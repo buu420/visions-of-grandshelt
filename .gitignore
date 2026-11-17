@@ -1,0 +1,11 @@
+/build*/
+/deps/
+/evidence/
+/packages/
+/.superpowers/
+*.user
+*.pdb
+*.ilk
+/tools/**/bin/
+/tools/**/obj/
+__pycache__/

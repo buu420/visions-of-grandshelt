@@ -1,0 +1,3 @@
+EXPORTS
+    XInputGetState=fake_get_state
+    FakeSetController=fake_set_state

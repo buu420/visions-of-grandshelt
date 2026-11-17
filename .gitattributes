@@ -1,0 +1,2 @@
+# Keep the verified package config bytes on every checkout.
+config/reloaded-mod.json -text whitespace=cr-at-eol

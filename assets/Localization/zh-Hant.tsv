@@ -1,0 +1,1353 @@
+key	text
+A book's	書
+A clear approach to the door's interaction could not be verified.	無法確認有暢通的路徑抵達門的互動點。
+A clear approach to the interaction point could not be verified.	無法確認有暢通的路徑抵達互動點。
+A clear approach to the mailbox could not be verified.	無法確認有暢通的路徑抵達郵筒。
+A clear walking approach for the player could not be verified.	無法確認角色有暢通的步行路徑。
+A clear walking approach for this doorway could not be verified.	無法確認有暢通的步行路徑抵達此門口。
+A clear walking approach on this floor could not be verified.	無法確認此樓層有暢通的步行路徑。
+A clear walking approach to this exit could not be verified.	無法確認有暢通的步行路徑抵達此出口。
+A clear walking approach to this interaction could not be verified.	無法確認有暢通的步行路徑抵達此互動點。
+A clear walking approach to this person's talk area could not be verified.	無法確認有暢通的步行路徑抵達此人的對話範圍。
+A clear walking route to the side of the crate could not be verified.	無法確認有暢通的步行路線抵達箱子側面。
+A clear water route to this Story destination could not be verified.	無法確認有暢通的水路抵達此劇情目的地。
+A compatible registered walking mesh could not be verified for this character.	無法為此角色確認相容的已註冊行走網格。
+A complete native walking route is unavailable.	沒有可用的完整遊戲步行路線。
+A current field character is unavailable.	目前沒有可用的探索角色。
+A damage number could not be matched to its unit.	有一個傷害數值無法對應到特定單位。
+A damage number could not be read.	有一個傷害數值無法讀取。
+A damage number's target could not be verified.	有一個傷害數值的目標無法確認。
+A door's	門
+A field character is unavailable.	沒有可用的場景角色。
+A field item's	地上的物品
+A ladder's	梯子
+A linked exit's current availability could not be read.	無法讀取某個關聯出口的目前可用狀態。
+A menu or scene is active.	有選單或場景處於作用中。
+A movable object's	可移動的物體
+A person's	人物
+A quest marker's	任務標記
+A route for the current Story crossing is unavailable.	目前的劇情渡水沒有可用路線。
+A route to the lift or its call pedestal could not be verified.	無法確認通往升降機或其呼叫台座的路線。
+A route to this story destination is unavailable.	沒有通往此劇情目的地的路線。
+A save point's	保存點
+A scripted scene is active.	有劇情場景正在進行。
+A switch's	開關
+A treasure chest's	寶箱
+A walking route to {0} is unavailable from here.	從這裡沒有通往{0}的步行路線。
+Ability	能力
+Accessibility Options	無障礙選項
+Accessibility Options is in the System menu. In battle, Home and End choose an ally to review. H reads HP, M reads MP, L reads gauges, F2 reads buffs, and F3 reads debuffs. Press the left stick in battle for controller status.	無障礙選項位於系統選單。戰鬥中，Home 和 End 選擇要查看的隊友。H 朗讀 HP，M 朗讀 MP，L 朗讀量表，F2 朗讀增益，F3 朗讀減益。戰鬥中按下左搖桿即可用控制器查看狀態。
+Accessibility Options. Left and right adjust the selected value. Back returns to System Menu.	無障礙選項。用左右鍵調整選取的值。返回鍵可回到系統選單。
+Accessory	飾品
+Accessory shop attendant	飾品店店員
+Acting. {0}	目前行動。{0}
+Activate the console between the containers.	啟動貨櫃之間的控制台。
+Activate the console within the fence.	啟動圍欄內的控制台。
+Activate the west console.	啟動西側的控制台。
+Adamandelion	堅鋼獅龜
+Aileen	艾琳
+All	全部
+Ally	我方
+An active story target or exit could not be verified in this area.	無法在此區域確認有效的劇情目標或出口。
+An elevator button's	電梯按鈕
+An elevator's	電梯
+An exit's	出口
+An overkill could not be matched to its unit.	有一個超量擊殺結果無法對應到特定單位。
+An overkill could not be read.	有一個超量擊殺結果無法讀取。
+Approach Lid on the upper platform.	靠近上層平台上的莉德。
+Approach Warden's Cape.	靠近守護者海角。
+Approach the barrier at the tower entrance.	靠近塔入口處的結界。
+Approach the miasma so Fina can cast Holy.	靠近瘴氣，讓菲娜施放神聖。
+Approach the platform to continue the trial.	靠近平台以繼續試煉。
+Approach the throne room doors with Shera.	和榭拉一起靠近王座之間的大門。
+Approach the wheel at the helm to take off.	靠近舵輪以起飛。
+Approach to Shera's cell	通往榭拉牢房的路
+Approach to the factory generator	通往工廠發電機的路
+Approach to the throne room	通往王座之間的路
+Arch beyond the lower save point	下層保存點後方的拱門
+Armor	防具
+Armor shop attendant	防具店店員
+Arrived at {0}.	已抵達{0}。
+Arsha	阿爾莎
+Ashasaur	骨龍
+At destination	已抵達目的地
+At target. Interaction available.	已抵達目標。可以互動。
+At the Crystal Tower. Follow the game's scene.	已抵達水晶塔。請跟隨遊戲的劇情場景。
+At the Shipyard gate. Continue up the road through the sliding door.	已抵達造船廠的大門。沿路向上穿過滑門繼續前進。
+At the captain's passage.	已抵達船長的通道。
+At the door to the hall. Walk through the door, then start the next route.	已抵達通往大廳的門。穿過門後，再開始下一段路線。
+At the factory's sliding door. Continue through it into the bridge hall.	已抵達工廠的滑門。穿過滑門進入艦橋大廳。
+At the push side of the loose crate. Walk into it toward the row.	已抵達鬆動箱子的推動側。朝著隊列方向走進箱子以推動它。
+At the push side of the loose crate. Walk {0} to push it toward the row.	已抵達鬆動箱子的推動側。朝{0}行走，將箱子推向隊列。
+At the sliding door.	已抵達滑門。
+At the target's activation area.	已抵達目標觸發區域。
+At the tornado over Pharm. Follow the game's scene.	已抵達法爾姆上空的龍捲風。請跟隨遊戲的劇情場景。
+At {0}. Interaction available.	已抵達{0}。可以互動。
+At {0}. Row through it to continue.	已到{0}。划過去繼續前進。
+At {0}. Use the game's interaction control to board.	已抵達{0}。使用遊戲的互動操作登船。
+At {0}. Use the game's interaction control to continue.	已抵達{0}。使用遊戲的互動操作繼續。
+At {0}. Use the game's interaction control to disembark.	已抵達{0}。使用遊戲的互動操作下船。
+At {0}. {1}	已抵達{0}。{1}
+Audio setting applied for this session. Could not save audio settings.	音訊設定已在本次遊玩中套用。無法儲存音訊設定。
+Automatic Story walking off.	已關閉劇情自動行走。
+Automatic Story walking stopped. Start it again to continue.	劇情自動行走已停止。再次啟動以繼續。
+Automatic door back to the elevator	返回電梯的自動門
+Automatic door into the laboratory	進入研究室的自動門
+Automatic door to the lower laboratory	通往下層研究室的自動門
+Automatic doorway	自動門
+Automatic walking cancelled by movement.	手動移動已取消自動行走。
+Automatic walking is already on.	自動行走已經開啟。
+Automatic walking is unavailable because Shift is assigned to another game control or could not be read.	無法自動行走。Shift 已綁定其他遊戲操作，或無法讀取它的綁定。
+Automatic walking off.	已關閉自動行走。
+Automatic walking on.	已開啟自動行走。
+Automatic walking on. {0}.	已開啟自動行走。{0}。
+Automatic walking stopped. A fresh route could not be verified.	自動行走已停止。無法確認新的路線。
+Automatic walking stopped. Clearance or braking room could not be verified.	自動行走已停止。無法確認通行空間或煞停距離。
+Automatic walking stopped. Controller state could not be verified.	自動行走已停止。無法確認控制器狀態。
+Automatic walking stopped. Player control changed.	自動行走已停止。角色控制已變更。
+Automatic walking stopped. Route is blocked.	自動行走已停止。路線受阻。
+Automatic walking stopped. Start it again to continue.	自動行走已停止。再次啟動以繼續。
+Automatic walking stopped. The ground ahead could not be verified.	自動行走已停止。無法確認前方地面狀況。
+Automatic walking stopped. The ground ahead is blocked.	自動行走已停止。前路受阻。
+Automatic walking stopped. The ground ahead requires manual movement.	自動行走已停止。前方路段需要手動移動。
+Automatic walking stopped. The ground check needs refreshing.	自動行走已停止。需要重新檢查地面。
+Automatic walking stopped. The next section requires a different movement action. Spoken guidance is available.	自動行走已停止。下一段需要使用其他移動操作。仍可使用語音引導。
+Automatic walking stopped. The slope needs further surface verification.	自動行走已停止。需要進一步檢查坡面的通行狀況。
+Automatic walking unavailable. {0}	無法自動行走。{0}
+Awakening Power	力量覺醒
+Ayaka	彩花
+Back door beside the lane	小巷旁的後門
+Back entrance to the back-lane house	小巷住宅的後門入口
+Basement door inside Rain's house	雷因家中的地下室門
+Battle information could not be read.	無法讀取戰鬥資訊。
+Battle information is not ready.	戰鬥資訊尚未就緒。
+Battle information is unavailable.	無法取得戰鬥資訊。
+Battle result	戰鬥結果
+Battle state could not be read.	無法讀取戰鬥階段。
+Battle status closed.	已關閉戰鬥狀態。
+Battle status could not be read.	無法讀取戰鬥狀態。
+Battle status. D-pad left and right choose an ally. Up reads HP and MP. Down reads effects. Y reads gauges. Press B or the left stick to close. {0}	戰鬥狀態。方向鍵左右選擇隊友，向上朗讀 HP和MP ，向下朗讀狀態效果。Y 朗讀量表。按 B 或按下左搖桿關閉。{0}
+Beacon volume	導航提示音音量
+Beacon volume is zero. Manual guidance will speak turns.	導航提示音音量為零。手動引導會播報轉向。
+Berserk	狂暴
+Black mage	黑魔道士
+Blacksmith	鐵匠
+Blind	失明
+Board the boat and return to the first boat room.	登上小船，返回第一個船室。
+Board the boat at the foot of the stairs to reach the tower.	在樓梯下方登上小船，前往塔。
+Board the boat for the crossing to the large crystal pedestal.	登上小船，渡往大水晶台座。
+Board the boat to cross the {0}.	登上小船渡過{0}。
+Board the boat to return to the pedestal across the basin.	登上小船，返回蓄水池對岸的台座。
+Board the boat to return to the second pool and take the other passage.	登上小船返回第二個水池，再走另一條通道。
+Board the {0} and interact to ride {1}.	登上{0}並進行互動，{1}。
+Boat	小船
+Book	書
+Boost	聲援
+Boy	男孩
+Brave	勇氣
+Breath Recovery formation	調息陣
+Bridge pedestal	橋的台座
+Buffs	增益
+Buffs unavailable	無法取得增益
+Calico cat	三花貓
+Call pedestal for the {0}	{0}的呼叫台座
+Call the restored entrance elevator up to this floor.	呼叫已修復的入口電梯上到這一層。
+Camouflage	偽裝
+Captain's quarters	隊長的房間
+Cargo elevator approach	通往貨運電梯的路
+Castle exit	城堡出口
+Castle hall approach	通往城堡大廳的路
+Cat	貓
+Center portal	中央傳送裝置
+Center-room portal	中央房間的傳送裝置
+Centre rotation pedestal	中央旋轉台座
+Charge formation	突擊之陣
+Charlotte	夏洛特
+Charm	魅惑
+Check the White Jade Stone on the center table.	調查中央桌子上的白輝石。
+Check the door back to the west corridor.	調查返回西側走廊的門。
+Check the east door with the Level 2 Lab Key Card.	使用研究所門禁卡 等級2調查東側的門。
+Check the harbor to open the destination choices.	調查港口以開啟目的地選項。
+Check the memo or the numbered elevator levers.	查看備忘錄或有編號的電梯拉桿。
+Check the nearby portal to return to the east wing.	調查附近的傳送裝置，返回東翼。
+Check the north door with the Level 3 Lab Key Card.	使用研究所門禁卡 等級3調查北側的門。
+Check the portal ahead.	調查前方的傳送裝置。
+Check the portal at the far side of this enclosure.	調查這個圍欄區遠端的傳送裝置。
+Check the portal in the west laboratory.	調查西側研究室裡的傳送裝置。
+Check the portal near the far side of the room.	調查房間遠端附近的傳送裝置。
+Check the portal on this side of the enclosure.	調查圍欄區這一側的傳送裝置。
+Check the powered portal in the center of the room.	調查房間中央已通電的傳送裝置。
+Check the rolled ladder to lower it.	調查捲起的梯子，把它放下來。
+Check the route toward the entrance.	確認通往入口的路線。
+Check the water by the orphanage so Luka can purify it.	調查孤兒院旁的水，讓露露卡淨化它。
+Check the water near the city entrance so Luka can purify it.	調查城市入口附近的水，讓露露卡淨化它。
+Check the water on the way to Old Town so Luka can purify it.	調查前往舊市區路上的水，讓露露卡淨化它。
+Check the west door with the Level 1 Lab Key Card.	使用研究所門禁卡 等級1調查西側的門。
+Checked	已勾選
+Chocobo	陸行鳥
+Choose a destination first.	請先選擇目的地。
+Choose a target with Page Up or Page Down, or F6 and F7.	用 Page Up 或 Page Down，或 F6 和 F7 選擇目標。
+Circle	圓圈鍵
+Climb back onto the shelf.	爬回貨架上。
+Climb back up from the lower ledge.	從下層的岩台爬回去。
+Climb back up to the side walkway.	爬回側面的通道。
+Climb down from the shelf.	從貨架上爬下來。
+Climb down the next ladder to the central walkway.	沿下一個梯子爬到中央通道。
+Climb down to the container room floor.	爬下到貨櫃房間的地面。
+Climb down to the fenced console.	爬下到圍欄內的控制台。
+Climb down to the next landing.	爬下到下一個平台。
+Climb the first ladder.	爬上第一個梯子。
+Climb the ladder on the tower.	爬上塔上的梯子。
+Climb the ladder onto the shelf.	爬上梯子到貨架上。
+Climb the ladder to the next section.	爬上梯子前往下一區段。
+Climb the ladder to the upper walkway.	爬上梯子前往上層通道。
+Climb the ladder to the upper walkways.	爬上梯子前往上層的各條通道。
+Climb the last ladder to the north exit.	爬上最後一個梯子前往北出口。
+Climb the long ladder to the upper path.	爬上長梯前往上層道路。
+Climb the second ladder.	爬上第二個梯子。
+Climb to the next level.	爬到下一層。
+Closed treasure chest	未打開的寶箱
+Confuse	混亂
+Connecting passage	連接通道
+Console between the containers	貨櫃之間的控制台
+Continue across the upper bridges to the altar.	繼續穿過上層的橋前往祭壇。
+Continue along the trail beyond the save point.	沿著保存點後方的小路繼續前進。
+Continue into the chamber at the bottom of the shrine.	繼續進入神殿底部的大廳。
+Continue into the elevator room.	繼續進入電梯室。
+Continue into the first trial room.	繼續進入第一個試煉室。
+Continue past the save point to the Dark Crystal.	越過保存點，繼續前往暗之水晶。
+Continue through the door at the top of the lifts.	穿過升降機頂端的門繼續前進。
+Continue through the door to the next trial.	穿過門前往下一個試煉。
+Continue through the doors to the inner chamber.	穿過大門前往內殿。
+Continue through the open Level 1 door.	穿過已開啟的等級1門繼續前進。
+Continue through the open Level 2 door.	穿過已開啟的等級2門繼續前進。
+Continue through the open Level 3 door.	穿過已開啟的等級3門繼續前進。
+Continue through the passage ahead.	穿過前方的通道繼續前進。
+Continue through the sliding door.	穿過滑門繼續前進。
+Continue through the upper passage.	穿過上層通道繼續前進。
+Continue through the west wing.	穿過西翼繼續前進。
+Continue to the bottom of the shrine.	繼續前往神殿底部。
+Continue to the far end of Old Town.	繼續前往舊市區的盡頭。
+Continue to the gate.	繼續前往大門。
+Continue to the guarded cells to look for Shera.	繼續前往有守衛的牢房尋找榭拉。
+Continue to the overlook on the mountain path.	繼續前往山路上的觀景處。
+Continue toward Shera's cell.	繼續朝榭拉的牢房前進。
+Continue toward the inner chamber.	繼續朝內殿前進。
+Continue toward the trial in the courtyard.	繼續朝庭院中的試煉前進。
+Continue up to the shrine entrance.	繼續向上前往神殿入口。
+Control-relative {0}, {1}	相對操作方向{0}，{1}
+Controller input capture is unavailable.	無法偵測控制器輸入。
+Controller navigation is available.	可使用控制器導航。
+Controller navigation is unavailable.	控制器導航無法使用。
+Controller navigation is unavailable. Start guidance when it is available.	控制器導航無法使用。可用時再開啟引導。
+Controller navigation unavailable. Its current game binding could not be reserved.	控制器導航無法使用。無法保留其目前的遊戲按鍵。
+Controller navigation unavailable. {0}	控制器導航無法使用。{0}
+Controller. Hold {0} for navigation. D-pad left and right change category; up and down choose a target. Press the left stick for manual guidance, or the right stick for automatic walking. B stops navigation; Y reads help. Release {0} after starting or stopping. Release held controls after a menu, focus or connection change.	控制器。按住 {0} 進行導航。方向鍵左右切換類別，上下選擇目標。按下左搖桿開啟手動引導，按下右搖桿開啟自動行走。B 停止導航。Y 朗讀說明。啟動或停止後放開 {0}。選單、視窗焦點或連線狀態變更後，放開按住的按鍵。
+Conveyor across the far gap	跨越遠處缺口的輸送帶
+Conveyor across the middle gap	跨越中間缺口的輸送帶
+Conveyor across to the next platform	通往下一個平台的輸送帶
+Conveyor back to the bridge hall	返回橋廳的輸送帶
+Conveyor from the bridge hall	從橋廳出發的輸送帶
+Conveyor to the bridge pedestal	通往橋的台座的輸送帶
+Conveyor to the far platform	通往遠處平台的輸送帶
+Conveyor to the middle platforms	通往中間平台的輸送帶
+Cover	掩護
+Cover all	全體掩護
+Crash Blade	粉碎之刃
+Crate room water pedestal	木箱房間的水位台座
+Cross into Old Town.	進入舊市區。
+Cross into the next section of the Wandering Lands.	進入漂浮大陸的下一區段。
+Cross the bridge to the Water Shrine.	過橋前往水之神殿。
+Cross the catwalks and use the large pedestal to lower the west bridge section.	穿過棧道，使用大台座降下西側的橋段。
+Cross the floating road toward the Wandering Lands entrance.	穿過漂浮的道路，朝漂浮大陸入口前進。
+Cross the lowered bridge back to the entrance passage.	穿過已降下的橋返回入口通道。
+Cross the lowered bridge to reach the factory generator.	穿過已降下的橋，前往工廠發電機。
+Cross the raised catwalk, then descend to the next pedestal.	穿過升起的棧道，然後下到下一個台座。
+Cross the summit passage to Lake Ryusei.	穿過山頂的通道前往流星湖。
+Cross the walkway to the passage on the far side.	穿過通道前往對面的通道口。
+Cross this car to the door into the third car.	穿過這節車廂，前往通往第三節車廂的門。
+Crystal Tower	水晶塔
+Crystal Tower barrier	水晶塔的結界
+Current objective. {0}	目前目標。{0}
+Current option is loading	正在載入目前選項
+Current screen text is unavailable	無法取得目前畫面文字
+Current story objective unavailable.	目前劇情目標無法使用。
+Current story objective unavailable. {0}	目前劇情目標無法使用。{0}
+Damage numbers could not be matched to a unit.	無法確認傷害數值對應的單位。
+Damage numbers could not be matched to the current battle.	無法確認傷害數值屬於目前戰鬥。
+Damage numbers could not be read.	無法讀取傷害數值。
+Dark immunity	免疫闇屬性
+Debrave	阻勇氣
+Debuffs	減益
+Debuffs unavailable	無法取得減益
+Decoy	誘餌
+Defaith	阻信心
+Delete	Delete
+Delivery attendant	配送員
+Demon Form	魔人形態
+Deprotect	阻物防護
+Descend the ladder to return to the bridge hall.	沿梯子下去返回橋廳。
+Descend to the side walkway and cross the two catwalks.	下到側面的通道，穿過兩條棧道。
+Description: {0}	場景描述。{0}
+Deshell	阻魔防護
+Destination guidance stopped.	已停止目的地引導。
+Destination kept. Start guidance to find a route from here.	目的地已保留。開啟引導以從這裡尋找路線。
+Destination kept. Start guidance when controller navigation is available.	目的地已保留。控制器導航可用時再開啟引導。
+Destination. {0}	目的地。{0}
+Destinations	目的地
+Destinations.	目的地。
+Destinations. No walking destinations are available from here.	目的地。從這裡沒有可步行抵達的目的地。
+Destinations. {0}.	目的地。{0}。
+Dilmagian soldier	迪爾馬基亞士兵
+Dock pedestal landing across the crates	木箱對面的碼頭台座平台
+Doom	死亡宣告
+Door back to Gaberada	返回伽貝拉達的門
+Door back to Sian	返回紫安鎮的門
+Door back to the west corridor	返回西側走廊的門
+Door beside the chocobo yard	陸行鳥圍欄旁的門
+Door from Rain's house to the street	從雷因家通往街道的門
+Door from the basement to Rain's house	從地下室通往雷因家的門
+Door from the chocobo yard into the house	從陸行鳥圍欄進入住宅的門
+Door from the courtyard house to the street	從庭院住宅通往街道的門
+Door from the house by the item shop to the street	從道具店旁住宅通往街道的門
+Door from the house to the back lane	從住宅通往小巷的門
+Door from the inn to the harbor	從旅店通往港口的門
+Door from the inn to the street	從旅店通往街道的門
+Door from the inn to the village	從旅店通往村子的門
+Door from the item shop to the harbor	從道具店通往港口的門
+Door from the item shop to the street	從道具店通往街道的門
+Door from the item shop to the village	從道具店通往村子的門
+Door from the vision shop to the street	從幻兵店通往街道的門
+Door from the weapon and armor shop to the harbor	從武器防具店通往港口的門
+Door from the weapon and armor shop to the street	從武器防具店通往街道的門
+Door from the weapon and armor shop to the village	從武器防具店通往村子的門
+Door from the weapon shop to the street	從武器店通往街道的門
+Door into the Enterprise	進入企業號的門
+Door of Rain's house	雷因家的門
+Door out of the bridge hall	離開橋廳的門
+Door out of the captain's quarters	離開隊長房間的門
+Door to Rain's basement	通往雷因家地下室的門
+Door to the bridge hall	通往橋廳的門
+Door to the chocobo yard	通往陸行鳥圍欄的門
+Door to the courtyard	通往庭院的門
+Door to the elder's home	通往婆婆家的門
+Door to the first trial	通往第一個試煉的門
+Door to the hall	通往大廳的門
+Door to the house by the item shop	通往道具店旁住宅的門
+Door to the inn	通往旅店的門
+Door to the item shop	通往道具店的門
+Door to the jail corridor	通往牢房走廊的門
+Door to the next train car	通往下一節車廂的門
+Door to the next wing	通往下一區的門
+Door to the outer cells	通往外側牢房的門
+Door to the roof stairway	通往屋頂樓梯的門
+Door to the vision shop	通往幻兵店的門
+Door to the weapon and armor shop	通往武器防具店的門
+Door to the weapon shop	通往武器店的門
+Door to {0}	通往{0}的門
+Down	向下
+Duality Knight	雙極騎士
+Dwarf	矮人
+Earth immunity	免疫土屬性
+Elevator	電梯
+Elevator call button	電梯呼叫按鈕
+Elevator down to the laboratory	下行至研究室的電梯
+Elevator lever memo	電梯拉桿備忘錄
+Elevator up to the entrance passage	上行至入口通道的電梯
+End	End
+End of the drained passage	排空積水的通道盡頭
+Enemies. {0}	敵方。{0}
+Enemy	敵方
+Enemy attention up	更容易被敵人盯上
+Enter Lake Ryusei at the top of the mountain.	進入山頂的流星湖。
+Enter Sian to ask about the Dark Crystal.	進入紫安鎮打聽暗之水晶的消息。
+Enter the jail corridor.	進入牢房走廊。
+Enter the throne room.	進入王座之間。
+Enter the tunnel behind the bookcase.	進入書櫃後面的隧道。
+Enterprise helm	企業號的舵輪
+Enterprise takeoff point	企業號起飛點
+Entrance approach	通往入口的路
+Entrance elevator approach	通往入口電梯的路
+Entrance elevator call pedestal	入口電梯的呼叫台座
+Entrance portal	入口處的傳送裝置
+Entrance terrace across the crates	木箱對面的入口平台
+Entrance to Crystal Tower	水晶塔入口
+Entrance to Dilmagia	迪爾馬基亞入口
+Entrance to Jake's office	傑科辦公室的入口
+Entrance to Lake Ryusei	流星湖入口
+Entrance to Olderion	奧爾德里昂入口
+Entrance to Rain's house	雷因家的入口
+Entrance to Sian	紫安鎮入口
+Entrance to Zoldaad, the Imperial Capital	帝都佐爾達多入口
+Entrance to the Rebel Hideout	反叛軍的基地入口
+Entrance to the Shrine side chamber	神殿側室入口
+Entrance to the Wandering Lands	漂浮大陸入口
+Entrance to the Water Shrine	水之神殿入口
+Entrance to the elder's home	婆婆家的入口
+Evan	埃文
+Examine the large crystal pedestal on this platform.	調查這個平台上的大水晶台座。
+Examine the stele before approaching the trial.	在靠近試煉之前先調查石碑。
+Exit from Jake's office	傑科辦公室的出口
+Exit from the cell wing	牢房區的出口
+Exit to Gronoa	通往格羅諾亞的出口
+Exit to Olderion	通往奧爾德里昂的出口
+Exit to the Gronoa overworld	通往格羅諾亞地圖的出口
+Exit to the Imperial Hotel district	通往帝都旅館區域的出口
+Exit to the castle rooftop	通往城堡屋頂的出口
+Exit to the next Battlefield section	通往戰場下一區段的出口
+Exit to {0}	通往{0}的出口
+Exits, doors and ladders	出口、門和梯子
+Expanded	已展開
+Factory exit to the desert	工廠通往沙漠的出口
+Faith	信心
+Far end of Old Town	舊市區的盡頭
+Far terrace across the crates	木箱對面的遠處平台
+Far walkway across the crates	木箱對面的遠處通道
+Fence by the elevator controls	電梯控制裝置旁的圍欄
+Fenced console	圍欄內的控制台
+Field controls are unavailable.	目前無法進行探索操作。
+Field controls could not be read.	無法讀取探索操作。
+Fina	菲娜
+Fina in the alley	小巷裡的菲娜
+Fire damage up	火屬性傷害提升
+Fire immunity	免疫火屬性
+First ladder toward Lake Dorr	通往多爾湖的第一個梯子
+First long ladder	第一個長梯
+First, go to the door to the hall. {0}	請先前往通往大廳的門。{0}
+Fisherman	男性漁夫
+Fisherwoman	女性漁夫
+Fluid Tactics	轉戰自如之策
+Focused. {0}	目前選取。{0}
+Folded ladder by the pedestal	台座旁折起的梯子
+Follow Arsha to the plaza with the tree.	跟隨阿爾莎前往有樹的廣場。
+Follow Jake through the factory gate.	跟隨傑科穿過工廠大門。
+Follow the canyon to Mozul Station. Interact at the entrance.	沿著峽谷前往摩組爾站。在入口處進行互動。
+Follow the corridor to the outer cells.	沿著走廊前往外側牢房。
+Follow the desert road to the Weapons Factory.	沿著沙漠道路前往兵器工廠。
+Follow the drained passage to the entrance hall.	沿著排空積水的通道前往入口大廳。
+Follow the drained passage to the ladder chamber.	沿著排空積水的通道前往梯子所在的房間。
+Follow the entrance passage into the bridge hall.	沿著入口通道進入橋廳。
+Follow the entrance path to the central hall.	沿著入口的路前往中央大廳。
+Follow the floating path to the Forest Path entrance.	沿著漂浮的道路前往林間道入口。
+Follow the hall toward the throne room.	沿著大廳朝王座之間前進。
+Follow the lower passage to the laboratory.	沿著下層通道前往研究室。
+Follow the lower road back to Olderion.	沿著下方的道路返回奧爾德里昂。
+Follow the lower walkway through the arch.	沿著下層通道穿過拱門。
+Follow the lower walkway to the crate room.	沿著下層通道前往木箱房間。
+Follow the main street to the monsters.	沿著主街前往怪物所在處。
+Follow the mountain trail toward the summit.	沿著山路朝山頂前進。
+Follow the passage back to the entrance.	沿著通道返回入口。
+Follow the path to Lake Dorr.	沿著道路前往多爾湖。
+Follow the platform to the conveyor to the bridge pedestal.	沿著平台前往通向橋的台座的輸送帶。
+Follow the railway toward the Imperial Capital.	沿著鐵路朝帝都前進。
+Follow the side walkway to the tall ladder and climb it.	沿著側面的通道前往高梯並爬上去。
+Follow the spiral to the summit. You can prepare at the rest stop along the way.	沿著螺旋通道前往山頂。途中可以在休息點做準備。
+Follow the stairs beyond the save point.	沿著保存點後方的樓梯前進。
+Follow the stairs down and go around the loose crate. Push it toward the row to line it up.	沿樓梯下去，繞到鬆動的木箱另一側。把它推向木箱排，使其對齊。
+Follow the stairway to the rooftop.	沿著樓梯前往屋頂。
+Follow the trail ahead.	沿著前方的小路前進。
+Follow the trail beyond the mountain pass.	沿著山口後方的小路前進。
+Follow the trail into the next section.	沿著小路進入下一區段。
+Follow the trail through the lower tower.	沿著小路穿過塔的下層。
+Follow the trail. The crystal paths appear as you approach.	沿著小路前進。水晶道路會在你靠近時出現。
+Follow the tunnel to the Rebel Hideout.	沿著隧道前往反叛軍的基地。
+Follow the tunnel to the castle dungeon.	沿著隧道前往城堡的地牢。
+Follow the upper path into the next passage.	沿著上層道路進入下一條通道。
+Follow the upper path to the Water Maiden.	沿著上層道路前往水之巫女所在處。
+Follow the upper walkway into the boat room.	沿著上層通道進入船室。
+Follow the upper walkway to the laboratory.	沿著上層通道前往研究室。
+Follow the west ramp to the small pedestal.	沿著西側坡道前往小台座。
+Follow the winding trail past the fork.	沿著蜿蜒的小路越過岔路口。
+Forest Path entrance	林間道入口
+Forest Path exit toward the Wandering Lands	林間道通往漂浮大陸的出口
+Four-lamp elevator	四燈電梯
+Front door from the back-lane house to the street	從小巷住宅通往街道的正門
+Front door from the inn to the street	從旅店通往街道的正門
+Front door of the courtyard house	庭院住宅的正門
+Front door of the house by the back lane	小巷旁住宅的正門
+Front door of the house by the item shop	道具店旁住宅的正門
+Front door of the inn	旅店的正門
+Front door of the item shop	道具店的正門
+Front door of the weapon and armor shop	武器防具店的正門
+Front entrance to the back-lane house	小巷住宅的正門入口
+Front entrance to the courtyard house	庭院住宅的正門入口
+Front entrance to the inn	旅店的正門入口
+Fryevia	弗雷比亞
+Fury	憤怒
+Gate into the Weapons Factory	進入兵器工廠的大門
+Gate to Old Town	通往舊市區的大門
+Gate to the Shipyard	通往造船廠的大門
+Gil on hand {0}	持有 GIL {0}
+Gilgamesh	吉爾伽美什
+Girl	女孩
+Go inside the Enterprise and make your way to the helm.	進入企業號，前往舵輪處。
+Go through Amore on the way to Warden's Cape.	穿過阿穆爾鎮，前往守護者海角。
+Go through the arch that the water uncovered.	穿過水位下降後露出的拱門。
+Go through the door into the second train car.	穿過門進入第二節車廂。
+Go through the entrance into the lower tower.	穿過入口進入塔的下層。
+Go through the gate into the factory.	穿過大門進入工廠。
+Go through the next door to reach the fourth car.	穿過下一道門前往第四節車廂。
+Go through the open door to speak to Jake.	穿過開啟的門去和傑科交談。
+Go through to the next wing.	穿過去前往下一區。
+Go through to the upper bridges.	穿過去前往上層的橋。
+Go to the Shipyard to meet Lid. Follow the main road to the gate.	前往造船廠與莉德會合。沿著主路前往大門。
+Go to the bridge.	前往橋。
+Go to the captain's quarters to look for the throne room key.	前往隊長的房間尋找王座之鑰。
+Go to the cave entrance northeast of Olderion.	前往奧爾德里昂東北方的洞窟入口。
+Go to the fence by the elevator controls.	前往電梯控制裝置旁的圍欄。
+Go to the ladder and walk toward it to climb down.	前往梯子並朝它走去，以便爬下去。
+Go to the last page to close.	翻到最後一頁即可關閉。
+Go to the portal beyond the save point and interact.	前往保存點後方的傳送門並進行互動。
+Go to the waterfall entrance west of Olderion.	前往奧爾德里昂西方的瀑布入口。
+Go toward the cargo elevator.	朝貨運電梯前進。
+Good Luck	好運
+Grand Magic	大魔法
+Grandshelt soldier	格蘭謝爾特士兵
+Great Wall	巨牆
+Ground pickup	地上的物品
+Guard	防禦
+Guidance is already on.	引導已經開啟。
+Guidance off.	已關閉引導。
+HP unavailable	無法取得 HP
+HP {0}	HP {0}
+HP {0} of {1}	HP {0}，上限{1}
+Harbor for Zoldaad	前往佐爾達多的港口
+Haste	急速
+Head to the far door to escape the train.	前往遠處的門逃離列車。
+Head toward the entrance elevator on the upper deck.	朝上層甲板的入口電梯前進。
+Heat	灼熱
+Hidden tunnel entrance	隱藏的隧道入口
+Hideout exit to the desert	基地通往沙漠的出口
+Hold Down to climb down.	按住下方向往下爬。
+Hold Up to climb.	按住上方向往上爬。
+Home	Home
+Honing Sense	感官強化
+Ice damage up	冰屬性傷害提升
+Ice immunity	免疫冰屬性
+Inn attendant	旅店店主
+Inn side door from inside	旅店內側的側門
+Inner chamber door	內殿的門
+Innkeeper	旅店店主
+Interaction available	可以互動
+Iron Wall formation	鐵壁之陣
+Item shop attendant	道具店店員
+Jake	傑科
+Jake's office door	傑科辦公室的門
+Key assignment is active.	正在指派按鍵。
+King of Grandshelt	格蘭謝爾特王
+Ladder	梯子
+Ladder back onto the shelf	返回貨架的梯子
+Ladder back to the container floor	返回貨櫃房間地面的梯子
+Ladder back to the upper path	返回上層道路的梯子
+Ladder beyond the trial	試煉後方的梯子
+Ladder down from the shelf	從貨架下來的梯子
+Ladder down to the bridge hall	下到橋廳的梯子
+Ladder down to the save point	下到保存點的梯子
+Ladder down toward Olderion	下行通往奧爾德里昂的梯子
+Ladder onto the shelf	上到貨架的梯子
+Ladder to the central walkway	通往中央通道的梯子
+Ladder to the elevator landing	通往電梯平台的梯子
+Ladder to the fenced console	通往圍欄內控制台的梯子
+Ladder to the lower floor	通往下層的梯子
+Ladder to the lower hall	通往下層大廳的梯子
+Ladder to the upper walkway	通往上層通道的梯子
+Ladder to the upper walkways	通往上層各條通道的梯子
+Lake Dorr entrance	多爾湖入口
+Lake Ryusei exit toward Forest Path	流星湖通往林間道的出口
+Landing below the upper passage	上方通道下的靠岸點
+Landing below the water pedestal	水位台座下的靠岸點
+Landing by the central hall passage	中央大廳通道旁的靠岸點
+Landing by the large crystal pedestal	大水晶台座旁的靠岸點
+Landing by the tower ladder	高塔梯子旁的靠岸點
+Landing on the far bank	對岸的靠岸點
+Large crystal pedestal	大水晶台座
+Lasswell	拉斯韋爾
+Leave Amore by the north bridge toward Warden's Cape.	從北橋離開阿穆爾鎮，前往守護者海角。
+Leave Amore by the south exit for Waterfall Way.	從南出口離開阿穆爾鎮，前往瀑布迴廊。
+Leave Forest Path for the Wandering Lands.	離開林間道，前往漂浮大陸。
+Leave Jake's office and return to the hall.	離開傑科的辦公室，返回大廳。
+Leave Old Town through Olderion on the way to Waterfall Way.	經由奧爾德里昂離開舊市區，前往瀑布迴廊。
+Leave Olderion by the south exit for the Cave of Waters.	從南出口離開奧爾德里昂，前往水之洞窟。
+Leave Olderion for Lake Dorr by way of the Cave of Waters.	離開奧爾德里昂，經由水之洞窟前往多爾湖。
+Leave Olderion for Waterfall Way.	離開奧爾德里昂，前往瀑布迴廊。
+Leave Sian and head for Mt. Reizan.	離開紫安鎮，前往靈峰山。
+Leave by the north exit, then take the east fork toward the Wind Shrine.	從北出口離開，然後走東側的岔路前往風之神殿。
+Leave the Research Center Ruins.	離開研究所廢墟。
+Leave the Water Maiden's chamber through the passage.	穿過通道離開水之巫女的房間。
+Leave the Water Shrine and return to Olderion.	離開水之神殿，返回奧爾德里昂。
+Leave the captain's quarters and return to the throne room doors.	離開隊長的房間，返回王座之間的大門。
+Leave the cave by the high exit toward Lake Dorr.	從高處的出口離開洞窟，前往多爾湖。
+Leave the cave by the south exit and return to Olderion.	從南出口離開洞窟，返回奧爾德里昂。
+Leave the cell wing to reach the corridor.	離開牢房區前往走廊。
+Leave the chamber through the arch.	穿過拱門離開大廳。
+Leave the crate room through the entrance passage.	穿過入口通道離開木箱房間。
+Leave the elder's home.	離開婆婆家。
+Leave the inn and meet the party in the alley.	離開旅店，在小巷與同伴會合。
+Leave the laboratory and return to the elevator.	離開研究室，返回電梯。
+Leave the lake and follow the floating path toward Forest Path.	離開湖畔，沿著漂浮的道路前往林間道。
+Leave the mountain path through the south exit.	從南出口離開山路。
+Leave the shrine to continue on Gronoa.	離開神殿，繼續在格羅諾亞前進。
+Leave the throne room through the door to the roof stairway.	穿過通往屋頂樓梯的門離開王座之間。
+Left	向左
+Left rotation pedestal	左側旋轉台座
+Level 1 Lab Key Card	研究所門禁卡 等級1
+Level 1 door	等級1門
+Level 2 Lab Key Card	研究所門禁卡 等級2
+Level 2 door	等級2門
+Level 3 Lab Key Card	研究所門禁卡 等級3
+Level 3 door	等級3門
+Level {0}	等級{0}
+Lever {0}	拉桿{0}
+Libra details could not be read.	無法讀取窺伺探測的詳細資訊。
+Libra target could not be read.	無法讀取窺伺探測的目標。
+Library bookshelf clue	圖書館書架上的線索
+Lid	莉德
+Lid's upper platform	莉德所在的上層平台
+Light Veil	光芒幕簾
+Light immunity	免疫光屬性
+Lightning damage up	雷屬性傷害提升
+Lightning immunity	免疫雷屬性
+Lightning ley line	雷之地脈
+Limit gauge unavailable	無法取得極限量表
+Limit gauge {0} percent	極限量表百分之{0}
+Local by the tree	樹旁的居民
+Local resident	當地居民
+Locked dungeon gate	鎖住的地牢門
+Lower shrine story marker	神殿下層的劇情標記
+Lower the ladder beside the pedestal to return to the hall.	放下台座旁的梯子以返回大廳。
+MP unavailable	無法取得 MP
+MP {0}	MP {0}
+Magic Barrier	魔法屏障
+Mailbox by the inn	旅店旁的郵箱
+Man	男性
+Man in blue	藍衣男子
+Masamune	正宗架勢
+Medal pickup	地上的獎章
+Merchant	商人
+Meteoroid	命運宣告
+Miasma story marker	瘴氣處的劇情標記
+Middle Reach landing	中層平台
+Mind Focus	精神集中
+Miner	採掘工
+Mixed	部分勾選
+Moogle	莫古利
+Moon Slayer	殲月
+More than one active exit leads to the next Battlefield section.	有多個可用出口通往戰場的下一區段。
+More than one active target matches this story object. A route is unavailable.	此劇情物件對應多個有效目標。沒有可用路線。
+More than one controller is active.	有多個控制器正在使用。
+Move toward the ladder, then {0}	走向梯子，然後{0}
+Move {0} onto the ladder, then {1}	朝{0}移動到梯子上，然後{1}
+Mozul Station entrance	摩組爾站入口
+Mt. Reizan trailhead	靈峰山山路起點
+NPC sound volume	非玩家角色提示音音量
+NPC sounds	非玩家角色提示音
+Native navigation input state is unavailable.	無法取得遊戲的導航輸入狀態。
+Native walking input is unavailable.	無法使用遊戲的行走輸入。
+Navigation beacon on.	已開啟導航信標。
+Navigation beacon on. {0}.	已開啟導航信標。{0}。
+Navigation commands arrived together. Release the modifier, then press one command at a time.	同時收到多個導航指令。請放開修飾鍵，然後每次只按一個指令。
+Navigation is off.	導航已關閉。
+Navigation is unavailable in this travel mode.	此移動方式下無法導航。
+Navigation key unavailable because it conflicts with a game control.	導航鍵無法使用，因為它與遊戲操作衝突。
+Navigation stopped while speech output was unavailable.	語音輸出無法使用期間導航已停止。
+Navigation stopped.	導航已停止。
+Navigation stopped. A fresh complete walking route is unavailable.	導航已停止。無法取得新的完整步行路線。
+Navigation stopped. Area or player changed.	導航已停止。區域或角色已變更。
+Navigation stopped. Controller unavailable.	導航已停止。控制器無法使用。
+Navigation stopped. Field controls unavailable.	導航已停止。目前無法進行探索操作。
+Navigation stopped. Game focus lost.	導航已停止。遊戲視窗已失去焦點。
+Navigation stopped. Its control binding is unavailable or assigned to another game control.	導航已停止。其按鍵無法使用或已指派給其他遊戲操作。
+Navigation stopped. Player walking state or location is unavailable.	導航已停止。無法取得角色的行走狀態或位置。
+Navigation stopped. Route guidance unavailable.	導航已停止。無法提供路線引導。
+Navigation stopped. Screen or area changed.	導航已停止。畫面或區域已變更。
+Navigation stopped. Target changed.	導航已停止。目標已變更。
+Navigation stopped. Target is no longer available.	導航已停止。目標已無法使用。
+Navigation stopped. The destination arrival distance could not be verified.	導航已停止。無法確認距離目標多近時算作抵達。
+Navigation stopped. The ground check does not match the current route.	導航已停止。地面檢查結果與目前路線不符。
+Navigation stopped. The selected target has no known position in this area.	導航已停止。所選目標在本區域沒有已知位置。
+Navigation stopped. This route requires unsupported movement.	導航已停止。此路線需要使用暫不支援的移動方式。
+Navigation stopped. Verified ground ahead is unavailable.	導航已停止。無法確認前方地面可通行。
+Navigation stopped. Walking route is too far from the player.	導航已停止。步行路線與角色相距過遠。
+Navigation stopped. Walking route unavailable.	導航已停止。沒有可用的步行路線。
+Navigation stopped. {0}	導航已停止。{0}
+Navigation unavailable while speech output was disconnected.	語音輸出中斷期間無法導航。
+Navigation unavailable. Select a target in the field.	無法導航。請在探索時選擇目標。
+Navigation unavailable. {0}	無法導航。{0}
+Near {0}. Row toward the landing until the interaction appears.	已接近{0}。朝著岸邊划行，直到出現互動提示。
+Newly uncovered arch	剛露出的拱門
+Next story event in the Earth Shrine	土之神殿的下一個劇情事件
+Next trial room	下一個試煉室
+Nichol	尼科爾
+No active controller was detected.	未偵測到使用中的控制器。
+No active exit leads to the next Battlefield section.	沒有可用出口通往戰場的下一區段。
+No buffs	無增益
+No captured selection or dialogue	沒有可重讀的選項或對話
+No clear route across the rotating walkways. Try the rotation pedestals.	沒有穿過旋轉走道的暢通路線。請嘗試旋轉台座。
+No current Story crossing could be verified.	無法確認目前的劇情渡水。
+No current main-story objective is displayed.	目前沒有顯示主線劇情目標。
+No current story objective is displayed.	沒有顯示目前劇情目標。
+No debuffs	無減益
+No disclosed local story destination has been captured.	未找到遊戲在本區域顯示的劇情目的地。
+No enabled story continuation is available in this area.	此區域沒有可用的已啟用劇情續接點。
+No enabled tutorial controls are shown.	沒有顯示已啟用的教學操作。
+No reachable targets in this area.	本區域沒有可抵達的目標。
+No supported capsule overlap at this exit could be verified.	無法在此出口確認角色碰撞膠囊的有效重疊。
+North bridge out of Amore	阿穆爾北側出鎮的橋
+North entrance to Amore	阿穆爾鎮北入口
+North entrance to Waterfall Way	瀑布迴廊北入口
+North entrance to the Cave of Waters	水之洞窟北入口
+North exit of the Dwarven Forge	矮人的工坊北出口
+North exit toward Amore	通往阿穆爾的北出口
+North exit toward Lake Dorr	通往多爾湖的北出口
+Not checked	未勾選
+Object sound volume	物品提示音音量
+Object sounds	物品提示音
+Objects	物體
+Off	關閉
+Offensive formation	攻勢之陣
+Old Town bridge	舊市區的橋
+Old Town gate	舊市區的大門
+Old Town street	舊市區的街道
+Older man	老先生
+Older woman	老太太
+Olderion inn door	奧爾德里昂旅店的門
+Olderion inn entrance	奧爾德里昂旅店入口
+Olderion innkeeper	奧爾德里昂的旅店店主
+Olderion soldier	奧爾德里昂士兵
+On	開啟
+Only available option	唯一可用選項
+Only ordinary walking is supported in this scene.	此場景僅支援普通行走。
+Open the door to Jake's office.	打開傑科辦公室的門。
+Open the door to the elder's home.	打開婆婆家的門。
+Open the door when the game's interaction appears.	當遊戲的互動提示出現時打開門。
+Open the inn door when the game's interaction appears.	當遊戲的互動提示出現時打開旅店的門。
+Open treasure chest	已打開的寶箱
+Open treasure safe	已打開的保險箱
+Option text unavailable	無法讀取選項文字
+Ordinary walking directions are unavailable during vertical travel.	垂直移動期間無法提供普通行走方向。
+Overclock	超頻
+Overclock Zero	超頻零式
+Overheat	過熱
+Page Down	Page Down
+Page Up	Page Up
+Painted floor number: {0}.	地面上塗寫的編號：{0}。
+Paradise Lost	失樂園
+Paralysis	麻痺
+Party status could not be read.	無法讀取隊伍狀態。
+Party status is unavailable.	無法取得隊伍狀態。
+Party. {0}	隊伍。{0}
+Passage along the upper path	沿上層道路的通道
+Passage at the foot of the ladders	梯子下方的通道
+Passage back from the altar	從祭壇返回的通道
+Passage back inside the shipyard	返回造船廠內部的通道
+Passage back to the Middle Reach stairs	返回中層樓梯的通道
+Passage back to the central hall	返回中央大廳的通道
+Passage back to the central walkway	返回中央通道的通道
+Passage back to the entrance hall	返回入口大廳的通道
+Passage back to the first boat room	返回第一個有船房間的通道
+Passage back to the guarded cells	返回有守衛的牢房的通道
+Passage back to the locked gate	返回鎖住的門的通道
+Passage back to the lower path	返回下層道路的通道
+Passage back to the lower save point	返回下層保存點的通道
+Passage back to the lower tower	返回塔下層的通道
+Passage back to the second pool	返回第二處水池的通道
+Passage back to the spiral	返回螺旋坡道的通道
+Passage back to the trials	返回試煉室的通道
+Passage back to the upper path	返回上層道路的通道
+Passage back to the upper save point	返回上層保存點的通道
+Passage behind the waterfall	瀑布後面的通道
+Passage door	通道門
+Passage from Middle Reach	來自中層的通道
+Passage from Middle Reach into the tower	從中層進入塔內的通道
+Passage from Upper Reach	來自上層的通道
+Passage from Upper Reach into the tower	從上層進入塔內的通道
+Passage from the upper walkway	來自上層通道的通道
+Passage into Zoldaad Castle	進入佐爾達多城的通道
+Passage into the Wandering Lands	進入漂浮大陸的通道
+Passage into the crystal platform hall	進入水晶平台大廳的通道
+Passage into the east wing	進入東翼的通道
+Passage into the inn	進入旅店的通道
+Passage into the lower laboratory	進入下層研究室的通道
+Passage into the next laboratory	進入下一個研究室的通道
+Passage into the next tower hall	進入塔內下一個大廳的通道
+Passage into the throne room	進入王座之間的通道
+Passage into the west wing	進入西翼的通道
+Passage onward	繼續前進的通道
+Passage out of the lower laboratory	離開下層研究室的通道
+Passage past the waterfall	越過瀑布的通道
+Passage to Lake Dorr	通往多爾湖的通道
+Passage to Lake Ryusei	通往流星湖的通道
+Passage to the Rebel Hideout	通往反叛軍的基地的通道
+Passage to the Water Maiden	通往水之巫女的通道
+Passage to the altar	通往祭壇的通道
+Passage to the castle dungeon	通往城堡地牢的通道
+Passage to the castle entrance	通往城堡入口的通道
+Passage to the central hall	通往中央大廳的通道
+Passage to the crate room	通往木箱房間的通道
+Passage to the duel	通往決鬥場的通道
+Passage to the elevator	通往電梯的通道
+Passage to the elevators	通往電梯群的通道
+Passage to the entrance	通往入口的通道
+Passage to the entrance hall	通往入口大廳的通道
+Passage to the entrance landing	通往入口平台的通道
+Passage to the factory entrance	通往工廠入口的通道
+Passage to the first boat room	通往第一個船室的通道
+Passage to the first pool	通往第一個水池的通道
+Passage to the guarded cells	通往有守衛的牢房的通道
+Passage to the lower trial	通往下層試煉的通道
+Passage to the main hall	通往大廳的通道
+Passage to the pedestal room	通往台座房間的通道
+Passage to the second pool	通往第二個水池的通道
+Passage to the summit rest stop	通往頂層休息點的通道
+Passage to the third pool	通往第三處水池的通道
+Passage to the upper Forest Path	通往林間道上段的通道
+Passage to the upper bridges	通往上層橋的通道
+Passage to the upper ledge	通往上層岩台的通道
+Passage within {0}	{0}內部的通道
+Path to the Dark Crystal	通往暗之水晶的路
+Path to the summit	通往頂層的路
+Pearly Pot	白甕
+Pedestal below the short ladder	短梯下方的台座
+Pedestal on the high walkway	高處通道上的台座
+Pedestal on the west ramp	西側坡道上的台座
+People	人物
+Petrify	石化
+Physical controls could not be read.	無法讀取實體操作輸入。
+Pick up the Level 1 Lab Key Card.	拾取研究所門禁卡 等級1。
+Pick up the Level 2 Lab Key Card.	拾取研究所門禁卡 等級2。
+Pick up the Level 3 Lab Key Card.	拾取研究所門禁卡 等級3。
+Plaza with the tree	有樹的廣場
+Poison	中毒
+Portal at the end of the lower tower	塔下層盡頭的傳送門
+Portal back to the east wing	返回東翼的傳送裝置
+Portal back to the lower tower	返回塔下層的傳送門
+Portal in the central pocket	中央圍欄區的傳送裝置
+Portal in the east pocket	東側圍欄區的傳送裝置
+Portal in the west laboratory	西側研究室的傳送裝置
+Portal in the west pocket	西側圍欄區的傳送裝置
+Portal to the lower side chamber	通往下層側室的傳送門
+Portal to the lower tower	通往塔下層的傳送門
+Portal to the next tower section	通往塔的下一區段的傳送門
+Prepare at the save point before confirming the white portal. It leads into the final sequence.	確認白色傳送門之前，先在保存點做好準備。它將通往最終的劇情。
+Press Confirm to use the highlighted Resonance	按確認發動選取的共鳴
+Pressed switch	已按下的開關
+Protect	物防護
+Push side of the loose crate	鬆動木箱的推動側
+Pushable obstacle	可推動的障礙物
+Pushable wooden crate	可推動的木箱
+Quest marker	任務標記
+Quest prompt in the inn	旅店內的任務提示
+Raegen	雷根
+Reached the verified walking point near {0}.	已抵達{0}附近經確認的步行點。
+Read the streetcar timetable and choose the Commercial District to continue gathering information.	查看路面電車時刻表，選擇帝都商業區以繼續收集情報。
+Read the streetcar timetable and choose the Slums to gather information.	查看路面電車時刻表，選擇貧民窟以收集情報。
+Rebel soldier	反叛軍的士兵
+Rebel soldier in the central hall	中央大廳的反叛軍士兵
+Rebel soldier near the desert exit	沙漠出口附近的反叛軍士兵
+Rebel soldier near the entrance	入口附近的反叛軍士兵
+Rebel soldier near the tunnel	隧道附近的反叛軍士兵
+Recorded description playback failed.	無法播放錄製的口述影像。
+Recorded description unavailable. Description: {0}	錄製的口述影像無法播放。場景描述。{0}
+Recorded descriptions unavailable.	錄製的口述影像無法使用。
+Recorded movie descriptions ready.	過場影片的錄製口述影像已就緒。
+Recorded movie descriptions unavailable.	過場影片的錄製口述影像無法使用。
+Reflect	反射
+Refraction Arts	鏡晶折射術
+Regen	漸癒
+Reraise	自動重生
+Research Center Ruins exit	研究所廢墟出口
+Researcher	研究員
+Visions of Grandshelt loaded. F10 for help. {0}	Visions of Grandshelt 已載入。按 F10 聽取說明。{0}
+Visions of Grandshelt reader stopped after an error. See its log.	Visions of Grandshelt 朗讀器因錯誤停止。請查看記錄。
+Visions of Grandshelt. F5 repeat. Home and End change target category, including Story for the current main objective and Destinations for travel through connected areas. Page Up and Page Down choose a target in the field; F6 and F7 also choose targets. Delete toggles manual guidance. Shift Delete toggles automatic walking. Moving or opening a menu stops automatic walking. F8 reads a complete native route. F9 reads the current screen, or party, enemies and target information in battle. F10 help. You control interaction and Confirm.	Visions of Grandshelt。按 F5 重複播報。Home 和 End 切換目標類別。劇情類別提供目前主線目標，目的地類別引導你穿過相連區域。在場景中用 Page Up、Page Down 或 F6、F7 選擇目標。Delete 切換手動引導。Shift 加 Delete 切換自動行走。手動移動或開啟選單會停止自動行走。F8 朗讀遊戲中的完整路線。F9 朗讀目前畫面，在戰鬥中朗讀隊伍、敵人和目標資訊。F10 朗讀說明。互動和確認由你控制。
+Restored entrance elevator	已修復的入口電梯
+Return conveyor from the pedestal	從台座返回的輸送帶
+Return from the altar passage to the north landing.	從祭壇通道返回北側平台。
+Return from the altar to the path leading to the north exit.	從祭壇返回通往北出口的道路。
+Return inside from Middle Reach.	從中層返回塔內。
+Return inside from Upper Reach.	從上層返回塔內。
+Return through Waterfall Way.	穿過瀑布迴廊返回。
+Return through the arch to the lower stairs in the central hall.	穿過拱門返回中央大廳的下層樓梯。
+Return through the entrance on the way to the Rebel Hideout.	穿過入口返回，前往反叛軍的基地。
+Return through the walkways and descend to the bridge hall.	穿過各條通道返回，下到橋廳。
+Return to Dilmagia so Lid can finish the airship.	返回迪爾馬基亞，讓莉德完成飛空艇。
+Return to Olderion through the Cave of Waters.	穿過水之洞窟返回奧爾德里昂。
+Return to the Rebel Hideout.	返回反叛軍的基地。
+Return to the Shipyard to board Lid's airship.	返回造船廠，登上莉德的飛空艇。
+Return to the Shrine main passage	返回神殿主通道
+Return to the central hall through the arch on this platform.	穿過這個平台上的拱門返回中央大廳。
+Return to the desert and head for the Rebel Hideout.	返回沙漠，前往反叛軍的基地。
+Return to the entrance hall.	返回入口大廳。
+Return to the guarded cells.	返回有守衛的牢房。
+Return to the landing below the tower.	返回塔下方的平台。
+Return to the locked gate with the dungeon key.	帶著地牢的鑰匙返回鎖住的門。
+Return to the lower path toward the long ladder.	返回下層道路，朝長梯前進。
+Return to the lower tower.	返回塔的下層。
+Return to the spiral path to the summit.	返回通往山頂的螺旋通道。
+Return to the town lane.	返回鎮上的小路。
+Return to the town square.	返回鎮上的廣場。
+Return to the trial rooms.	返回試煉室。
+Return to the upper path toward the altar.	返回上層道路，朝祭壇前進。
+Right	向右
+Right rotation pedestal	右側旋轉台座
+Robed figure	穿法袍的人
+Rolled ladder	捲起的梯子
+Rooftop return elevator	從屋頂返回的電梯
+Route beacon unavailable. Navigation will speak directions.	導航提示音無法使用。導航會朗讀方向。
+Row back through the passage to the first boat room.	划船穿過通道返回第一個船室。
+Row back through this channel to the previous room.	划船穿過這條水道返回上一個房間。
+Row back to the landing by the water pedestal.	划船返回水位台座旁的碼頭。
+Row back to the second pool to take the passage to the upper path.	划船返回第二個水池，走通往上層道路的通道。
+Row to the forward passage into the third pool. Keep the boat for the crossing.	划船前往前方通往第三個水池的通道。保留小船以便渡水。
+Row to the landing below the upper passage back to the entrance hall.	划船前往返回入口大廳的上層通道下方的碼頭。
+Row to the landing by the large crystal pedestal.	划船前往大水晶台座旁的碼頭。
+Row to the landing by the way back to the central hall.	划船前往返回中央大廳的路旁的碼頭。
+Row to the passage leading to the large crystal pedestal.	划船前往通向大水晶台座的通道。
+Row to the passage on the far bank. Disembark at the landing by the exit.	划船前往對岸的通道。在出口旁的碼頭下船。
+Row to the tower in the middle of the basin and climb its ladder.	划船前往蓄水池中央的塔，爬上塔上的梯子。
+Royal Guard	皇家臂環
+Sage's Eye	賢者之眼
+Sailor	船員
+Sakura	櫻
+Save point	保存點
+Save point for the return to the entrance	可返回入口的保存點
+Save point with a route to the entrance	可返回入口的保存點
+Save points	存檔點
+Scripted scene descriptions ready.	劇情場景的口述影像已就緒。
+Scripted scene descriptions unavailable.	劇情場景的口述影像無法使用。
+Second ladder toward Lake Dorr	通往多爾湖的第二個梯子
+Second long ladder	第二個長梯
+Shell	魔防護
+Shift Delete	Shift 加 Delete
+Ship captain	船長
+Short ladder down to the pedestal	下到台座的短梯
+Short ladder to the side walkway	通往側面通道的短梯
+Shrine door	神殿的門
+Shrine elevator	神殿的電梯
+Sian exit toward Mt. Reizan	紫安鎮通往靈峰山的出口
+Side door from the inn to the street	從旅店通往街道的側門
+Side entrance to the inn	旅店的側門入口
+Silence	沉默
+Single-panel door	單扇門
+Sleep	睡眠
+Sliding door	滑門
+Slow	緩慢
+Soldier by the bridge	橋旁的士兵
+Some battle names could not be read.	無法讀取部分參戰單位的名稱。
+Some choices could not be read	部分選項無法讀取
+Some displayed battle results could not be read.	部分已顯示的戰鬥結果無法讀取。
+Some tutorial controls are unavailable.	部分教學操作無法使用。
+South entrance to Amore	阿穆爾鎮南入口
+South entrance to Waterfall Way	瀑布迴廊南入口
+South entrance to the Cave of Waters	水之洞窟南入口
+South exit of Amore	阿穆爾南出口
+South exit of Olderion	奧爾德里昂南出口
+South exit of Waterfall Way	瀑布迴廊南出口
+South exit of the Cave of Waters	水之洞窟南出口
+South exit of the Dwarven Forge	矮人的工坊南出口
+South exit of the mountain path	山路南出口
+Sparkling ground pickup	地上閃光的物品
+Speak to Ayaka outside the building at the top of town.	和鎮上高處建築外的彩花交談。
+Speak to Fina in the elder's home.	和婆婆家中的菲娜交談。
+Speak to Jake in his office.	和辦公室裡的傑科交談。
+Speak to the elder in her home.	和家中的婆婆交談。
+Speak to the rebel soldiers in the hideout.	和基地裡的反叛軍士兵交談。
+Speech output is unavailable.	語音輸出無法使用。
+Spoken guidance on.	已開啟語音引導。
+Spoken guidance on. {0}.	已開啟語音引導。{0}。
+Stagger defense down	擊潰防禦低下
+Stagger defense up	擊潰防禦提升
+Stagger power down	擊潰傷害下降
+Stagger power up	擊潰傷害提升
+Stairs beyond Middle Reach	中層之後的樓梯
+Stairs down into the shrine	下行進入神殿的樓梯
+Stairs to the entrance	通往入口的樓梯
+Stairs to the next trial	通往下一個試煉的樓梯
+Start automatic walking when controller input is available.	控制器輸入可用時再開啟自動行走。
+Station Attendant	站員
+Station attendant	站員
+Status ailment guard	異常狀態防護
+Steer the airship toward the Crystal Tower. Turn on guidance for the beacon.	駕駛飛空艇朝水晶塔前進。開啟引導即可聽到信標音。
+Steer the airship toward the tornado over Pharm. Turn on guidance for the beacon.	駕駛飛空艇朝法爾姆上空的龍捲風前進。開啟引導即可聽到信標音。
+Steer the airship with the left stick. Use manual guidance for the beacon.	用左搖桿駕馭飛空艇。導航提示音請使用手動引導。
+Steer the raft with the game's movement controls. Use manual guidance for the Story crossing.	用遊戲的移動操作駕馭木筏。劇情渡水請使用手動引導。
+Step onto the conveyor from the bridge hall.	從橋廳踏上輸送帶。
+Step onto the four-lamp elevator and interact to ride down.	踏上四燈電梯並進行互動，搭乘它下去。
+Stop	停止
+Story	劇情
+Story and Destinations auto-walk resume after their exits and battles. Use Interact when prompted.	劇情和目的地的自動行走會在通過出口或結束戰鬥後恢復。出現提示時請互動。
+Story contact	劇情對話對象
+Story destination	劇情目的地
+Story event	劇情事件
+Story exit	劇情出口
+Story guidance stopped.	已停止劇情引導。
+Story marker at the mountain overlook	山上觀景處的劇情標記
+Story marker beyond the mountain pass	山口後方的劇情標記
+Story navigation stopped. The objective or destination changed.	劇情導航已停止。目標或目的地已變更。
+Story navigation stopped. {0}	劇情導航已停止。{0}
+Story objective is unavailable in the current scene.	目前場景無法取得劇情目標。
+Story passage	劇情通道
+Story trail near the Wandering Lands	漂浮大陸附近的劇情小路
+Story. No current crossing could be verified.	劇情。無法確認目前的渡水。
+Story. No current flight destination could be verified.	劇情。無法確認目前的飛行目的地。
+Story. {0}	劇情。{0}
+Story. {0} Use manual guidance for the route.	劇情。{0}此路線請使用手動引導。
+Streetcar timetable	路面電車時刻表
+Superior Guard	堅實防禦
+Swift	迅捷
+Switch	開關
+Tactical Assault	謀攻之計
+Take the bridge back to Amore.	走橋返回阿穆爾鎮。
+Take the conveyor across the far gap.	搭乘輸送帶跨越遠處的缺口。
+Take the conveyor across the middle gap.	搭乘輸送帶跨越中間的缺口。
+Take the conveyor across to the next platform.	搭乘輸送帶前往下一個平台。
+Take the conveyor back to the bridge hall.	搭乘輸送帶返回橋廳。
+Take the conveyor to the far platform.	搭乘輸送帶前往遠處的平台。
+Take the conveyor to the middle platforms.	搭乘輸送帶前往中間的平台。
+Take the desert exit to reach the Weapons Factory.	走沙漠出口前往兵器工廠。
+Take the first passage into Waterfall Way.	走第一條通道進入瀑布迴廊。
+Take the ladder down to the lower floor.	沿梯子下到下層。
+Take the lower passage from the cave entrance toward Lake Dorr.	從洞窟入口走下層通道，前往多爾湖。
+Take the mountain trail up Mt. Reizan.	沿著山路登上靈峰山。
+Take the north exit toward Amore.	走北出口前往阿穆爾鎮。
+Take the passage at the foot of the ladders.	走梯子下方的通道。
+Take the passage from the entrance to the first pool.	走從入口通往第一個水池的通道。
+Take the passage from this bank back to the central hall.	從這一岸走通道返回中央大廳。
+Take the passage on this bank to the next pool.	走這一岸的通道前往下一個水池。
+Take the portal to the next section.	使用傳送門前往下一區段。
+Take the restored elevator down toward the entrance.	搭乘已修復的電梯下行前往入口。
+Take the return conveyor from the pedestal.	從台座搭乘返回的輸送帶。
+Take the rooftop elevator back into the shipyard.	搭乘屋頂的電梯返回造船廠內部。
+Take the south entrance to the cave for Lake Dorr.	走洞窟南入口，前往多爾湖。
+Take the south exit to the road toward Olderion.	走南出口前往通向奧爾德里昂的道路。
+Take the stairs down into the shrine.	沿樓梯下行進入神殿。
+Take the stairs up from the dungeon toward the throne room.	從地牢沿樓梯上行，朝王座之間前進。
+Take the streetcar back to the Imperial Hotel district, then meet the party in the alley.	搭乘路面電車返回帝都旅館區域，然後在小巷與同伴會合。
+Take the tunnel from the hideout toward the castle.	從基地走隧道朝城堡前進。
+Take the upper passage back above the entrance.	走上層通道返回入口上方。
+Talk to Fina in the alley beside the hotel.	和旅館旁小巷裡的菲娜交談。
+Talk to Lasswell	和拉斯韋爾交談
+Talk to the innkeeper to stay the night.	和旅店店主交談以住宿一晚。
+Talk to the man in blue in the Slums.	和貧民窟裡的藍衣男子交談。
+Tall ladder down to the catwalks	下到棧道的高梯
+Tall ladder to the upper pedestal	通往上層台座的高梯
+Target unavailable	目標無法使用
+Target. {0}	目標。{0}
+Taunt	挑釁
+Text entry is active.	正在輸入文字。
+The Battlefield exit position could not be read.	無法讀取戰場出口的位置。
+The active main objective could not be verified.	無法確認目前生效的主線目標。
+The airship's steering directions could not be read.	無法讀取飛空艇的轉向指令。
+The approach to the south gate could not be measured.	無法測量通往南門的路線。
+The area's distance scale could not be verified.	無法確認此區域的距離比例。
+The area's distance scale is unavailable.	無法取得此區域的距離比例。
+The boat's boarding point is unavailable.	小船的登船點無法使用。
+The character and walking mesh slope limits could not be verified.	無法確認角色及可行走地形的坡度限制。
+The character's walking and braking state could not be read.	無法讀取角色的行走和減速狀態。
+The character's walking camera could not be verified.	無法確認角色的行走鏡頭。
+The crate is lined up with the row. Return to the pedestal and raise the water.	木箱已與木箱排對齊。返回台座，提高水位。
+The crates are floating at walkway level. Follow them back across.	木箱漂浮在與通道齊平的高度。沿著木箱返回對岸。
+The current Battlefield section's linked exits could not be read.	無法讀取目前戰場區段的關聯出口。
+The current Battlefield walking section could not be verified.	無法確認目前戰場的可通行區域。
+The current Mitra passage has changed.	米特拉目前的通道已變更。
+The current Story crossing is unavailable.	目前劇情的渡河路線無法使用。
+The current Story flight destination could not be verified.	無法確認目前劇情的飛行目的地。
+The current area is still loading.	目前區域仍在載入。
+The current area's entity list could not be read.	無法讀取目前區域的實體清單。
+The current area's exit list could not be read.	無法讀取目前區域的出口清單。
+The current castle doorway has changed. Request the route again.	目前城堡門口已變更。請重新要求路線。
+The current castle doorway or passage has changed.	目前城堡門口或通道已變更。
+The current destination data is unavailable.	無法取得目前目的地資訊。
+The current field character is unavailable.	目前的場景角色無法使用。
+The current field location could not be read.	無法讀取目前場景中的位置。
+The current laboratory room could not be verified.	無法確認研究所目前所在的房間。
+The current main objective could not be identified.	無法辨識目前的主線目標。
+The current main objective could not be read safely.	無法安全讀取目前的主線目標。
+The current main objective data is not available yet.	目前主線目標的資料尚無法使用。
+The current main objective is ambiguous.	目前的主線目標不明確。
+The current main objective is not active.	目前的主線目標未處於生效狀態。
+The current main objective source is unavailable.	目前主線目標的來源無法使用。
+The current map could not be verified. Walking guidance is unavailable.	無法確認目前的地圖。無法提供步行引導。
+The current player could not be identified.	無法辨識目前的玩家。
+The current story area could not be identified.	無法辨識目前的劇情區域。
+The current story area or filtered destination is unavailable. A walking route cannot be verified.	無法取得目前劇情區域或有效目的地。無法驗證步行路線。
+The current story destination could not be read.	無法讀取目前劇情目的地。
+The current walking area is unavailable.	無法取得目前的行走區域。
+The current walking character is unavailable.	無法取得目前行走的角色。
+The current walking mesh changed before pathfinding.	可行走地形在尋路前發生變化。
+The current walking mesh changed during pathfinding.	可行走地形在尋路時發生變化。
+The current walking speed could not be read.	無法讀取目前行走速度。
+The destination is in another area. A current-area walking route is unavailable.	目的地在其他區域。目前區域沒有可用的步行路線。
+The destination is in another area. An active current-area exit could not be verified.	目的地在其他區域。無法確認目前區域有可用的出口。
+The destination is in {0}. A current-area walking route is unavailable.	目的地在{0}。目前區域沒有可用的步行路線。
+The destination is in {0}. An active current-area exit could not be verified.	目的地在{0}。無法確認目前區域有可用的出口。
+The doorway's walking approach could not be read.	無法讀取通往這個門口的步行路線。
+The entrance is blocked. Return through the passage you came from.	入口被堵住了。從你來時的通道返回。
+The floating crates do not give a verified route to the far landing.	無法確認可踩著漂浮木箱前往對岸的上岸點。
+The floating crates form a bridge back to the opposite walkway.	漂浮的木箱形成了返回對面通道的橋。
+The floating crates form a bridge between the upper walkways.	漂浮的木箱在上層通道之間形成了橋。
+The floating crates line up across the gap. Cross them to reach the far terrace.	漂浮的木箱已在缺口上排成一列。踏著木箱前往遠處的平台。
+The forward door in this train car could not be verified.	無法確認這節車廂前方的門。
+The game has not supplied a destination for this objective.	遊戲沒有為這個目標提供目的地。
+The game is paused.	遊戲已暫停。
+The game's navigation system is unavailable in this area.	此區域無法使用遊戲的導航系統。
+The ground ahead could not be inspected.	無法檢查前方地面。
+The inn door is open. Continue through it when the passage is clear.	旅店的門已開啟。待通道暢通時穿過去。
+The left, centre and right pedestals turn the walkways.	左、中、右三個台座可以轉動通道。
+The lift is not ready to board.	升降機尚未準備好搭乘。
+The local walking controller could not be verified.	無法確認目前的行走控制。
+The lower stairs are open. Take the ladder down to the elevator landing.	下層樓梯已暢通。沿梯子下到電梯平台。
+The mailbox's	郵箱
+The modifier has another game binding or its binding could not be read.	導航組合鍵已綁定其他遊戲操作，或無法讀取它的綁定。
+The native current story objective could not be read safely.	無法可靠讀取遊戲中的目前劇情目標。
+The native landing or passage is unavailable.	上岸點或通道無法使用。
+The native path points could not be converted to walking instructions.	無法將遊戲的路徑點轉換成步行指令。
+The native route does not reach the target's activation area.	遊戲路線無法抵達目標的觸發區域。
+The native walking view target could not be read.	無法讀取遊戲行走鏡頭的目標。
+The native walking-camera flags could not be read.	無法讀取遊戲行走鏡頭的設定。
+The native walking-character layout could not be verified.	無法確認角色的行走資料。
+The native walking-control rotation could not be read.	無法讀取遊戲行走控制的方向。
+The next laboratory approach is unavailable from this position.	從目前位置無法前往研究所的下一個目標。
+The next laboratory step could not be verified.	無法確認研究所的下一步。
+The next local Story step could not be read safely.	無法安全讀取此地的下一個劇情步驟。
+The non-null walking view target could not be verified.	無法確認目前行走鏡頭的目標。
+The objective is available, but its filtered destinations could not be read safely.	目標可用，但無法安全讀取其篩選後的目的地。
+The objective is available, but its filtered destinations could not be verified.	目標可用，但無法確認其篩選後的目的地。
+The objective is available, but its local destinations could not be read safely.	可以取得目標，但無法可靠讀取它在本區域的目的地。
+The pedestal's approach is unavailable.	無法前往台座。
+The player position could not be read.	無法讀取玩家位置。
+The player position or destination could not be read.	無法讀取玩家位置或目的地。
+The player's walking collision could not be verified for this approach.	無法確認角色能沿這條路線順利通行。
+The player's walking shape could not be verified.	無法確認角色行走時所占的空間。
+The player's walking shape is not upright.	角色的行走碰撞範圍未保持垂直。
+The previous walking detour could not be verified from the current position.	無法從目前位置確認之前的繞行路線。
+The projected walking point does not give a verified approach to this activation area.	無法確認可從預定步行點進入這個觸發區域。
+The raft is outside the current Story crossing.	木筏已離開目前劇情的渡河路線。
+The raft's collision could not be verified.	無法確認木筏的碰撞範圍。
+The raft's current position could not be read.	無法讀取木筏的目前位置。
+The raft's steering directions could not be read.	無法讀取木筏的轉向指令。
+The selected Battlefield exit has changed.	選取的戰場出口已變更。
+The selected Story exit has changed. Choose the current destination.	選取的劇情出口已變更。請選擇目前目的地。
+The selected target is no longer available in this area.	此區域已無法到達選取的目標。
+The stereo route beacon points toward the next turn and pulses faster as you approach. F8 speaks directions.	立體聲導航提示音指向下一個轉彎處，越接近，提示音越快。按 F8 朗讀方向。
+The story destination is ambiguous. A walking route is unavailable.	劇情目的地不明確。沒有可用的步行路線。
+The story destination's	劇情目的地
+The story exit's activation area could not be verified.	無法確認劇情出口的觸發區域。
+The story exit's current transition could not be read safely.	無法安全讀取劇情出口目前的切換目標。
+The story target could not be verified in the current area.	無法在目前區域確認劇情目標。
+The story target's actor could not be read safely.	無法安全讀取劇情目標的對象。
+The story target's current actor is unavailable.	劇情目標目前的對象無法使用。
+The story target's current position could not be read safely.	無法安全讀取劇情目標目前的位置。
+The story target's position could not be read.	無法讀取劇情目標的位置。
+The story trigger's current state could not be read.	無法讀取目前劇情觸發狀態。
+The target's activation area could not be verified.	無法確認目標的觸發區域。
+The walking area changed before its ground check.	行走區域在檢查地面前發生變化。
+The walking area changed during its ground check.	行走區域在檢查地面時發生變化。
+The walking capsule could not verify clear ground ahead.	無法確認前方有足夠空間可供角色行走。
+The walking path does not reach the boat's boarding point.	步行路線無法抵達船的登船點。
+The walking surface inspection could not be prepared.	無法準備檢查行走表面。
+The walking view target is outside the current area.	行走鏡頭的目標位於目前區域之外。
+The walking view target's root could not be read.	無法讀取行走鏡頭目標的根物件。
+The walking view target's root could not be verified.	無法確認行走鏡頭目標的根物件。
+The walking-ground inspection could not be prepared.	無法準備檢查可行走地面。
+The walkways connect to the large pedestal. Use it to lower the bridge section below.	通道已連接到大台座。使用它降下下方的橋段。
+The water is high and the crates are floating. The small pedestal changes the water level.	水位很高，木箱正漂浮著。小台座可以改變水位。
+The water is high. Follow the floating crates to the next landing.	水位很高。踏著漂浮的木箱前往下一個落腳處。
+The water is high. The pedestal here controls the water by the stairs.	水位很高。這裡的台座控制樓梯旁的水位。
+The water is high. This pedestal controls the water above the dock stairs.	水位很高。這個台座控制碼頭樓梯上方的水位。
+The water is low and the lower stairs are exposed. The small pedestal changes the water level.	水位很低，下層樓梯已露出。小台座可以改變水位。
+The water is low. The pedestal raises the floating crates toward the upper walkway.	水位很低。台座可以把漂浮的木箱升到上層通道的高度。
+The water is low. The stairs beside the pedestal lead down to the boat dock.	水位很低。台座旁的樓梯通往下方的船碼頭。
+The water is low. The stairs lead to a water pedestal.	水位很低。樓梯通往一個水位台座。
+The {0} is not available at this landing.	在這個平台無法使用{0}。
+Third ladder toward Lake Dorr	通往多爾湖的第三個梯子
+This battle status shortcut is unavailable with the current bindings.	目前按鍵設定無法使用此戰鬥狀態快捷鍵。
+This person's talk area could not be verified.	無法確認可與此人對話的範圍。
+This story destination is no longer active in the area.	此劇情目的地在本區域已不再有效。
+Throne room doors	王座之間的大門
+Time remaining. {0}	剩餘時間。{0}
+To {0}. Next, {1}. {2}	前往{0}。下一站，{1}。{2}
+To {0}. {1}	前往{0}。{1}
+Tornado over Pharm	法爾姆上空的龍捲風
+Total damage could not be matched to a unit.	無法確認總傷害對應的單位。
+Total damage could not be matched to its unit.	總傷害無法對應到特定單位。
+Total damage could not be read.	無法讀取總傷害。
+Tower ladder	塔上的梯子
+Tower ladder down	塔上向下的梯子
+Trail across the crystal platforms	穿過水晶平台的小路
+Trail beyond the Forest Path save point	林間道保存點後方的小路
+Trail through the lower tower	穿過塔下層的小路
+Train escape door	逃離列車的門
+Treasure chest	寶箱
+Treasure safe	保險箱
+Trial platform	試煉平台
+Trial stele	試煉石碑
+Tunnel entrance from the Rebel Hideout	從反叛軍的基地進入隧道的入口
+Tutorial controls are unavailable.	無法使用教學操作。
+Twin Titleholders quest marker	任務標記：兩名最強的人
+Unavailable	無法使用
+Unit	單位
+Up	向上
+Upper Reach landing	上層平台
+Upper bridge pedestal	上層橋的台座
+Upper stairs across the crates	木箱對面的上層樓梯
+Upper trail on Mt. Reizan	靈峰山的上段山路
+Upper walkway across the crates	木箱對面的上層通道
+Use the call pedestal to bring the {0} here.	使用呼叫台座，把{0}叫到這裡。
+Use the dungeon key on the gate.	對門使用地牢的鑰匙。
+Use the elevator at this landing.	使用這個平台的電梯。
+Use the game's interaction control when available.	遊戲中出現互動提示時請互動。
+Use the interaction control to open the inn door.	使用互動操作打開旅店的門。
+Use the pedestal to lower the bridge section.	使用台座降下橋段。
+Use the pedestal to lower the last catwalk into place.	使用台座把最後一段棧道降到位。
+Use the pedestal to raise the next catwalk.	使用台座升起下一段棧道。
+Use the pedestal to raise the water in the {0}.	使用台座提高{0}的水位。
+Use the save point to return to the entrance.	使用保存點返回入口。
+Use the save point to return to the shrine entrance.	使用保存點返回神殿入口。
+Use the throne room key on the doors.	對大門使用王座之鑰。
+Use the town exit to continue on Gronoa.	從鎮上的出口離開，繼續在格羅諾亞前進。
+Use the town exit to continue toward Gronoa Shrine.	從鎮上的出口離開，繼續朝格羅諾亞神殿前進。
+Valiant Advance formation	勇猛進擊陣
+Value unavailable	無法取得目前值
+Veil defense up	帷幕防禦提升
+Village Elder	婆婆
+Vision	幻兵
+Vision shop attendant	幻兵店店員
+Vital point attack	瞄準要害
+Wait for the bridge section to settle.	等待橋段停穩。
+Wait for the water to rise to the bank before boarding.	等水位升到岸邊後再登船。
+Wait for the {0} to stop at your landing.	等待{0}停在你所在的平台。
+Waiting for a walking route. {0}	正在等待步行路線。{0}
+Walk onto the elevator.	走上電梯。
+Walk through the automatic door into the laboratory.	穿過自動門進入研究室。
+Walk through the automatic door toward the elevator.	穿過自動門朝電梯前進。
+Walk through the automatic door.	穿過自動門。
+Walk through the open door to the elder's home.	穿過開啟的門進入婆婆家。
+Walk through the open inn door.	穿過已開啟的旅店大門。
+Walk {0} through the sliding door.	{0}走，穿過滑動門。
+Walking route endpoint reached.	已抵達步行路線終點。
+Wall tone volume	牆壁提示音音量
+Wall tones	牆壁提示音
+Warden of the Waters	水之守護者
+Warden's Cape	守護者海角
+Water Shrine exit	水之神殿出口
+Water by the orphanage	孤兒院旁的水
+Water immunity	免疫水屬性
+Water ley line	水之地脈
+Water near the city entrance	城市入口附近的水
+Water on the way to Old Town	前往舊市區路上的水
+Water pedestal by the dock stairs	碼頭樓梯旁的水位台座
+Water pedestal by the upper stairs	上層樓梯旁的水位台座
+Water-level pedestal	水位台座
+Waterfall Way flower	瀑布迴廊的花
+Weapon	武器
+Weapon shop attendant	武器店店員
+Weapons Factory entrance	兵器工廠入口
+West bridge pedestal	西側橋的台座
+West console	西側控制台
+White Jade Stone on the center table	中央桌子上的白輝石
+White mage	白魔道士
+White teleport portal	白色傳送門
+Wind Crystal chamber elevator	風之水晶之間電梯
+Wind damage up	風屬性傷害提升
+Wind immunity	免疫風屬性
+Winding trail in the Wandering Lands	漂浮大陸上蜿蜒的小路
+Woman	女性
+Workshop technician	工坊技師
+World map via the far town gate	經遠處城門前往世界地圖
+World map via the town entrance	經城鎮入口前往世界地圖
+You are at {0}.	你目前位於{0}。
+You are in the objective's destination area, {0}. The objective identifies no specific point or onward exit here.	你已抵達目標所在區域：{0}。目標未在此指明特定地點或下一處出口。
+You are in the objective's destination area. The objective identifies no specific point or onward exit here.	你已抵達目標所在區域。目標未在此指明特定地點或下一處出口。
+Zoldaad soldier	佐爾達多士兵
+across the lower hall	橫渡下層大廳
+across to the upper walkway	橫渡至上層通道
+area could not be verified	無法確認所在區域
+back down to the main walkway	下行返回主通道
+bottom choice	下方選項
+collection state could not be read	無法讀取拾取狀態
+collision could not be read	無法讀取碰撞資訊
+conditional destination list is unreadable	無法讀取條件目的地清單
+conditional destinations could not be read	無法讀取條件目的地
+crossing lift	橫渡升降機
+current availability could not be read	無法讀取目前可用狀態
+current binding unavailable	無法取得目前按鍵
+current condition could not be read	無法讀取目前條件
+current destination could not be read	無法讀取目前目的地
+current-area state could not be read	無法讀取目前區域狀態
+delivery availability could not be read	無法讀取配送可用狀態
+door state could not be read	無法讀取門的狀態
+down	向下
+down to the lower walkway	下行至下層通道
+down-left	向左下
+down-right	向右下
+first elevator	第一台電梯
+first pool	第一個水池
+higher ground {0}	往上升高{0}
+hold Down to climb down.	按住下方向往下爬。
+hold Up to climb.	按住上方向往上爬。
+identity could not be read	無法讀取身分
+interaction box could not be read	無法讀取互動範圍
+interaction box geometry could not be read	無法讀取互動範圍的形狀
+interaction prompt could not be read	無法讀取互動提示
+interaction state could not be read	無法讀取互動狀態
+left	向左
+left choice	左側選項
+level {0}	等級{0}
+linked exit could not be read	無法讀取關聯出口
+lower crossing lift	下層橫渡升降機
+lower ground {0}	往下降低{0}
+mesh visibility could not be read	無法讀取模型可見性
+native layout differs from the audited build	原生資料配置與已審核的版本不同
+position could not be read	無法讀取位置
+removal state could not be read	無法讀取移除狀態
+right	向右
+right choice	右側選項
+second pool	第二個水池
+state could not be read	無法讀取狀態
+summit elevator	山頂電梯
+then	接著
+to the summit elevator's landing	前往山頂電梯的平台
+top choice	上方選項
+treasure balcony elevator	寶物陽台電梯
+up	向上
+up to the Wind Crystal chamber	上行至風之水晶之間
+up to the highest walkway	上行至最高處的通道
+up to the upper landing	上行至上層平台
+up-left	向左上
+up-right	向右上
+visibility could not be read	無法讀取可見性
+walkway elevator	通道電梯
+west crossing lift	西側橫渡升降機
+{0} Choose the next Story target to continue walking.	{0} 請選擇下一個劇情目標以繼續行走。
+{0} HP recovered	恢復{0}點 HP
+{0} MP damage	損失{0}點 MP
+{0} MP recovered	恢復{0}點 MP
+{0} Some targets could not be read.	{0} 部分目標無法讀取。
+{0} The selection is retained; try again.	{0} 已保留選取。請重試。
+{0} damage	{0}點傷害
+{0} in a straight line	直線距離{0}
+{0} is unavailable from here.	從這裡無法前往{0}。
+{0} limit gauge gained	極限量表增加{0}
+{0} limit gauge lost	極限量表減少{0}
+{0} metre	{0}公尺
+{0} metres	{0}公尺
+{0} navigation is unavailable because it is assigned to a game control.	無法用 {0} 導航，因為它已綁定遊戲操作。
+{0} navigation is unavailable because its current game binding could not be read.	無法用 {0} 導航，因為無法讀取它目前的遊戲綁定。
+{0} navigation unavailable. Its game binding is assigned to another control or could not be read.	{0} 導航無法使用。該鍵已綁定其他遊戲操作，或無法讀取綁定。
+{0} of {1}	共{1}項，第{0}項
+{0} or {1}	{0}或{1}
+{0} percent	百分之{0}
+{0} plus {1}	{0}加{1}
+{0} remains selected. Use Page Up or Page Down to choose another target.	{0}仍處於選取狀態。按 Page Up 或 Page Down 選擇其他目標。
+{0} {1}	{0} {1}
+{0} {1}.	{0}：{1}。
+{0}%	{0}%
+{0}, target point {1} higher	{0}，目標高出{1}
+{0}, target point {1} lower	{0}，目標低{1}
+{0}.	{0}。
+{0}. Checking reachable targets.	{0}。正在檢查可到達的目標。
+{0}. {1}	{0}。{1}
+{0}. {1} passage. {2}	{0}。經過{1}個通道。{2}
+{0}. {1} passages. {2}	{0}。經過{1}個通道。{2}
+{0}: {1}.	{0}：{1}。

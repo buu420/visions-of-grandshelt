@@ -1,0 +1,100 @@
+#include "resonance/Core.hpp"
+#include <iostream>
+#include <limits>
+#include <stdexcept>
+using namespace resonance;
+void require(bool ok, const char* reason) { if(!ok) throw std::runtime_error(reason); }
+int main() {
+ try {
+    ReaderCore core;
+    Frame f{"world/title", MenuSnapshot{"title", "Continue", "", 0,3,true,true,true}, {}};
+    auto out=core.observe(f);
+    require(out.size()==1 && out[0].text=="Continue. 1 of 3", "first valid selection must speak");
+    require(core.observe(f).empty(), "unchanged selection must deduplicate");
+    f.menu->label=""; f.menu->index=1;
+    require(core.observe(f).empty(), "missing text must remain pending");
+    f.menu->label="New game";
+    out=core.observe(f);
+    require(out.size()==1 && out[0].text=="New game. 2 of 3", "first valid changed selection must retry immediately");
+    f.menu->visible=false; f.menu->label="Hidden";
+    require(core.observe(f).empty(), "hidden state must not speak");
+    f.menu->visible=true; f.menu->ready=false;
+    require(core.observe(f).empty(), "opening animation must delay output");
+    f.menu->ready=true; f.menu->label="Music"; f.menu->value="50";
+    core.observe(f); f.menu->value="60";
+    out=core.observe(f);
+    require(out.size()==1 && out[0].text.find("60")!=std::string::npos, "changed native value must speak");
+    f.context="world/options";
+    require(core.observe(f).size()==1, "new scene must clear duplicate state");
+    f.menu.reset(); f.dialogue=DialogueSnapshot{"line-1","Terra","Hello",true,true};
+    require(core.observe(f).size()==1, "visible dialogue must speak");
+    require(core.observe(f).empty(), "unchanged dialogue must deduplicate");
+    f.dialogue->id="line-2";
+    out=core.observe(f);
+    require(out.size()==1 && out[0].text=="Terra: Hello", "new line identity must permit repeated words");
+    core.reset(); require(core.repeat().empty(), "reset must clear stale repeat");
+    require(!describe_target({"a","Chest","",false,true}), "hidden object must not be exposed");
+    require(!describe_target({"a","","Interact",true,true}), "unnamed object must not invent label");
+    require(describe_target({"a","Guard","Talk",true,true})=="Guard. Talk", "visible native target and prompt must be preserved");
+    PathSnapshot p{{{0,0,0},{-200,0,0},{-200,400,0}}, {1,0,0},{0,1,0},100,true,false};
+    require(describe_route(p)=="left 2 metres, then up 4 metres", "L route must preserve native bend and scale");
+    p.points.insert(p.points.begin()+1,{0,0,0});
+    require(describe_route(p)=="left 2 metres, then up 4 metres", "duplicate points must not create legs");
+    p.right={0,1,0}; p.up={-1,0,0};
+    require(describe_route(p)=="up 2 metres, then right 4 metres", "camera rotation must rotate directions");
+    p.partial=true; require(!describe_route(p), "partial route must not claim arrival"); p.partial=false;
+    p.points[1].x=std::numeric_limits<double>::quiet_NaN();
+    require(!describe_route(p), "nonfinite path must be rejected");
+    p.points={{0,0,0},{0,0,200}};
+    require(describe_route(p)=="higher ground 2 metres", "height must not be flattened into screen-up");
+    p.world_to_metres=0; require(!describe_route(p), "unknown scale must not fabricate distances");
+    SpeechQueue queue;
+    queue.push({"old context",false}); queue.push({"new context",true});
+    auto next=queue.pop();
+    require(next && next->text=="new context" && !queue.pop(), "interrupt must discard pending stale speech");
+    for(int i=0;i<100;++i) queue.push({std::to_string(i),false});
+    require(queue.size()<=16, "speech backlog must remain bounded");
+    queue.clear(); require(!queue.pop(), "scene reset must discard queued text");
+    require(!presented_text({"A whole unrevealed line",true,true,false}), "generic screen reading must not expose unrevealed gradual text");
+    require(presented_text({"A whole revealed line",true,true,true})=="A whole revealed line", "completed visible gradual text must be available");
+    require(!presented_text({"Hidden",false,false,true}), "hidden text must be excluded from screen reading");
+    ReaderCore dialog;
+    Frame question{"quit", MenuSnapshot{"choices","No","",1,2,true,true,true},{},"Quit the game?"};
+    auto opening=dialog.observe(question);
+    require(opening.size()==1 && opening[0].text=="Quit the game? No. 2 of 2", "confirmation opening must include its native question");
+    question.menu->label="Yes";question.menu->index=0;
+    auto change=dialog.observe(question);
+    require(change.size()==1 && change[0].text=="Yes. 1 of 2", "selection changes must not repeat opening context");
+    require(presented_children(2,true,1)==std::vector<int>{1}, "only the active switcher page may enter screen reading");
+    require(presented_children(2,true,0)==std::vector<int>{0}, "switching pages must replace the visible branch");
+    require(presented_children(2,true,-1).empty(), "unknown switcher state must not expose all pages");
+    require(presented_children(2,false,-1)==std::vector<int>({0,1}), "ordinary panels must retain both presented children");
+    dialog.output_epoch(2);
+    require(dialog.observe(question).size()==1, "speech recovery must replay the current capture");
+    dialog.output_epoch(2);
+    require(dialog.observe(question).empty(), "unchanged backend epoch must retain deduplication");
+    OptionObservation language{"Voice Language",{"Japanese","English"},1};
+    auto selected_option=option_menu(language,"option",1,11);
+    require(selected_option.value=="English", "radio option must announce only the native selected alternative");
+    ReaderCore options;Frame settings{"options",selected_option,{}};
+    auto selected_speech=options.observe(settings);
+    require(selected_speech.size()==1 && selected_speech[0].text=="Voice Language. English. 2 of 11", "option speech must exclude unselected alternatives");
+    language.selected=0;settings.menu=option_menu(language,"option",1,11);
+    require(options.observe(settings).size()==1, "changing value on the same row must announce immediately");
+    OptionObservation borderless{"Display Mode",{"Borderless Window"},0};
+    require(option_menu(borderless,"display",0,4).value=="Borderless Window. Only available option", "single available window mode must be explained without fabricating alternatives");
+    language.selected=4;
+    require(option_menu(language,"language",1,11).value=="Value unavailable", "invalid native selection must not fall back to all possible values");
+    language.selected=1;language.popup_open=true;
+    require(option_menu(language,"language",1,11).value=="English. Expanded", "opening a combo popup must produce feedback even before its selection changes");
+    language.binding_matches=false;
+    auto recycled=option_menu(language,"language",2,11);
+    require(!recycled.ready, "recycled entry data must wait until it matches the focused native item");
+    ReaderCore recycled_reader;Frame virtualized{"options",recycled,{}};
+    require(recycled_reader.observe(virtualized).empty(), "old row text must not speak with the new row position");
+    language.label="Text Language";language.binding_matches=true;
+    virtualized.menu=option_menu(language,"language",2,11);
+    require(recycled_reader.observe(virtualized).size()==1, "first matching recycled-row capture must speak immediately");
+    std::cout<<"All reader, route and speech queue behavior checks passed\n";
+ } catch(const std::exception& e) { std::cerr<<"FAIL: "<<e.what()<<'\n'; return 1; }
+}

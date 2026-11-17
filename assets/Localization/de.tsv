@@ -1,0 +1,1353 @@
+key	text
+A book's	Buch
+A clear approach to the door's interaction could not be verified.	Ein freier Zugang zur Interaktion der Tür konnte nicht überprüft werden.
+A clear approach to the interaction point could not be verified.	Ein freier Zugang zum Interaktionspunkt konnte nicht überprüft werden.
+A clear approach to the mailbox could not be verified.	Ein freier Zugang zum Briefkasten konnte nicht überprüft werden.
+A clear walking approach for the player could not be verified.	Ein freier Fußweg für den Charakter konnte nicht überprüft werden.
+A clear walking approach for this doorway could not be verified.	Ein freier Fußweg zu diesem Durchgang konnte nicht überprüft werden.
+A clear walking approach on this floor could not be verified.	Ein freier Fußweg auf dieser Ebene konnte nicht überprüft werden.
+A clear walking approach to this exit could not be verified.	Ein freier Fußweg zu diesem Ausgang konnte nicht überprüft werden.
+A clear walking approach to this interaction could not be verified.	Ein freier Fußweg zu dieser Interaktion konnte nicht überprüft werden.
+A clear walking approach to this person's talk area could not be verified.	Ein freier Fußweg zum Gesprächsbereich dieser Person konnte nicht überprüft werden.
+A clear walking route to the side of the crate could not be verified.	Ein freier Fußweg zur Seite der Kiste konnte nicht überprüft werden.
+A clear water route to this Story destination could not be verified.	Ein freier Wasserweg zu diesem Storyziel konnte nicht überprüft werden.
+A compatible registered walking mesh could not be verified for this character.	Für diesen Charakter konnte kein kompatibles registriertes Gehnetz überprüft werden.
+A complete native walking route is unavailable.	Es ist kein vollständiger Fußweg des Spiels verfügbar.
+A current field character is unavailable.	Es ist keine aktuelle Spielfigur im Erkundungsmodus verfügbar.
+A damage number could not be matched to its unit.	Eine Schadenszahl konnte der betroffenen Einheit nicht zugeordnet werden.
+A damage number could not be read.	Eine Schadenszahl konnte nicht gelesen werden.
+A damage number's target could not be verified.	Das Ziel einer Schadenszahl konnte nicht bestätigt werden.
+A door's	Tür
+A field character is unavailable.	Es ist kein Charakter im Feld verfügbar.
+A field item's	Gegenstand am Boden
+A ladder's	Leiter
+A linked exit's current availability could not be read.	Die aktuelle Verfügbarkeit eines verknüpften Ausgangs konnte nicht gelesen werden.
+A menu or scene is active.	Ein Menü oder eine Szene ist aktiv.
+A movable object's	Verschiebbares Objekt
+A person's	Person
+A quest marker's	Auftragsmarkierung
+A route for the current Story crossing is unavailable.	Für die aktuelle Storyüberfahrt ist kein Weg verfügbar.
+A route to the lift or its call pedestal could not be verified.	Ein Weg zum Aufzug oder zu seinem Rufpodest konnte nicht bestätigt werden.
+A route to this story destination is unavailable.	Es ist kein Weg zu diesem Storyziel verfügbar.
+A save point's	Speicherpunkt
+A scripted scene is active.	Eine gespielte Szene ist aktiv.
+A switch's	Schalter
+A treasure chest's	Schatztruhe
+A walking route to {0} is unavailable from here.	Von hier ist kein Fußweg nach {0} verfügbar.
+Ability	Fähigkeit
+Accessibility Options	Barrierefreiheit
+Accessibility Options is in the System menu. In battle, Home and End choose an ally to review. H reads HP, M reads MP, L reads gauges, F2 reads buffs, and F3 reads debuffs. Press the left stick in battle for controller status.	Barrierefreiheit findest du im Systemmenü. Im Kampf wählen Pos1 und Ende ein Gruppenmitglied zur Abfrage aus. H liest LP, M liest MP, L liest die Leisten, F2 liest Verstärkungen und F3 Schwächungen vor. Drücke im Kampf den linken Stick, um den Status per Controller abzufragen.
+Accessibility Options. Left and right adjust the selected value. Back returns to System Menu.	Barrierefreiheit. Links und rechts ändern den gewählten Wert. Zurück öffnet wieder das Systemmenü.
+Accessory	Accessoire
+Accessory shop attendant	Accessoireverkäufer
+Acting. {0}	Am Zug. {0}
+Activate the console between the containers.	Aktiviere die Konsole zwischen den Containern.
+Activate the console within the fence.	Aktiviere die Konsole innerhalb des Zauns.
+Activate the west console.	Aktiviere die westliche Konsole.
+Adamandelion	Adamandelion
+Aileen	Aileen
+All	Alle
+Ally	Verbündet
+An active story target or exit could not be verified in this area.	In diesem Gebiet konnte kein aktives Storyziel und kein aktiver Ausgang bestätigt werden.
+An elevator button's	Aufzugstaste
+An elevator's	Aufzug
+An exit's	Ausgang
+An overkill could not be matched to its unit.	Ein Overkill konnte der betroffenen Einheit nicht zugeordnet werden.
+An overkill could not be read.	Ein Overkill konnte nicht gelesen werden.
+Approach Lid on the upper platform.	Geh zu Lid auf der oberen Plattform.
+Approach Warden's Cape.	Geh zum Kap der Wächter.
+Approach the barrier at the tower entrance.	Geh zur Barriere am Eingang des Turms.
+Approach the miasma so Fina can cast Holy.	Geh zum Miasma, damit Fina Sanctus wirken kann.
+Approach the platform to continue the trial.	Geh zur Plattform, um die Prüfung fortzusetzen.
+Approach the throne room doors with Shera.	Geh mit Shera zu den Türen des Thronsaals.
+Approach the wheel at the helm to take off.	Geh zum Steuerrad am Ruder, um abzuheben.
+Approach to Shera's cell	Weg zu Sheras Zelle
+Approach to the factory generator	Weg zum Generator der Fabrik
+Approach to the throne room	Weg zum Thronsaal
+Arch beyond the lower save point	Bogen hinter dem unteren Speicherpunkt
+Armor	Rüstung
+Armor shop attendant	Rüstungsverkäufer
+Arrived at {0}.	{0} erreicht.
+Arsha	Arusha
+Ashasaur	Ashasaurus
+At destination	Am Ziel
+At target. Interaction available.	Ziel erreicht. Interaktion verfügbar.
+At the Crystal Tower. Follow the game's scene.	Am Kristallturm angekommen. Folge der Szene des Spiels.
+At the Shipyard gate. Continue up the road through the sliding door.	Am Tor der Schiffswerft. Folge der Straße aufwärts durch die Schiebetür.
+At the captain's passage.	Am Durchgang zum Kapitän.
+At the door to the hall. Walk through the door, then start the next route.	An der Tür zur Halle. Geh durch die Tür und starte dann die nächste Route.
+At the factory's sliding door. Continue through it into the bridge hall.	An der Schiebetür der Fabrik. Geh hindurch in die Halle zur Brücke.
+At the push side of the loose crate. Walk into it toward the row.	An der Schubseite der losen Kiste. Geh in Richtung der Reihe gegen sie.
+At the push side of the loose crate. Walk {0} to push it toward the row.	An der Schubseite der losen Kiste. Geh {0}, um sie zur Reihe zu schieben.
+At the sliding door.	An der Schiebetür.
+At the target's activation area.	Auslösebereich des Ziels erreicht.
+At the tornado over Pharm. Follow the game's scene.	Am Wirbelsturm über Pharm angekommen. Folge der Szene des Spiels.
+At {0}. Interaction available.	Bei {0} angekommen. Interaktion verfügbar.
+At {0}. Row through it to continue.	Bei {0}. Rudere hindurch, um weiterzukommen.
+At {0}. Use the game's interaction control to board.	Bei {0} angekommen. Nutze die Interaktionstaste des Spiels, um an Bord zu gehen.
+At {0}. Use the game's interaction control to continue.	Bei {0} angekommen. Nutze die Interaktionstaste des Spiels, um weiterzugehen.
+At {0}. Use the game's interaction control to disembark.	Bei {0} angekommen. Nutze die Interaktionstaste des Spiels, um von Bord zu gehen.
+At {0}. {1}	Bei {0} angekommen. {1}
+Audio setting applied for this session. Could not save audio settings.	Audioeinstellung für diese Sitzung übernommen. Die Audioeinstellungen konnten nicht gespeichert werden.
+Automatic Story walking off.	Automatisches Gehen zum Storyziel deaktiviert.
+Automatic Story walking stopped. Start it again to continue.	Automatisches Gehen zum Storyziel gestoppt. Starte es erneut, um fortzufahren.
+Automatic door back to the elevator	Automatiktür zurück zum Aufzug
+Automatic door into the laboratory	Automatiktür ins Labor
+Automatic door to the lower laboratory	Automatiktür zum unteren Labor
+Automatic doorway	Automatischer Durchgang
+Automatic walking cancelled by movement.	Automatisches Gehen durch Bewegungseingabe abgebrochen.
+Automatic walking is already on.	Automatisches Gehen ist bereits aktiviert.
+Automatic walking is unavailable because Shift is assigned to another game control or could not be read.	Automatisches Laufen ist nicht verfügbar. Die Umschalttaste ist anderweitig belegt oder ihre Belegung konnte nicht gelesen werden.
+Automatic walking off.	Automatisches Gehen deaktiviert.
+Automatic walking on.	Automatisches Gehen aktiviert.
+Automatic walking on. {0}.	Automatisches Gehen aktiviert. {0}.
+Automatic walking stopped. A fresh route could not be verified.	Automatisches Gehen gestoppt. Eine neue Route konnte nicht überprüft werden.
+Automatic walking stopped. Clearance or braking room could not be verified.	Automatisches Gehen gestoppt. Freiraum oder Bremsweg konnte nicht überprüft werden.
+Automatic walking stopped. Controller state could not be verified.	Automatisches Gehen gestoppt. Der Controllerstatus konnte nicht überprüft werden.
+Automatic walking stopped. Player control changed.	Automatisches Gehen gestoppt. Die Steuerung des Charakters hat gewechselt.
+Automatic walking stopped. Route is blocked.	Automatisches Gehen gestoppt. Der Weg ist versperrt.
+Automatic walking stopped. Start it again to continue.	Automatisches Gehen gestoppt. Starte es erneut, um fortzufahren.
+Automatic walking stopped. The ground ahead could not be verified.	Automatisches Gehen gestoppt. Der Boden voraus konnte nicht überprüft werden.
+Automatic walking stopped. The ground ahead is blocked.	Automatisches Gehen gestoppt. Der Weg voraus ist versperrt.
+Automatic walking stopped. The ground ahead requires manual movement.	Automatisches Gehen gestoppt. Gehe auf diesem Abschnitt selbst weiter.
+Automatic walking stopped. The ground check needs refreshing.	Automatisches Gehen gestoppt. Der Boden muss erneut überprüft werden.
+Automatic walking stopped. The next section requires a different movement action. Spoken guidance is available.	Automatisches Gehen gestoppt. Der nächste Abschnitt erfordert eine andere Fortbewegungsaktion. Sprachführung ist verfügbar.
+Automatic walking stopped. The slope needs further surface verification.	Automatisches Gehen gestoppt. Der Untergrund am Hang muss weiter überprüft werden.
+Automatic walking unavailable. {0}	Automatisches Gehen nicht verfügbar. {0}
+Awakening Power	Erwachte Kraft
+Ayaka	Ayaka
+Back door beside the lane	Hintertür an der Gasse
+Back entrance to the back-lane house	Hintereingang des Hauses an der Gasse
+Basement door inside Rain's house	Kellertür in Rains Haus
+Battle information could not be read.	Kampfinformationen konnten nicht gelesen werden.
+Battle information is not ready.	Die Kampfinformationen sind noch nicht bereit.
+Battle information is unavailable.	Kampfinformationen nicht verfügbar.
+Battle result	Kampfergebnis
+Battle state could not be read.	Die Kampfphase konnte nicht gelesen werden.
+Battle status closed.	Kampfstatus geschlossen.
+Battle status could not be read.	Der Kampfstatus konnte nicht gelesen werden.
+Battle status. D-pad left and right choose an ally. Up reads HP and MP. Down reads effects. Y reads gauges. Press B or the left stick to close. {0}	Kampfstatus. Links und rechts auf dem Steuerkreuz wählen ein Gruppenmitglied. Oben liest LP und MP vor. Unten liest Effekte vor. Y liest die Leisten vor. Drücke B oder den linken Stick zum Schließen. {0}
+Beacon volume	Lautstärke des Leitsignals
+Beacon volume is zero. Manual guidance will speak turns.	Die Lautstärke des Leitsignals ist null. Die manuelle Führung sagt Richtungswechsel an.
+Berserk	Tobsucht
+Black mage	Schwarzmagier
+Blacksmith	Schmied
+Blind	Blind
+Board the boat and return to the first boat room.	Steig ins Boot und kehre in den ersten Bootsraum zurück.
+Board the boat at the foot of the stairs to reach the tower.	Steig am Fuß der Treppe ins Boot, um den Turm zu erreichen.
+Board the boat for the crossing to the large crystal pedestal.	Steig ins Boot für die Überfahrt zum großen Kristallpodest.
+Board the boat to cross the {0}.	{0}: Steig ins Boot, um hinüberzufahren.
+Board the boat to return to the pedestal across the basin.	Steig ins Boot, um zum Podest auf der anderen Seite des Beckens zurückzukehren.
+Board the boat to return to the second pool and take the other passage.	Steig ins Boot, um zum zweiten Becken zurückzukehren und den anderen Durchgang zu nehmen.
+Board the {0} and interact to ride {1}.	{0} ist angedockt. Steig ein und interagiere, um {1} zu fahren.
+Boat	Boot
+Book	Buch
+Boost	Anfeuern
+Boy	Junge
+Brave	Mut
+Breath Recovery formation	Erholungsformation
+Bridge pedestal	Brückenpodest
+Buffs	Effektverstärkungen
+Buffs unavailable	Verstärkungen nicht verfügbar
+Calico cat	Dreifarbige Katze
+Call pedestal for the {0}	Rufpodest: {0}
+Call the restored entrance elevator up to this floor.	Ruf den wieder funktionierenden Eingangsaufzug zu diesem Stockwerk.
+Camouflage	Tarnung
+Captain's quarters	Quartier des Hauptmanns
+Cargo elevator approach	Weg zum Frachtaufzug
+Castle exit	Schlossausgang
+Castle hall approach	Weg zur Schlosshalle
+Cat	Katze
+Center portal	Mittleres Portal
+Center-room portal	Portal im mittleren Raum
+Centre rotation pedestal	Mittleres Drehpodest
+Charge formation	Formation Ansturm
+Charlotte	Charlotte
+Charm	Bann
+Check the White Jade Stone on the center table.	Untersuche den Weißen Jadestein auf dem Tisch in der Mitte.
+Check the door back to the west corridor.	Untersuche die Tür zurück zum Westkorridor.
+Check the east door with the Level 2 Lab Key Card.	Untersuche die Osttür mit dem Labor-Schl. St. 2.
+Check the harbor to open the destination choices.	Untersuche den Hafen, um die Zielauswahl zu öffnen.
+Check the memo or the numbered elevator levers.	Untersuche die Notiz oder die nummerierten Aufzughebel.
+Check the nearby portal to return to the east wing.	Untersuche das Portal in der Nähe, um in den Ostflügel zurückzukehren.
+Check the north door with the Level 3 Lab Key Card.	Untersuche die Nordtür mit dem Labor-Schl. St. 3.
+Check the portal ahead.	Untersuche das Portal vor dir.
+Check the portal at the far side of this enclosure.	Untersuche das Portal am anderen Ende dieser Abtrennung.
+Check the portal in the west laboratory.	Untersuche das Portal im Westlabor.
+Check the portal near the far side of the room.	Untersuche das Portal nahe dem anderen Ende des Raums.
+Check the portal on this side of the enclosure.	Untersuche das Portal auf dieser Seite der Abtrennung.
+Check the powered portal in the center of the room.	Untersuche das aktivierte Portal in der Mitte des Raums.
+Check the rolled ladder to lower it.	Untersuche die aufgerollte Leiter, um sie herunterzulassen.
+Check the route toward the entrance.	Prüfe den Weg zum Eingang.
+Check the water by the orphanage so Luka can purify it.	Untersuche das Wasser beim Waisenhaus, damit Luka es reinigen kann.
+Check the water near the city entrance so Luka can purify it.	Untersuche das Wasser nahe dem Stadteingang, damit Luka es reinigen kann.
+Check the water on the way to Old Town so Luka can purify it.	Untersuche das Wasser auf dem Weg zur Altstadt, damit Luka es reinigen kann.
+Check the west door with the Level 1 Lab Key Card.	Untersuche die Westtür mit dem Labor-Schl. St. 1.
+Checked	Aktiviert
+Chocobo	Chocobo
+Choose a destination first.	Wähle zuerst ein Reiseziel.
+Choose a target with Page Up or Page Down, or F6 and F7.	Wähle ein Ziel mit Bild auf oder Bild ab, oder mit F6 und F7.
+Circle	Kreis-Taste
+Climb back onto the shelf.	Klettere zurück auf das Regal.
+Climb back up from the lower ledge.	Klettere vom unteren Vorsprung wieder hinauf.
+Climb back up to the side walkway.	Klettere zurück hinauf zum seitlichen Laufsteg.
+Climb down from the shelf.	Klettere vom Regal hinunter.
+Climb down the next ladder to the central walkway.	Klettere die nächste Leiter hinunter zum mittleren Laufsteg.
+Climb down to the container room floor.	Klettere hinunter auf den Boden des Containerraums.
+Climb down to the fenced console.	Klettere hinunter zur eingezäunten Konsole.
+Climb down to the next landing.	Klettere hinunter zum nächsten Absatz.
+Climb the first ladder.	Klettere die erste Leiter hinauf.
+Climb the ladder on the tower.	Klettere die Leiter am Turm hinauf.
+Climb the ladder onto the shelf.	Klettere die Leiter hinauf auf das Regal.
+Climb the ladder to the next section.	Klettere die Leiter hinauf zum nächsten Abschnitt.
+Climb the ladder to the upper walkway.	Klettere die Leiter hinauf zum oberen Laufsteg.
+Climb the ladder to the upper walkways.	Klettere die Leiter hinauf zu den oberen Laufstegen.
+Climb the last ladder to the north exit.	Klettere die letzte Leiter hinauf zum Nordausgang.
+Climb the long ladder to the upper path.	Klettere die lange Leiter hinauf zum oberen Weg.
+Climb the second ladder.	Klettere die zweite Leiter hinauf.
+Climb to the next level.	Klettere hinauf zur nächsten Ebene.
+Closed treasure chest	Geschlossene Schatztruhe
+Confuse	Konfus
+Connecting passage	Verbindungsdurchgang
+Console between the containers	Konsole zwischen den Containern
+Continue across the upper bridges to the altar.	Geh weiter über die oberen Brücken zum Altar.
+Continue along the trail beyond the save point.	Folge dem Pfad hinter dem Speicherpunkt weiter.
+Continue into the chamber at the bottom of the shrine.	Geh weiter in die Kammer am Grund des Schreins.
+Continue into the elevator room.	Geh weiter in den Aufzugsraum.
+Continue into the first trial room.	Geh weiter in den ersten Prüfungsraum.
+Continue past the save point to the Dark Crystal.	Geh am Speicherpunkt vorbei weiter zum Dunkelkristall.
+Continue through the door at the top of the lifts.	Geh durch die Tür oben bei den Aufzügen weiter.
+Continue through the door to the next trial.	Geh durch die Tür weiter zur nächsten Prüfung.
+Continue through the doors to the inner chamber.	Geh durch die Türen weiter zur inneren Kammer.
+Continue through the open Level 1 door.	Geh durch die offene Tür der Stufe 1 weiter.
+Continue through the open Level 2 door.	Geh durch die offene Tür der Stufe 2 weiter.
+Continue through the open Level 3 door.	Geh durch die offene Tür der Stufe 3 weiter.
+Continue through the passage ahead.	Geh durch den Durchgang vor dir weiter.
+Continue through the sliding door.	Geh weiter durch die Schiebetür.
+Continue through the upper passage.	Geh durch den oberen Durchgang weiter.
+Continue through the west wing.	Geh weiter durch den Westflügel.
+Continue to the bottom of the shrine.	Geh weiter bis zum Grund des Schreins.
+Continue to the far end of Old Town.	Geh weiter bis zum anderen Ende der Altstadt.
+Continue to the gate.	Geh weiter zum Tor.
+Continue to the guarded cells to look for Shera.	Geh weiter zu den bewachten Zellen, um nach Shera zu suchen.
+Continue to the overlook on the mountain path.	Geh weiter zum Aussichtspunkt auf dem Bergpfad.
+Continue toward Shera's cell.	Geh weiter in Richtung von Sheras Zelle.
+Continue toward the inner chamber.	Geh weiter in Richtung der inneren Kammer.
+Continue toward the trial in the courtyard.	Geh weiter in Richtung der Prüfung im Hof.
+Continue up to the shrine entrance.	Geh weiter hinauf zum Eingang des Schreins.
+Control-relative {0}, {1}	Steuerungsrichtung {0}, {1}
+Controller input capture is unavailable.	Controllereingaben können nicht erkannt werden.
+Controller navigation is available.	Controllernavigation ist verfügbar.
+Controller navigation is unavailable.	Controllernavigation ist nicht verfügbar.
+Controller navigation is unavailable. Start guidance when it is available.	Controllernavigation ist nicht verfügbar. Starte die Führung, wenn sie verfügbar ist.
+Controller navigation unavailable. Its current game binding could not be reserved.	Controllernavigation nicht verfügbar. Ihre aktuelle Tastenbelegung im Spiel konnte nicht reserviert werden.
+Controller navigation unavailable. {0}	Controllernavigation nicht verfügbar. {0}
+Controller. Hold {0} for navigation. D-pad left and right change category; up and down choose a target. Press the left stick for manual guidance, or the right stick for automatic walking. B stops navigation; Y reads help. Release {0} after starting or stopping. Release held controls after a menu, focus or connection change.	Controller. Halte {0} zur Navigation gedrückt. Links und rechts auf dem Steuerkreuz wechseln die Kategorie. Oben und unten wählen ein Ziel. Drücke den linken Stick für manuelle Führung oder den rechten Stick für automatisches Laufen. B beendet die Navigation. Y liest die Hilfe vor. Lass {0} nach dem Starten oder Stoppen los. Lass gehaltene Tasten los, wenn Menü, Fensterfokus oder Verbindung wechseln.
+Conveyor across the far gap	Förderband über die hintere Lücke
+Conveyor across the middle gap	Förderband über die mittlere Lücke
+Conveyor across to the next platform	Förderband hinüber zur nächsten Plattform
+Conveyor back to the bridge hall	Förderband zurück zur Brückenhalle
+Conveyor from the bridge hall	Förderband von der Brückenhalle
+Conveyor to the bridge pedestal	Förderband zum Brückenpodest
+Conveyor to the far platform	Förderband zur hinteren Plattform
+Conveyor to the middle platforms	Förderband zu den mittleren Plattformen
+Cover	Deckung
+Cover all	Gruppendeckung
+Crash Blade	Berstklinge
+Crate room water pedestal	Wasserpodest im Kistenraum
+Cross into Old Town.	Geh hinüber in die Altstadt.
+Cross into the next section of the Wandering Lands.	Geh hinüber in den nächsten Abschnitt der Wandernden Länder.
+Cross the bridge to the Water Shrine.	Überquere die Brücke zum Wasserschrein.
+Cross the catwalks and use the large pedestal to lower the west bridge section.	Überquere die Stege und benutze das große Podest, um den westlichen Brückenabschnitt herabzulassen.
+Cross the floating road toward the Wandering Lands entrance.	Überquere die schwebende Straße in Richtung des Eingangs zu den Wandernden Ländern.
+Cross the lowered bridge back to the entrance passage.	Überquere die herabgelassene Brücke zurück zum Eingangsdurchgang.
+Cross the lowered bridge to reach the factory generator.	Überquere die herabgelassene Brücke, um den Generator der Fabrik zu erreichen.
+Cross the raised catwalk, then descend to the next pedestal.	Überquere den angehobenen Steg und klettere dann hinunter zum nächsten Podest.
+Cross the summit passage to Lake Ryusei.	Durchquere den Gipfeldurchgang zum Ryuseisee.
+Cross the walkway to the passage on the far side.	Überquere den Laufsteg zum Durchgang auf der anderen Seite.
+Cross this car to the door into the third car.	Durchquere diesen Waggon bis zur Tür in den dritten Waggon.
+Crystal Tower	Kristallturm
+Crystal Tower barrier	Barriere des Kristallturms
+Current objective. {0}	Aktuelles Ziel. {0}
+Current option is loading	Aktuelle Option wird geladen
+Current screen text is unavailable	Text auf dem aktuellen Bildschirm nicht verfügbar
+Current story objective unavailable.	Aktuelles Storyziel nicht verfügbar.
+Current story objective unavailable. {0}	Aktuelles Storyziel nicht verfügbar. {0}
+Damage numbers could not be matched to a unit.	Die Schadenszahlen konnten keiner Einheit zugeordnet werden.
+Damage numbers could not be matched to the current battle.	Die Schadenszahlen konnten dem laufenden Kampf nicht zugeordnet werden.
+Damage numbers could not be read.	Schadenszahlen konnten nicht gelesen werden.
+Dark immunity	Dunkelimmunität
+Debrave	Entmutigung
+Debuffs	Schwächungen
+Debuffs unavailable	Schwächungen nicht verfügbar
+Decoy	Köder
+Defaith	Degener
+Delete	Entf
+Delivery attendant	Lieferdienst
+Demon Form	Dämonengestalt
+Deprotect	Deprotes
+Descend the ladder to return to the bridge hall.	Klettere die Leiter hinunter, um zur Brückenhalle zurückzukehren.
+Descend to the side walkway and cross the two catwalks.	Klettere hinunter zum seitlichen Laufsteg und überquere die beiden Stege.
+Description: {0}	Beschreibung. {0}
+Deshell	Devall
+Destination guidance stopped.	Führung zum Reiseziel gestoppt.
+Destination kept. Start guidance to find a route from here.	Reiseziel beibehalten. Starte die Führung, um von hier eine Route zu finden.
+Destination kept. Start guidance when controller navigation is available.	Reiseziel beibehalten. Starte die Führung, wenn Controllernavigation verfügbar ist.
+Destination. {0}	Zielort. {0}
+Destinations	Reiseziele
+Destinations.	Reiseziele.
+Destinations. No walking destinations are available from here.	Reiseziele. Von hier sind keine Reiseziele zu Fuß erreichbar.
+Destinations. {0}.	Reiseziele. {0}.
+Dilmagian soldier	Dilmagia-Soldat
+Dock pedestal landing across the crates	Plattform des Anlegerpodests jenseits der Kisten
+Doom	Todesurteil
+Door back to Gaberada	Tür zurück nach Gaberada
+Door back to Sian	Tür zurück nach Sian
+Door back to the west corridor	Tür zurück zum Westkorridor
+Door beside the chocobo yard	Tür neben dem Chocobo-Gehege
+Door from Rain's house to the street	Tür von Rains Haus zur Straße
+Door from the basement to Rain's house	Tür vom Keller in Rains Haus
+Door from the chocobo yard into the house	Tür vom Chocobo-Gehege ins Haus
+Door from the courtyard house to the street	Tür vom Haus mit Innenhof zur Straße
+Door from the house by the item shop to the street	Tür vom Haus neben dem Itemladen zur Straße
+Door from the house to the back lane	Tür vom Haus zur Gasse
+Door from the inn to the harbor	Tür vom Gasthaus zum Hafen
+Door from the inn to the street	Tür vom Gasthaus zur Straße
+Door from the inn to the village	Tür vom Gasthaus ins Dorf
+Door from the item shop to the harbor	Tür vom Itemladen zum Hafen
+Door from the item shop to the street	Tür vom Itemladen zur Straße
+Door from the item shop to the village	Tür vom Itemladen ins Dorf
+Door from the vision shop to the street	Tür vom Visionenladen zur Straße
+Door from the weapon and armor shop to the harbor	Tür vom Waffen- und Rüstungsladen zum Hafen
+Door from the weapon and armor shop to the street	Tür vom Waffen- und Rüstungsladen zur Straße
+Door from the weapon and armor shop to the village	Tür vom Waffen- und Rüstungsladen ins Dorf
+Door from the weapon shop to the street	Tür vom Waffenladen zur Straße
+Door into the Enterprise	Tür in die Enterprise
+Door of Rain's house	Tür von Rains Haus
+Door out of the bridge hall	Tür aus der Brückenhalle
+Door out of the captain's quarters	Tür aus dem Quartier des Hauptmanns
+Door to Rain's basement	Tür zu Rains Keller
+Door to the bridge hall	Tür zur Brückenhalle
+Door to the chocobo yard	Tür zum Chocobo-Gehege
+Door to the courtyard	Tür zum Hof
+Door to the elder's home	Tür zum Haus der Dorfältesten
+Door to the first trial	Tür zur ersten Prüfung
+Door to the hall	Tür zur Halle
+Door to the house by the item shop	Tür zum Haus neben dem Itemladen
+Door to the inn	Tür zum Gasthaus
+Door to the item shop	Tür zum Itemladen
+Door to the jail corridor	Tür zum Zellengang
+Door to the next train car	Tür zum nächsten Waggon
+Door to the next wing	Tür zum nächsten Flügel
+Door to the outer cells	Tür zu den äußeren Zellen
+Door to the roof stairway	Tür zur Dachtreppe
+Door to the vision shop	Tür zum Visionenladen
+Door to the weapon and armor shop	Tür zum Waffen- und Rüstungsladen
+Door to the weapon shop	Tür zum Waffenladen
+Door to {0}	Tür nach {0}
+Down	nach unten
+Duality Knight	Ritter der Dualität
+Dwarf	Zwerg
+Earth immunity	Erdimmunität
+Elevator	Aufzug
+Elevator call button	Aufzugsruftaste
+Elevator down to the laboratory	Aufzug hinunter zum Labor
+Elevator lever memo	Notiz zu den Aufzughebeln
+Elevator up to the entrance passage	Aufzug hinauf zum Eingangsdurchgang
+End	Ende
+End of the drained passage	Ende des trockengelegten Durchgangs
+Enemies. {0}	Gegner. {0}
+Enemy	Gegner
+Enemy attention up	Erhöhte Gegneraufmerksamkeit
+Enter Lake Ryusei at the top of the mountain.	Betritt den Ryuseisee auf dem Gipfel des Berges.
+Enter Sian to ask about the Dark Crystal.	Betritt Sian, um nach dem Dunkelkristall zu fragen.
+Enter the jail corridor.	Betritt den Zellengang.
+Enter the throne room.	Betritt den Thronsaal.
+Enter the tunnel behind the bookcase.	Betritt den Tunnel hinter dem Bücherregal.
+Enterprise helm	Ruder der Enterprise
+Enterprise takeoff point	Startpunkt der Enterprise
+Entrance approach	Weg zum Eingang
+Entrance elevator approach	Weg zum Eingangsaufzug
+Entrance elevator call pedestal	Rufpodest des Eingangsaufzugs
+Entrance portal	Portal am Eingang
+Entrance terrace across the crates	Eingangsterrasse jenseits der Kisten
+Entrance to Crystal Tower	Eingang zum Kristallturm
+Entrance to Dilmagia	Eingang nach Dilmagia
+Entrance to Jake's office	Eingang zu Jakes Büro
+Entrance to Lake Ryusei	Eingang zum Ryuseisee
+Entrance to Olderion	Eingang nach Olderion
+Entrance to Rain's house	Eingang zu Rains Haus
+Entrance to Sian	Eingang nach Sian
+Entrance to Zoldaad, the Imperial Capital	Eingang nach Zoldaad, imperiale Hauptstadt
+Entrance to the Rebel Hideout	Eingang zum Unterschlupf der Rebellen
+Entrance to the Shrine side chamber	Eingang zur Seitenkammer des Schreins
+Entrance to the Wandering Lands	Eingang zu den Wandernden Ländern
+Entrance to the Water Shrine	Eingang zum Wasserschrein
+Entrance to the elder's home	Eingang zum Haus der Dorfältesten
+Evan	Evan
+Examine the large crystal pedestal on this platform.	Untersuche das große Kristallpodest auf dieser Plattform.
+Examine the stele before approaching the trial.	Untersuche die Stele, bevor du zur Prüfung gehst.
+Exit from Jake's office	Ausgang aus Jakes Büro
+Exit from the cell wing	Ausgang aus dem Zellenflügel
+Exit to Gronoa	Ausgang nach Gronoa
+Exit to Olderion	Ausgang nach Olderion
+Exit to the Gronoa overworld	Ausgang zur Weltkarte von Gronoa
+Exit to the Imperial Hotel district	Ausgang zum Viertel des Imperialen Hotels
+Exit to the castle rooftop	Ausgang zum Schlossdach
+Exit to the next Battlefield section	Ausgang zum nächsten Abschnitt des Schlachtfelds
+Exit to {0}	Ausgang nach {0}
+Exits, doors and ladders	Ausgänge, Türen und Leitern
+Expanded	Aufgeklappt
+Factory exit to the desert	Fabrikausgang zur Wüste
+Faith	Ener
+Far end of Old Town	Anderes Ende der Altstadt
+Far terrace across the crates	Hintere Terrasse jenseits der Kisten
+Far walkway across the crates	Hinterer Laufsteg jenseits der Kisten
+Fence by the elevator controls	Zaun bei der Aufzugsteuerung
+Fenced console	Eingezäunte Konsole
+Field controls are unavailable.	Die Feldsteuerung ist nicht verfügbar.
+Field controls could not be read.	Die Feldsteuerung konnte nicht gelesen werden.
+Fina	Fina
+Fina in the alley	Fina in der Gasse
+Fire damage up	Feuerschaden erhöht
+Fire immunity	Feuerimmunität
+First ladder toward Lake Dorr	Erste Leiter in Richtung Dorr-See
+First long ladder	Erste lange Leiter
+First, go to the door to the hall. {0}	Geh zuerst zur Tür zur Halle. {0}
+Fisherman	Fischer
+Fisherwoman	Fischerin
+Fluid Tactics	Taktik Flexi-Kriegsführung
+Focused. {0}	Ausgewählt. {0}
+Folded ladder by the pedestal	Eingeklappte Leiter beim Podest
+Follow Arsha to the plaza with the tree.	Folge Arusha zum Platz mit dem Baum.
+Follow Jake through the factory gate.	Folge Jake durch das Fabriktor.
+Follow the canyon to Mozul Station. Interact at the entrance.	Folge der Schlucht zur Mozul-Station. Interagiere am Eingang.
+Follow the corridor to the outer cells.	Folge dem Gang zu den äußeren Zellen.
+Follow the desert road to the Weapons Factory.	Folge der Wüstenstraße zur Waffenfabrik.
+Follow the drained passage to the entrance hall.	Folge dem trockengelegten Durchgang zur Eingangshalle.
+Follow the drained passage to the ladder chamber.	Folge dem trockengelegten Durchgang zur Leiterkammer.
+Follow the entrance passage into the bridge hall.	Folge dem Eingangsdurchgang in die Brückenhalle.
+Follow the entrance path to the central hall.	Folge dem Eingangsweg zur zentralen Halle.
+Follow the floating path to the Forest Path entrance.	Folge dem schwebenden Weg zum Eingang des Waldwegs.
+Follow the hall toward the throne room.	Folge der Halle in Richtung des Thronsaals.
+Follow the lower passage to the laboratory.	Folge dem unteren Durchgang zum Labor.
+Follow the lower road back to Olderion.	Folge der unteren Straße zurück nach Olderion.
+Follow the lower walkway through the arch.	Folge dem unteren Laufsteg durch den Bogen.
+Follow the lower walkway to the crate room.	Folge dem unteren Laufsteg zum Kistenraum.
+Follow the main street to the monsters.	Folge der Hauptstraße zu den Monstern.
+Follow the mountain trail toward the summit.	Folge dem Bergpfad in Richtung des Gipfels.
+Follow the passage back to the entrance.	Folge dem Durchgang zurück zum Eingang.
+Follow the path to Lake Dorr.	Folge dem Weg zum Dorr-See.
+Follow the platform to the conveyor to the bridge pedestal.	Folge der Plattform zum Förderband, das zum Brückenpodest führt.
+Follow the railway toward the Imperial Capital.	Folge der Bahnstrecke in Richtung der imperialen Hauptstadt.
+Follow the side walkway to the tall ladder and climb it.	Folge dem seitlichen Laufsteg zur hohen Leiter und klettere hinauf.
+Follow the spiral to the summit. You can prepare at the rest stop along the way.	Folge der Spirale zum Gipfel. Am Rastplatz auf dem Weg kannst du dich vorbereiten.
+Follow the stairs beyond the save point.	Folge der Treppe hinter dem Speicherpunkt.
+Follow the stairs down and go around the loose crate. Push it toward the row to line it up.	Geh die Treppe hinunter und um die lose Kiste herum. Schieb sie zur Reihe, um sie auszurichten.
+Follow the stairway to the rooftop.	Folge der Treppe zum Dach.
+Follow the trail ahead.	Folge dem Pfad vor dir.
+Follow the trail beyond the mountain pass.	Folge dem Pfad hinter dem Bergpass.
+Follow the trail into the next section.	Folge dem Pfad in den nächsten Abschnitt.
+Follow the trail through the lower tower.	Folge dem Pfad durch den unteren Turm.
+Follow the trail. The crystal paths appear as you approach.	Folge dem Pfad. Die Kristallwege erscheinen, wenn du dich näherst.
+Follow the tunnel to the Rebel Hideout.	Folge dem Tunnel zum Unterschlupf der Rebellen.
+Follow the tunnel to the castle dungeon.	Folge dem Tunnel zum Verlies des Schlosses.
+Follow the upper path into the next passage.	Folge dem oberen Weg in den nächsten Durchgang.
+Follow the upper path to the Water Maiden.	Folge dem oberen Weg zur Quellmaid.
+Follow the upper walkway into the boat room.	Folge dem oberen Laufsteg in den Bootsraum.
+Follow the upper walkway to the laboratory.	Folge dem oberen Laufsteg zum Labor.
+Follow the west ramp to the small pedestal.	Folge der westlichen Rampe zum kleinen Podest.
+Follow the winding trail past the fork.	Folge dem gewundenen Pfad an der Abzweigung vorbei.
+Forest Path entrance	Eingang zum Waldweg
+Forest Path exit toward the Wandering Lands	Ausgang des Waldwegs in Richtung der Wandernden Länder
+Four-lamp elevator	Aufzug mit den vier Lampen
+Front door from the back-lane house to the street	Haustür vom Haus an der Gasse zur Straße
+Front door from the inn to the street	Vordertür vom Gasthaus zur Straße
+Front door of the courtyard house	Haustür des Hauses mit Innenhof
+Front door of the house by the back lane	Haustür des Hauses an der Gasse
+Front door of the house by the item shop	Haustür des Hauses neben dem Itemladen
+Front door of the inn	Vordertür des Gasthauses
+Front door of the item shop	Vordertür des Itemladens
+Front door of the weapon and armor shop	Vordertür des Waffen- und Rüstungsladens
+Front entrance to the back-lane house	Vordereingang des Hauses an der Gasse
+Front entrance to the courtyard house	Vordereingang des Hauses mit Innenhof
+Front entrance to the inn	Vordereingang des Gasthauses
+Fryevia	Fryevia
+Fury	Zorn
+Gate into the Weapons Factory	Tor in die Waffenfabrik
+Gate to Old Town	Tor zur Altstadt
+Gate to the Shipyard	Tor zur Schiffswerft
+Gil on hand {0}	Gil im Besitz: {0}
+Gilgamesh	Gilgamesch
+Girl	Mädchen
+Go inside the Enterprise and make your way to the helm.	Geh in die Enterprise und begib dich zum Ruder.
+Go through Amore on the way to Warden's Cape.	Geh durch Amore auf dem Weg zum Kap der Wächter.
+Go through the arch that the water uncovered.	Geh durch den Bogen, den das Wasser freigelegt hat.
+Go through the door into the second train car.	Geh durch die Tür in den zweiten Waggon.
+Go through the entrance into the lower tower.	Geh durch den Eingang in den unteren Turm.
+Go through the gate into the factory.	Geh durch das Tor in die Fabrik.
+Go through the next door to reach the fourth car.	Geh durch die nächste Tür, um den vierten Waggon zu erreichen.
+Go through the open door to speak to Jake.	Geh durch die offene Tür, um mit Jake zu sprechen.
+Go through to the next wing.	Geh hinüber in den nächsten Flügel.
+Go through to the upper bridges.	Geh hinüber zu den oberen Brücken.
+Go to the Shipyard to meet Lid. Follow the main road to the gate.	Geh zur Schiffswerft, um Lid zu treffen. Folge der Hauptstraße zum Tor.
+Go to the bridge.	Geh zur Brücke.
+Go to the captain's quarters to look for the throne room key.	Geh zum Quartier des Hauptmanns, um den Thronsaalschlüssel zu suchen.
+Go to the cave entrance northeast of Olderion.	Geh zum Höhleneingang nordöstlich von Olderion.
+Go to the fence by the elevator controls.	Geh zum Zaun bei der Aufzugsteuerung.
+Go to the ladder and walk toward it to climb down.	Geh zur Leiter und lauf auf sie zu, um hinunterzuklettern.
+Go to the last page to close.	Wechsle zur letzten Seite, um das Tutorial zu schließen.
+Go to the portal beyond the save point and interact.	Geh zum Portal hinter dem Speicherpunkt und interagiere.
+Go to the waterfall entrance west of Olderion.	Geh zum Wasserfalleingang westlich von Olderion.
+Go toward the cargo elevator.	Geh in Richtung des Frachtaufzugs.
+Good Luck	Glück
+Grand Magic	Großmagie
+Grandshelt soldier	Grandshelt-Soldat
+Great Wall	Großer Wall
+Ground pickup	Gegenstand am Boden
+Guard	Abwehrhaltung
+Guidance is already on.	Führung ist bereits aktiviert.
+Guidance off.	Führung deaktiviert.
+HP unavailable	LP nicht verfügbar
+HP {0}	{0} LP
+HP {0} of {1}	LP, {0} von {1}
+Harbor for Zoldaad	Hafen nach Zoldaad
+Haste	Hast
+Head to the far door to escape the train.	Geh zur hinteren Tür, um aus dem Zug zu entkommen.
+Head toward the entrance elevator on the upper deck.	Geh in Richtung des Eingangsaufzugs auf dem Oberdeck.
+Heat	Hitze
+Hidden tunnel entrance	Versteckter Tunneleingang
+Hideout exit to the desert	Ausgang des Unterschlupfs zur Wüste
+Hold Down to climb down.	Halte Unten gedrückt, um hinabzuklettern.
+Hold Up to climb.	Halte Oben gedrückt, um zu klettern.
+Home	Pos1
+Honing Sense	Geschärfte Sinne
+Ice damage up	Eisschaden erhöht
+Ice immunity	Eisimmunität
+Inn attendant	Schankwirt
+Inn side door from inside	Seitentür des Gasthauses von innen
+Inner chamber door	Tür zur inneren Kammer
+Innkeeper	Schankwirt
+Interaction available	Interaktion verfügbar
+Iron Wall formation	Formation Bollwerk
+Item shop attendant	Itemverkäufer
+Jake	Jake
+Jake's office door	Tür zu Jakes Büro
+Key assignment is active.	Die Tastenzuweisung ist aktiv.
+King of Grandshelt	König von Grandshelt
+Ladder	Leiter
+Ladder back onto the shelf	Leiter zurück auf das Regal
+Ladder back to the container floor	Leiter zurück zum Boden des Containerraums
+Ladder back to the upper path	Leiter zurück zum oberen Weg
+Ladder beyond the trial	Leiter hinter der Prüfung
+Ladder down from the shelf	Leiter vom Regal hinunter
+Ladder down to the bridge hall	Leiter hinunter zur Brückenhalle
+Ladder down to the save point	Leiter hinunter zum Speicherpunkt
+Ladder down toward Olderion	Leiter hinunter in Richtung Olderion
+Ladder onto the shelf	Leiter auf das Regal
+Ladder to the central walkway	Leiter zum mittleren Laufsteg
+Ladder to the elevator landing	Leiter zur Aufzugsplattform
+Ladder to the fenced console	Leiter zur eingezäunten Konsole
+Ladder to the lower floor	Leiter zum unteren Stockwerk
+Ladder to the lower hall	Leiter zur unteren Halle
+Ladder to the upper walkway	Leiter zum oberen Laufsteg
+Ladder to the upper walkways	Leiter zu den oberen Laufstegen
+Lake Dorr entrance	Eingang zum Dorr-See
+Lake Ryusei exit toward Forest Path	Ausgang des Ryuseisees in Richtung Waldweg
+Landing below the upper passage	Anlegestelle unter dem oberen Durchgang
+Landing below the water pedestal	Anlegestelle unter dem Wasserstandssockel
+Landing by the central hall passage	Anlegestelle am Durchgang zur Haupthalle
+Landing by the large crystal pedestal	Anlegestelle am großen Kristallsockel
+Landing by the tower ladder	Anlegestelle an der Turmleiter
+Landing on the far bank	Anlegestelle am anderen Ufer
+Large crystal pedestal	Großes Kristallpodest
+Lasswell	Lasswell
+Leave Amore by the north bridge toward Warden's Cape.	Verlasse Amore über die Nordbrücke in Richtung Kap der Wächter.
+Leave Amore by the south exit for Waterfall Way.	Verlasse Amore durch den Südausgang zum Wasserfallweg.
+Leave Forest Path for the Wandering Lands.	Verlasse den Waldweg in Richtung der Wandernden Länder.
+Leave Jake's office and return to the hall.	Verlasse Jakes Büro und kehre in die Halle zurück.
+Leave Old Town through Olderion on the way to Waterfall Way.	Verlasse die Altstadt durch Olderion auf dem Weg zum Wasserfallweg.
+Leave Olderion by the south exit for the Cave of Waters.	Verlasse Olderion durch den Südausgang zur Quellgrotte.
+Leave Olderion for Lake Dorr by way of the Cave of Waters.	Verlasse Olderion zum Dorr-See über die Quellgrotte.
+Leave Olderion for Waterfall Way.	Verlasse Olderion zum Wasserfallweg.
+Leave Sian and head for Mt. Reizan.	Verlasse Sian und begib dich zum Berg Reizan.
+Leave by the north exit, then take the east fork toward the Wind Shrine.	Verlasse das Gebiet durch den Nordausgang und nimm dann die östliche Abzweigung zum Windschrein.
+Leave the Research Center Ruins.	Verlasse die Forschungszentrum-Ruinen.
+Leave the Water Maiden's chamber through the passage.	Verlasse die Kammer der Quellmaid durch den Durchgang.
+Leave the Water Shrine and return to Olderion.	Verlasse den Wasserschrein und kehre nach Olderion zurück.
+Leave the captain's quarters and return to the throne room doors.	Verlasse das Quartier des Hauptmanns und kehre zu den Türen des Thronsaals zurück.
+Leave the cave by the high exit toward Lake Dorr.	Verlasse die Höhle durch den hohen Ausgang in Richtung Dorr-See.
+Leave the cave by the south exit and return to Olderion.	Verlasse die Höhle durch den Südausgang und kehre nach Olderion zurück.
+Leave the cell wing to reach the corridor.	Verlasse den Zellenflügel, um den Gang zu erreichen.
+Leave the chamber through the arch.	Verlasse die Kammer durch den Bogen.
+Leave the crate room through the entrance passage.	Verlasse den Kistenraum durch den Eingangsdurchgang.
+Leave the elder's home.	Verlasse das Haus der Dorfältesten.
+Leave the inn and meet the party in the alley.	Verlasse das Gasthaus und triff die Gruppe in der Gasse.
+Leave the laboratory and return to the elevator.	Verlasse das Labor und kehre zum Aufzug zurück.
+Leave the lake and follow the floating path toward Forest Path.	Verlasse den See und folge dem schwebenden Weg in Richtung Waldweg.
+Leave the mountain path through the south exit.	Verlasse den Bergpfad durch den Südausgang.
+Leave the shrine to continue on Gronoa.	Verlasse den Schrein, um auf Gronoa weiterzureisen.
+Leave the throne room through the door to the roof stairway.	Verlasse den Thronsaal durch die Tür zur Dachtreppe.
+Left	nach links
+Left rotation pedestal	Linkes Drehpodest
+Level 1 Lab Key Card	Labor-Schl. St. 1
+Level 1 door	Tür der Stufe 1
+Level 2 Lab Key Card	Labor-Schl. St. 2
+Level 2 door	Tür der Stufe 2
+Level 3 Lab Key Card	Labor-Schl. St. 3
+Level 3 door	Tür der Stufe 3
+Level {0}	Stufe {0}
+Lever {0}	Hebel {0}
+Libra details could not be read.	Die Analysedaten konnten nicht gelesen werden.
+Libra target could not be read.	Das Analyseziel konnte nicht gelesen werden.
+Library bookshelf clue	Hinweis im Bücherregal der Bibliothek
+Lid	Lid
+Lid's upper platform	Lids obere Plattform
+Light Veil	Lichtschleier
+Light immunity	Lichtimmunität
+Lightning damage up	Blitzschaden erhöht
+Lightning immunity	Blitzimmunität
+Lightning ley line	Ley-Linie des Blitzes
+Limit gauge unavailable	Limit-Leiste nicht verfügbar
+Limit gauge {0} percent	Limit-Leiste bei {0} Prozent
+Local by the tree	Bewohner beim Baum
+Local resident	Einwohner
+Locked dungeon gate	Verschlossenes Verliestor
+Lower shrine story marker	Storymarkierung im unteren Schrein
+Lower the ladder beside the pedestal to return to the hall.	Lass die Leiter neben dem Podest herunter, um in die Halle zurückzukehren.
+MP unavailable	MP nicht verfügbar
+MP {0}	{0} MP
+Magic Barrier	Magiebarriere
+Mailbox by the inn	Briefkasten beim Gasthaus
+Man	Mann
+Man in blue	Mann in Blau
+Masamune	Masamune-Haltung
+Medal pickup	Medaille am Boden
+Merchant	Händler
+Meteoroid	Meteoroid
+Miasma story marker	Storymarkierung im Miasma
+Middle Reach landing	Plattform der Mittleren Ebene
+Mind Focus	Geistige Konzentration
+Miner	Minenarbeiter
+Mixed	Teilweise aktiviert
+Moogle	Mogry
+Moon Slayer	Mondbezwinger
+More than one active exit leads to the next Battlefield section.	Mehr als ein aktiver Ausgang führt zum nächsten Abschnitt des Schlachtfelds.
+More than one active target matches this story object. A route is unavailable.	Mehrere aktive Ziele passen zu diesem Storyobjekt. Ein Weg ist nicht verfügbar.
+More than one controller is active.	Mehr als ein Controller ist aktiv.
+Move toward the ladder, then {0}	Geh zur Leiter, dann {0}
+Move {0} onto the ladder, then {1}	Geh {0} auf die Leiter, dann {1}
+Mozul Station entrance	Eingang zur Mozul-Station
+Mt. Reizan trailhead	Beginn des Pfads auf den Berg Reizan
+NPC sound volume	Lautstärke der NSC-Klänge
+NPC sounds	NSC-Klänge
+Native navigation input state is unavailable.	Der Zustand der Navigationseingabe des Spiels ist nicht verfügbar.
+Native walking input is unavailable.	Die Geheingabe des Spiels ist nicht verfügbar.
+Navigation beacon on.	Akustische Wegmarkierung aktiviert.
+Navigation beacon on. {0}.	Akustische Wegmarkierung aktiviert. {0}.
+Navigation commands arrived together. Release the modifier, then press one command at a time.	Mehrere Navigationsbefehle kamen gleichzeitig an. Lass die Modifikatortaste los und drücke dann einen Befehl nach dem anderen.
+Navigation is off.	Navigation ist deaktiviert.
+Navigation is unavailable in this travel mode.	Navigation ist in dieser Fortbewegungsart nicht verfügbar.
+Navigation key unavailable because it conflicts with a game control.	Navigationstaste nicht verfügbar, da sie mit einer Spielsteuerung in Konflikt steht.
+Navigation stopped while speech output was unavailable.	Navigation gestoppt, während die Sprachausgabe nicht verfügbar war.
+Navigation stopped.	Navigation gestoppt.
+Navigation stopped. A fresh complete walking route is unavailable.	Navigation gestoppt. Es ist kein neuer vollständiger Fußweg verfügbar.
+Navigation stopped. Area or player changed.	Navigation gestoppt. Das Gebiet oder der Charakter hat gewechselt.
+Navigation stopped. Controller unavailable.	Navigation gestoppt. Controller nicht verfügbar.
+Navigation stopped. Field controls unavailable.	Navigation gestoppt. Die Feldsteuerung ist nicht verfügbar.
+Navigation stopped. Game focus lost.	Navigation gestoppt. Das Spielfenster ist nicht mehr aktiv.
+Navigation stopped. Its control binding is unavailable or assigned to another game control.	Navigation gestoppt. Ihre Tastenbelegung ist nicht verfügbar oder einer anderen Spielsteuerung zugewiesen.
+Navigation stopped. Player walking state or location is unavailable.	Navigation gestoppt. Gehstatus oder Position des Charakters ist nicht verfügbar.
+Navigation stopped. Route guidance unavailable.	Navigation gestoppt. Die Routenführung ist nicht verfügbar.
+Navigation stopped. Screen or area changed.	Navigation gestoppt. Bildschirm oder Gebiet hat gewechselt.
+Navigation stopped. Target changed.	Navigation gestoppt. Das Ziel hat gewechselt.
+Navigation stopped. Target is no longer available.	Navigation gestoppt. Das Ziel ist nicht mehr verfügbar.
+Navigation stopped. The destination arrival distance could not be verified.	Navigation gestoppt. Der Abstand zum Erreichen des Ziels konnte nicht ermittelt werden.
+Navigation stopped. The ground check does not match the current route.	Navigation gestoppt. Die Bodenprüfung passt nicht zur aktuellen Route.
+Navigation stopped. The selected target has no known position in this area.	Navigation gestoppt. Das gewählte Ziel hat in diesem Gebiet keine bekannte Position.
+Navigation stopped. This route requires unsupported movement.	Navigation gestoppt. Diese Route erfordert eine Fortbewegungsart, die nicht unterstützt wird.
+Navigation stopped. Verified ground ahead is unavailable.	Navigation gestoppt. Der begehbare Boden voraus konnte nicht überprüft werden.
+Navigation stopped. Walking route is too far from the player.	Navigation gestoppt. Der Fußweg ist zu weit vom Charakter entfernt.
+Navigation stopped. Walking route unavailable.	Navigation gestoppt. Kein Fußweg verfügbar.
+Navigation stopped. {0}	Navigation gestoppt. {0}
+Navigation unavailable while speech output was disconnected.	Navigation nicht verfügbar, während die Sprachausgabe getrennt war.
+Navigation unavailable. Select a target in the field.	Navigation nicht verfügbar. Wähle im Erkundungsmodus ein Ziel.
+Navigation unavailable. {0}	Navigation nicht verfügbar. {0}
+Near {0}. Row toward the landing until the interaction appears.	Nahe {0}. Rudere zum Anleger, bis die Interaktion erscheint.
+Newly uncovered arch	Neu freigelegter Bogen
+Next story event in the Earth Shrine	Nächstes Storyereignis im Erdschrein
+Next trial room	Nächster Prüfungsraum
+Nichol	Nichol
+No active controller was detected.	Kein aktiver Controller erkannt.
+No active exit leads to the next Battlefield section.	Kein aktiver Ausgang führt zum nächsten Abschnitt des Schlachtfelds.
+No buffs	Keine Verstärkungen
+No captured selection or dialogue	Keine Auswahl und kein Dialog zum Wiederholen
+No clear route across the rotating walkways. Try the rotation pedestals.	Kein freier Weg über die drehbaren Stege. Versuche es mit den Drehsockeln.
+No current Story crossing could be verified.	Es konnte keine aktuelle Storyüberfahrt überprüft werden.
+No current main-story objective is displayed.	Derzeit wird keine Aufgabe der Hauptgeschichte angezeigt.
+No current story objective is displayed.	Derzeit wird kein Storyziel angezeigt.
+No debuffs	Keine Schwächungen
+No disclosed local story destination has been captured.	In diesem Gebiet wurde kein vom Spiel angezeigtes Storyziel gefunden.
+No enabled story continuation is available in this area.	In diesem Gebiet ist keine aktivierte Fortsetzung der Story verfügbar.
+No enabled tutorial controls are shown.	Es werden keine nutzbaren Tutorialbefehle angezeigt.
+No reachable targets in this area.	Keine erreichbaren Ziele in diesem Gebiet.
+No supported capsule overlap at this exit could be verified.	An diesem Ausgang konnte keine unterstützte Überlappung mit der Kapsel des Charakters überprüft werden.
+North bridge out of Amore	Nordbrücke aus Amore hinaus
+North entrance to Amore	Nordeingang nach Amore
+North entrance to Waterfall Way	Nordeingang zum Wasserfallweg
+North entrance to the Cave of Waters	Nordeingang zur Quellgrotte
+North exit of the Dwarven Forge	Nordausgang der Zwergenschmiede
+North exit toward Amore	Nordausgang nach Amore
+North exit toward Lake Dorr	Nordausgang zum Dorr-See
+Not checked	Nicht aktiviert
+Object sound volume	Lautstärke der Objektklänge
+Object sounds	Objektklänge
+Objects	Objekte
+Off	Aus
+Offensive formation	Formation Überfall
+Old Town bridge	Brücke der Altstadt
+Old Town gate	Tor der Altstadt
+Old Town street	Straße der Altstadt
+Older man	Älterer Mann
+Older woman	Ältere Frau
+Olderion inn door	Tür des Gasthauses von Olderion
+Olderion inn entrance	Eingang des Gasthauses von Olderion
+Olderion innkeeper	Schankwirt von Olderion
+Olderion soldier	Olderion-Soldat
+On	An
+Only available option	Einzige verfügbare Einstellung
+Only ordinary walking is supported in this scene.	In dieser Szene wird nur gewöhnliches Gehen unterstützt.
+Open the door to Jake's office.	Öffne die Tür zu Jakes Büro.
+Open the door to the elder's home.	Öffne die Tür zum Haus der Dorfältesten.
+Open the door when the game's interaction appears.	Öffne die Tür, wenn die Interaktion des Spiels erscheint.
+Open the inn door when the game's interaction appears.	Öffne die Tür des Gasthauses, wenn die Interaktion des Spiels erscheint.
+Open treasure chest	Geöffnete Schatztruhe
+Open treasure safe	Geöffneter Tresor
+Option text unavailable	Optionstext nicht verfügbar
+Ordinary walking directions are unavailable during vertical travel.	Gewöhnliche Gehrichtungen sind während vertikaler Bewegung nicht verfügbar.
+Overclock	Übertaktung
+Overclock Zero	Übertaktung Null
+Overheat	Überhitzung
+Page Down	Bild ab
+Page Up	Bild auf
+Painted floor number: {0}.	Aufgemalte Stockwerksnummer: {0}.
+Paradise Lost	Verlorenes Paradies
+Paralysis	Lähmung
+Party status could not be read.	Der Gruppenstatus konnte nicht gelesen werden.
+Party status is unavailable.	Gruppenstatus nicht verfügbar.
+Party. {0}	Gruppe. {0}
+Passage along the upper path	Durchgang entlang des oberen Wegs
+Passage at the foot of the ladders	Durchgang am Fuß der Leitern
+Passage back from the altar	Durchgang zurück vom Altar
+Passage back inside the shipyard	Durchgang zurück in die Schiffswerft
+Passage back to the Middle Reach stairs	Durchgang zurück zur Treppe der Mittleren Ebene
+Passage back to the central hall	Durchgang zurück zur zentralen Halle
+Passage back to the central walkway	Durchgang zurück zum mittleren Laufsteg
+Passage back to the entrance hall	Durchgang zurück zur Eingangshalle
+Passage back to the first boat room	Rückweg zum ersten Raum mit dem Boot
+Passage back to the guarded cells	Durchgang zurück zu den bewachten Zellen
+Passage back to the locked gate	Durchgang zurück zum verschlossenen Tor
+Passage back to the lower path	Durchgang zurück zum unteren Weg
+Passage back to the lower save point	Durchgang zurück zum unteren Speicherpunkt
+Passage back to the lower tower	Durchgang zurück zum unteren Turm
+Passage back to the second pool	Rückweg zum zweiten Becken
+Passage back to the spiral	Durchgang zurück zur Spirale
+Passage back to the trials	Durchgang zurück zu den Prüfungen
+Passage back to the upper path	Durchgang zurück zum oberen Weg
+Passage back to the upper save point	Durchgang zurück zum oberen Speicherpunkt
+Passage behind the waterfall	Durchgang hinter dem Wasserfall
+Passage door	Durchgangstür
+Passage from Middle Reach	Durchgang von der Mittleren Ebene
+Passage from Middle Reach into the tower	Durchgang von der Mittleren Ebene in den Turm
+Passage from Upper Reach	Durchgang von der Oberen Ebene
+Passage from Upper Reach into the tower	Durchgang von der Oberen Ebene in den Turm
+Passage from the upper walkway	Durchgang vom oberen Laufsteg
+Passage into Zoldaad Castle	Durchgang in Schloss Zoldaad
+Passage into the Wandering Lands	Durchgang in die Wandernden Länder
+Passage into the crystal platform hall	Durchgang in die Halle der Kristallplattform
+Passage into the east wing	Durchgang in den Ostflügel
+Passage into the inn	Durchgang ins Gasthaus
+Passage into the lower laboratory	Durchgang ins untere Labor
+Passage into the next laboratory	Durchgang ins nächste Labor
+Passage into the next tower hall	Durchgang in die nächste Turmhalle
+Passage into the throne room	Durchgang in den Thronsaal
+Passage into the west wing	Durchgang in den Westflügel
+Passage onward	Durchgang weiter
+Passage out of the lower laboratory	Durchgang aus dem unteren Labor
+Passage past the waterfall	Durchgang am Wasserfall vorbei
+Passage to Lake Dorr	Durchgang zum Dorr-See
+Passage to Lake Ryusei	Durchgang zum Ryuseisee
+Passage to the Rebel Hideout	Durchgang zum Unterschlupf der Rebellen
+Passage to the Water Maiden	Durchgang zur Quellmaid
+Passage to the altar	Durchgang zum Altar
+Passage to the castle dungeon	Durchgang zum Verlies des Schlosses
+Passage to the castle entrance	Durchgang zum Schlosseingang
+Passage to the central hall	Durchgang zur zentralen Halle
+Passage to the crate room	Durchgang zum Kistenraum
+Passage to the duel	Durchgang zum Duell
+Passage to the elevator	Durchgang zum Aufzug
+Passage to the elevators	Durchgang zu den Aufzügen
+Passage to the entrance	Durchgang zum Eingang
+Passage to the entrance hall	Durchgang zur Eingangshalle
+Passage to the entrance landing	Durchgang zur Eingangsplattform
+Passage to the factory entrance	Durchgang zum Fabrikeingang
+Passage to the first boat room	Durchgang zum ersten Bootsraum
+Passage to the first pool	Durchgang zum ersten Becken
+Passage to the guarded cells	Durchgang zu den bewachten Zellen
+Passage to the lower trial	Durchgang zur unteren Prüfung
+Passage to the main hall	Durchgang zur großen Halle
+Passage to the pedestal room	Durchgang zum Raum mit dem Sockel
+Passage to the second pool	Durchgang zum zweiten Becken
+Passage to the summit rest stop	Durchgang zum Rastplatz vor dem Gipfel
+Passage to the third pool	Durchgang zum dritten Becken
+Passage to the upper Forest Path	Durchgang zum oberen Waldweg
+Passage to the upper bridges	Durchgang zu den oberen Brücken
+Passage to the upper ledge	Durchgang zum oberen Vorsprung
+Passage within {0}	Durchgang innerhalb von {0}
+Path to the Dark Crystal	Weg zum Dunkelkristall
+Path to the summit	Weg zum Gipfel
+Pearly Pot	Perlmutt-Topf
+Pedestal below the short ladder	Podest unterhalb der kurzen Leiter
+Pedestal on the high walkway	Podest auf dem hohen Laufsteg
+Pedestal on the west ramp	Podest auf der westlichen Rampe
+People	Personen
+Petrify	Stein
+Physical controls could not be read.	Die physischen Eingaben konnten nicht gelesen werden.
+Pick up the Level 1 Lab Key Card.	Nimm den Labor-Schl. St. 1 auf.
+Pick up the Level 2 Lab Key Card.	Nimm den Labor-Schl. St. 2 auf.
+Pick up the Level 3 Lab Key Card.	Nimm den Labor-Schl. St. 3 auf.
+Plaza with the tree	Platz mit dem Baum
+Poison	Gift
+Portal at the end of the lower tower	Portal am Ende des unteren Turms
+Portal back to the east wing	Portal zurück in den Ostflügel
+Portal back to the lower tower	Portal zurück zum unteren Turm
+Portal in the central pocket	Portal in der mittleren Nische
+Portal in the east pocket	Portal in der östlichen Nische
+Portal in the west laboratory	Portal im Westlabor
+Portal in the west pocket	Portal in der westlichen Nische
+Portal to the lower side chamber	Portal zur unteren Seitenkammer
+Portal to the lower tower	Portal zum unteren Turm
+Portal to the next tower section	Portal zum nächsten Turmabschnitt
+Prepare at the save point before confirming the white portal. It leads into the final sequence.	Bereite dich am Speicherpunkt vor, bevor du das weiße Portal bestätigst. Es führt in die letzte Sequenz.
+Press Confirm to use the highlighted Resonance	Bestätigen, um die markierte Resonanz einzusetzen
+Pressed switch	Gedrückter Schalter
+Protect	Protes
+Push side of the loose crate	Schiebeseite der losen Kiste
+Pushable obstacle	Verschiebbares Hindernis
+Pushable wooden crate	Verschiebbare Holzkiste
+Quest marker	Auftragsmarkierung
+Quest prompt in the inn	Auftragshinweis im Gasthaus
+Raegen	Raegen
+Reached the verified walking point near {0}.	Überprüften Gehpunkt nahe {0} erreicht.
+Read the streetcar timetable and choose the Commercial District to continue gathering information.	Lies den Straßenbahn-Fahrplan und wähle den Hauptstadtmarkt, um weiter Informationen zu sammeln.
+Read the streetcar timetable and choose the Slums to gather information.	Lies den Straßenbahn-Fahrplan und wähle das Armenviertel, um Informationen zu sammeln.
+Rebel soldier	Rebellensoldat
+Rebel soldier in the central hall	Rebellensoldat in der zentralen Halle
+Rebel soldier near the desert exit	Rebellensoldat nahe dem Wüstenausgang
+Rebel soldier near the entrance	Rebellensoldat nahe dem Eingang
+Rebel soldier near the tunnel	Rebellensoldat nahe dem Tunnel
+Recorded description playback failed.	Die Audiodeskription konnte nicht abgespielt werden.
+Recorded description unavailable. Description: {0}	Aufgezeichnete Audiodeskription nicht verfügbar. Beschreibung. {0}
+Recorded descriptions unavailable.	Aufgezeichnete Audiodeskription nicht verfügbar.
+Recorded movie descriptions ready.	Aufgezeichnete Audiodeskription der Zwischensequenzen bereit.
+Recorded movie descriptions unavailable.	Aufgezeichnete Audiodeskription der Zwischensequenzen nicht verfügbar.
+Reflect	Reflek
+Refraction Arts	Brechkunst
+Regen	Regena
+Reraise	Schutzengel
+Research Center Ruins exit	Ausgang der Forschungszentrum-Ruinen
+Researcher	Forscher
+Visions of Grandshelt loaded. F10 for help. {0}	Visions of Grandshelt geladen. F10 öffnet die Hilfe. {0}
+Visions of Grandshelt reader stopped after an error. See its log.	Der Reader von Visions of Grandshelt wurde nach einem Fehler angehalten. Details stehen im Protokoll.
+Visions of Grandshelt. F5 repeat. Home and End change target category, including Story for the current main objective and Destinations for travel through connected areas. Page Up and Page Down choose a target in the field; F6 and F7 also choose targets. Delete toggles manual guidance. Shift Delete toggles automatic walking. Moving or opening a menu stops automatic walking. F8 reads a complete native route. F9 reads the current screen, or party, enemies and target information in battle. F10 help. You control interaction and Confirm.	Visions of Grandshelt. F5 wiederholt die Ansage. Pos1 und Ende wechseln die Zielkategorie. Story zeigt das aktuelle Hauptziel. Reiseziele führt durch verbundene Gebiete. Bild auf und Bild ab wählen im Feld ein Ziel. Das geht auch mit F6 und F7. Entf schaltet die manuelle Führung um. Umschalt plus Entf schaltet das automatische Laufen um. Eigene Bewegung oder ein geöffnetes Menü beendet das automatische Laufen. F8 liest den vollständigen Weg des Spiels vor. F9 liest den aktuellen Bildschirm vor, im Kampf die Gruppe, Gegner und Ziele. F10 öffnet die Hilfe. Interagieren und bestätigen steuerst du selbst.
+Restored entrance elevator	Wieder funktionierender Eingangsaufzug
+Return conveyor from the pedestal	Rückförderband vom Podest
+Return from the altar passage to the north landing.	Kehre vom Altardurchgang zum nördlichen Absatz zurück.
+Return from the altar to the path leading to the north exit.	Kehre vom Altar zum Weg zurück, der zum Nordausgang führt.
+Return inside from Middle Reach.	Kehre von der Mittleren Ebene nach innen zurück.
+Return inside from Upper Reach.	Kehre von der Oberen Ebene nach innen zurück.
+Return through Waterfall Way.	Kehre durch den Wasserfallweg zurück.
+Return through the arch to the lower stairs in the central hall.	Kehre durch den Bogen zur unteren Treppe in der zentralen Halle zurück.
+Return through the entrance on the way to the Rebel Hideout.	Kehre durch den Eingang zurück, auf dem Weg zum Unterschlupf der Rebellen.
+Return through the walkways and descend to the bridge hall.	Kehre über die Laufstege zurück und klettere hinunter zur Brückenhalle.
+Return to Dilmagia so Lid can finish the airship.	Kehre nach Dilmagia zurück, damit Lid das Luftschiff fertigstellen kann.
+Return to Olderion through the Cave of Waters.	Kehre durch die Quellgrotte nach Olderion zurück.
+Return to the Rebel Hideout.	Kehre zum Unterschlupf der Rebellen zurück.
+Return to the Shipyard to board Lid's airship.	Kehre zur Schiffswerft zurück, um Lids Luftschiff zu betreten.
+Return to the Shrine main passage	Zurück zum Hauptgang des Schreins
+Return to the central hall through the arch on this platform.	Kehre durch den Bogen auf dieser Plattform zur zentralen Halle zurück.
+Return to the desert and head for the Rebel Hideout.	Kehre in die Wüste zurück und begib dich zum Unterschlupf der Rebellen.
+Return to the entrance hall.	Kehre zur Eingangshalle zurück.
+Return to the guarded cells.	Kehre zu den bewachten Zellen zurück.
+Return to the landing below the tower.	Kehre zur Plattform unterhalb des Turms zurück.
+Return to the locked gate with the dungeon key.	Kehre mit dem Verliesschlüssel zum verschlossenen Tor zurück.
+Return to the lower path toward the long ladder.	Kehre zum unteren Weg in Richtung der langen Leiter zurück.
+Return to the lower tower.	Kehre in den unteren Turm zurück.
+Return to the spiral path to the summit.	Kehre zum Spiralweg zum Gipfel zurück.
+Return to the town lane.	Kehre in die Gasse der Stadt zurück.
+Return to the town square.	Kehre zum Stadtplatz zurück.
+Return to the trial rooms.	Kehre zu den Prüfungsräumen zurück.
+Return to the upper path toward the altar.	Kehre zum oberen Weg in Richtung des Altars zurück.
+Right	nach rechts
+Right rotation pedestal	Rechtes Drehpodest
+Robed figure	Verhüllte Gestalt
+Rolled ladder	Aufgerollte Leiter
+Rooftop return elevator	Aufzug zurück vom Dach
+Route beacon unavailable. Navigation will speak directions.	Leitsignal nicht verfügbar. Die Navigation liest Richtungen vor.
+Row back through the passage to the first boat room.	Rudere durch den Durchgang zurück zum ersten Bootsraum.
+Row back through this channel to the previous room.	Rudere durch diesen Kanal zurück zum vorherigen Raum.
+Row back to the landing by the water pedestal.	Rudere zurück zum Anleger beim Wasserpodest.
+Row back to the second pool to take the passage to the upper path.	Rudere zurück zum zweiten Becken, um den Durchgang zum oberen Weg zu nehmen.
+Row to the forward passage into the third pool. Keep the boat for the crossing.	Rudere zum vorderen Durchgang ins dritte Becken. Behalte das Boot für die Überfahrt.
+Row to the landing below the upper passage back to the entrance hall.	Rudere zum Anleger unterhalb des oberen Durchgangs zurück zur Eingangshalle.
+Row to the landing by the large crystal pedestal.	Rudere zum Anleger beim großen Kristallpodest.
+Row to the landing by the way back to the central hall.	Rudere zum Anleger beim Rückweg zur zentralen Halle.
+Row to the passage leading to the large crystal pedestal.	Rudere zum Durchgang, der zum großen Kristallpodest führt.
+Row to the passage on the far bank. Disembark at the landing by the exit.	Rudere zum Durchgang am gegenüberliegenden Ufer. Steig am Anleger beim Ausgang aus.
+Row to the tower in the middle of the basin and climb its ladder.	Rudere zum Turm in der Mitte des Beckens und klettere seine Leiter hinauf.
+Royal Guard	Königliche Leibgarde
+Sage's Eye	Auge des Weisen
+Sailor	Matrose
+Sakura	Sakura
+Save point	Speicherpunkt
+Save point for the return to the entrance	Speicherpunkt für die Rückkehr zum Eingang
+Save point with a route to the entrance	Speicherpunkt mit einem Rückweg zum Eingang
+Save points	Speicherpunkte
+Scripted scene descriptions ready.	Audiodeskription der gespielten Szenen bereit.
+Scripted scene descriptions unavailable.	Audiodeskription der gespielten Szenen nicht verfügbar.
+Second ladder toward Lake Dorr	Zweite Leiter in Richtung Dorr-See
+Second long ladder	Zweite lange Leiter
+Shell	Vallum
+Shift Delete	Umschalt plus Entf
+Ship captain	Schiffskapitän
+Short ladder down to the pedestal	Kurze Leiter hinunter zum Podest
+Short ladder to the side walkway	Kurze Leiter zum seitlichen Laufsteg
+Shrine door	Schreintür
+Shrine elevator	Schreinaufzug
+Sian exit toward Mt. Reizan	Ausgang von Sian in Richtung Berg Reizan
+Side door from the inn to the street	Seitentür vom Gasthaus zur Straße
+Side entrance to the inn	Seiteneingang des Gasthauses
+Silence	Stumm
+Single-panel door	Einflügelige Tür
+Sleep	Schlaf
+Sliding door	Schiebetür
+Slow	Gemach
+Soldier by the bridge	Soldat bei der Brücke
+Some battle names could not be read.	Einige Kämpfernamen konnten nicht gelesen werden.
+Some choices could not be read	Einige Optionen konnten nicht gelesen werden
+Some displayed battle results could not be read.	Einige angezeigte Kampfergebnisse konnten nicht gelesen werden.
+Some tutorial controls are unavailable.	Einige Tutorialbefehle sind nicht verfügbar.
+South entrance to Amore	Südeingang nach Amore
+South entrance to Waterfall Way	Südeingang zum Wasserfallweg
+South entrance to the Cave of Waters	Südeingang zur Quellgrotte
+South exit of Amore	Südausgang von Amore
+South exit of Olderion	Südausgang von Olderion
+South exit of Waterfall Way	Südausgang des Wasserfallwegs
+South exit of the Cave of Waters	Südausgang der Quellgrotte
+South exit of the Dwarven Forge	Südausgang der Zwergenschmiede
+South exit of the mountain path	Südausgang des Bergpfads
+Sparkling ground pickup	Funkelnder Gegenstand am Boden
+Speak to Ayaka outside the building at the top of town.	Sprich mit Ayaka vor dem Gebäude am oberen Ende der Stadt.
+Speak to Fina in the elder's home.	Sprich mit Fina im Haus der Dorfältesten.
+Speak to Jake in his office.	Sprich mit Jake in seinem Büro.
+Speak to the elder in her home.	Sprich mit der Dorfältesten in ihrem Haus.
+Speak to the rebel soldiers in the hideout.	Sprich mit den Rebellensoldaten im Unterschlupf.
+Speech output is unavailable.	Die Sprachausgabe ist nicht verfügbar.
+Spoken guidance on.	Sprachführung aktiviert.
+Spoken guidance on. {0}.	Sprachführung aktiviert. {0}.
+Stagger defense down	Schockverteidigung-Minus
+Stagger defense up	Schockverteidigung erhöht
+Stagger power down	Schockschaden gesenkt
+Stagger power up	Schockschaden erhöht
+Stairs beyond Middle Reach	Treppe hinter der Mittleren Ebene
+Stairs down into the shrine	Treppe hinunter in den Schrein
+Stairs to the entrance	Treppe zum Eingang
+Stairs to the next trial	Treppe zur nächsten Prüfung
+Start automatic walking when controller input is available.	Starte das automatische Gehen, wenn Controllereingaben verfügbar sind.
+Station Attendant	Bahnhofsvorsteher
+Station attendant	Bahnhofsvorsteher
+Status ailment guard	Statusschutz
+Steer the airship toward the Crystal Tower. Turn on guidance for the beacon.	Steuere das Luftschiff in Richtung des Kristallturms. Schalte die Führung ein, um das Leitsignal zu hören.
+Steer the airship toward the tornado over Pharm. Turn on guidance for the beacon.	Steuere das Luftschiff in Richtung des Wirbelsturms über Pharm. Schalte die Führung ein, um das Leitsignal zu hören.
+Steer the airship with the left stick. Use manual guidance for the beacon.	Steuere das Luftschiff mit dem linken Stick. Nutze die manuelle Führung für das Leitsignal.
+Steer the raft with the game's movement controls. Use manual guidance for the Story crossing.	Steuere das Floß mit der Bewegungssteuerung des Spiels. Nutze die manuelle Führung für die Storyüberfahrt.
+Step onto the conveyor from the bridge hall.	Tritt von der Brückenhalle auf das Förderband.
+Step onto the four-lamp elevator and interact to ride down.	Tritt auf den Aufzug mit den vier Lampen und interagiere, um hinunterzufahren.
+Stop	Stopp
+Story	Story
+Story and Destinations auto-walk resume after their exits and battles. Use Interact when prompted.	Automatisches Laufen für Story und Reiseziele wird nach Durchgängen und Kämpfen fortgesetzt. Interagiere, wenn du dazu aufgefordert wirst.
+Story contact	Story-Ansprechperson
+Story destination	Storyziel
+Story event	Storyereignis
+Story exit	Storyausgang
+Story guidance stopped.	Storyführung gestoppt.
+Story marker at the mountain overlook	Storymarkierung am Aussichtspunkt des Berges
+Story marker beyond the mountain pass	Storymarkierung hinter dem Bergpass
+Story navigation stopped. The objective or destination changed.	Storynavigation gestoppt. Aufgabe oder Zielort hat gewechselt.
+Story navigation stopped. {0}	Storynavigation gestoppt. {0}
+Story objective is unavailable in the current scene.	Das Storyziel ist in der aktuellen Szene nicht verfügbar.
+Story passage	Storydurchgang
+Story trail near the Wandering Lands	Storypfad nahe den Wandernden Ländern
+Story. No current crossing could be verified.	Story. Es konnte keine aktuelle Überfahrt überprüft werden.
+Story. No current flight destination could be verified.	Story. Es konnte kein aktuelles Flugziel überprüft werden.
+Story. {0}	Story. {0}
+Story. {0} Use manual guidance for the route.	Story. {0} Nutze die manuelle Führung für die Route.
+Streetcar timetable	Straßenbahn-Fahrplan
+Superior Guard	Überlegene Abwehr
+Swift	Flinkheit
+Switch	Schalter
+Tactical Assault	Taktischer Angriff
+Take the bridge back to Amore.	Nimm die Brücke zurück nach Amore.
+Take the conveyor across the far gap.	Nimm das Förderband über die hintere Lücke.
+Take the conveyor across the middle gap.	Nimm das Förderband über die mittlere Lücke.
+Take the conveyor across to the next platform.	Nimm das Förderband hinüber zur nächsten Plattform.
+Take the conveyor back to the bridge hall.	Nimm das Förderband zurück zur Brückenhalle.
+Take the conveyor to the far platform.	Nimm das Förderband zur hinteren Plattform.
+Take the conveyor to the middle platforms.	Nimm das Förderband zu den mittleren Plattformen.
+Take the desert exit to reach the Weapons Factory.	Nimm den Wüstenausgang, um die Waffenfabrik zu erreichen.
+Take the first passage into Waterfall Way.	Nimm den ersten Durchgang in den Wasserfallweg.
+Take the ladder down to the lower floor.	Nimm die Leiter hinunter zum unteren Stockwerk.
+Take the lower passage from the cave entrance toward Lake Dorr.	Nimm den unteren Durchgang vom Höhleneingang in Richtung Dorr-See.
+Take the mountain trail up Mt. Reizan.	Nimm den Bergpfad hinauf auf den Berg Reizan.
+Take the north exit toward Amore.	Nimm den Nordausgang in Richtung Amore.
+Take the passage at the foot of the ladders.	Nimm den Durchgang am Fuß der Leitern.
+Take the passage from the entrance to the first pool.	Nimm den Durchgang vom Eingang zum ersten Becken.
+Take the passage from this bank back to the central hall.	Nimm den Durchgang von diesem Ufer zurück zur zentralen Halle.
+Take the passage on this bank to the next pool.	Nimm den Durchgang an diesem Ufer zum nächsten Becken.
+Take the portal to the next section.	Nimm das Portal zum nächsten Abschnitt.
+Take the restored elevator down toward the entrance.	Nimm den wieder funktionierenden Aufzug hinunter in Richtung des Eingangs.
+Take the return conveyor from the pedestal.	Nimm das Rückförderband vom Podest.
+Take the rooftop elevator back into the shipyard.	Nimm den Dachaufzug zurück in die Schiffswerft.
+Take the south entrance to the cave for Lake Dorr.	Nimm den Südeingang der Höhle zum Dorr-See.
+Take the south exit to the road toward Olderion.	Nimm den Südausgang zur Straße in Richtung Olderion.
+Take the stairs down into the shrine.	Nimm die Treppe hinunter in den Schrein.
+Take the stairs up from the dungeon toward the throne room.	Nimm die Treppe vom Verlies hinauf in Richtung des Thronsaals.
+Take the streetcar back to the Imperial Hotel district, then meet the party in the alley.	Nimm die Straßenbahn zurück zum Viertel des Imperialen Hotels und triff dann die Gruppe in der Gasse.
+Take the tunnel from the hideout toward the castle.	Nimm den Tunnel vom Unterschlupf in Richtung des Schlosses.
+Take the upper passage back above the entrance.	Nimm den oberen Durchgang zurück über den Eingang.
+Talk to Fina in the alley beside the hotel.	Sprich mit Fina in der Gasse neben dem Hotel.
+Talk to Lasswell	Mit Lasswell sprechen
+Talk to the innkeeper to stay the night.	Sprich mit dem Schankwirt, um zu übernachten.
+Talk to the man in blue in the Slums.	Sprich mit dem Mann in Blau im Armenviertel.
+Tall ladder down to the catwalks	Hohe Leiter hinunter zu den Stegen
+Tall ladder to the upper pedestal	Hohe Leiter zum oberen Podest
+Target unavailable	Ziel nicht verfügbar
+Target. {0}	Ziel. {0}
+Taunt	Provokation
+Text entry is active.	Die Texteingabe ist aktiv.
+The Battlefield exit position could not be read.	Die Position des Ausgangs vom Schlachtfeld konnte nicht gelesen werden.
+The active main objective could not be verified.	Die aktive Hauptaufgabe konnte nicht bestätigt werden.
+The airship's steering directions could not be read.	Die Steuerungsrichtungen des Luftschiffs konnten nicht gelesen werden.
+The approach to the south gate could not be measured.	Der Zugang zum Südtor konnte nicht vermessen werden.
+The area's distance scale could not be verified.	Die Entfernungsskala des Gebiets konnte nicht bestätigt werden.
+The area's distance scale is unavailable.	Die Entfernungsskala des Gebiets ist nicht verfügbar.
+The boat's boarding point is unavailable.	Die Einstiegsstelle des Boots ist nicht verfügbar.
+The character and walking mesh slope limits could not be verified.	Die zulässige Neigung für Figur und begehbares Gelände konnte nicht bestätigt werden.
+The character's walking and braking state could not be read.	Der Lauf- und Bremszustand der Figur konnte nicht gelesen werden.
+The character's walking camera could not be verified.	Die Laufkamera der Figur konnte nicht bestätigt werden.
+The crate is lined up with the row. Return to the pedestal and raise the water.	Die Kiste ist mit der Reihe ausgerichtet. Kehre zum Podest zurück und hebe das Wasser an.
+The crates are floating at walkway level. Follow them back across.	Die Kisten schwimmen auf Höhe des Laufstegs. Folge ihnen zurück auf die andere Seite.
+The current Battlefield section's linked exits could not be read.	Die verknüpften Ausgänge des aktuellen Schlachtfeld-Abschnitts konnten nicht gelesen werden.
+The current Battlefield walking section could not be verified.	Der aktuelle begehbare Abschnitt des Schlachtfelds konnte nicht bestätigt werden.
+The current Mitra passage has changed.	Der aktuelle Durchgang in Mitra hat sich geändert.
+The current Story crossing is unavailable.	Die aktuelle Storyüberquerung ist nicht verfügbar.
+The current Story flight destination could not be verified.	Das aktuelle Flugziel der Story konnte nicht bestätigt werden.
+The current area is still loading.	Das aktuelle Gebiet wird noch geladen.
+The current area's entity list could not be read.	Die Objektliste des aktuellen Gebiets konnte nicht gelesen werden.
+The current area's exit list could not be read.	Die Ausgangsliste des aktuellen Gebiets konnte nicht gelesen werden.
+The current castle doorway has changed. Request the route again.	Die aktuelle Burgtür hat sich geändert. Fordere den Weg erneut an.
+The current castle doorway or passage has changed.	Die aktuelle Burgtür oder der Durchgang hat sich geändert.
+The current destination data is unavailable.	Die Daten des aktuellen Ziels sind nicht verfügbar.
+The current field character is unavailable.	Die aktuelle Spielfigur im Erkundungsmodus ist nicht verfügbar.
+The current field location could not be read.	Die aktuelle Position im Feld konnte nicht gelesen werden.
+The current laboratory room could not be verified.	Der aktuelle Laborraum konnte nicht bestätigt werden.
+The current main objective could not be identified.	Die aktuelle Hauptaufgabe konnte nicht ermittelt werden.
+The current main objective could not be read safely.	Die aktuelle Hauptaufgabe konnte nicht sicher gelesen werden.
+The current main objective data is not available yet.	Die Daten der aktuellen Hauptaufgabe sind noch nicht verfügbar.
+The current main objective is ambiguous.	Die aktuelle Hauptaufgabe ist nicht eindeutig.
+The current main objective is not active.	Die aktuelle Hauptaufgabe ist nicht aktiv.
+The current main objective source is unavailable.	Die Quelle der aktuellen Hauptaufgabe ist nicht verfügbar.
+The current map could not be verified. Walking guidance is unavailable.	Die aktuelle Karte konnte nicht bestätigt werden. Die Gehführung ist nicht verfügbar.
+The current player could not be identified.	Der aktuelle Spieler konnte nicht ermittelt werden.
+The current story area could not be identified.	Das aktuelle Storygebiet konnte nicht ermittelt werden.
+The current story area or filtered destination is unavailable. A walking route cannot be verified.	Das aktuelle Storygebiet oder verfügbare Ziel konnte nicht ermittelt werden. Ein Fußweg lässt sich nicht überprüfen.
+The current story destination could not be read.	Das aktuelle Storyziel konnte nicht gelesen werden.
+The current walking area is unavailable.	Das aktuelle begehbare Gebiet ist nicht verfügbar.
+The current walking character is unavailable.	Die aktuelle Lauffigur ist nicht verfügbar.
+The current walking mesh changed before pathfinding.	Das begehbare Gelände hat sich vor der Wegsuche geändert.
+The current walking mesh changed during pathfinding.	Das begehbare Gelände hat sich während der Wegsuche geändert.
+The current walking speed could not be read.	Die aktuelle Laufgeschwindigkeit konnte nicht gelesen werden.
+The destination is in another area. A current-area walking route is unavailable.	Das Ziel liegt in einem anderen Gebiet. Im aktuellen Gebiet ist kein Fußweg verfügbar.
+The destination is in another area. An active current-area exit could not be verified.	Das Ziel liegt in einem anderen Gebiet. Im aktuellen Gebiet konnte kein aktiver Ausgang bestätigt werden.
+The destination is in {0}. A current-area walking route is unavailable.	Das Ziel liegt im Gebiet {0}. Im aktuellen Gebiet ist kein Fußweg verfügbar.
+The destination is in {0}. An active current-area exit could not be verified.	Das Ziel liegt im Gebiet {0}. Im aktuellen Gebiet konnte kein aktiver Ausgang bestätigt werden.
+The doorway's walking approach could not be read.	Der begehbare Zugang zur Tür konnte nicht gelesen werden.
+The entrance is blocked. Return through the passage you came from.	Der Eingang ist blockiert. Kehre durch den Durchgang zurück, aus dem du gekommen bist.
+The floating crates do not give a verified route to the far landing.	Über die schwimmenden Kisten ist kein bestätigter Weg zum anderen Ufer verfügbar.
+The floating crates form a bridge back to the opposite walkway.	Die schwimmenden Kisten bilden eine Brücke zurück zum gegenüberliegenden Laufsteg.
+The floating crates form a bridge between the upper walkways.	Die schwimmenden Kisten bilden eine Brücke zwischen den oberen Laufstegen.
+The floating crates line up across the gap. Cross them to reach the far terrace.	Die schwimmenden Kisten liegen in einer Reihe über der Lücke. Überquere sie, um die hintere Terrasse zu erreichen.
+The forward door in this train car could not be verified.	Die vordere Tür in diesem Waggon konnte nicht bestätigt werden.
+The game has not supplied a destination for this objective.	Das Spiel hat für diese Aufgabe kein Ziel angegeben.
+The game is paused.	Das Spiel ist pausiert.
+The game's navigation system is unavailable in this area.	Das Navigationssystem des Spiels ist in diesem Gebiet nicht verfügbar.
+The ground ahead could not be inspected.	Der Boden vor der Figur konnte nicht geprüft werden.
+The inn door is open. Continue through it when the passage is clear.	Die Tür des Gasthauses ist offen. Geh hindurch, wenn der Durchgang frei ist.
+The left, centre and right pedestals turn the walkways.	Das linke, das mittlere und das rechte Podest drehen die Laufstege.
+The lift is not ready to board.	Der Aufzug ist noch nicht bereit zum Einsteigen.
+The local walking controller could not be verified.	Die aktuelle Laufsteuerung konnte nicht bestätigt werden.
+The lower stairs are open. Take the ladder down to the elevator landing.	Die untere Treppe ist frei. Nimm die Leiter hinunter zur Aufzugsplattform.
+The mailbox's	Briefkasten
+The modifier has another game binding or its binding could not be read.	Die Navigationstaste ist anderweitig belegt oder ihre Belegung konnte nicht gelesen werden.
+The native current story objective could not be read safely.	Das aktuelle Storyziel im Spiel konnte nicht zuverlässig gelesen werden.
+The native landing or passage is unavailable.	Die Anlegestelle oder Passage ist nicht verfügbar.
+The native path points could not be converted to walking instructions.	Die Wegpunkte des Spiels konnten nicht in Gehhinweise umgewandelt werden.
+The native route does not reach the target's activation area.	Der Weg des Spiels erreicht den Aktivierungsbereich des Ziels nicht.
+The native walking view target could not be read.	Das Ziel der Laufkamera des Spiels konnte nicht gelesen werden.
+The native walking-camera flags could not be read.	Die Einstellungen der Laufkamera des Spiels konnten nicht gelesen werden.
+The native walking-character layout could not be verified.	Die Bewegungsdaten der Figur konnten nicht bestätigt werden.
+The native walking-control rotation could not be read.	Die Ausrichtung der Laufsteuerung des Spiels konnte nicht gelesen werden.
+The next laboratory approach is unavailable from this position.	Der nächste Weg im Labor ist von dieser Position aus nicht verfügbar.
+The next laboratory step could not be verified.	Der nächste Schritt im Labor konnte nicht bestätigt werden.
+The next local Story step could not be read safely.	Der nächste lokale Storyschritt konnte nicht sicher gelesen werden.
+The non-null walking view target could not be verified.	Das aktuelle Ziel der Laufkamera konnte nicht bestätigt werden.
+The objective is available, but its filtered destinations could not be read safely.	Die Aufgabe ist verfügbar, aber ihre gefilterten Ziele konnten nicht sicher gelesen werden.
+The objective is available, but its filtered destinations could not be verified.	Die Aufgabe ist verfügbar, aber ihre gefilterten Ziele konnten nicht bestätigt werden.
+The objective is available, but its local destinations could not be read safely.	Die Aufgabe ist verfügbar. Ihre Ziele in diesem Gebiet konnten nicht zuverlässig gelesen werden.
+The pedestal's approach is unavailable.	Der Weg zum Podest ist nicht verfügbar.
+The player position could not be read.	Die Spielerposition konnte nicht gelesen werden.
+The player position or destination could not be read.	Die Spielerposition oder das Ziel konnte nicht gelesen werden.
+The player's walking collision could not be verified for this approach.	Der kollisionsfreie Zugang für die Spielerfigur konnte nicht bestätigt werden.
+The player's walking shape could not be verified.	Der Platzbedarf der Spielerfigur beim Laufen konnte nicht bestätigt werden.
+The player's walking shape is not upright.	Die Kollisionshülle der Spielerfigur ist nicht aufrecht.
+The previous walking detour could not be verified from the current position.	Der vorherige Umweg konnte von der aktuellen Position nicht bestätigt werden.
+The projected walking point does not give a verified approach to this activation area.	Der berechnete Wegpunkt bietet keinen bestätigten Zugang zu diesem Aktivierungsbereich.
+The raft is outside the current Story crossing.	Das Floß ist außerhalb der aktuellen Storyüberquerung.
+The raft's collision could not be verified.	Die Kollisionsdaten des Floßes konnten nicht bestätigt werden.
+The raft's current position could not be read.	Die aktuelle Position des Floßes konnte nicht gelesen werden.
+The raft's steering directions could not be read.	Die Steuerungsrichtungen des Floßes konnten nicht gelesen werden.
+The selected Battlefield exit has changed.	Der ausgewählte Schlachtfeldausgang hat sich geändert.
+The selected Story exit has changed. Choose the current destination.	Der ausgewählte Storyausgang hat sich geändert. Wähle das aktuelle Ziel.
+The selected target is no longer available in this area.	Das ausgewählte Ziel ist in diesem Gebiet nicht mehr verfügbar.
+The stereo route beacon points toward the next turn and pulses faster as you approach. F8 speaks directions.	Das Stereo-Leitsignal weist zur nächsten Abbiegung und wird schneller, je näher du kommst. F8 liest die Richtungen vor.
+The story destination is ambiguous. A walking route is unavailable.	Das Storyziel ist nicht eindeutig. Ein Fußweg ist nicht verfügbar.
+The story destination's	Storyziel
+The story exit's activation area could not be verified.	Der Aktivierungsbereich des Storyausgangs konnte nicht bestätigt werden.
+The story exit's current transition could not be read safely.	Der aktuelle Übergang des Storyausgangs konnte nicht sicher gelesen werden.
+The story target could not be verified in the current area.	Das Storyziel konnte im aktuellen Gebiet nicht bestätigt werden.
+The story target's actor could not be read safely.	Der Akteur des Storyziels konnte nicht sicher gelesen werden.
+The story target's current actor is unavailable.	Der aktuelle Akteur des Storyziels ist nicht verfügbar.
+The story target's current position could not be read safely.	Die aktuelle Position des Storyziels konnte nicht sicher gelesen werden.
+The story target's position could not be read.	Die Position des Storyziels konnte nicht gelesen werden.
+The story trigger's current state could not be read.	Der Zustand des Storyauslösers konnte nicht gelesen werden.
+The target's activation area could not be verified.	Der Aktivierungsbereich des Ziels konnte nicht bestätigt werden.
+The walking area changed before its ground check.	Das begehbare Gebiet hat sich vor der Bodenprüfung geändert.
+The walking area changed during its ground check.	Das begehbare Gebiet hat sich während der Bodenprüfung geändert.
+The walking capsule could not verify clear ground ahead.	Die Kollisionsprüfung konnte keinen freien Boden voraus bestätigen.
+The walking path does not reach the boat's boarding point.	Der Fußweg erreicht den Einstiegspunkt des Boots nicht.
+The walking surface inspection could not be prepared.	Die Prüfung der begehbaren Oberfläche konnte nicht vorbereitet werden.
+The walking view target is outside the current area.	Das Ziel der Laufkamera liegt außerhalb des aktuellen Gebiets.
+The walking view target's root could not be read.	Das Grundobjekt des Ziels der Laufkamera konnte nicht gelesen werden.
+The walking view target's root could not be verified.	Das Grundobjekt des Ziels der Laufkamera konnte nicht bestätigt werden.
+The walking-ground inspection could not be prepared.	Die Prüfung des begehbaren Bodens konnte nicht vorbereitet werden.
+The walkways connect to the large pedestal. Use it to lower the bridge section below.	Die Laufstege führen zum großen Podest. Benutze es, um den Brückenabschnitt darunter herabzulassen.
+The water is high and the crates are floating. The small pedestal changes the water level.	Das Wasser steht hoch und die Kisten schwimmen. Das kleine Podest ändert den Wasserstand.
+The water is high. Follow the floating crates to the next landing.	Das Wasser steht hoch. Folge den schwimmenden Kisten zum nächsten Absatz.
+The water is high. The pedestal here controls the water by the stairs.	Das Wasser steht hoch. Das Podest hier steuert das Wasser bei der Treppe.
+The water is high. This pedestal controls the water above the dock stairs.	Das Wasser steht hoch. Dieses Podest steuert das Wasser über der Anlegertreppe.
+The water is low and the lower stairs are exposed. The small pedestal changes the water level.	Das Wasser steht niedrig und die untere Treppe liegt frei. Das kleine Podest ändert den Wasserstand.
+The water is low. The pedestal raises the floating crates toward the upper walkway.	Das Wasser steht niedrig. Das Podest hebt die schwimmenden Kisten zum oberen Laufsteg an.
+The water is low. The stairs beside the pedestal lead down to the boat dock.	Das Wasser steht niedrig. Die Treppe neben dem Podest führt hinunter zum Bootsanleger.
+The water is low. The stairs lead to a water pedestal.	Das Wasser steht niedrig. Die Treppe führt zu einem Wasserpodest.
+The {0} is not available at this landing.	{0} ist an dieser Plattform nicht verfügbar.
+Third ladder toward Lake Dorr	Dritte Leiter in Richtung Dorr-See
+This battle status shortcut is unavailable with the current bindings.	Dieses Kürzel für den Kampfstatus ist mit der aktuellen Belegung nicht verfügbar.
+This person's talk area could not be verified.	Der Gesprächsbereich dieser Person konnte nicht bestätigt werden.
+This story destination is no longer active in the area.	Dieses Storyziel ist im Gebiet nicht mehr aktiv.
+Throne room doors	Türen des Thronsaals
+Time remaining. {0}	Verbleibende Zeit. {0}
+To {0}. Next, {1}. {2}	Nach {0}. Als Nächstes {1}. {2}
+To {0}. {1}	Nach {0}. {1}
+Tornado over Pharm	Wirbelsturm über Pharm
+Total damage could not be matched to a unit.	Der Gesamtschaden konnte keiner Einheit zugeordnet werden.
+Total damage could not be matched to its unit.	Der Gesamtschaden konnte der betroffenen Einheit nicht zugeordnet werden.
+Total damage could not be read.	Der Gesamtschaden konnte nicht gelesen werden.
+Tower ladder	Turmleiter
+Tower ladder down	Turmleiter hinunter
+Trail across the crystal platforms	Pfad über die Kristallplattformen
+Trail beyond the Forest Path save point	Pfad hinter dem Speicherpunkt des Waldwegs
+Trail through the lower tower	Pfad durch den unteren Turm
+Train escape door	Fluchttür des Zugs
+Treasure chest	Schatztruhe
+Treasure safe	Tresor
+Trial platform	Prüfungsplattform
+Trial stele	Prüfungsstele
+Tunnel entrance from the Rebel Hideout	Tunneleingang vom Unterschlupf der Rebellen
+Tutorial controls are unavailable.	Die Tutorialsteuerung ist nicht verfügbar.
+Twin Titleholders quest marker	Auftragsmarkierung: Die zwei Titelträger
+Unavailable	Nicht verfügbar
+Unit	Einheit
+Up	nach oben
+Upper Reach landing	Plattform der Oberen Ebene
+Upper bridge pedestal	Oberes Brückenpodest
+Upper stairs across the crates	Obere Treppe jenseits der Kisten
+Upper trail on Mt. Reizan	Oberer Pfad auf dem Berg Reizan
+Upper walkway across the crates	Oberer Laufsteg jenseits der Kisten
+Use the call pedestal to bring the {0} here.	Benutze das Rufpodest. {0} kommt dann hierher.
+Use the dungeon key on the gate.	Benutze den Verliesschlüssel am Tor.
+Use the elevator at this landing.	Benutze den Aufzug an dieser Plattform.
+Use the game's interaction control when available.	Interagiere, sobald die Spielaktion verfügbar ist.
+Use the interaction control to open the inn door.	Benutze die Interaktionstaste, um die Tür des Gasthauses zu öffnen.
+Use the pedestal to lower the bridge section.	Benutze das Podest, um den Brückenabschnitt herabzulassen.
+Use the pedestal to lower the last catwalk into place.	Benutze das Podest, um den letzten Steg in Position zu senken.
+Use the pedestal to raise the next catwalk.	Benutze das Podest, um den nächsten Steg anzuheben.
+Use the pedestal to raise the water in the {0}.	{0}: Benutze das Podest, um das Wasser anzuheben.
+Use the save point to return to the entrance.	Benutze den Speicherpunkt, um zum Eingang zurückzukehren.
+Use the save point to return to the shrine entrance.	Benutze den Speicherpunkt, um zum Eingang des Schreins zurückzukehren.
+Use the throne room key on the doors.	Benutze den Thronsaalschlüssel an den Türen.
+Use the town exit to continue on Gronoa.	Benutze den Stadtausgang, um auf Gronoa weiterzureisen.
+Use the town exit to continue toward Gronoa Shrine.	Benutze den Stadtausgang, um in Richtung des Gronoa-Schreins weiterzureisen.
+Valiant Advance formation	Formierung Mutiger Vormarsch
+Value unavailable	Wert nicht verfügbar
+Veil defense up	Schleierabwehr erhöht
+Village Elder	Dorfälteste
+Vision	Vision
+Vision shop attendant	Visionenverkäufer
+Vital point attack	Angriff auf einen Vitalpunkt
+Wait for the bridge section to settle.	Warte, bis der Brückenabschnitt zur Ruhe kommt.
+Wait for the water to rise to the bank before boarding.	Warte mit dem Einsteigen, bis das Wasser bis zum Ufer gestiegen ist.
+Wait for the {0} to stop at your landing.	{0} ist noch unterwegs. Warte, bis er an deiner Plattform anhält.
+Waiting for a walking route. {0}	Warte auf einen Fußweg. {0}
+Walk onto the elevator.	Geh auf den Aufzug.
+Walk through the automatic door into the laboratory.	Geh durch die Automatiktür ins Labor.
+Walk through the automatic door toward the elevator.	Geh durch die Automatiktür in Richtung des Aufzugs.
+Walk through the automatic door.	Geh durch die Automatiktür.
+Walk through the open door to the elder's home.	Geh durch die offene Tür ins Haus der Dorfältesten.
+Walk through the open inn door.	Geh durch die offene Tür des Gasthauses.
+Walk {0} through the sliding door.	Gehe {0} durch die Schiebetür.
+Walking route endpoint reached.	Ende des Fußwegs erreicht.
+Wall tone volume	Lautstärke der Wandklänge
+Wall tones	Wandklänge
+Warden of the Waters	Wächter des Wassers
+Warden's Cape	Kap der Wächter
+Water Shrine exit	Ausgang des Wasserschreins
+Water by the orphanage	Wasser beim Waisenhaus
+Water immunity	Wasserimmunität
+Water ley line	Ley-Linie des Wassers
+Water near the city entrance	Wasser nahe dem Stadteingang
+Water on the way to Old Town	Wasser auf dem Weg zur Altstadt
+Water pedestal by the dock stairs	Wasserpodest bei der Anlegertreppe
+Water pedestal by the upper stairs	Wasserpodest bei der oberen Treppe
+Water-level pedestal	Wasserstandspodest
+Waterfall Way flower	Blume am Wasserfallweg
+Weapon	Waffe
+Weapon shop attendant	Waffenverkäufer
+Weapons Factory entrance	Eingang zur Waffenfabrik
+West bridge pedestal	Westliches Brückenpodest
+West console	Westliche Konsole
+White Jade Stone on the center table	Weißer Jadestein auf dem Tisch in der Mitte
+White mage	Weißmagierin
+White teleport portal	Weißes Teleportportal
+Wind Crystal chamber elevator	Der Aufzug zur Windkristall-Kammer
+Wind damage up	Windschaden erhöht
+Wind immunity	Windimmunität
+Winding trail in the Wandering Lands	Gewundener Pfad in den Wandernden Ländern
+Woman	Frau
+Workshop technician	Werkstatttechniker
+World map via the far town gate	Weltkarte durch das hintere Stadttor
+World map via the town entrance	Weltkarte durch den Stadteingang
+You are at {0}.	Du befindest dich bei {0}.
+You are in the objective's destination area, {0}. The objective identifies no specific point or onward exit here.	Du bist im Zielgebiet der Aufgabe, {0}. Die Aufgabe nennt hier weder einen bestimmten Punkt noch einen weiterführenden Ausgang.
+You are in the objective's destination area. The objective identifies no specific point or onward exit here.	Du bist im Zielgebiet der Aufgabe. Die Aufgabe nennt hier weder einen bestimmten Punkt noch einen weiterführenden Ausgang.
+Zoldaad soldier	Zoldaad-Soldat
+across the lower hall	quer durch die untere Halle
+across to the upper walkway	hinüber zum oberen Laufsteg
+area could not be verified	Das Gebiet konnte nicht überprüft werden
+back down to the main walkway	zurück nach unten zum Hauptlaufsteg
+bottom choice	untere Auswahl
+collection state could not be read	Der Einsammelstatus konnte nicht gelesen werden
+collision could not be read	Die Kollision konnte nicht gelesen werden
+conditional destination list is unreadable	Die Liste der bedingten Ziele ist nicht lesbar
+conditional destinations could not be read	Die bedingten Ziele konnten nicht gelesen werden
+crossing lift	Der Querlift
+current availability could not be read	Die aktuelle Verfügbarkeit konnte nicht gelesen werden
+current binding unavailable	aktuelle Tastenbelegung nicht verfügbar
+current condition could not be read	Die aktuelle Bedingung konnte nicht gelesen werden
+current destination could not be read	Das aktuelle Ziel konnte nicht gelesen werden
+current-area state could not be read	Der Zustand im aktuellen Gebiet konnte nicht gelesen werden
+delivery availability could not be read	Die Verfügbarkeit der Lieferung konnte nicht gelesen werden
+door state could not be read	Der Türzustand konnte nicht gelesen werden
+down	nach unten
+down to the lower walkway	nach unten zum unteren Laufsteg
+down-left	nach links unten
+down-right	nach rechts unten
+first elevator	Der erste Aufzug
+first pool	Erstes Becken
+higher ground {0}	{0} nach oben
+hold Down to climb down.	halte Unten gedrückt, um hinabzuklettern.
+hold Up to climb.	halte Oben gedrückt, um zu klettern.
+identity could not be read	Die Identität konnte nicht gelesen werden
+interaction box could not be read	Der Interaktionsbereich konnte nicht gelesen werden
+interaction box geometry could not be read	Die Geometrie des Interaktionsbereichs konnte nicht gelesen werden
+interaction prompt could not be read	Die Interaktionsaufforderung konnte nicht gelesen werden
+interaction state could not be read	Der Interaktionszustand konnte nicht gelesen werden
+left	links
+left choice	linke Auswahl
+level {0}	Stufe {0}
+linked exit could not be read	Der verknüpfte Ausgang konnte nicht gelesen werden
+lower crossing lift	Der untere Querlift
+lower ground {0}	{0} nach unten
+mesh visibility could not be read	Die Sichtbarkeit des Modells konnte nicht gelesen werden
+native layout differs from the audited build	Das native Layout unterscheidet sich vom geprüften Build
+position could not be read	Die Position konnte nicht gelesen werden
+removal state could not be read	Der Entfernungsstatus konnte nicht gelesen werden
+right	rechts
+right choice	rechte Auswahl
+second pool	Zweites Becken
+state could not be read	Der Zustand konnte nicht gelesen werden
+summit elevator	Der Gipfelaufzug
+then	dann
+to the summit elevator's landing	zur Plattform des Gipfelaufzugs
+top choice	obere Auswahl
+treasure balcony elevator	Der Aufzug am Schatzbalkon
+up	nach oben
+up to the Wind Crystal chamber	nach oben zur Windkristall-Kammer
+up to the highest walkway	nach oben zum höchsten Laufsteg
+up to the upper landing	nach oben zur oberen Plattform
+up-left	nach links oben
+up-right	nach rechts oben
+visibility could not be read	Die Sichtbarkeit konnte nicht gelesen werden
+walkway elevator	Der Laufsteg-Aufzug
+west crossing lift	Der westliche Querlift
+{0} Choose the next Story target to continue walking.	{0} Wähle das nächste Storyziel, um weiterzulaufen.
+{0} HP recovered	{0} LP wiederhergestellt
+{0} MP damage	{0} MP verloren
+{0} MP recovered	{0} MP wiederhergestellt
+{0} Some targets could not be read.	{0} Einige Ziele konnten nicht gelesen werden.
+{0} The selection is retained; try again.	{0} Die Auswahl bleibt bestehen. Versuche es erneut.
+{0} damage	{0} Schaden
+{0} in a straight line	{0} Luftlinie
+{0} is unavailable from here.	{0} ist von hier aus nicht erreichbar.
+{0} limit gauge gained	Limit-Leiste um {0} erhöht
+{0} limit gauge lost	Limit-Leiste um {0} gesenkt
+{0} metre	{0} Meter
+{0} metres	{0} Meter
+{0} navigation is unavailable because it is assigned to a game control.	Navigation mit {0} ist nicht verfügbar, da die Taste bereits einer Spielaktion zugewiesen ist.
+{0} navigation is unavailable because its current game binding could not be read.	Navigation mit {0} ist nicht verfügbar, da die aktuelle Tastenbelegung nicht gelesen werden konnte.
+{0} navigation unavailable. Its game binding is assigned to another control or could not be read.	Navigation mit {0} nicht verfügbar. Die Taste ist anderweitig belegt oder die Belegung konnte nicht gelesen werden.
+{0} of {1}	{0} von {1}
+{0} or {1}	{0} oder {1}
+{0} percent	{0} Prozent
+{0} plus {1}	{0} plus {1}
+{0} remains selected. Use Page Up or Page Down to choose another target.	{0} bleibt ausgewählt. Wähle mit Bild auf oder Bild ab ein anderes Ziel.
+{0} {1}	{0} {1}
+{0} {1}.	{0}. {1}.
+{0}%	{0} %
+{0}, target point {1} higher	{0}, Zielpunkt liegt {1} höher
+{0}, target point {1} lower	{0}, Zielpunkt liegt {1} tiefer
+{0}.	{0}.
+{0}. Checking reachable targets.	{0}. Erreichbare Ziele werden geprüft.
+{0}. {1}	{0}. {1}
+{0}. {1} passage. {2}	{0}. {1} Durchgang. {2}
+{0}. {1} passages. {2}	{0}. {1} Durchgänge. {2}
+{0}: {1}.	{0}: {1}.

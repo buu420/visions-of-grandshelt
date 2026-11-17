@@ -1,0 +1,219 @@
+--- a/buffer.c
++++ b/buffer.c
+@@ -164,7 +164,7 @@
+     if ((ULONG_PTR)pOrigin > MAX_MEMORY_RANGE && minAddr < (ULONG_PTR)pOrigin - MAX_MEMORY_RANGE)
+         minAddr = (ULONG_PTR)pOrigin - MAX_MEMORY_RANGE;
+ 
+-    if (maxAddr > (ULONG_PTR)pOrigin + MAX_MEMORY_RANGE)
++    if (pOrigin != NULL && maxAddr > (ULONG_PTR)pOrigin + MAX_MEMORY_RANGE)
+         maxAddr = (ULONG_PTR)pOrigin + MAX_MEMORY_RANGE;
+ 
+     // Make room for MEMORY_BLOCK_SIZE bytes.
+@@ -176,7 +176,7 @@
+     {
+ #if defined(_M_X64) || defined(__x86_64__)
+         // Ignore the blocks too far.
+-        if ((ULONG_PTR)pBlock < minAddr || (ULONG_PTR)pBlock >= maxAddr)
++        if (pOrigin != NULL && ((ULONG_PTR)pBlock < minAddr || (ULONG_PTR)pBlock >= maxAddr))
+             continue;
+ #endif
+         // The block has at least one unused slot.
+@@ -185,7 +185,13 @@
+     }
+ 
+ #if defined(_M_X64) || defined(__x86_64__)
+-    // Alloc a new block above if not found.
++    // An absolute entry jump does not require a nearby trampoline.
++    if (pOrigin == NULL)
++    {
++        pBlock = (PMEMORY_BLOCK)VirtualAlloc(
++            NULL, MEMORY_BLOCK_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
++    }
++    else
+     {
+         LPVOID pAlloc = pOrigin;
+         while ((ULONG_PTR)pAlloc >= minAddr)
+@@ -202,7 +208,7 @@
+     }
+ 
+     // Alloc a new block below if not found.
+-    if (pBlock == NULL)
++    if (pOrigin != NULL && pBlock == NULL)
+     {
+         LPVOID pAlloc = pOrigin;
+         while ((ULONG_PTR)pAlloc <= maxAddr)
+--- a/hook.c
++++ b/hook.c
+@@ -63,8 +63,9 @@
+     LPVOID pTarget;             // Address of the target function.
+     LPVOID pDetour;             // Address of the detour or relay function.
+     LPVOID pTrampoline;         // Address of the trampoline function.
+-    UINT8  backup[8];           // Original prologue of the target function.
+-
++    UINT8  backup[sizeof(JMP_ABS)]; // Original prologue of the target function.
++
++    UINT8  absolutePatch : 1;  // Uses an absolute jump at the entry.
+     UINT8  patchAbove  : 1;     // Uses the hot patch area.
+     UINT8  isEnabled   : 1;     // Enabled.
+     UINT8  queueEnable : 1;     // Queued for enabling/disabling when != isEnabled.
+@@ -72,4 +73,4 @@
+     UINT   nIP : 4;             // Count of the instruction boundaries.
+-    UINT8  oldIPs[8];           // Instruction boundaries of the target function.
+-    UINT8  newIPs[8];           // Instruction boundaries of the trampoline function.
++    UINT8  oldIPs[12];          // Instruction boundaries of the target function.
++    UINT8  newIPs[12];          // Instruction boundaries of the trampoline function.
+ } HOOK_ENTRY, *PHOOK_ENTRY;
+@@ -394,7 +395,7 @@
+ {
+     PHOOK_ENTRY pHook = &g_hooks.pItems[pos];
+     DWORD  oldProtect;
+-    SIZE_T patchSize    = sizeof(JMP_REL);
++    SIZE_T patchSize    = pHook->absolutePatch ? sizeof(JMP_ABS) : sizeof(JMP_REL);
+     LPBYTE pPatchTarget = (LPBYTE)pHook->pTarget;
+ 
+     if (pHook->patchAbove)
+@@ -406,7 +407,12 @@
+     if (!VirtualProtect(pPatchTarget, patchSize, PAGE_EXECUTE_READWRITE, &oldProtect))
+         return MH_ERROR_MEMORY_PROTECT;
+ 
+-    if (enable)
++    if (enable && pHook->absolutePatch)
++    {
++        const JMP_ABS jmp = {0xFF, 0x25, 0, (ULONG_PTR)pHook->pDetour};
++        memcpy(pPatchTarget, &jmp, sizeof(jmp));
++    }
++    else if (enable)
+     {
+         PJMP_REL pJmp = (PJMP_REL)pPatchTarget;
+         pJmp->opcode = 0xE9;
+@@ -421,10 +427,7 @@
+     }
+     else
+     {
+-        if (pHook->patchAbove)
+-            memcpy(pPatchTarget, pHook->backup, sizeof(JMP_REL) + sizeof(JMP_REL_SHORT));
+-        else
+-            memcpy(pPatchTarget, pHook->backup, sizeof(JMP_REL));
++        memcpy(pPatchTarget, pHook->backup, patchSize);
+     }
+ 
+     VirtualProtect(pPatchTarget, patchSize, oldProtect, &oldProtect);
+@@ -576,9 +579,48 @@
+ }
+ 
+ //-------------------------------------------------------------------------
+-MH_STATUS WINAPI MH_CreateHook(LPVOID pTarget, LPVOID pDetour, LPVOID *ppOriginal)
++// The caller supplies complete, exact-build-verified instructions with no
++// position-dependent operands and their instruction boundaries.
++static BOOL CreateAbsoluteTrampoline(PTRAMPOLINE ct, const UINT8* offsets, UINT count)
++{
++#if defined(_M_X64) || defined(__x86_64__)
++    UINT size, i;
++    if (count < 2 || count > ARRAYSIZE(ct->oldIPs) || offsets[0] != 0)
++        return FALSE;
++    size = offsets[count - 1];
++    if (size < sizeof(JMP_ABS) || size + 2 * sizeof(JMP_ABS) > MEMORY_SLOT_SIZE)
++        return FALSE;
++    for (i = 1; i < count; ++i)
++    {
++        if (offsets[i] <= offsets[i - 1] || offsets[i] - offsets[i - 1] > 15)
++            return FALSE;
++    }
++
++    {
++        const JMP_ABS resume = {0xFF, 0x25, 0, (ULONG_PTR)ct->pTarget + size};
++        const JMP_ABS relay = {0xFF, 0x25, 0, (ULONG_PTR)ct->pDetour};
++        LPBYTE code = (LPBYTE)ct->pTrampoline;
++        ct->patchAbove = FALSE;
++        ct->nIP = count;
++        memcpy(ct->oldIPs, offsets, count);
++        memcpy(ct->newIPs, offsets, count);
++        memcpy(code, ct->pTarget, size);
++        memcpy(code + size, &resume, sizeof(resume));
++        ct->pRelay = code + size + sizeof(resume);
++        memcpy(ct->pRelay, &relay, sizeof(relay));
++        return FlushInstructionCache(GetCurrentProcess(), code, size + sizeof(resume) + sizeof(relay));
++    }
++#else
++    return FALSE;
++#endif
++}
++
++//-------------------------------------------------------------------------
++static MH_STATUS CreateHook(LPVOID pTarget, LPVOID pDetour, LPVOID *ppOriginal,
++    const UINT8* absoluteOffsets, UINT count)
+ {
+     MH_STATUS status = MH_OK;
++    const BOOL absolutePatch = absoluteOffsets != NULL;
+ 
+     EnterSpinLock();
+ 
+@@ -589,15 +631,16 @@
+             UINT pos = FindHookEntry(pTarget);
+             if (pos == INVALID_HOOK_POS)
+             {
+-                LPVOID pBuffer = AllocateBuffer(pTarget);
++                LPVOID pBuffer = AllocateBuffer(absolutePatch ? NULL : pTarget);
+                 if (pBuffer != NULL)
+                 {
+-                    TRAMPOLINE ct;
++                    TRAMPOLINE ct = {0};
+ 
+                     ct.pTarget     = pTarget;
+                     ct.pDetour     = pDetour;
+                     ct.pTrampoline = pBuffer;
+-                    if (CreateTrampolineFunction(&ct))
++                    if (absolutePatch ? CreateAbsoluteTrampoline(&ct, absoluteOffsets, count)
++                                      : CreateTrampolineFunction(&ct))
+                     {
+                         PHOOK_ENTRY pHook = AddHookEntry();
+                         if (pHook != NULL)
+@@ -609,6 +652,7 @@
+                             pHook->pDetour     = ct.pDetour;
+ #endif
+                             pHook->pTrampoline = ct.pTrampoline;
++                            pHook->absolutePatch = absolutePatch;
+                             pHook->patchAbove  = ct.patchAbove;
+                             pHook->isEnabled   = FALSE;
+                             pHook->queueEnable = FALSE;
+@@ -627,7 +671,7 @@
+                             }
+                             else
+                             {
+-                                memcpy(pHook->backup, pTarget, sizeof(JMP_REL));
++                                memcpy(pHook->backup, pTarget, absolutePatch ? sizeof(JMP_ABS) : sizeof(JMP_REL));
+                             }
+ 
+                             if (ppOriginal != NULL)
+@@ -671,6 +715,21 @@
+     LeaveSpinLock();
+ 
+     return status;
++}
++
++//-------------------------------------------------------------------------
++MH_STATUS WINAPI MH_CreateHook(LPVOID pTarget, LPVOID pDetour, LPVOID *ppOriginal)
++{
++    return CreateHook(pTarget, pDetour, ppOriginal, NULL, 0);
++}
++
++//-------------------------------------------------------------------------
++MH_STATUS WINAPI ResonanceCreateAbsoluteHook(LPVOID pTarget, LPVOID pDetour, LPVOID *ppOriginal,
++    const UINT8* offsets, UINT count)
++{
++    if (offsets == NULL)
++        return MH_ERROR_UNSUPPORTED_FUNCTION;
++    return CreateHook(pTarget, pDetour, ppOriginal, offsets, count);
+ }
+ 
+ //-------------------------------------------------------------------------
+--- a/trampoline.h
++++ b/trampoline.h
+@@ -99,5 +99,5 @@
+     BOOL   patchAbove;      // [Out] Should use the hot patch area?
+     UINT   nIP;             // [Out] Number of the instruction boundaries.
+-    UINT8  oldIPs[8];       // [Out] Instruction boundaries of the target function.
+-    UINT8  newIPs[8];       // [Out] Instruction boundaries of the trampoline function.
++    UINT8  oldIPs[12];      // [Out] Instruction boundaries of the target function.
++    UINT8  newIPs[12];      // [Out] Instruction boundaries of the trampoline function.
+ } TRAMPOLINE, *PTRAMPOLINE;

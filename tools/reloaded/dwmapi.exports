@@ -1,0 +1,119 @@
+# Windows x64 System32 dwmapi export ordinals and optional names.
+100 DwmpDxGetWindowSharedSurface
+101 DwmpDxUpdateWindowSharedSurface
+102 DwmEnableComposition
+103
+104
+105
+106
+107
+108
+109
+110
+111 DllCanUnloadNow
+112
+113
+114
+115 DllGetClassObject
+116 DwmAttachMilContent
+117 DwmDefWindowProc
+118 DwmDetachMilContent
+119 DwmEnableBlurBehindWindow
+120 DwmEnableMMCSS
+121 DwmExtendFrameIntoClientArea
+122 DwmFlush
+123 DwmGetColorizationColor
+124
+125 DwmGetCompositionTimingInfo
+126 DwmGetGraphicsStreamClient
+127 DwmpGetColorizationParameters
+128 DwmpDxgiIsThreadDesktopComposited
+129 DwmGetGraphicsStreamTransformHint
+130 DwmGetTransportAttributes
+131 DwmpSetColorizationParameters
+132
+133 DwmGetUnmetTabRequirements
+134 DwmGetWindowAttribute
+135 DwmpRenderFlick
+136 DwmpAllocateSecurityDescriptor
+137 DwmpFreeSecurityDescriptor
+138
+139
+140
+141
+142
+143 DwmpEnableDDASupport
+144
+145
+146 DwmInvalidateIconicBitmaps
+147
+148
+149 DwmIsCompositionEnabled
+150
+151
+152
+153
+154
+155
+156 DwmTetherTextContact
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183 DwmpUpdateProxyWindowForCapture
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198 DwmModifyPreviousDxFrameDuration
+199
+200
+201
+202
+203
+204
+205 DwmQueryThumbnailSourceSize
+206 DwmRegisterThumbnail
+207 DwmRenderGesture
+208 DwmSetDxFrameDuration
+209 DwmSetIconicLivePreviewBitmap
+210 DwmSetIconicThumbnail
+211 DwmSetPresentParameters
+212 DwmSetWindowAttribute
+213 DwmShowContact
+214 DwmTetherContact
+215 DwmTransitionOwnedWindow
+216 DwmUnregisterThumbnail
+217 DwmUpdateThumbnailProperties

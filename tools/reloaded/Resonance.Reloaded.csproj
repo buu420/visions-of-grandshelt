@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <AssemblyName>Resonance.Reloaded</AssemblyName>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <ReloadedSdk Condition="'$(ReloadedSdk)' == ''">D:/FFRSAccess/deps/reloaded-streamlined-x64/Loader/X64</ReloadedSdk>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Reloaded.Mod.Loader" HintPath="$(ReloadedSdk)/Reloaded.Mod.Loader.dll" />
+    <Reference Include="Reloaded.Mod.Loader.IO" HintPath="$(ReloadedSdk)/Reloaded.Mod.Loader.IO.dll" />
+    <Reference Include="Reloaded.Mod.Interfaces" HintPath="$(ReloadedSdk)/Reloaded.Mod.Interfaces.dll" />
+    <Reference Include="Reloaded.Memory" HintPath="$(ReloadedSdk)/Reloaded.Memory.dll" />
+  </ItemGroup>
+</Project>

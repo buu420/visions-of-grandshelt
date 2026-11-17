@@ -1,0 +1,57 @@
+{
+  "archive_sha256": "1bb75148c5761a4a5c490935647462914a3711a4df64d1c9c6b145a66030baba",
+  "files": [
+    {
+      "path": "Loader/X64/Colorful.Console.dll",
+      "sha256": "8174dd6113b128d4a5eca173893e613df855eec3ccaac23f794900c81398be6a",
+      "length": 36864
+    },
+    {
+      "path": "Loader/X64/Indieteur.SAMAPI.dll",
+      "sha256": "fd459d2ada1bef66d5d55201fdb7266bfed0d446be75263947cc7fc8077fa193",
+      "length": 24576
+    },
+    {
+      "path": "Loader/X64/Indieteur.VDFAPI.dll",
+      "sha256": "44000fe8b402ef68ae588c5165854dddaacaee4d8287bc1cf61d2d8b9c632ade",
+      "length": 32768
+    },
+    {
+      "path": "Loader/X64/McMaster.NETCore.Plugins.dll",
+      "sha256": "9d2e21a0fc208ad024c0d970eeed1032ac81617e65d68bb66d2b63a3c2907f5c",
+      "length": 73728
+    },
+    {
+      "path": "Loader/X64/Reloaded.Memory.dll",
+      "sha256": "a5799dd95703ddcf4f730039e246dd7aeb3928f0a9771afffaf930662a6ae418",
+      "length": 28672
+    },
+    {
+      "path": "Loader/X64/Reloaded.Mod.Interfaces.dll",
+      "sha256": "725984c4ae111cad4437ba23f887258c3c5624f5243b05f116b8fe6fbc75344d",
+      "length": 40960
+    },
+    {
+      "path": "Loader/X64/Reloaded.Mod.Loader.deps.json",
+      "sha256": "d5b6f1b42e6d57ed28c2a680fc50b25b24e2578326fa692cbb77a0d6c7cbedaf",
+      "length": 3983
+    },
+    {
+      "path": "Loader/X64/Reloaded.Mod.Loader.dll",
+      "sha256": "2bf119a29b62ffb638687d1196578bfc0edf22726fc3ee459f1f3ebb5cf52dfb",
+      "length": 176128
+    },
+    {
+      "path": "Loader/X64/Reloaded.Mod.Loader.IO.dll",
+      "sha256": "550b86744c2a4004269ec3ff00e5e36175e7873c9e9d4345d0af89c601d732e2",
+      "length": 372736
+    },
+    {
+      "path": "Loader/X64/Reloaded.Mod.Loader.runtimeconfig.json",
+      "sha256": "8a66ecf499684b2071b18b52902928ff37efd4131729e1b04ea7dbb6d93ef23d",
+      "length": 649
+    }
+  ],
+  "product_version": "1.30.1",
+  "source_commit": "8ea7483135a7e369052252bffb561877538f993f"
+}

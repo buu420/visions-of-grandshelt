@@ -1,0 +1,1353 @@
+key	text
+A book's	本
+A clear approach to the door's interaction could not be verified.	扉の調べる位置まで、障害物のない経路を確認できませんでした。
+A clear approach to the interaction point could not be verified.	調べる位置まで、障害物のない経路を確認できませんでした。
+A clear approach to the mailbox could not be verified.	ポストまで、障害物のない経路を確認できませんでした。
+A clear walking approach for the player could not be verified.	操作キャラクターが歩ける、障害物のない経路を確認できませんでした。
+A clear walking approach for this doorway could not be verified.	この出入り口まで歩ける、障害物のない経路を確認できませんでした。
+A clear walking approach on this floor could not be verified.	この階で歩ける、障害物のない経路を確認できませんでした。
+A clear walking approach to this exit could not be verified.	この出口まで歩ける、障害物のない経路を確認できませんでした。
+A clear walking approach to this interaction could not be verified.	この調べる対象まで歩ける、障害物のない経路を確認できませんでした。
+A clear walking approach to this person's talk area could not be verified.	この人物の会話範囲まで歩ける、障害物のない経路を確認できませんでした。
+A clear walking route to the side of the crate could not be verified.	箱の側面まで歩ける、障害物のない経路を確認できませんでした。
+A clear water route to this Story destination could not be verified.	このストーリーの目的地まで、障害物のない水上経路を確認できませんでした。
+A compatible registered walking mesh could not be verified for this character.	このキャラクターに対応する、登録済みの歩行メッシュを確認できませんでした。
+A complete native walking route is unavailable.	ゲーム内の完全な歩行経路を利用できません。
+A current field character is unavailable.	現在操作できるフィールドのキャラクターがいません。
+A damage number could not be matched to its unit.	ユニットと照合できないダメージの数値があります。
+A damage number could not be read.	ダメージの数値を一つ読み取れません。
+A damage number's target could not be verified.	ダメージの対象を確認できない数値があります。
+A door's	ドア
+A field character is unavailable.	フィールドのキャラクターを利用できません。
+A field item's	地面のアイテム
+A ladder's	はしご
+A linked exit's current availability could not be read.	リンクされた出口の現在の利用可否を読み取れませんでした。
+A menu or scene is active.	メニューまたはシーンが開いています。
+A movable object's	動かせる物体
+A person's	人物
+A quest marker's	クエストマーカー
+A route for the current Story crossing is unavailable.	現在のストーリーの水上移動に使える経路がありません。
+A route to the lift or its call pedestal could not be verified.	リフトまたはその呼び出し台座への経路を確認できませんでした。
+A route to this story destination is unavailable.	このストーリーの目的地への経路を利用できません。
+A save point's	セーブポイント
+A scripted scene is active.	イベントシーンが進行中です。
+A switch's	スイッチ
+A treasure chest's	宝箱
+A walking route to {0} is unavailable from here.	ここから{0}への歩行経路を利用できません。
+Ability	アビリティ
+Accessibility Options	アクセシビリティ設定
+Accessibility Options is in the System menu. In battle, Home and End choose an ally to review. H reads HP, M reads MP, L reads gauges, F2 reads buffs, and F3 reads debuffs. Press the left stick in battle for controller status.	アクセシビリティ設定はシステムメニューにあります。バトル中はHomeとEndで確認する味方を選びます。HでHP、MでMP、Lでゲージ、F2で強化効果、F3で弱体効果を読み上げます。バトル中に左スティックを押し込むと、コントローラーでステータスを確認できます。
+Accessibility Options. Left and right adjust the selected value. Back returns to System Menu.	アクセシビリティ設定。左右で選択中の値を調整します。戻るとシステムメニューに戻ります。
+Accessory	アクセサリ
+Accessory shop attendant	アクセサリ屋の店員
+Acting. {0}	行動中。{0}
+Activate the console between the containers.	コンテナの間にあるコンソールを起動してください。
+Activate the console within the fence.	フェンスの内側にあるコンソールを起動してください。
+Activate the west console.	西側のコンソールを起動してください。
+Adamandelion	アダマンデリオン
+Aileen	アイリーン
+All	すべて
+Ally	味方
+An active story target or exit could not be verified in this area.	このエリアで有効なストーリーの目標や出口を確認できませんでした。
+An elevator button's	エレベーターのボタン
+An elevator's	エレベーター
+An exit's	出口
+An overkill could not be matched to its unit.	オーバーキルの対象を一つ確認できません。
+An overkill could not be read.	オーバーキルを一つ読み取れません。
+Approach Lid on the upper platform.	上の足場にいるリドに近づいてください。
+Approach Warden's Cape.	守り人の岬に近づいてください。
+Approach the barrier at the tower entrance.	タワー入口の結界に近づいてください。
+Approach the miasma so Fina can cast Holy.	フィーナがホーリーを唱えられるよう、瘴気に近づいてください。
+Approach the platform to continue the trial.	試練を続けるため、足場に近づいてください。
+Approach the throne room doors with Shera.	シエラと一緒に玉座の間の扉に近づいてください。
+Approach the wheel at the helm to take off.	離陸するため、操舵席の舵輪に近づいてください。
+Approach to Shera's cell	シエラの牢への道
+Approach to the factory generator	工場の発電機への道
+Approach to the throne room	玉座の間への道
+Arch beyond the lower save point	下のセーブポイントの先にあるアーチ
+Armor	防具
+Armor shop attendant	防具屋の店員
+Arrived at {0}.	{0}に到着しました。
+Arsha	アルシャ
+Ashasaur	アッシュサウルス
+At destination	目的地に到着
+At target. Interaction available.	目的地に着きました。調べられます。
+At the Crystal Tower. Follow the game's scene.	クリスタルタワーに着きました。ゲームのシーンに従ってください。
+At the Shipyard gate. Continue up the road through the sliding door.	造船所の門に着きました。道を上ってスライドドアを通ってください。
+At the captain's passage.	船長への通路に着きました。
+At the door to the hall. Walk through the door, then start the next route.	ホールへの扉の前です。扉を通ってから、次の経路を開始してください。
+At the factory's sliding door. Continue through it into the bridge hall.	工場のスライドドアの前です。ドアを通ってブリッジのホールに入ってください。
+At the push side of the loose crate. Walk into it toward the row.	動く箱の押す側に着きました。列の方向へ箱に向かって歩いてください。
+At the push side of the loose crate. Walk {0} to push it toward the row.	動く箱の押す側に着きました。{0}へ歩いて、箱を列の方向へ押してください。
+At the sliding door.	スライドドアの前です。
+At the target's activation area.	目的地の起動範囲に入りました。
+At the tornado over Pharm. Follow the game's scene.	ファルム上空の竜巻に着きました。ゲームのシーンに従ってください。
+At {0}. Interaction available.	{0}に着きました。調べられます。
+At {0}. Row through it to continue.	{0}に着きました。こいで通過してください。
+At {0}. Use the game's interaction control to board.	{0}に着きました。ゲームの調べる操作で乗り込みます。
+At {0}. Use the game's interaction control to continue.	{0}に着きました。ゲームの調べる操作で先へ進みます。
+At {0}. Use the game's interaction control to disembark.	{0}に着きました。ゲームの調べる操作で降ります。
+At {0}. {1}	{0}に着きました。{1}
+Audio setting applied for this session. Could not save audio settings.	音声設定をこのセッションに適用しました。音声設定を保存できませんでした。
+Automatic Story walking off.	ストーリーの自動歩行をオフにしました。
+Automatic Story walking stopped. Start it again to continue.	ストーリーの自動歩行を停止しました。続けるには、もう一度開始してください。
+Automatic door back to the elevator	エレベーターへ戻る自動ドア
+Automatic door into the laboratory	研究室へ入る自動ドア
+Automatic door to the lower laboratory	下の研究室への自動ドア
+Automatic doorway	自動ドア
+Automatic walking cancelled by movement.	移動操作により自動歩行を中止しました。
+Automatic walking is already on.	自動歩行はすでにオンです。
+Automatic walking is unavailable because Shift is assigned to another game control or could not be read.	自動歩行を利用できません。Shiftが別の操作に割り当てられているか、割り当てを読み取れません。
+Automatic walking off.	自動歩行をオフにしました。
+Automatic walking on.	自動歩行を開始します。
+Automatic walking on. {0}.	自動歩行を開始します。{0}。
+Automatic walking stopped. A fresh route could not be verified.	自動歩行を停止しました。新しい経路を確認できませんでした。
+Automatic walking stopped. Clearance or braking room could not be verified.	自動歩行を停止しました。通れる幅または止まるための余地を確認できませんでした。
+Automatic walking stopped. Controller state could not be verified.	自動歩行を停止しました。コントローラーの状態を確認できませんでした。
+Automatic walking stopped. Player control changed.	自動歩行を停止しました。操作キャラクターの制御が変わりました。
+Automatic walking stopped. Route is blocked.	自動歩行を停止しました。経路がふさがれています。
+Automatic walking stopped. Start it again to continue.	自動歩行を停止しました。続けるには、もう一度開始してください。
+Automatic walking stopped. The ground ahead could not be verified.	自動歩行を停止しました。この先の足場を確認できませんでした。
+Automatic walking stopped. The ground ahead is blocked.	自動歩行を停止しました。この先は通れません。
+Automatic walking stopped. The ground ahead requires manual movement.	自動歩行を停止しました。この先は手動で移動してください。
+Automatic walking stopped. The ground check needs refreshing.	自動歩行を停止しました。足場をもう一度確認する必要があります。
+Automatic walking stopped. The next section requires a different movement action. Spoken guidance is available.	自動歩行を停止しました。この先は別の移動操作が必要です。音声案内を利用できます。
+Automatic walking stopped. The slope needs further surface verification.	自動歩行を停止しました。坂の足場をさらに確認する必要があります。
+Automatic walking unavailable. {0}	自動歩行を利用できません。{0}
+Awakening Power	力の覚醒
+Ayaka	アヤカ
+Back door beside the lane	路地沿いの裏口
+Back entrance to the back-lane house	路地裏の家の裏口
+Basement door inside Rain's house	レインの家の中の地下室のドア
+Battle information could not be read.	バトル情報を読み取れません。
+Battle information is not ready.	バトル情報はまだ読み上げられません。
+Battle information is unavailable.	バトル情報を確認できません。
+Battle result	バトル結果
+Battle state could not be read.	バトルの進行状況を読み取れません。
+Battle status closed.	バトルステータスを閉じました。
+Battle status could not be read.	バトルの状態を読み取れません。
+Battle status. D-pad left and right choose an ally. Up reads HP and MP. Down reads effects. Y reads gauges. Press B or the left stick to close. {0}	バトルステータス。方向パッドの左右で味方を選びます。上でHPとMP、下で効果を読み上げます。Yでゲージを読み上げます。Bか左スティックの押し込みで閉じます。{0}
+Beacon volume	誘導音の音量
+Beacon volume is zero. Manual guidance will speak turns.	誘導音の音量がゼロです。手動ガイドでは曲がる方向を読み上げます。
+Berserk	バーサク
+Black mage	黒魔道士
+Blacksmith	鍛冶屋
+Blind	暗闇
+Board the boat and return to the first boat room.	ボートに乗って最初のボート室に戻ってください。
+Board the boat at the foot of the stairs to reach the tower.	階段の下でボートに乗り、塔へ向かってください。
+Board the boat for the crossing to the large crystal pedestal.	ボートに乗って大きなクリスタルの台座へ渡ってください。
+Board the boat to cross the {0}.	ボートに乗って{0}を渡ってください。
+Board the boat to return to the pedestal across the basin.	ボートに乗って貯水池の向こう岸の台座に戻ってください。
+Board the boat to return to the second pool and take the other passage.	ボートに乗って2番目の水場に戻り、もう一方の通路へ進んでください。
+Board the {0} and interact to ride {1}.	{0}に乗り込み、調べて{1}移動してください。
+Boat	ボート
+Book	本
+Boost	おうえん
+Boy	男の子
+Brave	ブレイブ
+Breath Recovery formation	調息の陣
+Bridge pedestal	橋の台座
+Buffs	強化効果
+Buffs unavailable	強化効果を確認できません
+Calico cat	三毛猫
+Call pedestal for the {0}	{0}の呼び出し台座
+Call the restored entrance elevator up to this floor.	復旧した入口のエレベーターをこの階へ呼んでください。
+Camouflage	カモフラージュ
+Captain's quarters	隊長の部屋
+Cargo elevator approach	貨物エレベーターへの道
+Castle exit	城の出口
+Castle hall approach	城のホールへの道
+Cat	ネコ
+Center portal	中央の転送装置
+Center-room portal	中央の部屋の転送装置
+Centre rotation pedestal	中央の回転台座
+Charge formation	突撃の陣
+Charlotte	シャルロット
+Charm	魅了
+Check the White Jade Stone on the center table.	中央のテーブルにある白輝石を調べてください。
+Check the door back to the west corridor.	西の廊下へ戻る扉を調べてください。
+Check the east door with the Level 2 Lab Key Card.	研究所カードキー　レベル２で東の扉を調べてください。
+Check the harbor to open the destination choices.	港を調べて行き先の選択肢を開いてください。
+Check the memo or the numbered elevator levers.	メモか、番号のついたエレベーターのレバーを調べてください。
+Check the nearby portal to return to the east wing.	近くの転送装置を調べて東棟に戻ってください。
+Check the north door with the Level 3 Lab Key Card.	研究所カードキー　レベル３で北の扉を調べてください。
+Check the portal ahead.	前方の転送装置を調べてください。
+Check the portal at the far side of this enclosure.	この囲いの奥にある転送装置を調べてください。
+Check the portal in the west laboratory.	西の研究室にある転送装置を調べてください。
+Check the portal near the far side of the room.	部屋の奥のほうにある転送装置を調べてください。
+Check the portal on this side of the enclosure.	囲いのこちら側にある転送装置を調べてください。
+Check the powered portal in the center of the room.	部屋の中央にある起動した転送装置を調べてください。
+Check the rolled ladder to lower it.	巻き上げられたはしごを調べて降ろしてください。
+Check the route toward the entrance.	入口へ向かう道を確認してください。
+Check the water by the orphanage so Luka can purify it.	ルルカが浄化できるよう、孤児院のそばの水を調べてください。
+Check the water near the city entrance so Luka can purify it.	ルルカが浄化できるよう、街の入口近くの水を調べてください。
+Check the water on the way to Old Town so Luka can purify it.	ルルカが浄化できるよう、旧市街へ向かう道の水を調べてください。
+Check the west door with the Level 1 Lab Key Card.	研究所カードキー　レベル１で西の扉を調べてください。
+Checked	チェック済み
+Chocobo	チョコボ
+Choose a destination first.	まず目的地を選んでください。
+Choose a target with Page Up or Page Down, or F6 and F7.	Page UpかPage Down、またはF6とF7で目的を選んでください。
+Circle	○ボタン
+Climb back onto the shelf.	棚の上に登り直してください。
+Climb back up from the lower ledge.	下の岩棚から登り直してください。
+Climb back up to the side walkway.	脇の通路まで登り直してください。
+Climb down from the shelf.	棚から降りてください。
+Climb down the next ladder to the central walkway.	次のはしごを降りて中央の通路へ向かってください。
+Climb down to the container room floor.	コンテナ室の床まで降りてください。
+Climb down to the fenced console.	フェンスで囲まれたコンソールまで降りてください。
+Climb down to the next landing.	次の踊り場まで降りてください。
+Climb the first ladder.	最初のはしごを登ってください。
+Climb the ladder on the tower.	塔のはしごを登ってください。
+Climb the ladder onto the shelf.	はしごを登って棚の上に上がってください。
+Climb the ladder to the next section.	はしごを登って次の区画へ向かってください。
+Climb the ladder to the upper walkway.	はしごを登って上の通路へ向かってください。
+Climb the ladder to the upper walkways.	はしごを登って上の通路群へ向かってください。
+Climb the last ladder to the north exit.	最後のはしごを登って北の出口へ向かってください。
+Climb the long ladder to the upper path.	長いはしごを登って上の道へ向かってください。
+Climb the second ladder.	2番目のはしごを登ってください。
+Climb to the next level.	次の階層へ登ってください。
+Closed treasure chest	閉じた宝箱
+Confuse	混乱
+Connecting passage	連絡通路
+Console between the containers	コンテナの間のコンソール
+Continue across the upper bridges to the altar.	上の橋を渡って祭壇へ進んでください。
+Continue along the trail beyond the save point.	セーブポイントの先の道を進んでください。
+Continue into the chamber at the bottom of the shrine.	神殿の最下部にある広間へ進んでください。
+Continue into the elevator room.	エレベーター室へ進んでください。
+Continue into the first trial room.	最初の試練の部屋へ進んでください。
+Continue past the save point to the Dark Crystal.	セーブポイントを過ぎて闇のクリスタルへ進んでください。
+Continue through the door at the top of the lifts.	リフトの最上部にある扉を通って進んでください。
+Continue through the door to the next trial.	扉を通って次の試練へ進んでください。
+Continue through the doors to the inner chamber.	扉を通って奥の間へ進んでください。
+Continue through the open Level 1 door.	開いたレベル１の扉を通って進んでください。
+Continue through the open Level 2 door.	開いたレベル２の扉を通って進んでください。
+Continue through the open Level 3 door.	開いたレベル３の扉を通って進んでください。
+Continue through the passage ahead.	前方の通路を通って進んでください。
+Continue through the sliding door.	スライドドアを通って進んでください。
+Continue through the upper passage.	上の通路を通って進んでください。
+Continue through the west wing.	西棟を通って進んでください。
+Continue to the bottom of the shrine.	神殿の最下部へ進んでください。
+Continue to the far end of Old Town.	旧市街の奥まで進んでください。
+Continue to the gate.	門へ進んでください。
+Continue to the guarded cells to look for Shera.	シエラを探すため、見張りのいる牢へ進んでください。
+Continue to the overlook on the mountain path.	山道の見晴らし台へ進んでください。
+Continue toward Shera's cell.	シエラの牢へ向かって進んでください。
+Continue toward the inner chamber.	奥の間へ向かって進んでください。
+Continue toward the trial in the courtyard.	中庭の試練へ向かって進んでください。
+Continue up to the shrine entrance.	神殿の入口まで上って進んでください。
+Control-relative {0}, {1}	操作方向で{0}、{1}
+Controller input capture is unavailable.	コントローラーの入力を取得できません。
+Controller navigation is available.	コントローラーでガイドを利用できます。
+Controller navigation is unavailable.	コントローラーでガイドを利用できません。
+Controller navigation is unavailable. Start guidance when it is available.	コントローラーでガイドを利用できません。利用できるようになったら、ガイドを開始してください。
+Controller navigation unavailable. Its current game binding could not be reserved.	コントローラーでガイドを利用できません。現在のゲーム内のボタン割り当てを確保できませんでした。
+Controller navigation unavailable. {0}	コントローラーでガイドを利用できません。{0}
+Controller. Hold {0} for navigation. D-pad left and right change category; up and down choose a target. Press the left stick for manual guidance, or the right stick for automatic walking. B stops navigation; Y reads help. Release {0} after starting or stopping. Release held controls after a menu, focus or connection change.	コントローラー。ガイドを使うには{0}を押し続けます。方向パッドの左右でカテゴリーを切り替え、上下で目的を選びます。左スティックを押し込むと手動ガイド、右スティックを押し込むと自動歩行です。Bでガイドを停止し、Yでヘルプを読み上げます。開始や停止の後は{0}を離してください。メニュー、ウィンドウのフォーカス、接続が変わったら、押していたボタンを離してください。
+Conveyor across the far gap	奥の隙間を渡るベルトコンベア
+Conveyor across the middle gap	中央の隙間を渡るベルトコンベア
+Conveyor across to the next platform	次の足場へ渡るベルトコンベア
+Conveyor back to the bridge hall	橋のホールへ戻るベルトコンベア
+Conveyor from the bridge hall	橋のホールから出るベルトコンベア
+Conveyor to the bridge pedestal	橋の台座へ向かうベルトコンベア
+Conveyor to the far platform	奥の足場へ向かうベルトコンベア
+Conveyor to the middle platforms	中央の足場へ向かうベルトコンベア
+Cover	かばう
+Cover all	全体かばう
+Crash Blade	クラッシュブレイド
+Crate room water pedestal	木箱の部屋の水位台座
+Cross into Old Town.	旧市街へ渡ってください。
+Cross into the next section of the Wandering Lands.	浮遊大陸の次の区画へ渡ってください。
+Cross the bridge to the Water Shrine.	橋を渡って水の神殿へ向かってください。
+Cross the catwalks and use the large pedestal to lower the west bridge section.	足場を渡り、大きな台座を使って西側の橋を降ろしてください。
+Cross the floating road toward the Wandering Lands entrance.	浮遊する道を渡って浮遊大陸の入口へ向かってください。
+Cross the lowered bridge back to the entrance passage.	降りた橋を渡って入口の通路へ戻ってください。
+Cross the lowered bridge to reach the factory generator.	降りた橋を渡って工場の発電機へ向かってください。
+Cross the raised catwalk, then descend to the next pedestal.	上がった足場を渡り、次の台座まで降りてください。
+Cross the summit passage to Lake Ryusei.	山頂の通路を渡ってリュウセイ湖へ向かってください。
+Cross the walkway to the passage on the far side.	通路を渡って向こう側の通路へ向かってください。
+Cross this car to the door into the third car.	この車両を進み、3両目へ入る扉へ向かってください。
+Crystal Tower	クリスタルタワー
+Crystal Tower barrier	クリスタルタワーの結界
+Current objective. {0}	現在の目標。{0}
+Current option is loading	現在の設定を読み込み中
+Current screen text is unavailable	現在の画面のテキストを読み取れません
+Current story objective unavailable.	現在のストーリー目標を利用できません。
+Current story objective unavailable. {0}	現在のストーリー目標を利用できません。{0}
+Damage numbers could not be matched to a unit.	ダメージの数値がどのユニットに対応するか確認できません。
+Damage numbers could not be matched to the current battle.	ダメージの数値を現在のバトルと照合できません。
+Damage numbers could not be read.	ダメージの数値を読み取れません。
+Dark immunity	闇属性無効
+Debrave	デブレイ
+Debuffs	弱体効果
+Debuffs unavailable	弱体効果を確認できません
+Decoy	ぶんしん
+Defaith	デフェイ
+Delete	Delete
+Delivery attendant	配送係
+Demon Form	魔人の本領
+Deprotect	デプロテ
+Descend the ladder to return to the bridge hall.	はしごを降りて橋のホールへ戻ってください。
+Descend to the side walkway and cross the two catwalks.	脇の通路まで降りて、2つの足場を渡ってください。
+Description: {0}	場面の説明。{0}
+Deshell	デシェル
+Destination guidance stopped.	目的地の案内を停止しました。
+Destination kept. Start guidance to find a route from here.	目的地は保持されています。ここからの経路を探すには、ガイドを開始してください。
+Destination kept. Start guidance when controller navigation is available.	目的地は保持されています。コントローラーでガイドを利用できるようになったら、ガイドを開始してください。
+Destination. {0}	目的地。{0}
+Destinations	目的地
+Destinations.	目的地。
+Destinations. No walking destinations are available from here.	目的地。ここから歩いて行ける目的地はありません。
+Destinations. {0}.	目的地。{0}。
+Dilmagian soldier	ディルマギア兵
+Dock pedestal landing across the crates	木箱の向こうにある船着き場の台座前の踊り場
+Doom	死の宣告
+Door back to Gaberada	ガベラダへ戻る扉
+Door back to Sian	シアンの町へ戻る扉
+Door back to the west corridor	西の廊下へ戻る扉
+Door beside the chocobo yard	チョコボの囲いの横のドア
+Door from Rain's house to the street	レインの家から通りへのドア
+Door from the basement to Rain's house	地下室からレインの家へのドア
+Door from the chocobo yard into the house	チョコボの囲いから家へのドア
+Door from the courtyard house to the street	中庭のある家から通りへのドア
+Door from the house by the item shop to the street	道具屋の隣の家から通りへのドア
+Door from the house to the back lane	家から路地裏へのドア
+Door from the inn to the harbor	宿屋から港へのドア
+Door from the inn to the street	宿屋から通りへのドア
+Door from the inn to the village	宿屋から村へのドア
+Door from the item shop to the harbor	道具屋から港へのドア
+Door from the item shop to the street	道具屋から通りへのドア
+Door from the item shop to the village	道具屋から村へのドア
+Door from the vision shop to the street	ビジョン屋から通りへのドア
+Door from the weapon and armor shop to the harbor	武器防具屋から港へのドア
+Door from the weapon and armor shop to the street	武器防具屋から通りへのドア
+Door from the weapon and armor shop to the village	武器防具屋から村へのドア
+Door from the weapon shop to the street	武器屋から通りへのドア
+Door into the Enterprise	エンタープライズへ入る扉
+Door of Rain's house	レインの家のドア
+Door out of the bridge hall	橋のホールから出る扉
+Door out of the captain's quarters	隊長の部屋から出る扉
+Door to Rain's basement	レインの家の地下室へのドア
+Door to the bridge hall	橋のホールへの扉
+Door to the chocobo yard	チョコボの囲いへのドア
+Door to the courtyard	中庭への扉
+Door to the elder's home	おばばの家への扉
+Door to the first trial	最初の試練への扉
+Door to the hall	ホールへの扉
+Door to the house by the item shop	道具屋の隣の家へのドア
+Door to the inn	宿屋へのドア
+Door to the item shop	道具屋へのドア
+Door to the jail corridor	牢の廊下への扉
+Door to the next train car	次の車両への扉
+Door to the next wing	次の区画への扉
+Door to the outer cells	外側の牢への扉
+Door to the roof stairway	屋上への階段に続く扉
+Door to the vision shop	ビジョン屋へのドア
+Door to the weapon and armor shop	武器防具屋へのドア
+Door to the weapon shop	武器屋へのドア
+Door to {0}	{0}へのドア
+Down	下に
+Duality Knight	デュアリティナイト
+Dwarf	ドワーフ
+Earth immunity	土属性無効
+Elevator	エレベーター
+Elevator call button	エレベーターの呼び出しボタン
+Elevator down to the laboratory	研究室へ降りるエレベーター
+Elevator lever memo	エレベーターのレバーのメモ
+Elevator up to the entrance passage	入口の通路へ上がるエレベーター
+End	End
+End of the drained passage	水の引いた通路の終わり
+Enemies. {0}	敵。{0}
+Enemy	敵
+Enemy attention up	ねらう
+Enter Lake Ryusei at the top of the mountain.	山頂にあるリュウセイ湖へ入ってください。
+Enter Sian to ask about the Dark Crystal.	闇のクリスタルについて尋ねるため、シアンの町へ入ってください。
+Enter the jail corridor.	牢の廊下へ入ってください。
+Enter the throne room.	玉座の間へ入ってください。
+Enter the tunnel behind the bookcase.	本棚の裏の隧道へ入ってください。
+Enterprise helm	エンタープライズの操舵席
+Enterprise takeoff point	エンタープライズの離陸地点
+Entrance approach	入口への道
+Entrance elevator approach	入口のエレベーターへの道
+Entrance elevator call pedestal	入口のエレベーターの呼び出し台座
+Entrance portal	入口の転送装置
+Entrance terrace across the crates	木箱の向こうにある入口側のテラス
+Entrance to Crystal Tower	クリスタルタワーの入口
+Entrance to Dilmagia	ディルマギアの入口
+Entrance to Jake's office	ジェイクの執務室の入口
+Entrance to Lake Ryusei	リュウセイ湖の入口
+Entrance to Olderion	オルデリオンの入口
+Entrance to Rain's house	レインの家の入口
+Entrance to Sian	シアンの町の入口
+Entrance to Zoldaad, the Imperial Capital	帝都ゾルダードの入口
+Entrance to the Rebel Hideout	反乱軍のアジトの入口
+Entrance to the Shrine side chamber	神殿の側室への入口
+Entrance to the Wandering Lands	浮遊大陸の入口
+Entrance to the Water Shrine	水の神殿の入口
+Entrance to the elder's home	おばばの家の入口
+Evan	エヴァン
+Examine the large crystal pedestal on this platform.	この足場にある大きなクリスタルの台座を調べてください。
+Examine the stele before approaching the trial.	試練に近づく前に石碑を調べてください。
+Exit from Jake's office	ジェイクの執務室の出口
+Exit from the cell wing	牢の区画の出口
+Exit to Gronoa	ゴロノアへの出口
+Exit to Olderion	オルデリオンへの出口
+Exit to the Gronoa overworld	ゴロノアのフィールドマップへの出口
+Exit to the Imperial Hotel district	帝都ホテル周辺への出口
+Exit to the castle rooftop	城の屋上への出口
+Exit to the next Battlefield section	戦場の次の区画への出口
+Exit to {0}	{0}への出口
+Exits, doors and ladders	出口、扉、はしご
+Expanded	展開済み
+Factory exit to the desert	工場から砂漠への出口
+Faith	フェイス
+Far end of Old Town	旧市街の奥
+Far terrace across the crates	木箱の向こうにある奥のテラス
+Far walkway across the crates	木箱の向こうにある奥の通路
+Fence by the elevator controls	エレベーターの操作盤のそばのフェンス
+Fenced console	フェンスで囲まれたコンソール
+Field controls are unavailable.	フィールドを操作できません。
+Field controls could not be read.	フィールドの操作を読み取れませんでした。
+Fina	フィーナ
+Fina in the alley	路地にいるフィーナ
+Fire damage up	火属性強化
+Fire immunity	火属性無効
+First ladder toward Lake Dorr	ドール湖へ向かう最初のはしご
+First long ladder	最初の長いはしご
+First, go to the door to the hall. {0}	まず、ホールへの扉に向かってください。{0}
+Fisherman	漁師の男性
+Fisherwoman	漁師の女性
+Fluid Tactics	転戦自在の策
+Focused. {0}	選択中。{0}
+Folded ladder by the pedestal	台座のそばの折りたたまれたはしご
+Follow Arsha to the plaza with the tree.	アルシャについて木のある広場へ向かってください。
+Follow Jake through the factory gate.	ジェイクについて工場の門を通ってください。
+Follow the canyon to Mozul Station. Interact at the entrance.	峡谷に沿ってモズール駅へ向かってください。入口で調べてください。
+Follow the corridor to the outer cells.	廊下に沿って外側の牢へ向かってください。
+Follow the desert road to the Weapons Factory.	砂漠の道に沿って兵器工場へ向かってください。
+Follow the drained passage to the entrance hall.	水の引いた通路に沿って入口のホールへ向かってください。
+Follow the drained passage to the ladder chamber.	水の引いた通路に沿ってはしごの部屋へ向かってください。
+Follow the entrance passage into the bridge hall.	入口の通路に沿って橋のホールへ入ってください。
+Follow the entrance path to the central hall.	入口の道に沿って中央ホールへ向かってください。
+Follow the floating path to the Forest Path entrance.	浮遊する道に沿って林道の入口へ向かってください。
+Follow the hall toward the throne room.	ホールに沿って玉座の間へ向かってください。
+Follow the lower passage to the laboratory.	下の通路に沿って研究室へ向かってください。
+Follow the lower road back to Olderion.	下の道に沿ってオルデリオンへ戻ってください。
+Follow the lower walkway through the arch.	下の通路に沿ってアーチを通ってください。
+Follow the lower walkway to the crate room.	下の通路に沿って木箱の部屋へ向かってください。
+Follow the main street to the monsters.	大通りに沿ってモンスターのいる場所へ向かってください。
+Follow the mountain trail toward the summit.	山道に沿って山頂へ向かってください。
+Follow the passage back to the entrance.	通路に沿って入口へ戻ってください。
+Follow the path to Lake Dorr.	道に沿ってドール湖へ向かってください。
+Follow the platform to the conveyor to the bridge pedestal.	足場に沿って、橋の台座へ向かうベルトコンベアまで進んでください。
+Follow the railway toward the Imperial Capital.	鉄道に沿って帝都へ向かってください。
+Follow the side walkway to the tall ladder and climb it.	脇の通路に沿って高いはしごまで進み、登ってください。
+Follow the spiral to the summit. You can prepare at the rest stop along the way.	らせんの道に沿って頂上へ向かってください。途中の休憩所で準備ができます。
+Follow the stairs beyond the save point.	セーブポイントの先の階段を進んでください。
+Follow the stairs down and go around the loose crate. Push it toward the row to line it up.	階段を下りて、動く木箱の反対側へ回ってください。木箱を列のほうへ押して並べてください。
+Follow the stairway to the rooftop.	階段に沿って屋上へ向かってください。
+Follow the trail ahead.	前方の道を進んでください。
+Follow the trail beyond the mountain pass.	峠の先の道を進んでください。
+Follow the trail into the next section.	道に沿って次の区画へ進んでください。
+Follow the trail through the lower tower.	道に沿ってタワー下層を進んでください。
+Follow the trail. The crystal paths appear as you approach.	道を進んでください。近づくとクリスタルの道が現れます。
+Follow the tunnel to the Rebel Hideout.	隧道に沿って反乱軍のアジトへ向かってください。
+Follow the tunnel to the castle dungeon.	隧道に沿って城の地下牢へ向かってください。
+Follow the upper path into the next passage.	上の道に沿って次の通路へ進んでください。
+Follow the upper path to the Water Maiden.	上の道に沿って水の巫女のもとへ向かってください。
+Follow the upper walkway into the boat room.	上の通路に沿ってボート室へ入ってください。
+Follow the upper walkway to the laboratory.	上の通路に沿って研究室へ向かってください。
+Follow the west ramp to the small pedestal.	西側のスロープに沿って小さな台座へ向かってください。
+Follow the winding trail past the fork.	曲がりくねった道を進み、分かれ道を過ぎてください。
+Forest Path entrance	林道の入口
+Forest Path exit toward the Wandering Lands	林道から浮遊大陸へ向かう出口
+Four-lamp elevator	4つのランプのあるエレベーター
+Front door from the back-lane house to the street	路地裏の家から通りへの正面のドア
+Front door from the inn to the street	宿屋から通りへの正面のドア
+Front door of the courtyard house	中庭のある家の正面のドア
+Front door of the house by the back lane	路地沿いの家の正面のドア
+Front door of the house by the item shop	道具屋の隣の家の正面のドア
+Front door of the inn	宿屋の正面のドア
+Front door of the item shop	道具屋の正面のドア
+Front door of the weapon and armor shop	武器防具屋の正面のドア
+Front entrance to the back-lane house	路地裏の家の正面入口
+Front entrance to the courtyard house	中庭のある家の正面入口
+Front entrance to the inn	宿屋の正面入口
+Fryevia	フレイヴィア
+Fury	怒り
+Gate into the Weapons Factory	兵器工場へ入る門
+Gate to Old Town	旧市街への門
+Gate to the Shipyard	造船所への門
+Gil on hand {0}	所持ギル{0}
+Gilgamesh	ギルガメッシュ
+Girl	女の子
+Go inside the Enterprise and make your way to the helm.	エンタープライズの中に入り、操舵席へ向かってください。
+Go through Amore on the way to Warden's Cape.	アムールの町を通って守り人の岬へ向かってください。
+Go through the arch that the water uncovered.	水が引いて現れたアーチを通ってください。
+Go through the door into the second train car.	扉を通って2両目へ入ってください。
+Go through the entrance into the lower tower.	入口を通ってタワー下層へ入ってください。
+Go through the gate into the factory.	門を通って工場へ入ってください。
+Go through the next door to reach the fourth car.	次の扉を通って4両目へ向かってください。
+Go through the open door to speak to Jake.	開いた扉を通ってジェイクと話してください。
+Go through to the next wing.	次の区画へ進んでください。
+Go through to the upper bridges.	上の橋へ進んでください。
+Go to the Shipyard to meet Lid. Follow the main road to the gate.	リドに会うため造船所へ向かってください。大通りに沿って門へ進んでください。
+Go to the bridge.	橋へ向かってください。
+Go to the captain's quarters to look for the throne room key.	玉座の鍵を探すため、隊長の部屋へ向かってください。
+Go to the cave entrance northeast of Olderion.	オルデリオンの北東にある洞窟の入口へ向かってください。
+Go to the fence by the elevator controls.	エレベーターの操作盤のそばのフェンスへ向かってください。
+Go to the ladder and walk toward it to climb down.	はしごへ向かい、そのまま歩いて降りてください。
+Go to the last page to close.	最後のページに進むと閉じられます。
+Go to the portal beyond the save point and interact.	セーブポイントの先のポータルへ向かい、調べてください。
+Go to the waterfall entrance west of Olderion.	オルデリオンの西にある滝の入口へ向かってください。
+Go toward the cargo elevator.	貨物エレベーターへ向かってください。
+Good Luck	強運
+Grand Magic	大魔法
+Grandshelt soldier	グランシェルト兵
+Great Wall	グレートウォール
+Ground pickup	地面のアイテム
+Guard	ぼうぎょ
+Guidance is already on.	ガイドはすでにオンです。
+Guidance off.	案内をオフにしました。
+HP unavailable	HPを確認できません
+HP {0}	HP {0}
+HP {0} of {1}	HP {0}、最大{1}
+Harbor for Zoldaad	ゾルダード行きの港
+Haste	ヘイスト
+Head to the far door to escape the train.	列車から脱出するため、奥の扉へ向かってください。
+Head toward the entrance elevator on the upper deck.	上のデッキにある入口のエレベーターへ向かってください。
+Heat	HEAT状態
+Hidden tunnel entrance	隠された隧道の入口
+Hideout exit to the desert	アジトから砂漠への出口
+Hold Down to climb down.	下を押し続けて降りてください。
+Hold Up to climb.	上を押し続けて登ってください。
+Home	Home
+Honing Sense	研ぎ澄まし
+Ice damage up	氷属性強化
+Ice immunity	氷属性無効
+Inn attendant	宿屋の店主
+Inn side door from inside	宿屋の内側の横のドア
+Inner chamber door	奥の間の扉
+Innkeeper	宿屋の店主
+Interaction available	調べられます
+Iron Wall formation	鉄壁の陣
+Item shop attendant	道具屋の店員
+Jake	ジェイク
+Jake's office door	ジェイクの執務室の扉
+Key assignment is active.	キー割り当て中です。
+King of Grandshelt	グランシェルト王
+Ladder	はしご
+Ladder back onto the shelf	棚の上へ戻るはしご
+Ladder back to the container floor	コンテナ室の床へ戻るはしご
+Ladder back to the upper path	上の道へ戻るはしご
+Ladder beyond the trial	試練の先にあるはしご
+Ladder down from the shelf	棚から降りるはしご
+Ladder down to the bridge hall	橋のホールへ降りるはしご
+Ladder down to the save point	セーブポイントへ降りるはしご
+Ladder down toward Olderion	オルデリオン方面へ降りるはしご
+Ladder onto the shelf	棚の上へ登るはしご
+Ladder to the central walkway	中央の通路へのはしご
+Ladder to the elevator landing	エレベーターの踊り場へのはしご
+Ladder to the fenced console	フェンスで囲まれたコンソールへのはしご
+Ladder to the lower floor	下の階へのはしご
+Ladder to the lower hall	下のホールへのはしご
+Ladder to the upper walkway	上の通路へのはしご
+Ladder to the upper walkways	上の通路群へのはしご
+Lake Dorr entrance	ドール湖の入口
+Lake Ryusei exit toward Forest Path	リュウセイ湖から林道へ向かう出口
+Landing below the upper passage	上の通路の下にある船着き場
+Landing below the water pedestal	水位を変える台座の下にある船着き場
+Landing by the central hall passage	中央広間への通路脇の船着き場
+Landing by the large crystal pedestal	大きなクリスタルの台座脇の船着き場
+Landing by the tower ladder	塔のはしご脇の船着き場
+Landing on the far bank	対岸の船着き場
+Large crystal pedestal	大きなクリスタルの台座
+Lasswell	ラスウェル
+Leave Amore by the north bridge toward Warden's Cape.	北の橋からアムールの町を出て、守り人の岬へ向かってください。
+Leave Amore by the south exit for Waterfall Way.	南の出口からアムールの町を出て、滝の回廊へ向かってください。
+Leave Forest Path for the Wandering Lands.	林道を出て浮遊大陸へ向かってください。
+Leave Jake's office and return to the hall.	ジェイクの執務室を出てホールへ戻ってください。
+Leave Old Town through Olderion on the way to Waterfall Way.	オルデリオンを通って旧市街を出て、滝の回廊へ向かってください。
+Leave Olderion by the south exit for the Cave of Waters.	南の出口からオルデリオンを出て、水の洞窟へ向かってください。
+Leave Olderion for Lake Dorr by way of the Cave of Waters.	オルデリオンを出て、水の洞窟を経由してドール湖へ向かってください。
+Leave Olderion for Waterfall Way.	オルデリオンを出て滝の回廊へ向かってください。
+Leave Sian and head for Mt. Reizan.	シアンの町を出てレイホウ山へ向かってください。
+Leave by the north exit, then take the east fork toward the Wind Shrine.	北の出口から出て、東の分かれ道を進み、風の神殿へ向かってください。
+Leave the Research Center Ruins.	研究所廃墟を出てください。
+Leave the Water Maiden's chamber through the passage.	通路を通って水の巫女の部屋を出てください。
+Leave the Water Shrine and return to Olderion.	水の神殿を出てオルデリオンへ戻ってください。
+Leave the captain's quarters and return to the throne room doors.	隊長の部屋を出て玉座の間の扉へ戻ってください。
+Leave the cave by the high exit toward Lake Dorr.	高い場所の出口から洞窟を出て、ドール湖へ向かってください。
+Leave the cave by the south exit and return to Olderion.	南の出口から洞窟を出てオルデリオンへ戻ってください。
+Leave the cell wing to reach the corridor.	牢の区画を出て廊下へ向かってください。
+Leave the chamber through the arch.	アーチを通って広間を出てください。
+Leave the crate room through the entrance passage.	入口の通路を通って木箱の部屋を出てください。
+Leave the elder's home.	おばばの家を出てください。
+Leave the inn and meet the party in the alley.	宿屋を出て、路地で仲間と合流してください。
+Leave the laboratory and return to the elevator.	研究室を出てエレベーターへ戻ってください。
+Leave the lake and follow the floating path toward Forest Path.	湖を出て、浮遊する道に沿って林道へ向かってください。
+Leave the mountain path through the south exit.	南の出口から山道を出てください。
+Leave the shrine to continue on Gronoa.	神殿を出てゴロノアの旅を続けてください。
+Leave the throne room through the door to the roof stairway.	屋上への階段に続く扉を通って玉座の間を出てください。
+Left	左に
+Left rotation pedestal	左の回転台座
+Level 1 Lab Key Card	研究所カードキー　レベル１
+Level 1 door	レベル１の扉
+Level 2 Lab Key Card	研究所カードキー　レベル２
+Level 2 door	レベル２の扉
+Level 3 Lab Key Card	研究所カードキー　レベル３
+Level 3 door	レベル３の扉
+Level {0}	レベル{0}
+Lever {0}	レバー{0}
+Libra details could not be read.	ライブラの詳細を読み取れません。
+Libra target could not be read.	ライブラの対象を読み取れません。
+Library bookshelf clue	図書館の本棚の手がかり
+Lid	リド
+Lid's upper platform	リドのいる上の足場
+Light Veil	ライトヴェール
+Light immunity	光属性無効
+Lightning damage up	雷属性強化
+Lightning immunity	雷属性無効
+Lightning ley line	雷の地脈
+Limit gauge unavailable	リミットゲージを確認できません
+Limit gauge {0} percent	リミットゲージ{0}パーセント
+Local by the tree	木のそばの住人
+Local resident	住民
+Locked dungeon gate	鍵のかかった地下牢の門
+Lower shrine story marker	神殿下層のストーリーの目印
+Lower the ladder beside the pedestal to return to the hall.	台座の横のはしごを降ろしてホールへ戻ってください。
+MP unavailable	MPを確認できません
+MP {0}	MP {0}
+Magic Barrier	マバリア
+Mailbox by the inn	宿屋のそばのポスト
+Man	男性
+Man in blue	青い服の男
+Masamune	政宗の構え
+Medal pickup	地面のメダル
+Merchant	商人
+Meteoroid	運命の宣告
+Miasma story marker	瘴気のストーリーの目印
+Middle Reach landing	中層の踊り場
+Mind Focus	精神集中
+Miner	採掘師
+Mixed	一部チェック済み
+Moogle	モーグリ
+Moon Slayer	殲月
+More than one active exit leads to the next Battlefield section.	戦場の次の区画へ通じる有効な出口が複数あります。
+More than one active target matches this story object. A route is unavailable.	このストーリーオブジェクトに該当する有効な対象が複数あります。経路を利用できません。
+More than one controller is active.	複数のコントローラーが有効です。
+Move toward the ladder, then {0}	はしごに向かって移動してから、{0}
+Move {0} onto the ladder, then {1}	{0}へ移動してはしごに乗ってから、{1}
+Mozul Station entrance	モズール駅の入口
+Mt. Reizan trailhead	レイホウ山の登山口
+NPC sound volume	NPCの通知音の音量
+NPC sounds	NPCの通知音
+Native navigation input state is unavailable.	ゲーム内のナビゲーション入力の状態を取得できません。
+Native walking input is unavailable.	ゲーム内の歩行入力を利用できません。
+Navigation beacon on.	ナビゲーションビーコンをオンにしました。
+Navigation beacon on. {0}.	ナビゲーションビーコンをオンにしました。{0}。
+Navigation commands arrived together. Release the modifier, then press one command at a time.	複数のナビゲーション操作が同時に届きました。修飾キーを離してから、操作をひとつずつ押してください。
+Navigation is off.	ナビゲーションはオフです。
+Navigation is unavailable in this travel mode.	この移動方法ではナビゲーションを利用できません。
+Navigation key unavailable because it conflicts with a game control.	ナビゲーションのキーはゲームの操作と重複しているため利用できません。
+Navigation stopped while speech output was unavailable.	音声出力を利用できなかったため、ナビゲーションを停止しました。
+Navigation stopped.	ガイドを停止しました。
+Navigation stopped. A fresh complete walking route is unavailable.	ナビゲーションを停止しました。新しい経路を最後まで確認できませんでした。
+Navigation stopped. Area or player changed.	ナビゲーションを停止しました。エリアか操作キャラクターが変わりました。
+Navigation stopped. Controller unavailable.	ナビゲーションを停止しました。コントローラーを利用できません。
+Navigation stopped. Field controls unavailable.	ナビゲーションを停止しました。フィールドを操作できません。
+Navigation stopped. Game focus lost.	ナビゲーションを停止しました。ゲーム画面が非アクティブになりました。
+Navigation stopped. Its control binding is unavailable or assigned to another game control.	ナビゲーションを停止しました。そのボタン割り当てを利用できないか、別のゲーム操作に割り当てられています。
+Navigation stopped. Player walking state or location is unavailable.	ナビゲーションを停止しました。操作キャラクターの歩行状態か位置を取得できません。
+Navigation stopped. Route guidance unavailable.	ナビゲーションを停止しました。経路を案内できません。
+Navigation stopped. Screen or area changed.	ナビゲーションを停止しました。画面かエリアが変わりました。
+Navigation stopped. Target changed.	ナビゲーションを停止しました。目的地が変わりました。
+Navigation stopped. Target is no longer available.	ナビゲーションを停止しました。目的地を利用できなくなりました。
+Navigation stopped. The destination arrival distance could not be verified.	ナビゲーションを停止しました。目的地への到着を判定する距離を確認できませんでした。
+Navigation stopped. The ground check does not match the current route.	ナビゲーションを停止しました。足場の確認結果が現在の経路と一致しません。
+Navigation stopped. The selected target has no known position in this area.	ナビゲーションを停止しました。選択中の目的地はこのエリア内で位置が分かりません。
+Navigation stopped. This route requires unsupported movement.	ナビゲーションを停止しました。この経路には対応していない移動操作が必要です。
+Navigation stopped. Verified ground ahead is unavailable.	ナビゲーションを停止しました。この先の足場を確認できませんでした。
+Navigation stopped. Walking route is too far from the player.	ナビゲーションを停止しました。歩行経路がキャラクターから離れすぎています。
+Navigation stopped. Walking route unavailable.	ナビゲーションを停止しました。歩ける経路を利用できません。
+Navigation stopped. {0}	ナビゲーションを停止しました。{0}
+Navigation unavailable while speech output was disconnected.	音声出力が切断されていたため、ナビゲーションを利用できません。
+Navigation unavailable. Select a target in the field.	ナビゲーションを利用できません。フィールドで目的地を選んでください。
+Navigation unavailable. {0}	ナビゲーションを利用できません。{0}
+Near {0}. Row toward the landing until the interaction appears.	{0}の近くです。調べる表示が出るまで、岸に向かって漕いでください。
+Newly uncovered arch	新たに現れたアーチ
+Next story event in the Earth Shrine	土の神殿の次のストーリーイベント
+Next trial room	次の試練の部屋
+Nichol	ニコル
+No active controller was detected.	使用中のコントローラーが見つかりません。
+No active exit leads to the next Battlefield section.	戦場の次の区画へ通じる有効な出口がありません。
+No buffs	強化効果なし
+No captured selection or dialogue	繰り返せる選択項目や会話はありません
+No clear route across the rotating walkways. Try the rotation pedestals.	回転する通路を渡る経路を確認できません。回転の台座を試してください。
+No current Story crossing could be verified.	現在のストーリーの水上移動を確認できませんでした。
+No current main-story objective is displayed.	現在表示されているメインストーリーの目標はありません。
+No current story objective is displayed.	現在のストーリー目標は表示されていません。
+No debuffs	弱体効果なし
+No disclosed local story destination has been captured.	このエリアでゲームが示しているストーリーの目的地が見つかりません。
+No enabled story continuation is available in this area.	このエリアには有効なストーリーの続きがありません。
+No enabled tutorial controls are shown.	利用できるチュートリアル操作は表示されていません。
+No reachable targets in this area.	このエリアに到達できる目的地はありません。
+No supported capsule overlap at this exit could be verified.	この出口で、キャラクターのカプセルとの対応する重なりを確認できませんでした。
+North bridge out of Amore	アムールから出る北の橋
+North entrance to Amore	アムールの町の北の入口
+North entrance to Waterfall Way	滝の回廊の北の入口
+North entrance to the Cave of Waters	水の洞窟の北の入口
+North exit of the Dwarven Forge	ドワーフの工房の北の出口
+North exit toward Amore	アムール方面の北出口
+North exit toward Lake Dorr	ドール湖方面の北出口
+Not checked	チェックなし
+Object sound volume	オブジェクトの通知音の音量
+Object sounds	オブジェクトの通知音
+Objects	オブジェクト
+Off	オフ
+Offensive formation	攻勢の陣
+Old Town bridge	旧市街の橋
+Old Town gate	旧市街の門
+Old Town street	旧市街の通り
+Older man	年配の男性
+Older woman	年配の女性
+Olderion inn door	オルデリオンの宿屋の扉
+Olderion inn entrance	オルデリオンの宿屋の入口
+Olderion innkeeper	オルデリオンの宿屋の店主
+Olderion soldier	オルデリオン兵
+On	オン
+Only available option	選択肢はこの項目のみ
+Only ordinary walking is supported in this scene.	この場面では通常の歩行のみに対応しています。
+Open the door to Jake's office.	ジェイクの執務室の扉を開けてください。
+Open the door to the elder's home.	おばばの家の扉を開けてください。
+Open the door when the game's interaction appears.	ゲームの操作表示が出たら扉を開けてください。
+Open the inn door when the game's interaction appears.	ゲームの操作表示が出たら宿屋の扉を開けてください。
+Open treasure chest	開いた宝箱
+Open treasure safe	開いた金庫
+Option text unavailable	設定項目のテキストを取得できません
+Ordinary walking directions are unavailable during vertical travel.	上下移動中は通常の歩行方向を案内できません。
+Overclock	オーバークロック
+Overclock Zero	オーバークロック零式
+Overheat	オーバーヒート
+Page Down	Page Down
+Page Up	Page Up
+Painted floor number: {0}.	床に描かれた番号：{0}。
+Paradise Lost	パラダイスロスト
+Paralysis	麻痺
+Party status could not be read.	パーティーの状態を読み取れません。
+Party status is unavailable.	パーティーの状態を確認できません。
+Party. {0}	パーティー。{0}
+Passage along the upper path	上の道に沿った通路
+Passage at the foot of the ladders	はしごの下の通路
+Passage back from the altar	祭壇から戻る通路
+Passage back inside the shipyard	造船所の中へ戻る通路
+Passage back to the Middle Reach stairs	中層の階段へ戻る通路
+Passage back to the central hall	中央ホールへ戻る通路
+Passage back to the central walkway	中央の通路へ戻る通路
+Passage back to the entrance hall	入口のホールへ戻る通路
+Passage back to the first boat room	最初にボートがある部屋へ戻る通路
+Passage back to the guarded cells	見張りのいる牢へ戻る通路
+Passage back to the locked gate	鍵のかかった門へ戻る通路
+Passage back to the lower path	下の道へ戻る通路
+Passage back to the lower save point	下のセーブポイントへ戻る通路
+Passage back to the lower tower	タワー下層へ戻る通路
+Passage back to the second pool	二つ目の水場に戻る通路
+Passage back to the spiral	螺旋の道へ戻る通路
+Passage back to the trials	試練の部屋へ戻る通路
+Passage back to the upper path	上の道へ戻る通路
+Passage back to the upper save point	上のセーブポイントへ戻る通路
+Passage behind the waterfall	滝の裏の通路
+Passage door	通路のドア
+Passage from Middle Reach	中層から戻る通路
+Passage from Middle Reach into the tower	中層から塔内への通路
+Passage from Upper Reach	上層から戻る通路
+Passage from Upper Reach into the tower	上層から塔内への通路
+Passage from the upper walkway	上の通路から続く通路
+Passage into Zoldaad Castle	ゾルダード城へ入る通路
+Passage into the Wandering Lands	浮遊大陸へ入る通路
+Passage into the crystal platform hall	クリスタルの台座の広間への通路
+Passage into the east wing	東棟へ入る通路
+Passage into the inn	宿屋へ入る通路
+Passage into the lower laboratory	下の研究室へ入る通路
+Passage into the next laboratory	次の研究室へ入る通路
+Passage into the next tower hall	タワーの次のホールへ入る通路
+Passage into the throne room	玉座の間へ入る通路
+Passage into the west wing	西棟へ入る通路
+Passage onward	先へ進む通路
+Passage out of the lower laboratory	下の研究室から出る通路
+Passage past the waterfall	滝を過ぎた通路
+Passage to Lake Dorr	ドール湖への通路
+Passage to Lake Ryusei	リュウセイ湖への通路
+Passage to the Rebel Hideout	反乱軍のアジトへの通路
+Passage to the Water Maiden	水の巫女のもとへの通路
+Passage to the altar	祭壇への通路
+Passage to the castle dungeon	城の地下牢への通路
+Passage to the castle entrance	城の入口への通路
+Passage to the central hall	中央ホールへの通路
+Passage to the crate room	木箱の部屋への通路
+Passage to the duel	決闘の場への通路
+Passage to the elevator	エレベーターへの通路
+Passage to the elevators	エレベーター群への通路
+Passage to the entrance	入口への通路
+Passage to the entrance hall	入口のホールへの通路
+Passage to the entrance landing	入口の踊り場への通路
+Passage to the factory entrance	工場の入口への通路
+Passage to the first boat room	最初のボート室への通路
+Passage to the first pool	最初の水場への通路
+Passage to the guarded cells	見張りのいる牢への通路
+Passage to the lower trial	下の試練への通路
+Passage to the main hall	大広間への通路
+Passage to the pedestal room	台座のある部屋への通路
+Passage to the second pool	2番目の水場への通路
+Passage to the summit rest stop	頂上の休憩所への通路
+Passage to the third pool	三つ目の水場への通路
+Passage to the upper Forest Path	林道の上部への通路
+Passage to the upper bridges	上の橋への通路
+Passage to the upper ledge	上の岩棚への通路
+Passage within {0}	{0}内の通路
+Path to the Dark Crystal	闇のクリスタルへの道
+Path to the summit	頂上への道
+Pearly Pot	ホワイトポット
+Pedestal below the short ladder	短いはしごの下の台座
+Pedestal on the high walkway	高い通路の上の台座
+Pedestal on the west ramp	西側のスロープの台座
+People	人物
+Petrify	石化
+Physical controls could not be read.	物理的な操作入力を読み取れませんでした。
+Pick up the Level 1 Lab Key Card.	研究所カードキー　レベル１を拾ってください。
+Pick up the Level 2 Lab Key Card.	研究所カードキー　レベル２を拾ってください。
+Pick up the Level 3 Lab Key Card.	研究所カードキー　レベル３を拾ってください。
+Plaza with the tree	木のある広場
+Poison	毒
+Portal at the end of the lower tower	タワー下層の終わりにあるポータル
+Portal back to the east wing	東棟へ戻る転送装置
+Portal back to the lower tower	塔の下部へ戻るポータル
+Portal in the central pocket	中央の囲いの転送装置
+Portal in the east pocket	東の囲いの転送装置
+Portal in the west laboratory	西の研究室の転送装置
+Portal in the west pocket	西の囲いの転送装置
+Portal to the lower side chamber	下の側室へのポータル
+Portal to the lower tower	塔の下部へのポータル
+Portal to the next tower section	塔の次の区画へのポータル
+Prepare at the save point before confirming the white portal. It leads into the final sequence.	白いポータルを決定する前に、セーブポイントで準備をしてください。先は最終局面です。
+Press Confirm to use the highlighted Resonance	決定ボタンで選択中のレゾナンスを発動
+Pressed switch	押されたスイッチ
+Protect	プロテス
+Push side of the loose crate	動く木箱を押す側
+Pushable obstacle	押せる障害物
+Pushable wooden crate	押せる木箱
+Quest marker	クエストマーカー
+Quest prompt in the inn	宿屋内のクエストの合図
+Raegen	レーゲン
+Reached the verified walking point near {0}.	{0}の近くの確認済みの歩行地点に着きました。
+Read the streetcar timetable and choose the Commercial District to continue gathering information.	路面電車の時刻表を見て、帝都商業区を選び、情報集めを続けてください。
+Read the streetcar timetable and choose the Slums to gather information.	路面電車の時刻表を見て、スラムを選び、情報を集めてください。
+Rebel soldier	反乱軍の兵士
+Rebel soldier in the central hall	中央ホールの反乱軍の兵士
+Rebel soldier near the desert exit	砂漠への出口近くの反乱軍の兵士
+Rebel soldier near the entrance	入口近くの反乱軍の兵士
+Rebel soldier near the tunnel	隧道近くの反乱軍の兵士
+Recorded description playback failed.	収録済みの音声ガイドを再生できませんでした。
+Recorded description unavailable. Description: {0}	音声ガイドを再生できません。場面の説明を読み上げます。{0}
+Recorded descriptions unavailable.	収録済みの音声ガイドは利用できません。
+Recorded movie descriptions ready.	ムービーの音声ガイドを利用できます。
+Recorded movie descriptions unavailable.	ムービーの音声ガイドは利用できません。
+Reflect	リフレク
+Refraction Arts	鏡面晶写の術
+Regen	リジェネ
+Reraise	リレイズ
+Research Center Ruins exit	研究所廃墟の出口
+Researcher	研究員
+Visions of Grandshelt loaded. F10 for help. {0}	Visions of Grandsheltを読み込みました。F10でヘルプを読み上げます。{0}
+Visions of Grandshelt reader stopped after an error. See its log.	エラーのためVisions of Grandsheltの読み上げ機能が停止しました。ログをご確認ください。
+Visions of Grandshelt. F5 repeat. Home and End change target category, including Story for the current main objective and Destinations for travel through connected areas. Page Up and Page Down choose a target in the field; F6 and F7 also choose targets. Delete toggles manual guidance. Shift Delete toggles automatic walking. Moving or opening a menu stops automatic walking. F8 reads a complete native route. F9 reads the current screen, or party, enemies and target information in battle. F10 help. You control interaction and Confirm.	Visions of Grandshelt。F5で直前の読み上げを繰り返します。HomeとEndで目的のカテゴリーを切り替えます。ストーリーではメイン目標、目的地ではつながっているエリアへの行き方を確認できます。フィールドの目的地はPage UpとPage Down、またはF6とF7で選びます。Deleteで手動ガイド、ShiftとDeleteで自動歩行を切り替えます。自分で移動したりメニューを開いたりすると自動歩行は止まります。F8でゲーム内の経路を最後まで読み上げます。F9で現在の画面を読み上げ、バトル中はパーティー、敵、対象の情報を読み上げます。F10でヘルプです。調べる操作や決定は自分で行います。
+Restored entrance elevator	復旧した入口のエレベーター
+Return conveyor from the pedestal	台座から戻るベルトコンベア
+Return from the altar passage to the north landing.	祭壇の通路から北の踊り場へ戻ってください。
+Return from the altar to the path leading to the north exit.	祭壇から、北の出口へ続く道へ戻ってください。
+Return inside from Middle Reach.	中層から中へ戻ってください。
+Return inside from Upper Reach.	上層から中へ戻ってください。
+Return through Waterfall Way.	滝の回廊を通って戻ってください。
+Return through the arch to the lower stairs in the central hall.	アーチを通って中央ホールの下の階段へ戻ってください。
+Return through the entrance on the way to the Rebel Hideout.	入口を通って戻り、反乱軍のアジトへ向かってください。
+Return through the walkways and descend to the bridge hall.	通路を通って戻り、橋のホールへ降りてください。
+Return to Dilmagia so Lid can finish the airship.	リドが飛空艇を完成させられるよう、ディルマギアへ戻ってください。
+Return to Olderion through the Cave of Waters.	水の洞窟を通ってオルデリオンへ戻ってください。
+Return to the Rebel Hideout.	反乱軍のアジトへ戻ってください。
+Return to the Shipyard to board Lid's airship.	リドの飛空艇に乗るため、造船所へ戻ってください。
+Return to the Shrine main passage	神殿の主通路へ戻る
+Return to the central hall through the arch on this platform.	この足場のアーチを通って中央ホールへ戻ってください。
+Return to the desert and head for the Rebel Hideout.	砂漠へ戻り、反乱軍のアジトへ向かってください。
+Return to the entrance hall.	入口のホールへ戻ってください。
+Return to the guarded cells.	見張りのいる牢へ戻ってください。
+Return to the landing below the tower.	塔の下の踊り場へ戻ってください。
+Return to the locked gate with the dungeon key.	地下牢の鍵を持って、鍵のかかった門へ戻ってください。
+Return to the lower path toward the long ladder.	下の道へ戻り、長いはしごへ向かってください。
+Return to the lower tower.	タワー下層へ戻ってください。
+Return to the spiral path to the summit.	頂上へのらせんの道へ戻ってください。
+Return to the town lane.	町の小道へ戻ってください。
+Return to the town square.	町の広場へ戻ってください。
+Return to the trial rooms.	試練の部屋へ戻ってください。
+Return to the upper path toward the altar.	上の道へ戻り、祭壇へ向かってください。
+Right	右に
+Right rotation pedestal	右の回転台座
+Robed figure	ローブの人物
+Rolled ladder	巻き上げられたはしご
+Rooftop return elevator	屋上から戻るエレベーター
+Route beacon unavailable. Navigation will speak directions.	誘導音は利用できません。進行方向を読み上げます。
+Row back through the passage to the first boat room.	通路を漕いで戻り、最初のボート室へ向かってください。
+Row back through this channel to the previous room.	この水路を漕いで戻り、前の部屋へ向かってください。
+Row back to the landing by the water pedestal.	漕いで戻り、水位台座のそばの船着き場へ向かってください。
+Row back to the second pool to take the passage to the upper path.	漕いで2番目の水場へ戻り、上の道への通路へ進んでください。
+Row to the forward passage into the third pool. Keep the boat for the crossing.	前方の、3番目の水場へ続く通路へ漕いでください。渡るためにボートはそのまま使ってください。
+Row to the landing below the upper passage back to the entrance hall.	入口のホールへ戻る上の通路の下にある船着き場へ漕いでください。
+Row to the landing by the large crystal pedestal.	大きなクリスタルの台座のそばの船着き場へ漕いでください。
+Row to the landing by the way back to the central hall.	中央ホールへ戻る道のそばの船着き場へ漕いでください。
+Row to the passage leading to the large crystal pedestal.	大きなクリスタルの台座へ続く通路へ漕いでください。
+Row to the passage on the far bank. Disembark at the landing by the exit.	向こう岸の通路へ漕いでください。出口のそばの船着き場で降りてください。
+Row to the tower in the middle of the basin and climb its ladder.	貯水池の中央の塔へ漕ぎ、そのはしごを登ってください。
+Royal Guard	ロイヤルガード
+Sage's Eye	賢者の目
+Sailor	船乗り
+Sakura	サクラ
+Save point	セーブポイント
+Save point for the return to the entrance	入口へ戻るためのセーブポイント
+Save point with a route to the entrance	入口へ戻れるセーブポイント
+Save points	セーブポイント
+Scripted scene descriptions ready.	イベントシーンの音声ガイドを利用できます。
+Scripted scene descriptions unavailable.	イベントシーンの音声ガイドは利用できません。
+Second ladder toward Lake Dorr	ドール湖へ向かう2番目のはしご
+Second long ladder	2番目の長いはしご
+Shell	シェル
+Shift Delete	ShiftとDelete
+Ship captain	船長
+Short ladder down to the pedestal	台座へ降りる短いはしご
+Short ladder to the side walkway	脇の通路への短いはしご
+Shrine door	神殿の扉
+Shrine elevator	神殿のエレベーター
+Sian exit toward Mt. Reizan	シアンの町からレイホウ山へ向かう出口
+Side door from the inn to the street	宿屋から通りへの横のドア
+Side entrance to the inn	宿屋の横の入口
+Silence	沈黙
+Single-panel door	片開きのドア
+Sleep	睡眠
+Sliding door	引き戸
+Slow	スロウ
+Soldier by the bridge	橋のそばの兵士
+Some battle names could not be read.	一部のバトル参加者の名前を読み取れません。
+Some choices could not be read	一部の選択肢を読み取れません
+Some displayed battle results could not be read.	表示されたバトル結果の一部を読み取れません。
+Some tutorial controls are unavailable.	チュートリアルの一部の操作を利用できません。
+South entrance to Amore	アムールの町の南の入口
+South entrance to Waterfall Way	滝の回廊の南の入口
+South entrance to the Cave of Waters	水の洞窟の南の入口
+South exit of Amore	アムールの南出口
+South exit of Olderion	オルデリオンの南出口
+South exit of Waterfall Way	滝の回廊の南出口
+South exit of the Cave of Waters	水の洞窟の南出口
+South exit of the Dwarven Forge	ドワーフの工房の南出口
+South exit of the mountain path	山道の南の出口
+Sparkling ground pickup	地面の光るアイテム
+Speak to Ayaka outside the building at the top of town.	町の高台にある建物の外で、アヤカと話してください。
+Speak to Fina in the elder's home.	おばばの家でフィーナと話してください。
+Speak to Jake in his office.	執務室でジェイクと話してください。
+Speak to the elder in her home.	おばばの家でおばばと話してください。
+Speak to the rebel soldiers in the hideout.	アジトで反乱軍の兵士たちと話してください。
+Speech output is unavailable.	音声出力を利用できません。
+Spoken guidance on.	音声案内を開始します。
+Spoken guidance on. {0}.	音声案内を開始します。{0}。
+Stagger defense down	ブレイク防御ダウン
+Stagger defense up	ブレイク防御アップ
+Stagger power down	ブレイクダメージダウン
+Stagger power up	ブレイクダメージアップ
+Stairs beyond Middle Reach	中層の先の階段
+Stairs down into the shrine	神殿へ降りる階段
+Stairs to the entrance	入口への階段
+Stairs to the next trial	次の試練への階段
+Start automatic walking when controller input is available.	コントローラー入力を利用できるようになったら、自動歩行を開始してください。
+Station Attendant	駅員
+Station attendant	駅員
+Status ailment guard	バステ防御
+Steer the airship toward the Crystal Tower. Turn on guidance for the beacon.	飛空艇をクリスタルタワーへ向けて操縦してください。ガイドをオンにするとビーコンの音が聞こえます。
+Steer the airship toward the tornado over Pharm. Turn on guidance for the beacon.	飛空艇をファルム上空の竜巻へ向けて操縦してください。ガイドをオンにするとビーコンの音が聞こえます。
+Steer the airship with the left stick. Use manual guidance for the beacon.	飛空艇は左スティックで操縦してください。誘導音には手動ガイドを使ってください。
+Steer the raft with the game's movement controls. Use manual guidance for the Story crossing.	いかだはゲームの移動操作で操縦してください。ストーリーの水上移動には手動ガイドを使ってください。
+Step onto the conveyor from the bridge hall.	橋のホールからベルトコンベアに乗ってください。
+Step onto the four-lamp elevator and interact to ride down.	4つのランプのあるエレベーターに乗り、調べて下へ降りてください。
+Stop	ストップ
+Story	ストーリー
+Story and Destinations auto-walk resume after their exits and battles. Use Interact when prompted.	ストーリーと目的地への自動歩行は、出口の通過後やバトル終了後に再開します。表示が出たら、調べる操作を行ってください。
+Story contact	ストーリーの会話相手
+Story destination	ストーリーの目的地
+Story event	ストーリーイベント
+Story exit	ストーリーの出口
+Story guidance stopped.	ストーリーの案内を停止しました。
+Story marker at the mountain overlook	山の見晴らし台のストーリーの目印
+Story marker beyond the mountain pass	峠の先のストーリーの目印
+Story navigation stopped. The objective or destination changed.	ストーリーナビゲーションを停止しました。目標か目的地が変わりました。
+Story navigation stopped. {0}	ストーリーのガイドを停止しました。{0}
+Story objective is unavailable in the current scene.	この場面ではストーリー目標を利用できません。
+Story passage	ストーリーの通路
+Story trail near the Wandering Lands	浮遊大陸付近のストーリーの道
+Story. No current crossing could be verified.	ストーリー。現在の水上移動を確認できませんでした。
+Story. No current flight destination could be verified.	ストーリー。現在の飛行の目的地を確認できませんでした。
+Story. {0}	ストーリー。{0}
+Story. {0} Use manual guidance for the route.	ストーリー。{0}この経路には手動ガイドを使ってください。
+Streetcar timetable	路面電車の時刻表
+Superior Guard	スペリオルガード
+Swift	迅速
+Switch	スイッチ
+Tactical Assault	謀攻の計
+Take the bridge back to Amore.	橋を渡ってアムールの町へ戻ってください。
+Take the conveyor across the far gap.	ベルトコンベアに乗って奥の隙間を渡ってください。
+Take the conveyor across the middle gap.	ベルトコンベアに乗って中央の隙間を渡ってください。
+Take the conveyor across to the next platform.	ベルトコンベアに乗って次の足場へ渡ってください。
+Take the conveyor back to the bridge hall.	ベルトコンベアに乗って橋のホールへ戻ってください。
+Take the conveyor to the far platform.	ベルトコンベアに乗って奥の足場へ向かってください。
+Take the conveyor to the middle platforms.	ベルトコンベアに乗って中央の足場へ向かってください。
+Take the desert exit to reach the Weapons Factory.	砂漠への出口から出て兵器工場へ向かってください。
+Take the first passage into Waterfall Way.	最初の通路から滝の回廊へ入ってください。
+Take the ladder down to the lower floor.	はしごを降りて下の階へ向かってください。
+Take the lower passage from the cave entrance toward Lake Dorr.	洞窟の入口から下の通路を進み、ドール湖へ向かってください。
+Take the mountain trail up Mt. Reizan.	山道を登ってレイホウ山へ向かってください。
+Take the north exit toward Amore.	北の出口から出てアムールの町へ向かってください。
+Take the passage at the foot of the ladders.	はしごの下の通路へ進んでください。
+Take the passage from the entrance to the first pool.	入口から最初の水場への通路へ進んでください。
+Take the passage from this bank back to the central hall.	この岸の通路から中央ホールへ戻ってください。
+Take the passage on this bank to the next pool.	この岸の通路から次の水場へ進んでください。
+Take the portal to the next section.	ポータルで次の区画へ進んでください。
+Take the restored elevator down toward the entrance.	復旧したエレベーターで入口のほうへ降りてください。
+Take the return conveyor from the pedestal.	台座から戻るベルトコンベアに乗ってください。
+Take the rooftop elevator back into the shipyard.	屋上のエレベーターで造船所の中へ戻ってください。
+Take the south entrance to the cave for Lake Dorr.	洞窟の南の入口から入り、ドール湖へ向かってください。
+Take the south exit to the road toward Olderion.	南の出口から出て、オルデリオンへ向かう道へ進んでください。
+Take the stairs down into the shrine.	階段を降りて神殿へ入ってください。
+Take the stairs up from the dungeon toward the throne room.	地下牢から階段を上り、玉座の間へ向かってください。
+Take the streetcar back to the Imperial Hotel district, then meet the party in the alley.	路面電車で帝都ホテル周辺へ戻り、路地で仲間と合流してください。
+Take the tunnel from the hideout toward the castle.	アジトから隧道を通って城へ向かってください。
+Take the upper passage back above the entrance.	上の通路から入口の上へ戻ってください。
+Talk to Fina in the alley beside the hotel.	ホテルの横の路地でフィーナと話してください。
+Talk to Lasswell	ラスウェルと話す
+Talk to the innkeeper to stay the night.	宿屋の店主と話して一晩泊まってください。
+Talk to the man in blue in the Slums.	スラムで青い服の男と話してください。
+Tall ladder down to the catwalks	足場へ降りる高いはしご
+Tall ladder to the upper pedestal	上の台座への高いはしご
+Target unavailable	対象を利用できません
+Target. {0}	対象。{0}
+Taunt	挑発
+Text entry is active.	文字入力中です。
+The Battlefield exit position could not be read.	戦場の出口の位置を読み取れませんでした。
+The active main objective could not be verified.	有効なメインの目標を確認できませんでした。
+The airship's steering directions could not be read.	飛空艇の操舵方向を読み取れません。
+The approach to the south gate could not be measured.	南門までの進入経路を測れません。
+The area's distance scale could not be verified.	このエリアの距離の尺度を確認できません。
+The area's distance scale is unavailable.	このエリアの距離の尺度を取得できません。
+The boat's boarding point is unavailable.	ボートの乗船位置が利用できません。
+The character and walking mesh slope limits could not be verified.	キャラクターと歩行可能な地形の傾斜制限を確認できません。
+The character's walking and braking state could not be read.	キャラクターの歩行や減速の状態を読み取れません。
+The character's walking camera could not be verified.	キャラクターの歩行カメラを確認できません。
+The crate is lined up with the row. Return to the pedestal and raise the water.	木箱が列に並びました。台座に戻って水位を上げてください。
+The crates are floating at walkway level. Follow them back across.	木箱が通路の高さに浮いています。木箱の上を渡って戻ってください。
+The current Battlefield section's linked exits could not be read.	現在の戦場の区画のリンクされた出口を読み取れませんでした。
+The current Battlefield walking section could not be verified.	戦場で現在歩ける区画を確認できません。
+The current Mitra passage has changed.	ミトラの通路が変わりました。
+The current Story crossing is unavailable.	現在のストーリーで使う渡航経路を利用できません。
+The current Story flight destination could not be verified.	ストーリーの現在の飛行先を確認できません。
+The current area is still loading.	現在のエリアを読み込み中です。
+The current area's entity list could not be read.	現在のエリアのエンティティ一覧を読み取れませんでした。
+The current area's exit list could not be read.	現在のエリアの出口一覧を読み取れませんでした。
+The current castle doorway has changed. Request the route again.	城内の通り口が変わりました。もう一度経路を確認してください。
+The current castle doorway or passage has changed.	城内の通り口か通路が変わりました。
+The current destination data is unavailable.	現在の目的地の情報を取得できません。
+The current field character is unavailable.	現在のフィールドキャラクターを利用できません。
+The current field location could not be read.	フィールド上の現在地を読み取れません。
+The current laboratory room could not be verified.	研究所の現在の部屋を確認できませんでした。
+The current main objective could not be identified.	現在のメインの目標を特定できませんでした。
+The current main objective could not be read safely.	現在のメインの目標を安全に読み取れませんでした。
+The current main objective data is not available yet.	現在のメインの目標のデータはまだ利用できません。
+The current main objective is ambiguous.	現在のメインの目標が一つに決まりません。
+The current main objective is not active.	現在のメインの目標は有効ではありません。
+The current main objective source is unavailable.	現在のメインの目標の情報源が利用できません。
+The current map could not be verified. Walking guidance is unavailable.	現在のマップを確認できませんでした。歩行のガイドは利用できません。
+The current player could not be identified.	現在のプレイヤーを特定できませんでした。
+The current story area could not be identified.	現在のストーリーのエリアを特定できませんでした。
+The current story area or filtered destination is unavailable. A walking route cannot be verified.	現在のストーリーエリアか有効な目的地を確認できません。歩行経路を確認できません。
+The current story destination could not be read.	現在のストーリーの目的地を読み取れません。
+The current walking area is unavailable.	現在の歩行エリアを取得できません。
+The current walking character is unavailable.	現在歩行中のキャラクターを取得できません。
+The current walking mesh changed before pathfinding.	経路を探す前に歩行可能な地形が変わりました。
+The current walking mesh changed during pathfinding.	経路を探している間に歩行可能な地形が変わりました。
+The current walking speed could not be read.	現在の歩行速度を読み取れません。
+The destination is in another area. A current-area walking route is unavailable.	目的地は別のエリアです。現在のエリア内に歩ける経路はありません。
+The destination is in another area. An active current-area exit could not be verified.	目的地は別のエリアにあります。現在のエリアで有効な出口を確認できませんでした。
+The destination is in {0}. A current-area walking route is unavailable.	目的地は{0}にあります。現在のエリア内に歩ける経路はありません。
+The destination is in {0}. An active current-area exit could not be verified.	目的地は{0}にあります。現在のエリアで有効な出口を確認できませんでした。
+The doorway's walking approach could not be read.	通り口への歩行経路を読み取れません。
+The entrance is blocked. Return through the passage you came from.	入口がふさがれています。来た通路から戻ってください。
+The floating crates do not give a verified route to the far landing.	浮いている木箱から対岸の船着き場に渡れる経路を確認できません。
+The floating crates form a bridge back to the opposite walkway.	浮いた木箱が向かいの通路へ戻る橋になっています。
+The floating crates form a bridge between the upper walkways.	浮いた木箱が上の通路同士をつなぐ橋になっています。
+The floating crates line up across the gap. Cross them to reach the far terrace.	浮いた木箱が隙間の上に並んでいます。木箱の上を渡って奥のテラスへ向かってください。
+The forward door in this train car could not be verified.	この車両の前方の扉を確認できませんでした。
+The game has not supplied a destination for this objective.	この目標の目的地はゲームから示されていません。
+The game is paused.	ゲームは一時停止中です。
+The game's navigation system is unavailable in this area.	このエリアではゲームのナビゲーションを利用できません。
+The ground ahead could not be inspected.	前方の地面を調べられません。
+The inn door is open. Continue through it when the passage is clear.	宿屋の扉が開いています。通路が空いたら進んでください。
+The left, centre and right pedestals turn the walkways.	左、中央、右の台座で通路が回転します。
+The lift is not ready to board.	リフトはまだ乗り込める状態ではありません。
+The local walking controller could not be verified.	現在の歩行操作を確認できません。
+The lower stairs are open. Take the ladder down to the elevator landing.	下の階段が通れます。はしごを降りてエレベーターの踊り場へ向かってください。
+The mailbox's	ポスト
+The modifier has another game binding or its binding could not be read.	ガイド用ボタンは他の操作に割り当てられているか、割り当てを読み取れません。
+The native current story objective could not be read safely.	現在のストーリー目標をゲームから確実に読み取れませんでした。
+The native landing or passage is unavailable.	船着き場か通路を利用できません。
+The native path points could not be converted to walking instructions.	ゲームの経路を歩行案内に変換できません。
+The native route does not reach the target's activation area.	ゲームの経路は目的の起動範囲まで届きません。
+The native walking view target could not be read.	ゲームの歩行カメラの対象を読み取れません。
+The native walking-camera flags could not be read.	ゲームの歩行カメラの設定を読み取れません。
+The native walking-character layout could not be verified.	キャラクターの歩行データを確認できません。
+The native walking-control rotation could not be read.	ゲームの歩行操作の向きを読み取れません。
+The next laboratory approach is unavailable from this position.	この位置からは研究所の次の目標へ進めません。
+The next laboratory step could not be verified.	研究所の次の手順を確認できませんでした。
+The next local Story step could not be read safely.	このエリアでの次のストーリーの手順を安全に読み取れませんでした。
+The non-null walking view target could not be verified.	現在の歩行カメラの対象を確認できません。
+The objective is available, but its filtered destinations could not be read safely.	目標はありますが、絞り込まれた目的地を安全に読み取れませんでした。
+The objective is available, but its filtered destinations could not be verified.	目標はありますが、絞り込まれた目的地を確認できませんでした。
+The objective is available, but its local destinations could not be read safely.	目標は確認できましたが、このエリアの目的地は確認できませんでした。
+The pedestal's approach is unavailable.	台座への道が利用できません。
+The player position could not be read.	プレイヤーの位置を読み取れません。
+The player position or destination could not be read.	プレイヤーの位置か目的地を読み取れません。
+The player's walking collision could not be verified for this approach.	この進入経路をプレイヤーが障害物に当たらず通れるか確認できません。
+The player's walking shape could not be verified.	プレイヤーが歩くときに必要な空間を確認できません。
+The player's walking shape is not upright.	プレイヤーの歩行用の当たり判定が垂直ではありません。
+The previous walking detour could not be verified from the current position.	現在地から前の迂回経路を確認できません。
+The projected walking point does not give a verified approach to this activation area.	計算した地点からこの起動範囲に入る経路を確認できません。
+The raft is outside the current Story crossing.	いかだが現在のストーリーの渡航経路の外にあります。
+The raft's collision could not be verified.	いかだの当たり判定を確認できません。
+The raft's current position could not be read.	いかだの現在地を読み取れません。
+The raft's steering directions could not be read.	いかだの操舵方向を読み取れません。
+The selected Battlefield exit has changed.	選択した戦場の出口が変わりました。
+The selected Story exit has changed. Choose the current destination.	選択したストーリーの出口が変わりました。現在の目的地を選んでください。
+The selected target is no longer available in this area.	選択した対象はこのエリアでは利用できなくなりました。
+The stereo route beacon points toward the next turn and pulses faster as you approach. F8 speaks directions.	ステレオの誘導音は次に曲がる方向から聞こえます。近づくほど音の間隔が短くなります。F8で進行方向を読み上げます。
+The story destination is ambiguous. A walking route is unavailable.	ストーリーの目的地を特定できません。歩行経路を利用できません。
+The story destination's	ストーリーの目的地
+The story exit's activation area could not be verified.	ストーリーの出口の作動範囲を確認できませんでした。
+The story exit's current transition could not be read safely.	ストーリーの出口の現在の移動先を安全に読み取れませんでした。
+The story target could not be verified in the current area.	現在のエリアでストーリーの目標を確認できませんでした。
+The story target's actor could not be read safely.	ストーリーの目標の対象を安全に読み取れませんでした。
+The story target's current actor is unavailable.	ストーリーの目標の現在の対象が利用できません。
+The story target's current position could not be read safely.	ストーリーの目標の現在位置を安全に読み取れませんでした。
+The story target's position could not be read.	ストーリー目標の位置を読み取れません。
+The story trigger's current state could not be read.	ストーリーイベントの発生状態を読み取れません。
+The target's activation area could not be verified.	目的の起動範囲を確認できません。
+The walking area changed before its ground check.	地面を調べる前に歩行エリアが変わりました。
+The walking area changed during its ground check.	地面を調べている間に歩行エリアが変わりました。
+The walking capsule could not verify clear ground ahead.	前方にキャラクターが通れる空間があるか確認できません。
+The walking path does not reach the boat's boarding point.	歩行経路は船の乗船地点まで届きません。
+The walking surface inspection could not be prepared.	歩行面を調べる準備ができません。
+The walking view target is outside the current area.	歩行カメラの対象が現在のエリアの外にあります。
+The walking view target's root could not be read.	歩行カメラの対象の基準を読み取れません。
+The walking view target's root could not be verified.	歩行カメラの対象の基準を確認できません。
+The walking-ground inspection could not be prepared.	歩ける地面を調べる準備ができません。
+The walkways connect to the large pedestal. Use it to lower the bridge section below.	通路が大きな台座につながりました。台座を使って下の橋を降ろしてください。
+The water is high and the crates are floating. The small pedestal changes the water level.	水位が高く、木箱が浮いています。小さな台座で水位が変わります。
+The water is high. Follow the floating crates to the next landing.	水位が高くなっています。浮いた木箱の上を渡って次の足場へ向かってください。
+The water is high. The pedestal here controls the water by the stairs.	水位が高くなっています。ここの台座で階段のそばの水位を操作できます。
+The water is high. This pedestal controls the water above the dock stairs.	水位が高くなっています。この台座で船着き場の階段の上の水位を操作できます。
+The water is low and the lower stairs are exposed. The small pedestal changes the water level.	水位が低く、下の階段が現れています。小さな台座で水位が変わります。
+The water is low. The pedestal raises the floating crates toward the upper walkway.	水位が低くなっています。台座を使うと浮いた木箱が上の通路の高さまで上がります。
+The water is low. The stairs beside the pedestal lead down to the boat dock.	水位が低くなっています。台座の横の階段を降りると船着き場です。
+The water is low. The stairs lead to a water pedestal.	水位が低くなっています。階段の先に水位台座があります。
+The {0} is not available at this landing.	この踊り場では{0}を利用できません。
+Third ladder toward Lake Dorr	ドール湖へ向かう3番目のはしご
+This battle status shortcut is unavailable with the current bindings.	現在のボタン割り当てでは、このバトルステータスのショートカットを利用できません。
+This person's talk area could not be verified.	この人物に話しかけられる範囲を確認できません。
+This story destination is no longer active in the area.	このストーリーの目的地はエリア内で無効になりました。
+Throne room doors	玉座の間の扉
+Time remaining. {0}	残り時間。{0}
+To {0}. Next, {1}. {2}	{0}へ。次は{1}です。{2}
+To {0}. {1}	{0}へ。{1}
+Tornado over Pharm	ファルム上空の竜巻
+Total damage could not be matched to a unit.	合計ダメージの対象を特定できません。
+Total damage could not be matched to its unit.	合計ダメージを対象のユニットと照合できません。
+Total damage could not be read.	合計ダメージを読み取れません。
+Tower ladder	塔のはしご
+Tower ladder down	塔のはしごを降りる
+Trail across the crystal platforms	クリスタルの足場を渡る道
+Trail beyond the Forest Path save point	林道のセーブポイントの先の道
+Trail through the lower tower	タワー下層を進む道
+Train escape door	列車から脱出する扉
+Treasure chest	宝箱
+Treasure safe	金庫
+Trial platform	試練の足場
+Trial stele	試練の石碑
+Tunnel entrance from the Rebel Hideout	反乱軍のアジトからの隧道の入口
+Tutorial controls are unavailable.	チュートリアルの操作を利用できません。
+Twin Titleholders quest marker	クエストマーカー：２人のナンバーワン
+Unavailable	利用できません
+Unit	ユニット
+Up	上に
+Upper Reach landing	上層の踊り場
+Upper bridge pedestal	上の橋の台座
+Upper stairs across the crates	木箱の向こうにある上の階段
+Upper trail on Mt. Reizan	レイホウ山の上の山道
+Upper walkway across the crates	木箱の向こうにある上の通路
+Use the call pedestal to bring the {0} here.	呼び出し台座を使って、{0}をここへ呼んでください。
+Use the dungeon key on the gate.	門に地下牢の鍵を使ってください。
+Use the elevator at this landing.	この踊り場のエレベーターを使ってください。
+Use the game's interaction control when available.	表示が出たら、ゲームの調べる操作を行ってください。
+Use the interaction control to open the inn door.	調べる操作で宿屋の扉を開けてください。
+Use the pedestal to lower the bridge section.	台座を使って橋を降ろしてください。
+Use the pedestal to lower the last catwalk into place.	台座を使って最後の足場を降ろし、位置を合わせてください。
+Use the pedestal to raise the next catwalk.	台座を使って次の足場を上げてください。
+Use the pedestal to raise the water in the {0}.	台座を使って{0}の水位を上げてください。
+Use the save point to return to the entrance.	セーブポイントを使って入口へ戻ってください。
+Use the save point to return to the shrine entrance.	セーブポイントを使って神殿の入口へ戻ってください。
+Use the throne room key on the doors.	扉に玉座の鍵を使ってください。
+Use the town exit to continue on Gronoa.	町の出口から出て、ゴロノアの旅を続けてください。
+Use the town exit to continue toward Gronoa Shrine.	町の出口から出て、ゴロノア神殿へ向かってください。
+Valiant Advance formation	勇猛邁進の陣
+Value unavailable	設定値を確認できません
+Veil defense up	ヴェール防御力アップ
+Village Elder	おばば
+Vision	ビジョン
+Vision shop attendant	ビジョン屋の店員
+Vital point attack	急所狙い
+Wait for the bridge section to settle.	橋が止まるまで待ってください。
+Wait for the water to rise to the bank before boarding.	水位が岸まで上がってから乗ってください。
+Wait for the {0} to stop at your landing.	{0}がこの踊り場に止まるまで待ってください。
+Waiting for a walking route. {0}	歩ける経路を待っています。{0}
+Walk onto the elevator.	エレベーターの上に歩いて乗ってください。
+Walk through the automatic door into the laboratory.	自動ドアを通って研究室へ入ってください。
+Walk through the automatic door toward the elevator.	自動ドアを通ってエレベーターへ向かってください。
+Walk through the automatic door.	自動ドアを通ってください。
+Walk through the open door to the elder's home.	開いた扉を通っておばばの家へ入ってください。
+Walk through the open inn door.	開いた宿屋の扉を通ってください。
+Walk {0} through the sliding door.	{0}進んで引き戸を通ってください。
+Walking route endpoint reached.	歩行経路の終点に着きました。
+Wall tone volume	壁の通知音の音量
+Wall tones	壁の通知音
+Warden of the Waters	水の守り人
+Warden's Cape	守り人の岬
+Water Shrine exit	水の神殿の出口
+Water by the orphanage	孤児院のそばの水
+Water immunity	水属性無効
+Water ley line	水の地脈
+Water near the city entrance	街の入口近くの水
+Water on the way to Old Town	旧市街へ向かう道の水
+Water pedestal by the dock stairs	船着き場の階段のそばの水位台座
+Water pedestal by the upper stairs	上の階段のそばの水位台座
+Water-level pedestal	水位台座
+Waterfall Way flower	滝の回廊の花
+Weapon	武器
+Weapon shop attendant	武器屋の店員
+Weapons Factory entrance	兵器工場の入口
+West bridge pedestal	西の橋の台座
+West console	西側のコンソール
+White Jade Stone on the center table	中央のテーブルの白輝石
+White mage	白魔道士
+White teleport portal	白いテレポートポータル
+Wind Crystal chamber elevator	風のクリスタルの間へのエレベーター
+Wind damage up	風属性強化
+Wind immunity	風属性無効
+Winding trail in the Wandering Lands	浮遊大陸の曲がりくねった道
+Woman	女性
+Workshop technician	工房の技師
+World map via the far town gate	奥の町の門から世界地図へ
+World map via the town entrance	町の入口から世界地図へ
+You are at {0}.	現在地は{0}です。
+You are in the objective's destination area, {0}. The objective identifies no specific point or onward exit here.	目標のエリア、{0}に到着しています。このエリアでは、目標に具体的な地点や次に進む出口が示されていません。
+You are in the objective's destination area. The objective identifies no specific point or onward exit here.	目標のエリアに到着しています。このエリアでは、目標に具体的な地点や次に進む出口が示されていません。
+Zoldaad soldier	ゾルダード兵
+across the lower hall	下のホールの向こう側へ
+across to the upper walkway	向かいの上の通路へ
+area could not be verified	エリアを確認できませんでした
+back down to the main walkway	下のメイン通路へ
+bottom choice	下の選択肢
+collection state could not be read	取得状態を読み取れませんでした
+collision could not be read	コリジョンを読み取れませんでした
+conditional destination list is unreadable	条件付き目的地のリストを読み取れません
+conditional destinations could not be read	条件付き目的地を読み取れませんでした
+crossing lift	渡りリフト
+current availability could not be read	現在の利用可否を読み取れませんでした
+current binding unavailable	現在のボタン割り当てを確認できません
+current condition could not be read	現在の条件を読み取れませんでした
+current destination could not be read	現在の目的地を読み取れませんでした
+current-area state could not be read	現在のエリアでの状態を読み取れませんでした
+delivery availability could not be read	配送の利用可否を読み取れませんでした
+door state could not be read	ドアの状態を読み取れませんでした
+down	下へ
+down to the lower walkway	下の通路へ
+down-left	左下へ
+down-right	右下へ
+first elevator	最初のエレベーター
+first pool	最初の水場
+higher ground {0}	{0}上ります
+hold Down to climb down.	下を押し続けて降りてください。
+hold Up to climb.	上を押し続けて登ってください。
+identity could not be read	識別情報を読み取れませんでした
+interaction box could not be read	インタラクト範囲を読み取れませんでした
+interaction box geometry could not be read	インタラクト範囲の形状を読み取れませんでした
+interaction prompt could not be read	インタラクトの表示を読み取れませんでした
+interaction state could not be read	インタラクトの状態を読み取れませんでした
+left	左へ
+left choice	左の選択肢
+level {0}	レベル{0}
+linked exit could not be read	リンクされた出口を読み取れませんでした
+lower crossing lift	下の渡りリフト
+lower ground {0}	{0}下ります
+mesh visibility could not be read	モデルの表示状態を読み取れませんでした
+native layout differs from the audited build	ネイティブのレイアウトが監査済みビルドと異なります
+position could not be read	位置を読み取れませんでした
+removal state could not be read	削除状態を読み取れませんでした
+right	右へ
+right choice	右の選択肢
+second pool	2番目の水場
+state could not be read	状態を読み取れませんでした
+summit elevator	頂上エレベーター
+then	次に
+to the summit elevator's landing	頂上エレベーターの踊り場へ
+top choice	上の選択肢
+treasure balcony elevator	宝物バルコニーのエレベーター
+up	上へ
+up to the Wind Crystal chamber	風のクリスタルの間へ
+up to the highest walkway	最上部の通路へ
+up to the upper landing	上の踊り場へ
+up-left	左上へ
+up-right	右上へ
+visibility could not be read	表示状態を読み取れませんでした
+walkway elevator	通路のエレベーター
+west crossing lift	西の渡りリフト
+{0} Choose the next Story target to continue walking.	{0} 次のストーリー目標を選ぶと歩行を続けられます。
+{0} HP recovered	HPが{0}回復
+{0} MP damage	MPが{0}減少
+{0} MP recovered	MPが{0}回復
+{0} Some targets could not be read.	{0} 一部の対象を読み取れません。
+{0} The selection is retained; try again.	{0} 選択はそのままです。もう一度お試しください。
+{0} damage	{0}ダメージ
+{0} in a straight line	直線距離{0}
+{0} is unavailable from here.	ここからは{0}へ進めません。
+{0} limit gauge gained	リミットゲージが{0}増加
+{0} limit gauge lost	リミットゲージが{0}減少
+{0} metre	{0}メートル
+{0} metres	{0}メートル
+{0} navigation is unavailable because it is assigned to a game control.	{0}はゲーム内の操作に割り当てられているため、ガイドに使えません。
+{0} navigation is unavailable because its current game binding could not be read.	{0}の現在の割り当てを読み取れないため、ガイドに使えません。
+{0} navigation unavailable. Its game binding is assigned to another control or could not be read.	{0}でガイドを利用できません。他の操作に割り当てられているか、割り当てを読み取れません。
+{0} of {1}	全{1}項目中{0}番目
+{0} or {1}	{0}または{1}
+{0} percent	{0}パーセント
+{0} plus {1}	{0}と{1}を同時に
+{0} remains selected. Use Page Up or Page Down to choose another target.	{0}を引き続き選択しています。Page UpかPage Downで別の対象を選んでください。
+{0} {1}	{0} {1}
+{0} {1}.	{0}。{1}。
+{0}%	{0}%
+{0}, target point {1} higher	{0}、目的地は{1}上です
+{0}, target point {1} lower	{0}、目的地は{1}下です
+{0}.	{0}。
+{0}. Checking reachable targets.	{0}。到達できる対象を確認しています。
+{0}. {1}	{0}。{1}
+{0}. {1} passage. {2}	{0}。通過する出口は{1}か所。{2}
+{0}. {1} passages. {2}	{0}。通過する出口は{1}か所。{2}
+{0}: {1}.	{0}、{1}。

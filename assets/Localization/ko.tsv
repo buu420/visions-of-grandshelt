@@ -1,0 +1,1353 @@
+key	text
+A book's	책
+A clear approach to the door's interaction could not be verified.	문의 상호작용 지점까지 막힘 없는 접근 경로를 확인할 수 없었습니다.
+A clear approach to the interaction point could not be verified.	상호작용 지점까지 막힘 없는 접근 경로를 확인할 수 없었습니다.
+A clear approach to the mailbox could not be verified.	우편함까지 막힘 없는 접근 경로를 확인할 수 없었습니다.
+A clear walking approach for the player could not be verified.	캐릭터가 걸어갈 수 있는 막힘 없는 접근 경로를 확인할 수 없었습니다.
+A clear walking approach for this doorway could not be verified.	이 출입구까지 걸어갈 수 있는 막힘 없는 경로를 확인할 수 없었습니다.
+A clear walking approach on this floor could not be verified.	이 층에서 걸어갈 수 있는 막힘 없는 경로를 확인할 수 없었습니다.
+A clear walking approach to this exit could not be verified.	이 출구까지 걸어갈 수 있는 막힘 없는 경로를 확인할 수 없었습니다.
+A clear walking approach to this interaction could not be verified.	이 상호작용 지점까지 걸어갈 수 있는 막힘 없는 경로를 확인할 수 없었습니다.
+A clear walking approach to this person's talk area could not be verified.	이 사람의 대화 범위까지 걸어갈 수 있는 막힘 없는 경로를 확인할 수 없었습니다.
+A clear walking route to the side of the crate could not be verified.	상자 옆면까지 걸어갈 수 있는 막힘 없는 경로를 확인할 수 없었습니다.
+A clear water route to this Story destination could not be verified.	이 스토리 목적지까지 막힘 없는 수상 경로를 확인할 수 없었습니다.
+A compatible registered walking mesh could not be verified for this character.	이 캐릭터에 맞는 등록된 걷기 메시를 확인할 수 없었습니다.
+A complete native walking route is unavailable.	게임의 완전한 도보 경로를 이용할 수 없습니다.
+A current field character is unavailable.	현재 조작할 수 있는 필드 캐릭터가 없습니다.
+A damage number could not be matched to its unit.	피해 수치 하나를 해당 유닛과 연결할 수 없습니다.
+A damage number could not be read.	피해 수치 하나를 읽을 수 없습니다.
+A damage number's target could not be verified.	피해 수치 하나의 대상을 확인할 수 없습니다.
+A door's	문
+A field character is unavailable.	필드 캐릭터를 이용할 수 없습니다.
+A field item's	바닥의 아이템
+A ladder's	사다리
+A linked exit's current availability could not be read.	연결된 출구의 현재 이용 가능 여부를 읽을 수 없었습니다.
+A menu or scene is active.	메뉴나 장면이 열려 있습니다.
+A movable object's	움직일 수 있는 물체
+A person's	인물
+A quest marker's	퀘스트 마커
+A route for the current Story crossing is unavailable.	현재 스토리 수상 이동에 쓸 수 있는 경로가 없습니다.
+A route to the lift or its call pedestal could not be verified.	리프트 또는 호출 받침대로 가는 경로를 확인할 수 없습니다.
+A route to this story destination is unavailable.	이 스토리 목적지로 가는 경로가 없습니다.
+A save point's	저장 포인트
+A scripted scene is active.	이벤트 장면이 진행 중입니다.
+A switch's	스위치
+A treasure chest's	보물상자
+A walking route to {0} is unavailable from here.	여기에서 {0}까지 걸어갈 경로가 없습니다.
+Ability	어빌리티
+Accessibility Options	접근성 옵션
+Accessibility Options is in the System menu. In battle, Home and End choose an ally to review. H reads HP, M reads MP, L reads gauges, F2 reads buffs, and F3 reads debuffs. Press the left stick in battle for controller status.	접근성 옵션은 시스템 메뉴에 있습니다. 배틀 중 Home과 End로 상태를 확인할 아군을 고릅니다. H는 HP, M은 MP, L은 게이지, F2는 강화 효과, F3는 약화 효과를 읽습니다. 배틀 중 왼쪽 스틱을 눌러 컨트롤러로 상태를 확인하세요.
+Accessibility Options. Left and right adjust the selected value. Back returns to System Menu.	접근성 옵션입니다. 좌우로 선택한 값을 조절합니다. 뒤로 가면 시스템 메뉴로 돌아갑니다.
+Accessory	장신구
+Accessory shop attendant	장신구상
+Acting. {0}	행동 중. {0}
+Activate the console between the containers.	컨테이너 사이의 콘솔을 작동하세요.
+Activate the console within the fence.	울타리 안의 콘솔을 작동하세요.
+Activate the west console.	서쪽 콘솔을 작동하세요.
+Adamandelion	아다만데리온
+Aileen	아이린
+All	전체
+Ally	아군
+An active story target or exit could not be verified in this area.	이 지역에서 유효한 스토리 목표나 출구를 확인할 수 없습니다.
+An elevator button's	엘리베이터 버튼
+An elevator's	엘리베이터
+An exit's	출구
+An overkill could not be matched to its unit.	오버킬 결과 하나를 해당 유닛과 연결할 수 없습니다.
+An overkill could not be read.	오버킬 결과 하나를 읽을 수 없습니다.
+Approach Lid on the upper platform.	위쪽 발판에 있는 리드에게 다가가세요.
+Approach Warden's Cape.	수호자의 곶으로 다가가세요.
+Approach the barrier at the tower entrance.	타워 입구의 결계로 다가가세요.
+Approach the miasma so Fina can cast Holy.	피나가 홀리를 쓸 수 있도록 독기 쪽으로 다가가세요.
+Approach the platform to continue the trial.	시련을 계속하려면 발판으로 다가가세요.
+Approach the throne room doors with Shera.	시에라와 함께 알현실 문으로 다가가세요.
+Approach the wheel at the helm to take off.	이륙하려면 조타실의 조타륜으로 다가가세요.
+Approach to Shera's cell	시에라의 감방으로 가는 길
+Approach to the factory generator	공장 발전기로 가는 길
+Approach to the throne room	알현실로 가는 길
+Arch beyond the lower save point	아래쪽 저장 포인트 너머의 아치
+Armor	방어구
+Armor shop attendant	방어구상
+Arrived at {0}.	{0}에 도착했습니다.
+Arsha	아르샤
+Ashasaur	애시사우루스
+At destination	목적지에 도착
+At target. Interaction available.	대상에 도착했습니다. 상호작용할 수 있습니다.
+At the Crystal Tower. Follow the game's scene.	크리스털 타워에 도착했습니다. 게임의 장면을 따라가세요.
+At the Shipyard gate. Continue up the road through the sliding door.	조선소 정문에 도착했습니다. 길을 따라 올라가 미닫이문을 통과하세요.
+At the captain's passage.	선장에게 가는 통로에 도착했습니다.
+At the door to the hall. Walk through the door, then start the next route.	홀로 이어지는 문 앞입니다. 문을 통과한 뒤 다음 경로를 시작하세요.
+At the factory's sliding door. Continue through it into the bridge hall.	공장의 미닫이문 앞입니다. 문을 통과해 함교 홀로 들어가세요.
+At the push side of the loose crate. Walk into it toward the row.	움직이는 상자의 미는 쪽에 도착했습니다. 줄 방향으로 상자를 향해 걸어가세요.
+At the push side of the loose crate. Walk {0} to push it toward the row.	움직이는 상자의 미는 쪽에 도착했습니다. {0} 걸어가서 상자를 줄 쪽으로 미세요.
+At the sliding door.	미닫이문 앞입니다.
+At the target's activation area.	대상의 작동 구역에 도착했습니다.
+At the tornado over Pharm. Follow the game's scene.	파름 상공의 회오리에 도착했습니다. 게임의 장면을 따라가세요.
+At {0}. Interaction available.	{0} 도착. 상호작용할 수 있습니다.
+At {0}. Row through it to continue.	{0}에 도착했습니다. 계속하려면 노를 저어 지나가세요.
+At {0}. Use the game's interaction control to board.	{0} 도착. 게임의 상호작용 조작으로 탑승하세요.
+At {0}. Use the game's interaction control to continue.	{0} 도착. 게임의 상호작용 조작으로 계속 진행하세요.
+At {0}. Use the game's interaction control to disembark.	{0} 도착. 게임의 상호작용 조작으로 내리세요.
+At {0}. {1}	{0} 도착. {1}
+Audio setting applied for this session. Could not save audio settings.	오디오 설정을 이번 세션에 적용했습니다. 오디오 설정을 저장할 수 없었습니다.
+Automatic Story walking off.	스토리 자동 걷기를 껐습니다.
+Automatic Story walking stopped. Start it again to continue.	스토리 자동 걷기가 중단되었습니다. 계속하려면 다시 시작하세요.
+Automatic door back to the elevator	엘리베이터로 돌아가는 자동문
+Automatic door into the laboratory	연구실로 들어가는 자동문
+Automatic door to the lower laboratory	아래층 연구실로 가는 자동문
+Automatic doorway	자동문
+Automatic walking cancelled by movement.	직접 이동하여 자동 걷기가 취소되었습니다.
+Automatic walking is already on.	자동 걷기가 이미 켜져 있습니다.
+Automatic walking is unavailable because Shift is assigned to another game control or could not be read.	자동 걷기를 이용할 수 없습니다. Shift가 다른 게임 조작에 배정되었거나 배정을 읽을 수 없습니다.
+Automatic walking off.	자동 걷기를 껐습니다.
+Automatic walking on.	자동 걷기를 시작합니다.
+Automatic walking on. {0}.	자동 걷기를 시작합니다. {0}.
+Automatic walking stopped. A fresh route could not be verified.	자동 걷기가 중단되었습니다. 새 경로를 확인할 수 없었습니다.
+Automatic walking stopped. Clearance or braking room could not be verified.	자동 걷기가 중단되었습니다. 통과 공간이나 멈출 여유 거리를 확인할 수 없었습니다.
+Automatic walking stopped. Controller state could not be verified.	자동 걷기가 중단되었습니다. 컨트롤러 상태를 확인할 수 없었습니다.
+Automatic walking stopped. Player control changed.	자동 걷기가 중단되었습니다. 캐릭터 조작 상태가 바뀌었습니다.
+Automatic walking stopped. Route is blocked.	자동 걷기가 중단되었습니다. 경로가 막혀 있습니다.
+Automatic walking stopped. Start it again to continue.	자동 걷기가 중단되었습니다. 계속하려면 다시 시작하세요.
+Automatic walking stopped. The ground ahead could not be verified.	자동 걷기가 중단되었습니다. 앞쪽 지면을 확인할 수 없었습니다.
+Automatic walking stopped. The ground ahead is blocked.	자동 걷기가 중단되었습니다. 앞길이 막혀 있습니다.
+Automatic walking stopped. The ground ahead requires manual movement.	자동 걷기가 중단되었습니다. 이 구간은 직접 이동해야 합니다.
+Automatic walking stopped. The ground check needs refreshing.	자동 걷기가 중단되었습니다. 지면을 다시 확인해야 합니다.
+Automatic walking stopped. The next section requires a different movement action. Spoken guidance is available.	자동 걷기가 중단되었습니다. 다음 구간에서는 다른 이동 조작이 필요합니다. 음성 안내를 이용할 수 있습니다.
+Automatic walking stopped. The slope needs further surface verification.	자동 걷기가 중단되었습니다. 경사면을 더 확인해야 합니다.
+Automatic walking unavailable. {0}	자동 걷기를 이용할 수 없습니다. {0}
+Awakening Power	힘의 각성
+Ayaka	아야카
+Back door beside the lane	골목 옆 뒷문
+Back entrance to the back-lane house	뒷골목 집의 뒷문 입구
+Basement door inside Rain's house	레인의 집 안의 지하실 문
+Battle information could not be read.	배틀 정보를 읽을 수 없습니다.
+Battle information is not ready.	배틀 정보가 아직 준비되지 않았습니다.
+Battle information is unavailable.	배틀 정보를 확인할 수 없습니다.
+Battle result	배틀 결과
+Battle state could not be read.	배틀 진행 상황을 읽을 수 없습니다.
+Battle status closed.	배틀 상태를 닫았습니다.
+Battle status could not be read.	배틀 상태를 읽을 수 없습니다.
+Battle status. D-pad left and right choose an ally. Up reads HP and MP. Down reads effects. Y reads gauges. Press B or the left stick to close. {0}	배틀 상태입니다. 방향 패드 좌우로 아군을 고릅니다. 위는 HP와 MP, 아래는 상태 효과를 읽습니다. Y는 게이지를 읽습니다. 닫으려면 B나 왼쪽 스틱을 누르세요. {0}
+Beacon volume	길 안내음 음량
+Beacon volume is zero. Manual guidance will speak turns.	길 안내음 음량이 0입니다. 수동 안내는 방향 전환을 읽어 줍니다.
+Berserk	버서크
+Black mage	흑마도사
+Blacksmith	대장장이
+Blind	암흑
+Board the boat and return to the first boat room.	배에 타고 첫 번째 배 방으로 돌아가세요.
+Board the boat at the foot of the stairs to reach the tower.	계단 아래에서 배에 타고 탑으로 가세요.
+Board the boat for the crossing to the large crystal pedestal.	배에 타고 큰 크리스털 받침대 쪽으로 건너가세요.
+Board the boat to cross the {0}.	배에 타고 {0}를 건너세요.
+Board the boat to return to the pedestal across the basin.	배에 타고 저수조 건너편의 받침대로 돌아가세요.
+Board the boat to return to the second pool and take the other passage.	배에 타고 두 번째 물웅덩이로 돌아간 뒤 다른 통로로 가세요.
+Board the {0} and interact to ride {1}.	{0}에 탑승한 뒤 상호작용하여 {1} 이동하세요.
+Boat	배
+Book	책
+Boost	응원
+Boy	남자아이
+Brave	브레이브
+Breath Recovery formation	회복 진형
+Bridge pedestal	다리 받침대
+Buffs	강화 효과
+Buffs unavailable	강화 효과를 확인할 수 없음
+Calico cat	삼색 고양이
+Call pedestal for the {0}	{0} 호출 받침대
+Call the restored entrance elevator up to this floor.	복구된 입구 엘리베이터를 이 층으로 호출하세요.
+Camouflage	위장
+Captain's quarters	대장의 방
+Cargo elevator approach	화물 엘리베이터로 가는 길
+Castle exit	성 출구
+Castle hall approach	성 홀로 가는 길
+Cat	고양이
+Center portal	중앙 전송 장치
+Center-room portal	중앙 방의 전송 장치
+Centre rotation pedestal	중앙 회전 받침대
+Charge formation	돌격 진형
+Charlotte	샤를로트
+Charm	매혹
+Check the White Jade Stone on the center table.	중앙 탁자 위의 백휘석을 조사하세요.
+Check the door back to the west corridor.	서쪽 복도로 돌아가는 문을 조사하세요.
+Check the east door with the Level 2 Lab Key Card.	연구소 카드 키 레벨 2로 동쪽 문을 조사하세요.
+Check the harbor to open the destination choices.	항구를 조사하여 목적지 선택지를 여세요.
+Check the memo or the numbered elevator levers.	메모 또는 번호가 적힌 엘리베이터 레버를 조사하세요.
+Check the nearby portal to return to the east wing.	근처의 전송 장치를 조사하여 동쪽 구역으로 돌아가세요.
+Check the north door with the Level 3 Lab Key Card.	연구소 카드 키 레벨 3으로 북쪽 문을 조사하세요.
+Check the portal ahead.	앞쪽의 전송 장치를 조사하세요.
+Check the portal at the far side of this enclosure.	이 울타리 구역 안쪽 끝의 전송 장치를 조사하세요.
+Check the portal in the west laboratory.	서쪽 연구실의 전송 장치를 조사하세요.
+Check the portal near the far side of the room.	방 안쪽 끝 근처의 전송 장치를 조사하세요.
+Check the portal on this side of the enclosure.	울타리 구역 이쪽의 전송 장치를 조사하세요.
+Check the powered portal in the center of the room.	방 중앙의 가동 중인 전송 장치를 조사하세요.
+Check the rolled ladder to lower it.	말려 있는 사다리를 조사하여 내리세요.
+Check the route toward the entrance.	입구로 가는 길을 확인하세요.
+Check the water by the orphanage so Luka can purify it.	루루카가 정화할 수 있도록 고아원 옆의 물을 조사하세요.
+Check the water near the city entrance so Luka can purify it.	루루카가 정화할 수 있도록 도시 입구 근처의 물을 조사하세요.
+Check the water on the way to Old Town so Luka can purify it.	루루카가 정화할 수 있도록 구시가지로 가는 길의 물을 조사하세요.
+Check the west door with the Level 1 Lab Key Card.	연구소 카드 키 레벨 1로 서쪽 문을 조사하세요.
+Checked	선택됨
+Chocobo	초코보
+Choose a destination first.	먼저 목적지를 선택하세요.
+Choose a target with Page Up or Page Down, or F6 and F7.	Page Up이나 Page Down 또는 F6과 F7로 대상을 선택하세요.
+Circle	동그라미 버튼
+Climb back onto the shelf.	선반 위로 다시 올라가세요.
+Climb back up from the lower ledge.	아래쪽 턱에서 다시 올라가세요.
+Climb back up to the side walkway.	옆쪽 통로로 다시 올라가세요.
+Climb down from the shelf.	선반에서 내려가세요.
+Climb down the next ladder to the central walkway.	다음 사다리를 타고 중앙 통로로 내려가세요.
+Climb down to the container room floor.	컨테이너 방 바닥으로 내려가세요.
+Climb down to the fenced console.	울타리 안의 콘솔로 내려가세요.
+Climb down to the next landing.	다음 층계참으로 내려가세요.
+Climb the first ladder.	첫 번째 사다리를 오르세요.
+Climb the ladder on the tower.	탑의 사다리를 오르세요.
+Climb the ladder onto the shelf.	사다리를 타고 선반 위로 올라가세요.
+Climb the ladder to the next section.	사다리를 타고 다음 구역으로 올라가세요.
+Climb the ladder to the upper walkway.	사다리를 타고 위쪽 통로로 올라가세요.
+Climb the ladder to the upper walkways.	사다리를 타고 위쪽 통로들로 올라가세요.
+Climb the last ladder to the north exit.	마지막 사다리를 타고 북쪽 출구로 올라가세요.
+Climb the long ladder to the upper path.	긴 사다리를 타고 위쪽 길로 올라가세요.
+Climb the second ladder.	두 번째 사다리를 오르세요.
+Climb to the next level.	다음 층으로 올라가세요.
+Closed treasure chest	닫힌 보물상자
+Confuse	혼란
+Connecting passage	연결 통로
+Console between the containers	컨테이너 사이의 콘솔
+Continue across the upper bridges to the altar.	위쪽 다리들을 건너 제단으로 계속 가세요.
+Continue along the trail beyond the save point.	저장 포인트 너머의 길을 따라 계속 가세요.
+Continue into the chamber at the bottom of the shrine.	신전 맨 아래의 방으로 계속 들어가세요.
+Continue into the elevator room.	엘리베이터 방으로 계속 들어가세요.
+Continue into the first trial room.	첫 번째 시련의 방으로 계속 들어가세요.
+Continue past the save point to the Dark Crystal.	저장 포인트를 지나 어둠의 크리스털로 계속 가세요.
+Continue through the door at the top of the lifts.	리프트 맨 위의 문을 지나 계속 가세요.
+Continue through the door to the next trial.	문을 지나 다음 시련으로 계속 가세요.
+Continue through the doors to the inner chamber.	문들을 지나 안쪽 방으로 계속 가세요.
+Continue through the open Level 1 door.	열린 레벨 1 문을 지나 계속 가세요.
+Continue through the open Level 2 door.	열린 레벨 2 문을 지나 계속 가세요.
+Continue through the open Level 3 door.	열린 레벨 3 문을 지나 계속 가세요.
+Continue through the passage ahead.	앞쪽 통로를 지나 계속 가세요.
+Continue through the sliding door.	미닫이문을 통과해 계속 가세요.
+Continue through the upper passage.	위쪽 통로를 지나 계속 가세요.
+Continue through the west wing.	서쪽 구역을 지나 계속 가세요.
+Continue to the bottom of the shrine.	신전 맨 아래까지 계속 가세요.
+Continue to the far end of Old Town.	구시가지 끝까지 계속 가세요.
+Continue to the gate.	문까지 계속 가세요.
+Continue to the guarded cells to look for Shera.	시에라를 찾기 위해 경비가 있는 감방으로 계속 가세요.
+Continue to the overlook on the mountain path.	산길의 전망대로 계속 가세요.
+Continue toward Shera's cell.	시에라의 감방 쪽으로 계속 가세요.
+Continue toward the inner chamber.	안쪽 방 쪽으로 계속 가세요.
+Continue toward the trial in the courtyard.	안뜰의 시련 쪽으로 계속 가세요.
+Continue up to the shrine entrance.	신전 입구까지 계속 올라가세요.
+Control-relative {0}, {1}	조작 방향 기준 {0}, {1}
+Controller input capture is unavailable.	컨트롤러 입력을 감지할 수 없습니다.
+Controller navigation is available.	컨트롤러 길 안내를 이용할 수 있습니다.
+Controller navigation is unavailable.	컨트롤러 길 안내를 이용할 수 없습니다.
+Controller navigation is unavailable. Start guidance when it is available.	컨트롤러 길 안내를 이용할 수 없습니다. 이용할 수 있게 되면 안내를 시작하세요.
+Controller navigation unavailable. Its current game binding could not be reserved.	컨트롤러 길 안내를 이용할 수 없습니다. 현재 게임 버튼 배정을 확보할 수 없었습니다.
+Controller navigation unavailable. {0}	컨트롤러 길 안내를 이용할 수 없습니다. {0}
+Controller. Hold {0} for navigation. D-pad left and right change category; up and down choose a target. Press the left stick for manual guidance, or the right stick for automatic walking. B stops navigation; Y reads help. Release {0} after starting or stopping. Release held controls after a menu, focus or connection change.	컨트롤러입니다. {0}을 길게 눌러 길 안내를 사용합니다. 방향 패드 좌우로 범주를 바꾸고 상하로 대상을 고릅니다. 왼쪽 스틱을 누르면 수동 안내가, 오른쪽 스틱을 누르면 자동 걷기가 시작됩니다. B는 길 안내를 중지하고 Y는 도움말을 읽습니다. 시작하거나 중지한 뒤 {0}에서 손을 떼세요. 메뉴, 창 포커스 또는 연결이 바뀌면 누르고 있던 조작부에서 손을 떼세요.
+Conveyor across the far gap	먼 쪽 틈을 건너는 컨베이어
+Conveyor across the middle gap	가운데 틈을 건너는 컨베이어
+Conveyor across to the next platform	다음 발판으로 건너가는 컨베이어
+Conveyor back to the bridge hall	다리 홀로 돌아가는 컨베이어
+Conveyor from the bridge hall	다리 홀에서 출발하는 컨베이어
+Conveyor to the bridge pedestal	다리 받침대로 가는 컨베이어
+Conveyor to the far platform	먼 쪽 발판으로 가는 컨베이어
+Conveyor to the middle platforms	가운데 발판들로 가는 컨베이어
+Cover	감싸기
+Cover all	전체 감싸기
+Crash Blade	크래시 블레이드
+Crate room water pedestal	나무 상자 방의 수위 받침대
+Cross into Old Town.	구시가지로 건너가세요.
+Cross into the next section of the Wandering Lands.	부유 대륙의 다음 구역으로 건너가세요.
+Cross the bridge to the Water Shrine.	다리를 건너 물의 신전으로 가세요.
+Cross the catwalks and use the large pedestal to lower the west bridge section.	발판 통로를 건너 큰 받침대를 사용해 서쪽 다리 구간을 내리세요.
+Cross the floating road toward the Wandering Lands entrance.	떠 있는 길을 건너 부유 대륙 입구 쪽으로 가세요.
+Cross the lowered bridge back to the entrance passage.	내려온 다리를 건너 입구 통로로 돌아가세요.
+Cross the lowered bridge to reach the factory generator.	내려온 다리를 건너 공장 발전기로 가세요.
+Cross the raised catwalk, then descend to the next pedestal.	올라온 발판 통로를 건넌 뒤 다음 받침대로 내려가세요.
+Cross the summit passage to Lake Ryusei.	정상의 통로를 지나 유성호로 가세요.
+Cross the walkway to the passage on the far side.	통로를 건너 반대편 통로로 가세요.
+Cross this car to the door into the third car.	이 객차를 지나 세 번째 객차로 들어가는 문으로 가세요.
+Crystal Tower	크리스털 타워
+Crystal Tower barrier	크리스털 타워 결계
+Current objective. {0}	현재 목표. {0}
+Current option is loading	현재 옵션을 불러오는 중
+Current screen text is unavailable	현재 화면의 텍스트를 읽을 수 없음
+Current story objective unavailable.	현재 스토리 목표를 이용할 수 없습니다.
+Current story objective unavailable. {0}	현재 스토리 목표를 이용할 수 없습니다. {0}
+Damage numbers could not be matched to a unit.	피해 수치가 어느 유닛의 것인지 확인할 수 없습니다.
+Damage numbers could not be matched to the current battle.	피해 수치를 현재 배틀과 연결할 수 없습니다.
+Damage numbers could not be read.	피해 수치를 읽을 수 없습니다.
+Dark immunity	어둠 속성 무효
+Debrave	디브레이
+Debuffs	약화 효과
+Debuffs unavailable	약화 효과를 확인할 수 없음
+Decoy	분신
+Defaith	디페이
+Delete	Delete
+Delivery attendant	배송 담당자
+Demon Form	마인 형태
+Deprotect	디프로테
+Descend the ladder to return to the bridge hall.	사다리를 타고 내려가 다리 홀로 돌아가세요.
+Descend to the side walkway and cross the two catwalks.	옆쪽 통로로 내려가 두 발판 통로를 건너세요.
+Description: {0}	장면 설명. {0}
+Deshell	디셸
+Destination guidance stopped.	목적지 안내가 중단되었습니다.
+Destination kept. Start guidance to find a route from here.	목적지는 유지됩니다. 여기에서 경로를 찾으려면 안내를 시작하세요.
+Destination kept. Start guidance when controller navigation is available.	목적지는 유지됩니다. 컨트롤러 길 안내를 이용할 수 있게 되면 안내를 시작하세요.
+Destination. {0}	목적지. {0}
+Destinations	목적지
+Destinations.	목적지.
+Destinations. No walking destinations are available from here.	목적지. 여기에서 걸어갈 수 있는 목적지가 없습니다.
+Destinations. {0}.	목적지. {0}.
+Dilmagian soldier	딜마기아 병사
+Dock pedestal landing across the crates	나무 상자 건너편의 선착장 받침대 앞 발판
+Doom	죽음의 선고
+Door back to Gaberada	가베라다로 돌아가는 문
+Door back to Sian	시안 마을로 돌아가는 문
+Door back to the west corridor	서쪽 복도로 돌아가는 문
+Door beside the chocobo yard	초코보 우리 옆의 문
+Door from Rain's house to the street	레인의 집에서 거리로 나가는 문
+Door from the basement to Rain's house	지하실에서 레인의 집으로 가는 문
+Door from the chocobo yard into the house	초코보 우리에서 집으로 들어가는 문
+Door from the courtyard house to the street	안뜰 있는 집에서 거리로 나가는 문
+Door from the house by the item shop to the street	도구 상점 옆 집에서 거리로 나가는 문
+Door from the house to the back lane	집에서 뒷골목으로 나가는 문
+Door from the inn to the harbor	숙소에서 항구로 나가는 문
+Door from the inn to the street	숙소에서 거리로 나가는 문
+Door from the inn to the village	숙소에서 마을로 나가는 문
+Door from the item shop to the harbor	도구 상점에서 항구로 나가는 문
+Door from the item shop to the street	도구 상점에서 거리로 나가는 문
+Door from the item shop to the village	도구 상점에서 마을로 나가는 문
+Door from the vision shop to the street	비전 상점에서 거리로 나가는 문
+Door from the weapon and armor shop to the harbor	무기 방어구 상점에서 항구로 나가는 문
+Door from the weapon and armor shop to the street	무기 방어구 상점에서 거리로 나가는 문
+Door from the weapon and armor shop to the village	무기 방어구 상점에서 마을로 나가는 문
+Door from the weapon shop to the street	무기 상점에서 거리로 나가는 문
+Door into the Enterprise	엔터프라이즈로 들어가는 문
+Door of Rain's house	레인의 집 문
+Door out of the bridge hall	다리 홀에서 나가는 문
+Door out of the captain's quarters	대장의 방에서 나가는 문
+Door to Rain's basement	레인의 집 지하실로 가는 문
+Door to the bridge hall	다리 홀로 가는 문
+Door to the chocobo yard	초코보 우리로 가는 문
+Door to the courtyard	안뜰로 가는 문
+Door to the elder's home	할머니의 집으로 가는 문
+Door to the first trial	첫 번째 시련으로 가는 문
+Door to the hall	홀로 이어지는 문
+Door to the house by the item shop	도구 상점 옆 집으로 가는 문
+Door to the inn	숙소로 가는 문
+Door to the item shop	도구 상점으로 가는 문
+Door to the jail corridor	감옥 복도로 가는 문
+Door to the next train car	다음 객차로 가는 문
+Door to the next wing	다음 구역으로 가는 문
+Door to the outer cells	바깥쪽 감방으로 가는 문
+Door to the roof stairway	옥상 계단으로 가는 문
+Door to the vision shop	비전 상점으로 가는 문
+Door to the weapon and armor shop	무기 방어구 상점으로 가는 문
+Door to the weapon shop	무기 상점으로 가는 문
+Door to {0}	{0} 방면 문
+Down	아래로
+Duality Knight	듀얼리티 나이트
+Dwarf	드워프
+Earth immunity	땅 속성 무효
+Elevator	엘리베이터
+Elevator call button	엘리베이터 호출 버튼
+Elevator down to the laboratory	연구실로 내려가는 엘리베이터
+Elevator lever memo	엘리베이터 레버 메모
+Elevator up to the entrance passage	입구 통로로 올라가는 엘리베이터
+End	End
+End of the drained passage	물이 빠진 통로의 끝
+Enemies. {0}	적. {0}
+Enemy	적
+Enemy attention up	적의 주목도 증가
+Enter Lake Ryusei at the top of the mountain.	산 정상의 유성호로 들어가세요.
+Enter Sian to ask about the Dark Crystal.	어둠의 크리스털에 대해 물어보기 위해 시안 마을로 들어가세요.
+Enter the jail corridor.	감옥 복도로 들어가세요.
+Enter the throne room.	알현실로 들어가세요.
+Enter the tunnel behind the bookcase.	책장 뒤의 터널로 들어가세요.
+Enterprise helm	엔터프라이즈 조타실
+Enterprise takeoff point	엔터프라이즈 이륙 지점
+Entrance approach	입구로 가는 길
+Entrance elevator approach	입구 엘리베이터로 가는 길
+Entrance elevator call pedestal	입구 엘리베이터 호출 받침대
+Entrance portal	입구의 전송 장치
+Entrance terrace across the crates	나무 상자 건너편의 입구 쪽 테라스
+Entrance to Crystal Tower	크리스털 타워 입구
+Entrance to Dilmagia	딜마기아 입구
+Entrance to Jake's office	제이크의 사무실 입구
+Entrance to Lake Ryusei	유성호 입구
+Entrance to Olderion	올데리온 입구
+Entrance to Rain's house	레인의 집 입구
+Entrance to Sian	시안 마을 입구
+Entrance to Zoldaad, the Imperial Capital	제도 졸다드 입구
+Entrance to the Rebel Hideout	반란군의 아지트 입구
+Entrance to the Shrine side chamber	신전 곁방 입구
+Entrance to the Wandering Lands	부유 대륙 입구
+Entrance to the Water Shrine	물의 신전 입구
+Entrance to the elder's home	할머니의 집 입구
+Evan	에반
+Examine the large crystal pedestal on this platform.	이 발판 위의 큰 크리스털 받침대를 조사하세요.
+Examine the stele before approaching the trial.	시련에 다가가기 전에 비석을 조사하세요.
+Exit from Jake's office	제이크의 사무실 출구
+Exit from the cell wing	감방 구역 출구
+Exit to Gronoa	고로노아로 가는 출구
+Exit to Olderion	올데리온으로 가는 출구
+Exit to the Gronoa overworld	고로노아 필드 지도로 가는 출구
+Exit to the Imperial Hotel district	제도 호텔 주변으로 가는 출구
+Exit to the castle rooftop	성 옥상으로 가는 출구
+Exit to the next Battlefield section	전장의 다음 구역으로 가는 출구
+Exit to {0}	{0} 방면 출구
+Exits, doors and ladders	출구, 문, 사다리
+Expanded	펼쳐짐
+Factory exit to the desert	공장에서 사막으로 가는 출구
+Faith	페이스
+Far end of Old Town	구시가지의 끝
+Far terrace across the crates	나무 상자 건너편의 먼 쪽 테라스
+Far walkway across the crates	나무 상자 건너편의 먼 쪽 통로
+Fence by the elevator controls	엘리베이터 조작 장치 옆의 울타리
+Fenced console	울타리 안의 콘솔
+Field controls are unavailable.	필드 조작을 할 수 없습니다.
+Field controls could not be read.	필드 조작 상태를 읽을 수 없었습니다.
+Fina	피나
+Fina in the alley	골목에 있는 피나
+Fire damage up	불 속성 피해 증가
+Fire immunity	불 속성 무효
+First ladder toward Lake Dorr	돌 호수 쪽 첫 번째 사다리
+First long ladder	첫 번째 긴 사다리
+First, go to the door to the hall. {0}	먼저 홀로 이어지는 문으로 가세요. {0}
+Fisherman	어부 남성
+Fisherwoman	어부 여성
+Fluid Tactics	유연한 전투 책략
+Focused. {0}	선택됨. {0}
+Folded ladder by the pedestal	받침대 옆의 접힌 사다리
+Follow Arsha to the plaza with the tree.	아르샤를 따라 나무가 있는 광장으로 가세요.
+Follow Jake through the factory gate.	제이크를 따라 공장 문을 지나가세요.
+Follow the canyon to Mozul Station. Interact at the entrance.	협곡을 따라 모즐역으로 가세요. 입구에서 상호작용하세요.
+Follow the corridor to the outer cells.	복도를 따라 바깥쪽 감방으로 가세요.
+Follow the desert road to the Weapons Factory.	사막 길을 따라 병기 공장으로 가세요.
+Follow the drained passage to the entrance hall.	물이 빠진 통로를 따라 입구 홀로 가세요.
+Follow the drained passage to the ladder chamber.	물이 빠진 통로를 따라 사다리 방으로 가세요.
+Follow the entrance passage into the bridge hall.	입구 통로를 따라 다리 홀로 들어가세요.
+Follow the entrance path to the central hall.	입구 길을 따라 중앙 홀로 가세요.
+Follow the floating path to the Forest Path entrance.	떠 있는 길을 따라 오솔길 입구로 가세요.
+Follow the hall toward the throne room.	홀을 따라 알현실 쪽으로 가세요.
+Follow the lower passage to the laboratory.	아래쪽 통로를 따라 연구실로 가세요.
+Follow the lower road back to Olderion.	아래쪽 길을 따라 올데리온으로 돌아가세요.
+Follow the lower walkway through the arch.	아래쪽 통로를 따라 아치를 지나가세요.
+Follow the lower walkway to the crate room.	아래쪽 통로를 따라 나무 상자 방으로 가세요.
+Follow the main street to the monsters.	큰길을 따라 몬스터가 있는 곳으로 가세요.
+Follow the mountain trail toward the summit.	산길을 따라 정상 쪽으로 가세요.
+Follow the passage back to the entrance.	통로를 따라 입구로 돌아가세요.
+Follow the path to Lake Dorr.	길을 따라 돌 호수로 가세요.
+Follow the platform to the conveyor to the bridge pedestal.	발판을 따라 다리 받침대로 가는 컨베이어까지 가세요.
+Follow the railway toward the Imperial Capital.	철로를 따라 제도 쪽으로 가세요.
+Follow the side walkway to the tall ladder and climb it.	옆쪽 통로를 따라 높은 사다리까지 가서 오르세요.
+Follow the spiral to the summit. You can prepare at the rest stop along the way.	나선형 길을 따라 정상으로 가세요. 가는 길의 휴식처에서 준비할 수 있습니다.
+Follow the stairs beyond the save point.	저장 포인트 너머의 계단을 따라가세요.
+Follow the stairs down and go around the loose crate. Push it toward the row to line it up.	계단을 내려가 움직이는 나무 상자의 반대편으로 돌아가세요. 상자를 줄 쪽으로 밀어 정렬하세요.
+Follow the stairway to the rooftop.	계단을 따라 옥상으로 가세요.
+Follow the trail ahead.	앞쪽 길을 따라가세요.
+Follow the trail beyond the mountain pass.	고갯길 너머의 길을 따라가세요.
+Follow the trail into the next section.	길을 따라 다음 구역으로 들어가세요.
+Follow the trail through the lower tower.	길을 따라 타워 하층을 지나가세요.
+Follow the trail. The crystal paths appear as you approach.	길을 따라가세요. 다가가면 크리스털 길이 나타납니다.
+Follow the tunnel to the Rebel Hideout.	터널을 따라 반란군의 아지트로 가세요.
+Follow the tunnel to the castle dungeon.	터널을 따라 성의 지하 감옥으로 가세요.
+Follow the upper path into the next passage.	위쪽 길을 따라 다음 통로로 들어가세요.
+Follow the upper path to the Water Maiden.	위쪽 길을 따라 물의 무녀가 있는 곳으로 가세요.
+Follow the upper walkway into the boat room.	위쪽 통로를 따라 배 방으로 들어가세요.
+Follow the upper walkway to the laboratory.	위쪽 통로를 따라 연구실로 가세요.
+Follow the west ramp to the small pedestal.	서쪽 경사로를 따라 작은 받침대로 가세요.
+Follow the winding trail past the fork.	굽이진 길을 따라 갈림길을 지나가세요.
+Forest Path entrance	오솔길 입구
+Forest Path exit toward the Wandering Lands	오솔길에서 부유 대륙으로 가는 출구
+Four-lamp elevator	램프 네 개가 달린 엘리베이터
+Front door from the back-lane house to the street	뒷골목 집에서 거리로 나가는 정문
+Front door from the inn to the street	숙소에서 거리로 나가는 정문
+Front door of the courtyard house	안뜰 있는 집의 정문
+Front door of the house by the back lane	뒷골목 옆 집의 정문
+Front door of the house by the item shop	도구 상점 옆 집의 정문
+Front door of the inn	숙소 정문
+Front door of the item shop	도구 상점 정문
+Front door of the weapon and armor shop	무기 방어구 상점 정문
+Front entrance to the back-lane house	뒷골목 집의 정문 입구
+Front entrance to the courtyard house	안뜰 있는 집의 정문 입구
+Front entrance to the inn	숙소 정문 입구
+Fryevia	프레이비아
+Fury	분노
+Gate into the Weapons Factory	병기 공장으로 들어가는 문
+Gate to Old Town	구시가지로 가는 문
+Gate to the Shipyard	조선소로 가는 문
+Gil on hand {0}	보유 길 {0}
+Gilgamesh	길가메시
+Girl	여자아이
+Go inside the Enterprise and make your way to the helm.	엔터프라이즈 안으로 들어가 조타실로 가세요.
+Go through Amore on the way to Warden's Cape.	아무르 마을을 지나 수호자의 곶으로 가세요.
+Go through the arch that the water uncovered.	물이 빠져 드러난 아치를 지나가세요.
+Go through the door into the second train car.	문을 지나 두 번째 객차로 들어가세요.
+Go through the entrance into the lower tower.	입구를 지나 타워 하층으로 들어가세요.
+Go through the gate into the factory.	문을 지나 공장으로 들어가세요.
+Go through the next door to reach the fourth car.	다음 문을 지나 네 번째 객차로 가세요.
+Go through the open door to speak to Jake.	열린 문을 지나 제이크와 대화하세요.
+Go through to the next wing.	다음 구역으로 지나가세요.
+Go through to the upper bridges.	위쪽 다리들로 지나가세요.
+Go to the Shipyard to meet Lid. Follow the main road to the gate.	리드를 만나기 위해 조선소로 가세요. 큰길을 따라 문까지 가세요.
+Go to the bridge.	다리로 가세요.
+Go to the captain's quarters to look for the throne room key.	왕좌 열쇠를 찾기 위해 대장의 방으로 가세요.
+Go to the cave entrance northeast of Olderion.	올데리온 북동쪽의 동굴 입구로 가세요.
+Go to the fence by the elevator controls.	엘리베이터 조작 장치 옆의 울타리로 가세요.
+Go to the ladder and walk toward it to climb down.	사다리로 가서 그대로 걸어가 내려가세요.
+Go to the last page to close.	마지막 페이지로 이동하면 닫을 수 있습니다.
+Go to the portal beyond the save point and interact.	저장 포인트 너머의 포털로 가서 상호작용하세요.
+Go to the waterfall entrance west of Olderion.	올데리온 서쪽의 폭포 입구로 가세요.
+Go toward the cargo elevator.	화물 엘리베이터 쪽으로 가세요.
+Good Luck	행운
+Grand Magic	대마법
+Grandshelt soldier	그랑셸트 병사
+Great Wall	그레이트 월
+Ground pickup	바닥의 아이템
+Guard	방어
+Guidance is already on.	안내가 이미 켜져 있습니다.
+Guidance off.	길 안내를 껐습니다.
+HP unavailable	HP를 확인할 수 없음
+HP {0}	HP {0}
+HP {0} of {1}	HP {0}, 최대 {1}
+Harbor for Zoldaad	졸다드로 가는 항구
+Haste	헤이스트
+Head to the far door to escape the train.	열차에서 탈출하기 위해 먼 쪽 문으로 가세요.
+Head toward the entrance elevator on the upper deck.	위쪽 갑판의 입구 엘리베이터 쪽으로 가세요.
+Heat	열기
+Hidden tunnel entrance	숨겨진 터널 입구
+Hideout exit to the desert	아지트에서 사막으로 가는 출구
+Hold Down to climb down.	아래를 길게 눌러 내려가세요.
+Hold Up to climb.	위를 길게 눌러 올라가세요.
+Home	Home
+Honing Sense	감각 집중
+Ice damage up	얼음 속성 피해 증가
+Ice immunity	얼음 속성 무효
+Inn attendant	숙소 주인
+Inn side door from inside	숙소 안쪽의 옆문
+Inner chamber door	안쪽 방의 문
+Innkeeper	숙소 주인
+Interaction available	상호작용 가능
+Iron Wall formation	철벽 진형
+Item shop attendant	도구상
+Jake	제이크
+Jake's office door	제이크의 사무실 문
+Key assignment is active.	키 배정이 진행 중입니다.
+King of Grandshelt	그랑셸트 왕
+Ladder	사다리
+Ladder back onto the shelf	선반 위로 돌아가는 사다리
+Ladder back to the container floor	컨테이너 방 바닥으로 돌아가는 사다리
+Ladder back to the upper path	위쪽 길로 돌아가는 사다리
+Ladder beyond the trial	시련 너머의 사다리
+Ladder down from the shelf	선반에서 내려가는 사다리
+Ladder down to the bridge hall	다리 홀로 내려가는 사다리
+Ladder down to the save point	저장 포인트로 내려가는 사다리
+Ladder down toward Olderion	올데리온 쪽으로 내려가는 사다리
+Ladder onto the shelf	선반 위로 올라가는 사다리
+Ladder to the central walkway	중앙 통로로 가는 사다리
+Ladder to the elevator landing	엘리베이터 승강장으로 가는 사다리
+Ladder to the fenced console	울타리 안의 콘솔로 가는 사다리
+Ladder to the lower floor	아래층으로 가는 사다리
+Ladder to the lower hall	아래쪽 홀로 가는 사다리
+Ladder to the upper walkway	위쪽 통로로 가는 사다리
+Ladder to the upper walkways	위쪽 통로들로 가는 사다리
+Lake Dorr entrance	돌 호수 입구
+Lake Ryusei exit toward Forest Path	유성호에서 오솔길로 가는 출구
+Landing below the upper passage	위쪽 통로 아래 선착장
+Landing below the water pedestal	수위 조절 받침대 아래 선착장
+Landing by the central hall passage	중앙 홀 통로 옆 선착장
+Landing by the large crystal pedestal	큰 크리스털 받침대 옆 선착장
+Landing by the tower ladder	탑 사다리 옆 선착장
+Landing on the far bank	건너편 선착장
+Large crystal pedestal	큰 크리스털 받침대
+Lasswell	라스웰
+Leave Amore by the north bridge toward Warden's Cape.	북쪽 다리로 아무르 마을을 떠나 수호자의 곶으로 가세요.
+Leave Amore by the south exit for Waterfall Way.	남쪽 출구로 아무르 마을을 떠나 폭포의 회랑으로 가세요.
+Leave Forest Path for the Wandering Lands.	오솔길을 떠나 부유 대륙으로 가세요.
+Leave Jake's office and return to the hall.	제이크의 사무실을 나와 홀로 돌아가세요.
+Leave Old Town through Olderion on the way to Waterfall Way.	올데리온을 거쳐 구시가지를 떠나 폭포의 회랑으로 가세요.
+Leave Olderion by the south exit for the Cave of Waters.	남쪽 출구로 올데리온을 떠나 물의 동굴로 가세요.
+Leave Olderion for Lake Dorr by way of the Cave of Waters.	올데리온을 떠나 물의 동굴을 거쳐 돌 호수로 가세요.
+Leave Olderion for Waterfall Way.	올데리온을 떠나 폭포의 회랑으로 가세요.
+Leave Sian and head for Mt. Reizan.	시안 마을을 떠나 레이호우산으로 가세요.
+Leave by the north exit, then take the east fork toward the Wind Shrine.	북쪽 출구로 나간 뒤 동쪽 갈림길을 따라 바람의 신전으로 가세요.
+Leave the Research Center Ruins.	연구소 폐허를 떠나세요.
+Leave the Water Maiden's chamber through the passage.	통로를 지나 물의 무녀의 방을 나가세요.
+Leave the Water Shrine and return to Olderion.	물의 신전을 떠나 올데리온으로 돌아가세요.
+Leave the captain's quarters and return to the throne room doors.	대장의 방을 나와 알현실 문으로 돌아가세요.
+Leave the cave by the high exit toward Lake Dorr.	높은 곳의 출구로 동굴을 떠나 돌 호수로 가세요.
+Leave the cave by the south exit and return to Olderion.	남쪽 출구로 동굴을 떠나 올데리온으로 돌아가세요.
+Leave the cell wing to reach the corridor.	감방 구역을 나와 복도로 가세요.
+Leave the chamber through the arch.	아치를 지나 방을 나가세요.
+Leave the crate room through the entrance passage.	입구 통로를 지나 나무 상자 방을 나가세요.
+Leave the elder's home.	할머니의 집을 나가세요.
+Leave the inn and meet the party in the alley.	숙소를 나와 골목에서 동료들과 만나세요.
+Leave the laboratory and return to the elevator.	연구실을 나와 엘리베이터로 돌아가세요.
+Leave the lake and follow the floating path toward Forest Path.	호수를 떠나 떠 있는 길을 따라 오솔길 쪽으로 가세요.
+Leave the mountain path through the south exit.	남쪽 출구로 산길을 떠나세요.
+Leave the shrine to continue on Gronoa.	신전을 떠나 고로노아 여정을 계속하세요.
+Leave the throne room through the door to the roof stairway.	옥상 계단으로 가는 문을 지나 알현실을 나가세요.
+Left	왼쪽으로
+Left rotation pedestal	왼쪽 회전 받침대
+Level 1 Lab Key Card	연구소 카드 키 레벨 1
+Level 1 door	레벨 1 문
+Level 2 Lab Key Card	연구소 카드 키 레벨 2
+Level 2 door	레벨 2 문
+Level 3 Lab Key Card	연구소 카드 키 레벨 3
+Level 3 door	레벨 3 문
+Level {0}	레벨 {0}
+Lever {0}	레버 {0}
+Libra details could not be read.	라이브라 상세 정보를 읽을 수 없습니다.
+Libra target could not be read.	라이브라 대상을 읽을 수 없습니다.
+Library bookshelf clue	도서관 책장의 단서
+Lid	리드
+Lid's upper platform	리드가 있는 위쪽 발판
+Light Veil	라이트 베일
+Light immunity	빛 속성 무효
+Lightning damage up	번개 속성 피해 증가
+Lightning immunity	번개 속성 무효
+Lightning ley line	번개의 지맥
+Limit gauge unavailable	리미트 게이지를 확인할 수 없음
+Limit gauge {0} percent	리미트 게이지 {0}퍼센트
+Local by the tree	나무 옆의 주민
+Local resident	주민
+Locked dungeon gate	잠긴 지하 감옥 문
+Lower shrine story marker	신전 하층의 스토리 표식
+Lower the ladder beside the pedestal to return to the hall.	받침대 옆의 사다리를 내려 홀로 돌아가세요.
+MP unavailable	MP를 확인할 수 없음
+MP {0}	MP {0}
+Magic Barrier	마법 장벽
+Mailbox by the inn	숙소 옆 우편함
+Man	남성
+Man in blue	파란 옷의 남자
+Masamune	마사무네 자세
+Medal pickup	바닥의 메달
+Merchant	상인
+Meteoroid	운명의 선고
+Miasma story marker	독기 쪽의 스토리 표식
+Middle Reach landing	중층 층계참
+Mind Focus	정신 집중
+Miner	채굴원
+Mixed	일부 선택됨
+Moogle	모그리
+Moon Slayer	섬월
+More than one active exit leads to the next Battlefield section.	전장의 다음 구역으로 이어지는 활성 출구가 둘 이상입니다.
+More than one active target matches this story object. A route is unavailable.	이 스토리 물체에 해당하는 활성 대상이 여럿 있습니다. 경로를 이용할 수 없습니다.
+More than one controller is active.	활성 컨트롤러가 둘 이상입니다.
+Move toward the ladder, then {0}	사다리 쪽으로 이동한 뒤, {0}
+Move {0} onto the ladder, then {1}	{0} 이동해 사다리에 올라선 뒤, {1}
+Mozul Station entrance	모즐역 입구
+Mt. Reizan trailhead	레이호우산 등산로 입구
+NPC sound volume	NPC 알림음 음량
+NPC sounds	NPC 알림음
+Native navigation input state is unavailable.	게임의 길 안내 입력 상태를 확인할 수 없습니다.
+Native walking input is unavailable.	게임의 걷기 입력을 이용할 수 없습니다.
+Navigation beacon on.	길 안내 신호음을 켰습니다.
+Navigation beacon on. {0}.	길 안내 신호음을 켰습니다. {0}.
+Navigation commands arrived together. Release the modifier, then press one command at a time.	여러 길 안내 명령이 동시에 들어왔습니다. 보조 키에서 손을 뗀 뒤 명령을 하나씩 누르세요.
+Navigation is off.	길 안내가 꺼져 있습니다.
+Navigation is unavailable in this travel mode.	이 이동 방식에서는 길 안내를 이용할 수 없습니다.
+Navigation key unavailable because it conflicts with a game control.	길 안내 키가 게임 조작과 충돌하여 사용할 수 없습니다.
+Navigation stopped while speech output was unavailable.	음성 출력을 이용할 수 없는 동안 길 안내가 중단되었습니다.
+Navigation stopped.	길 안내가 중단되었습니다.
+Navigation stopped. A fresh complete walking route is unavailable.	길 안내가 중단되었습니다. 새로운 전체 도보 경로를 찾을 수 없습니다.
+Navigation stopped. Area or player changed.	길 안내가 중단되었습니다. 지역이나 조작 캐릭터가 바뀌었습니다.
+Navigation stopped. Controller unavailable.	길 안내가 중단되었습니다. 컨트롤러를 이용할 수 없습니다.
+Navigation stopped. Field controls unavailable.	길 안내가 중단되었습니다. 필드 조작을 할 수 없습니다.
+Navigation stopped. Game focus lost.	길 안내가 중단되었습니다. 게임 창이 비활성화되었습니다.
+Navigation stopped. Its control binding is unavailable or assigned to another game control.	길 안내가 중단되었습니다. 해당 버튼 배정을 사용할 수 없거나 다른 게임 조작에 배정되어 있습니다.
+Navigation stopped. Player walking state or location is unavailable.	길 안내가 중단되었습니다. 캐릭터의 걷기 상태나 위치를 확인할 수 없습니다.
+Navigation stopped. Route guidance unavailable.	길 안내가 중단되었습니다. 이 경로를 안내할 수 없습니다.
+Navigation stopped. Screen or area changed.	길 안내가 중단되었습니다. 화면이나 지역이 바뀌었습니다.
+Navigation stopped. Target changed.	길 안내가 중단되었습니다. 대상이 바뀌었습니다.
+Navigation stopped. Target is no longer available.	길 안내가 중단되었습니다. 대상을 더 이상 이용할 수 없습니다.
+Navigation stopped. The destination arrival distance could not be verified.	길 안내가 중단되었습니다. 목적지에 도착한 것으로 판단할 거리를 확인할 수 없었습니다.
+Navigation stopped. The ground check does not match the current route.	길 안내가 중단되었습니다. 지면 확인 결과가 현재 경로와 일치하지 않습니다.
+Navigation stopped. The selected target has no known position in this area.	길 안내가 중단되었습니다. 선택한 대상은 이 지역에서 알려진 위치가 없습니다.
+Navigation stopped. This route requires unsupported movement.	길 안내가 중단되었습니다. 이 경로에는 지원되지 않는 이동 조작이 필요합니다.
+Navigation stopped. Verified ground ahead is unavailable.	길 안내가 중단되었습니다. 앞쪽에서 걸을 수 있는 지면을 확인하지 못했습니다.
+Navigation stopped. Walking route is too far from the player.	길 안내가 중단되었습니다. 도보 경로가 캐릭터와 너무 멀리 떨어져 있습니다.
+Navigation stopped. Walking route unavailable.	길 안내가 중단되었습니다. 걸어갈 경로가 없습니다.
+Navigation stopped. {0}	길 안내가 중단되었습니다. {0}
+Navigation unavailable while speech output was disconnected.	음성 출력이 끊어진 동안 길 안내를 이용할 수 없습니다.
+Navigation unavailable. Select a target in the field.	길 안내를 이용할 수 없습니다. 필드에서 대상을 선택하세요.
+Navigation unavailable. {0}	길 안내를 이용할 수 없습니다. {0}
+Near {0}. Row toward the landing until the interaction appears.	{0} 근처입니다. 상호작용 표시가 나올 때까지 선착장 쪽으로 노를 저으세요.
+Newly uncovered arch	새로 드러난 아치
+Next story event in the Earth Shrine	땅의 신전의 다음 스토리 이벤트
+Next trial room	다음 시련의 방
+Nichol	니콜
+No active controller was detected.	활성 컨트롤러를 찾을 수 없습니다.
+No active exit leads to the next Battlefield section.	전장의 다음 구역으로 이어지는 활성 출구가 없습니다.
+No buffs	강화 효과 없음
+No captured selection or dialogue	다시 읽을 선택 항목이나 대화가 없음
+No clear route across the rotating walkways. Try the rotation pedestals.	회전 통로를 건너는 막힘 없는 경로가 없습니다. 회전 받침대를 사용해 보세요.
+No current Story crossing could be verified.	현재 스토리 수상 이동을 확인할 수 없었습니다.
+No current main-story objective is displayed.	현재 표시된 메인 스토리 목표가 없습니다.
+No current story objective is displayed.	현재 스토리 목표가 표시되어 있지 않습니다.
+No debuffs	약화 효과 없음
+No disclosed local story destination has been captured.	이 지역에서 게임에 표시되는 스토리 목적지를 찾을 수 없습니다.
+No enabled story continuation is available in this area.	이 지역에는 활성화된 스토리 진행 지점이 없습니다.
+No enabled tutorial controls are shown.	사용할 수 있는 튜토리얼 조작이 표시되어 있지 않습니다.
+No reachable targets in this area.	이 지역에 도달할 수 있는 대상이 없습니다.
+No supported capsule overlap at this exit could be verified.	이 출구에서 캐릭터 캡슐과의 지원되는 겹침을 확인할 수 없었습니다.
+North bridge out of Amore	아무르에서 나가는 북쪽 다리
+North entrance to Amore	아무르 마을 북쪽 입구
+North entrance to Waterfall Way	폭포의 회랑 북쪽 입구
+North entrance to the Cave of Waters	물의 동굴 북쪽 입구
+North exit of the Dwarven Forge	드워프의 공방 북쪽 출구
+North exit toward Amore	아무르 방면 북쪽 출구
+North exit toward Lake Dorr	돌 호수 방면 북쪽 출구
+Not checked	선택 안 됨
+Object sound volume	물체 알림음 음량
+Object sounds	물체 알림음
+Objects	물체
+Off	끄기
+Offensive formation	공세 진형
+Old Town bridge	구시가지 다리
+Old Town gate	구시가지 문
+Old Town street	구시가지 거리
+Older man	나이 든 남성
+Older woman	나이 든 여성
+Olderion inn door	올데리온 숙소의 문
+Olderion inn entrance	올데리온 숙소 입구
+Olderion innkeeper	올데리온 숙소 주인
+Olderion soldier	올데리온 병사
+On	켜기
+Only available option	선택 가능한 유일한 옵션
+Only ordinary walking is supported in this scene.	이 장면에서는 일반 걷기만 지원됩니다.
+Open the door to Jake's office.	제이크의 사무실 문을 여세요.
+Open the door to the elder's home.	할머니의 집 문을 여세요.
+Open the door when the game's interaction appears.	게임의 상호작용 표시가 나타나면 문을 여세요.
+Open the inn door when the game's interaction appears.	게임의 상호작용 표시가 나타나면 숙소 문을 여세요.
+Open treasure chest	열린 보물상자
+Open treasure safe	열린 금고
+Option text unavailable	옵션 텍스트를 읽을 수 없음
+Ordinary walking directions are unavailable during vertical travel.	수직 이동 중에는 일반 걷기 방향을 안내할 수 없습니다.
+Overclock	오버 클록
+Overclock Zero	오버 클록 영식
+Overheat	과열
+Page Down	Page Down
+Page Up	Page Up
+Painted floor number: {0}.	바닥에 그려진 번호: {0}.
+Paradise Lost	파라다이스 로스트
+Paralysis	마비
+Party status could not be read.	파티 상태를 읽을 수 없습니다.
+Party status is unavailable.	파티 상태를 확인할 수 없습니다.
+Party. {0}	파티. {0}
+Passage along the upper path	위쪽 길을 따라 이어지는 통로
+Passage at the foot of the ladders	사다리 아래의 통로
+Passage back from the altar	제단에서 돌아가는 통로
+Passage back inside the shipyard	조선소 안으로 돌아가는 통로
+Passage back to the Middle Reach stairs	중층 계단으로 돌아가는 통로
+Passage back to the central hall	중앙 홀로 돌아가는 통로
+Passage back to the central walkway	중앙 통로로 돌아가는 통로
+Passage back to the entrance hall	입구 홀로 돌아가는 통로
+Passage back to the first boat room	첫 번째 보트가 있는 방으로 돌아가는 통로
+Passage back to the guarded cells	경비가 있는 감방으로 돌아가는 통로
+Passage back to the locked gate	잠긴 문으로 돌아가는 통로
+Passage back to the lower path	아래쪽 길로 돌아가는 통로
+Passage back to the lower save point	아래쪽 저장 포인트로 돌아가는 통로
+Passage back to the lower tower	타워 하층으로 돌아가는 통로
+Passage back to the second pool	두 번째 물웅덩이로 돌아가는 통로
+Passage back to the spiral	나선 길로 돌아가는 통로
+Passage back to the trials	시련의 방으로 돌아가는 통로
+Passage back to the upper path	위쪽 길로 돌아가는 통로
+Passage back to the upper save point	위쪽 저장 포인트로 돌아가는 통로
+Passage behind the waterfall	폭포 뒤의 통로
+Passage door	통로 문
+Passage from Middle Reach	중층에서 돌아오는 통로
+Passage from Middle Reach into the tower	중층에서 탑 안으로 가는 통로
+Passage from Upper Reach	상층에서 돌아오는 통로
+Passage from Upper Reach into the tower	상층에서 탑 안으로 가는 통로
+Passage from the upper walkway	위쪽 통로에서 이어지는 통로
+Passage into Zoldaad Castle	졸다드 성으로 들어가는 통로
+Passage into the Wandering Lands	부유 대륙으로 들어가는 통로
+Passage into the crystal platform hall	크리스털 단상 홀로 들어가는 통로
+Passage into the east wing	동쪽 구역으로 들어가는 통로
+Passage into the inn	숙소로 들어가는 통로
+Passage into the lower laboratory	아래층 연구실로 들어가는 통로
+Passage into the next laboratory	다음 연구실로 들어가는 통로
+Passage into the next tower hall	타워의 다음 홀로 들어가는 통로
+Passage into the throne room	알현실로 들어가는 통로
+Passage into the west wing	서쪽 구역으로 들어가는 통로
+Passage onward	앞으로 나아가는 통로
+Passage out of the lower laboratory	아래층 연구실에서 나가는 통로
+Passage past the waterfall	폭포를 지나는 통로
+Passage to Lake Dorr	돌 호수로 가는 통로
+Passage to Lake Ryusei	유성호로 가는 통로
+Passage to the Rebel Hideout	반란군의 아지트로 가는 통로
+Passage to the Water Maiden	물의 무녀에게 가는 통로
+Passage to the altar	제단으로 가는 통로
+Passage to the castle dungeon	성의 지하 감옥으로 가는 통로
+Passage to the castle entrance	성 입구로 가는 통로
+Passage to the central hall	중앙 홀로 가는 통로
+Passage to the crate room	나무 상자 방으로 가는 통로
+Passage to the duel	결투 장소로 가는 통로
+Passage to the elevator	엘리베이터로 가는 통로
+Passage to the elevators	엘리베이터들로 가는 통로
+Passage to the entrance	입구로 가는 통로
+Passage to the entrance hall	입구 홀로 가는 통로
+Passage to the entrance landing	입구 층계참으로 가는 통로
+Passage to the factory entrance	공장 입구로 가는 통로
+Passage to the first boat room	첫 번째 배 방으로 가는 통로
+Passage to the first pool	첫 번째 물웅덩이로 가는 통로
+Passage to the guarded cells	경비가 있는 감방으로 가는 통로
+Passage to the lower trial	아래쪽 시련으로 가는 통로
+Passage to the main hall	중앙 홀로 가는 통로
+Passage to the pedestal room	받침대가 있는 방으로 가는 통로
+Passage to the second pool	두 번째 물웅덩이로 가는 통로
+Passage to the summit rest stop	정상 휴식처로 가는 통로
+Passage to the third pool	세 번째 물웅덩이로 가는 통로
+Passage to the upper Forest Path	오솔길 위쪽 구간으로 가는 통로
+Passage to the upper bridges	위쪽 다리들로 가는 통로
+Passage to the upper ledge	위쪽 턱으로 가는 통로
+Passage within {0}	{0} 내부 통로
+Path to the Dark Crystal	어둠의 크리스털로 가는 길
+Path to the summit	정상으로 가는 길
+Pearly Pot	화이트 포트
+Pedestal below the short ladder	짧은 사다리 아래의 받침대
+Pedestal on the high walkway	높은 통로 위의 받침대
+Pedestal on the west ramp	서쪽 경사로의 받침대
+People	사람
+Petrify	석화
+Physical controls could not be read.	물리 조작 입력을 읽을 수 없었습니다.
+Pick up the Level 1 Lab Key Card.	연구소 카드 키 레벨 1을 집으세요.
+Pick up the Level 2 Lab Key Card.	연구소 카드 키 레벨 2를 집으세요.
+Pick up the Level 3 Lab Key Card.	연구소 카드 키 레벨 3을 집으세요.
+Plaza with the tree	나무가 있는 광장
+Poison	독
+Portal at the end of the lower tower	타워 하층 끝의 포털
+Portal back to the east wing	동쪽 구역으로 돌아가는 전송 장치
+Portal back to the lower tower	탑 아래쪽으로 돌아가는 포털
+Portal in the central pocket	중앙 울타리 구역의 전송 장치
+Portal in the east pocket	동쪽 울타리 구역의 전송 장치
+Portal in the west laboratory	서쪽 연구실의 전송 장치
+Portal in the west pocket	서쪽 울타리 구역의 전송 장치
+Portal to the lower side chamber	아래쪽 곁방으로 가는 포털
+Portal to the lower tower	탑 아래쪽으로 가는 포털
+Portal to the next tower section	탑의 다음 구역으로 가는 포털
+Prepare at the save point before confirming the white portal. It leads into the final sequence.	흰색 포털을 결정하기 전에 저장 포인트에서 준비하세요. 그 너머는 마지막 장면입니다.
+Press Confirm to use the highlighted Resonance	결정 버튼을 눌러 선택한 레저넌스 사용
+Pressed switch	눌린 스위치
+Protect	프로테스
+Push side of the loose crate	움직이는 나무 상자를 미는 쪽
+Pushable obstacle	밀 수 있는 장애물
+Pushable wooden crate	밀 수 있는 나무 상자
+Quest marker	퀘스트 마커
+Quest prompt in the inn	숙소 안의 퀘스트 안내
+Raegen	레겐
+Reached the verified walking point near {0}.	{0} 근처의 확인된 도보 지점에 도착했습니다.
+Read the streetcar timetable and choose the Commercial District to continue gathering information.	노면 전차 시간표를 보고 제도 상업지구를 선택해 정보 수집을 계속하세요.
+Read the streetcar timetable and choose the Slums to gather information.	노면 전차 시간표를 보고 슬럼가를 선택해 정보를 모으세요.
+Rebel soldier	반란군 병사
+Rebel soldier in the central hall	중앙 홀의 반란군 병사
+Rebel soldier near the desert exit	사막 출구 근처의 반란군 병사
+Rebel soldier near the entrance	입구 근처의 반란군 병사
+Rebel soldier near the tunnel	터널 근처의 반란군 병사
+Recorded description playback failed.	녹음된 화면 해설을 재생할 수 없습니다.
+Recorded description unavailable. Description: {0}	녹음된 화면 해설을 재생할 수 없습니다. 장면 설명을 읽습니다. {0}
+Recorded descriptions unavailable.	녹음된 화면 해설을 이용할 수 없습니다.
+Recorded movie descriptions ready.	영상의 화면 해설을 이용할 수 있습니다.
+Recorded movie descriptions unavailable.	영상의 화면 해설을 이용할 수 없습니다.
+Reflect	리플렉
+Refraction Arts	굴절술
+Regen	리제네
+Reraise	리레이즈
+Research Center Ruins exit	연구소 폐허 출구
+Researcher	연구원
+Visions of Grandshelt loaded. F10 for help. {0}	Visions of Grandshelt를 불러왔습니다. F10을 누르면 도움말을 읽습니다. {0}
+Visions of Grandshelt reader stopped after an error. See its log.	오류로 Visions of Grandshelt 읽기 기능이 중단되었습니다. 로그를 확인하세요.
+Visions of Grandshelt. F5 repeat. Home and End change target category, including Story for the current main objective and Destinations for travel through connected areas. Page Up and Page Down choose a target in the field; F6 and F7 also choose targets. Delete toggles manual guidance. Shift Delete toggles automatic walking. Moving or opening a menu stops automatic walking. F8 reads a complete native route. F9 reads the current screen, or party, enemies and target information in battle. F10 help. You control interaction and Confirm.	Visions of Grandshelt입니다. F5는 마지막 안내를 반복합니다. Home과 End로 대상 범주를 바꿉니다. 스토리는 현재 주요 목표를, 목적지는 연결된 지역으로 가는 경로를 안내합니다. 필드의 대상은 Page Up과 Page Down 또는 F6과 F7로 선택합니다. Delete로 수동 안내를, Shift와 Delete로 자동 걷기를 켜거나 끕니다. 직접 움직이거나 메뉴를 열면 자동 걷기가 멈춥니다. F8은 게임의 전체 경로를 읽습니다. F9는 현재 화면을 읽으며, 배틀 중에는 파티, 적과 대상 정보를 읽습니다. F10은 도움말입니다. 상호작용과 결정은 직접 조작합니다.
+Restored entrance elevator	복구된 입구 엘리베이터
+Return conveyor from the pedestal	받침대에서 돌아가는 컨베이어
+Return from the altar passage to the north landing.	제단 통로에서 북쪽 층계참으로 돌아가세요.
+Return from the altar to the path leading to the north exit.	제단에서 북쪽 출구로 이어지는 길로 돌아가세요.
+Return inside from Middle Reach.	중층에서 안으로 돌아가세요.
+Return inside from Upper Reach.	상층에서 안으로 돌아가세요.
+Return through Waterfall Way.	폭포의 회랑을 지나 돌아가세요.
+Return through the arch to the lower stairs in the central hall.	아치를 지나 중앙 홀의 아래쪽 계단으로 돌아가세요.
+Return through the entrance on the way to the Rebel Hideout.	입구를 지나 돌아가서 반란군의 아지트로 가세요.
+Return through the walkways and descend to the bridge hall.	통로들을 지나 돌아가 다리 홀로 내려가세요.
+Return to Dilmagia so Lid can finish the airship.	리드가 비공정을 완성할 수 있도록 딜마기아로 돌아가세요.
+Return to Olderion through the Cave of Waters.	물의 동굴을 지나 올데리온으로 돌아가세요.
+Return to the Rebel Hideout.	반란군의 아지트로 돌아가세요.
+Return to the Shipyard to board Lid's airship.	리드의 비공정에 타기 위해 조선소로 돌아가세요.
+Return to the Shrine main passage	신전 주 통로로 돌아가는 길
+Return to the central hall through the arch on this platform.	이 발판의 아치를 지나 중앙 홀로 돌아가세요.
+Return to the desert and head for the Rebel Hideout.	사막으로 돌아가 반란군의 아지트로 가세요.
+Return to the entrance hall.	입구 홀로 돌아가세요.
+Return to the guarded cells.	경비가 있는 감방으로 돌아가세요.
+Return to the landing below the tower.	탑 아래의 발판으로 돌아가세요.
+Return to the locked gate with the dungeon key.	지하 감옥 열쇠를 가지고 잠긴 문으로 돌아가세요.
+Return to the lower path toward the long ladder.	아래쪽 길로 돌아가 긴 사다리 쪽으로 가세요.
+Return to the lower tower.	타워 하층으로 돌아가세요.
+Return to the spiral path to the summit.	정상으로 가는 나선형 길로 돌아가세요.
+Return to the town lane.	마을의 골목길로 돌아가세요.
+Return to the town square.	마을 광장으로 돌아가세요.
+Return to the trial rooms.	시련의 방으로 돌아가세요.
+Return to the upper path toward the altar.	위쪽 길로 돌아가 제단 쪽으로 가세요.
+Right	오른쪽으로
+Right rotation pedestal	오른쪽 회전 받침대
+Robed figure	로브를 걸친 사람
+Rolled ladder	말려 있는 사다리
+Rooftop return elevator	옥상에서 돌아가는 엘리베이터
+Route beacon unavailable. Navigation will speak directions.	길 안내음을 사용할 수 없습니다. 길 안내가 방향을 읽어 줍니다.
+Row back through the passage to the first boat room.	통로를 노 저어 돌아가 첫 번째 배 방으로 가세요.
+Row back through this channel to the previous room.	이 수로를 노 저어 돌아가 이전 방으로 가세요.
+Row back to the landing by the water pedestal.	노를 저어 수위 받침대 옆의 선착장으로 돌아가세요.
+Row back to the second pool to take the passage to the upper path.	노를 저어 두 번째 물웅덩이로 돌아가 위쪽 길로 가는 통로로 가세요.
+Row to the forward passage into the third pool. Keep the boat for the crossing.	앞쪽의 세 번째 물웅덩이로 이어지는 통로로 노를 저어 가세요. 건너갈 때 배를 그대로 사용하세요.
+Row to the landing below the upper passage back to the entrance hall.	입구 홀로 돌아가는 위쪽 통로 아래의 선착장으로 노를 저어 가세요.
+Row to the landing by the large crystal pedestal.	큰 크리스털 받침대 옆의 선착장으로 노를 저어 가세요.
+Row to the landing by the way back to the central hall.	중앙 홀로 돌아가는 길 옆의 선착장으로 노를 저어 가세요.
+Row to the passage leading to the large crystal pedestal.	큰 크리스털 받침대로 이어지는 통로로 노를 저어 가세요.
+Row to the passage on the far bank. Disembark at the landing by the exit.	건너편 기슭의 통로로 노를 저어 가세요. 출구 옆 선착장에서 내리세요.
+Row to the tower in the middle of the basin and climb its ladder.	저수조 가운데의 탑으로 노를 저어 가서 그 사다리를 오르세요.
+Royal Guard	로열 가드
+Sage's Eye	현자의 눈
+Sailor	뱃사람
+Sakura	사쿠라
+Save point	저장 포인트
+Save point for the return to the entrance	입구로 돌아가기 위한 저장 포인트
+Save point with a route to the entrance	입구로 돌아갈 수 있는 저장 포인트
+Save points	세이브 포인트
+Scripted scene descriptions ready.	이벤트 장면의 화면 해설을 이용할 수 있습니다.
+Scripted scene descriptions unavailable.	이벤트 장면의 화면 해설을 이용할 수 없습니다.
+Second ladder toward Lake Dorr	돌 호수 쪽 두 번째 사다리
+Second long ladder	두 번째 긴 사다리
+Shell	셸
+Shift Delete	Shift와 Delete
+Ship captain	선장
+Short ladder down to the pedestal	받침대로 내려가는 짧은 사다리
+Short ladder to the side walkway	옆쪽 통로로 가는 짧은 사다리
+Shrine door	신전 문
+Shrine elevator	신전 엘리베이터
+Sian exit toward Mt. Reizan	시안 마을에서 레이호우산으로 가는 출구
+Side door from the inn to the street	숙소에서 거리로 나가는 옆문
+Side entrance to the inn	숙소 옆문 입구
+Silence	침묵
+Single-panel door	외닫이문
+Sleep	수면
+Sliding door	미닫이문
+Slow	슬로우
+Soldier by the bridge	다리 옆의 병사
+Some battle names could not be read.	배틀 참가자 일부의 이름을 읽을 수 없습니다.
+Some choices could not be read	일부 선택지를 읽을 수 없음
+Some displayed battle results could not be read.	표시된 배틀 결과 중 일부를 읽을 수 없습니다.
+Some tutorial controls are unavailable.	일부 튜토리얼 조작을 이용할 수 없습니다.
+South entrance to Amore	아무르 마을 남쪽 입구
+South entrance to Waterfall Way	폭포의 회랑 남쪽 입구
+South entrance to the Cave of Waters	물의 동굴 남쪽 입구
+South exit of Amore	아무르 남쪽 출구
+South exit of Olderion	올데리온 남쪽 출구
+South exit of Waterfall Way	폭포의 회랑 남쪽 출구
+South exit of the Cave of Waters	물의 동굴 남쪽 출구
+South exit of the Dwarven Forge	드워프의 공방 남쪽 출구
+South exit of the mountain path	산길 남쪽 출구
+Sparkling ground pickup	바닥의 반짝이는 아이템
+Speak to Ayaka outside the building at the top of town.	마을 위쪽 건물 밖에 있는 아야카와 대화하세요.
+Speak to Fina in the elder's home.	할머니의 집에서 피나와 대화하세요.
+Speak to Jake in his office.	사무실에서 제이크와 대화하세요.
+Speak to the elder in her home.	할머니의 집에서 할머니와 대화하세요.
+Speak to the rebel soldiers in the hideout.	아지트에서 반란군 병사들과 대화하세요.
+Speech output is unavailable.	음성 출력을 이용할 수 없습니다.
+Spoken guidance on.	음성 안내를 시작합니다.
+Spoken guidance on. {0}.	음성 안내를 시작합니다. {0}.
+Stagger defense down	브레이크 방어 다운
+Stagger defense up	브레이크 방어 업
+Stagger power down	브레이크 피해 감소
+Stagger power up	브레이크 피해 증가
+Stairs beyond Middle Reach	중층 너머의 계단
+Stairs down into the shrine	신전으로 내려가는 계단
+Stairs to the entrance	입구로 가는 계단
+Stairs to the next trial	다음 시련으로 가는 계단
+Start automatic walking when controller input is available.	컨트롤러 입력을 이용할 수 있게 되면 자동 걷기를 시작하세요.
+Station Attendant	역무원
+Station attendant	역무원
+Status ailment guard	상태 이상 방어
+Steer the airship toward the Crystal Tower. Turn on guidance for the beacon.	비공정을 크리스털 타워 쪽으로 조종하세요. 안내를 켜면 신호음이 들립니다.
+Steer the airship toward the tornado over Pharm. Turn on guidance for the beacon.	비공정을 파름 상공의 회오리 쪽으로 조종하세요. 안내를 켜면 신호음이 들립니다.
+Steer the airship with the left stick. Use manual guidance for the beacon.	비공정은 왼쪽 스틱으로 조종하세요. 길 안내음에는 수동 안내를 사용하세요.
+Steer the raft with the game's movement controls. Use manual guidance for the Story crossing.	뗏목은 게임의 이동 조작으로 조종하세요. 스토리 수상 이동에는 수동 안내를 사용하세요.
+Step onto the conveyor from the bridge hall.	다리 홀에서 컨베이어에 올라타세요.
+Step onto the four-lamp elevator and interact to ride down.	램프 네 개가 달린 엘리베이터에 올라 상호작용하여 아래로 내려가세요.
+Stop	스톱
+Story	스토리
+Story and Destinations auto-walk resume after their exits and battles. Use Interact when prompted.	스토리와 목적지 자동 걷기는 출구를 통과하거나 배틀이 끝나면 다시 시작합니다. 표시가 나오면 상호작용하세요.
+Story contact	스토리 대화 상대
+Story destination	스토리 목적지
+Story event	스토리 이벤트
+Story exit	스토리 출구
+Story guidance stopped.	스토리 안내가 중단되었습니다.
+Story marker at the mountain overlook	산 전망대의 스토리 표식
+Story marker beyond the mountain pass	고갯길 너머의 스토리 표식
+Story navigation stopped. The objective or destination changed.	스토리 길 안내가 중단되었습니다. 목표나 목적지가 바뀌었습니다.
+Story navigation stopped. {0}	스토리 길 안내가 중단되었습니다. {0}
+Story objective is unavailable in the current scene.	현재 장면에서는 스토리 목표를 이용할 수 없습니다.
+Story passage	스토리 통로
+Story trail near the Wandering Lands	부유 대륙 근처의 스토리 길
+Story. No current crossing could be verified.	스토리. 현재 수상 이동을 확인할 수 없었습니다.
+Story. No current flight destination could be verified.	스토리. 현재 비행 목적지를 확인할 수 없었습니다.
+Story. {0}	스토리. {0}
+Story. {0} Use manual guidance for the route.	스토리. {0} 이 경로에는 수동 안내를 사용하세요.
+Streetcar timetable	노면 전차 시간표
+Superior Guard	수페리어 가드
+Swift	신속
+Switch	스위치
+Tactical Assault	전술 공습
+Take the bridge back to Amore.	다리를 건너 아무르 마을로 돌아가세요.
+Take the conveyor across the far gap.	컨베이어를 타고 먼 쪽 틈을 건너세요.
+Take the conveyor across the middle gap.	컨베이어를 타고 가운데 틈을 건너세요.
+Take the conveyor across to the next platform.	컨베이어를 타고 다음 발판으로 건너가세요.
+Take the conveyor back to the bridge hall.	컨베이어를 타고 다리 홀로 돌아가세요.
+Take the conveyor to the far platform.	컨베이어를 타고 먼 쪽 발판으로 가세요.
+Take the conveyor to the middle platforms.	컨베이어를 타고 가운데 발판들로 가세요.
+Take the desert exit to reach the Weapons Factory.	사막 출구로 나가 병기 공장으로 가세요.
+Take the first passage into Waterfall Way.	첫 번째 통로로 폭포의 회랑에 들어가세요.
+Take the ladder down to the lower floor.	사다리를 타고 아래층으로 내려가세요.
+Take the lower passage from the cave entrance toward Lake Dorr.	동굴 입구에서 아래쪽 통로를 따라 돌 호수 쪽으로 가세요.
+Take the mountain trail up Mt. Reizan.	산길을 따라 레이호우산을 오르세요.
+Take the north exit toward Amore.	북쪽 출구로 나가 아무르 마을로 가세요.
+Take the passage at the foot of the ladders.	사다리 아래의 통로로 가세요.
+Take the passage from the entrance to the first pool.	입구에서 첫 번째 물웅덩이로 가는 통로로 가세요.
+Take the passage from this bank back to the central hall.	이쪽 기슭의 통로를 따라 중앙 홀로 돌아가세요.
+Take the passage on this bank to the next pool.	이쪽 기슭의 통로를 따라 다음 물웅덩이로 가세요.
+Take the portal to the next section.	포털을 타고 다음 구역으로 가세요.
+Take the restored elevator down toward the entrance.	복구된 엘리베이터를 타고 입구 쪽으로 내려가세요.
+Take the return conveyor from the pedestal.	받침대에서 돌아가는 컨베이어를 타세요.
+Take the rooftop elevator back into the shipyard.	옥상 엘리베이터를 타고 조선소 안으로 돌아가세요.
+Take the south entrance to the cave for Lake Dorr.	동굴 남쪽 입구로 들어가 돌 호수로 가세요.
+Take the south exit to the road toward Olderion.	남쪽 출구로 나가 올데리온으로 가는 길로 가세요.
+Take the stairs down into the shrine.	계단을 내려가 신전으로 들어가세요.
+Take the stairs up from the dungeon toward the throne room.	지하 감옥에서 계단을 올라 알현실 쪽으로 가세요.
+Take the streetcar back to the Imperial Hotel district, then meet the party in the alley.	노면 전차를 타고 제도 호텔 주변으로 돌아간 뒤 골목에서 동료들과 만나세요.
+Take the tunnel from the hideout toward the castle.	아지트에서 터널을 따라 성 쪽으로 가세요.
+Take the upper passage back above the entrance.	위쪽 통로를 따라 입구 위쪽으로 돌아가세요.
+Talk to Fina in the alley beside the hotel.	호텔 옆 골목에서 피나와 대화하세요.
+Talk to Lasswell	라스웰과 대화
+Talk to the innkeeper to stay the night.	숙소 주인과 대화하여 하룻밤 묵으세요.
+Talk to the man in blue in the Slums.	슬럼가에서 파란 옷의 남자와 대화하세요.
+Tall ladder down to the catwalks	발판 통로로 내려가는 높은 사다리
+Tall ladder to the upper pedestal	위쪽 받침대로 가는 높은 사다리
+Target unavailable	대상을 이용할 수 없음
+Target. {0}	대상. {0}
+Taunt	도발
+Text entry is active.	문자 입력 중입니다.
+The Battlefield exit position could not be read.	전장 출구의 위치를 읽을 수 없습니다.
+The active main objective could not be verified.	유효한 메인 목표를 확인할 수 없습니다.
+The airship's steering directions could not be read.	비공정의 조종 방향을 읽을 수 없습니다.
+The approach to the south gate could not be measured.	남쪽 문으로 가는 길을 측정할 수 없습니다.
+The area's distance scale could not be verified.	이 지역의 거리 척도를 확인할 수 없습니다.
+The area's distance scale is unavailable.	이 지역의 거리 척도를 이용할 수 없습니다.
+The boat's boarding point is unavailable.	배의 탑승 지점을 이용할 수 없습니다.
+The character and walking mesh slope limits could not be verified.	캐릭터와 보행 지형의 경사 제한을 확인할 수 없습니다.
+The character's walking and braking state could not be read.	캐릭터의 보행 및 감속 상태를 읽을 수 없습니다.
+The character's walking camera could not be verified.	캐릭터의 보행 카메라를 확인할 수 없습니다.
+The crate is lined up with the row. Return to the pedestal and raise the water.	나무 상자가 줄에 맞춰졌습니다. 받침대로 돌아가 수위를 높이세요.
+The crates are floating at walkway level. Follow them back across.	나무 상자들이 통로 높이에 떠 있습니다. 상자들을 따라 건너 돌아가세요.
+The current Battlefield section's linked exits could not be read.	현재 전장 구역의 연결된 출구를 읽을 수 없었습니다.
+The current Battlefield walking section could not be verified.	현재 전장의 보행 구역을 확인할 수 없습니다.
+The current Mitra passage has changed.	현재 미트라의 통로가 바뀌었습니다.
+The current Story crossing is unavailable.	현재 스토리의 건너는 경로를 이용할 수 없습니다.
+The current Story flight destination could not be verified.	현재 스토리의 비행 목적지를 확인할 수 없습니다.
+The current area is still loading.	현재 지역을 아직 불러오는 중입니다.
+The current area's entity list could not be read.	현재 지역의 개체 목록을 읽을 수 없었습니다.
+The current area's exit list could not be read.	현재 지역의 출구 목록을 읽을 수 없었습니다.
+The current castle doorway has changed. Request the route again.	현재 성의 출입구가 바뀌었습니다. 경로를 다시 요청하세요.
+The current castle doorway or passage has changed.	현재 성의 출입구나 통로가 바뀌었습니다.
+The current destination data is unavailable.	현재 목적지 정보를 이용할 수 없습니다.
+The current field character is unavailable.	현재 필드 캐릭터를 이용할 수 없습니다.
+The current field location could not be read.	필드의 현재 위치를 읽을 수 없습니다.
+The current laboratory room could not be verified.	연구소의 현재 방을 확인할 수 없습니다.
+The current main objective could not be identified.	현재 메인 목표를 식별할 수 없습니다.
+The current main objective could not be read safely.	현재 메인 목표를 안전하게 읽을 수 없습니다.
+The current main objective data is not available yet.	현재 메인 목표의 데이터를 아직 이용할 수 없습니다.
+The current main objective is ambiguous.	현재 메인 목표가 명확하지 않습니다.
+The current main objective is not active.	현재 메인 목표가 활성 상태가 아닙니다.
+The current main objective source is unavailable.	현재 메인 목표의 출처를 이용할 수 없습니다.
+The current map could not be verified. Walking guidance is unavailable.	현재 지도를 확인할 수 없습니다. 보행 안내를 이용할 수 없습니다.
+The current player could not be identified.	현재 플레이어를 식별할 수 없습니다.
+The current story area could not be identified.	현재 스토리 지역을 식별할 수 없습니다.
+The current story area or filtered destination is unavailable. A walking route cannot be verified.	현재 스토리 지역이나 유효한 목적지를 찾을 수 없습니다. 도보 경로를 확인할 수 없습니다.
+The current story destination could not be read.	현재 스토리 목적지를 읽을 수 없습니다.
+The current walking area is unavailable.	현재 보행 구역을 이용할 수 없습니다.
+The current walking character is unavailable.	현재 보행 캐릭터를 이용할 수 없습니다.
+The current walking mesh changed before pathfinding.	경로를 찾기 전에 보행 지형이 바뀌었습니다.
+The current walking mesh changed during pathfinding.	경로를 찾는 동안 보행 지형이 바뀌었습니다.
+The current walking speed could not be read.	현재 보행 속도를 읽을 수 없습니다.
+The destination is in another area. A current-area walking route is unavailable.	목적지가 다른 지역에 있습니다. 현재 지역에서 걸어갈 경로를 이용할 수 없습니다.
+The destination is in another area. An active current-area exit could not be verified.	목적지는 다른 지역에 있습니다. 현재 지역에서 사용 가능한 출구를 확인할 수 없습니다.
+The destination is in {0}. A current-area walking route is unavailable.	목적지는 {0}에 있습니다. 현재 지역에서 걸어갈 경로를 이용할 수 없습니다.
+The destination is in {0}. An active current-area exit could not be verified.	목적지는 {0}에 있습니다. 현재 지역에서 사용 가능한 출구를 확인할 수 없습니다.
+The doorway's walking approach could not be read.	출입구로 가는 도보 경로를 읽을 수 없습니다.
+The entrance is blocked. Return through the passage you came from.	입구가 막혀 있습니다. 왔던 통로로 돌아가세요.
+The floating crates do not give a verified route to the far landing.	떠 있는 상자를 지나 건너편 선착장으로 가는 경로를 확인할 수 없습니다.
+The floating crates form a bridge back to the opposite walkway.	떠 있는 나무 상자들이 반대편 통로로 돌아가는 다리를 이루고 있습니다.
+The floating crates form a bridge between the upper walkways.	떠 있는 나무 상자들이 위쪽 통로 사이에 다리를 이루고 있습니다.
+The floating crates line up across the gap. Cross them to reach the far terrace.	떠 있는 나무 상자들이 틈 위에 줄지어 있습니다. 상자들을 건너 먼 쪽 테라스로 가세요.
+The forward door in this train car could not be verified.	이 객차의 앞쪽 문을 확인할 수 없습니다.
+The game has not supplied a destination for this objective.	게임이 이 목표의 목적지를 제공하지 않았습니다.
+The game is paused.	게임이 일시 정지되었습니다.
+The game's navigation system is unavailable in this area.	이 지역에서는 게임의 길 찾기 시스템을 사용할 수 없습니다.
+The ground ahead could not be inspected.	앞쪽 지면을 확인할 수 없습니다.
+The inn door is open. Continue through it when the passage is clear.	숙소 문이 열려 있습니다. 통로가 비면 지나가세요.
+The left, centre and right pedestals turn the walkways.	왼쪽, 중앙, 오른쪽 받침대로 통로를 회전시킬 수 있습니다.
+The lift is not ready to board.	리프트에 아직 탑승할 수 없습니다.
+The local walking controller could not be verified.	현재 보행 조작을 확인할 수 없습니다.
+The lower stairs are open. Take the ladder down to the elevator landing.	아래쪽 계단이 열렸습니다. 사다리를 타고 엘리베이터 승강장으로 내려가세요.
+The mailbox's	우편함
+The modifier has another game binding or its binding could not be read.	길 안내 보조 버튼이 다른 게임 조작에 배정되었거나 배정을 읽을 수 없습니다.
+The native current story objective could not be read safely.	게임의 현재 스토리 목표를 정확히 확인하지 못했습니다.
+The native landing or passage is unavailable.	선착장이나 통로를 이용할 수 없습니다.
+The native path points could not be converted to walking instructions.	게임의 경로 지점을 보행 안내로 바꿀 수 없습니다.
+The native route does not reach the target's activation area.	게임 경로가 대상의 작동 범위에 닿지 않습니다.
+The native walking view target could not be read.	게임 보행 카메라의 대상을 읽을 수 없습니다.
+The native walking-camera flags could not be read.	게임 보행 카메라의 설정을 읽을 수 없습니다.
+The native walking-character layout could not be verified.	캐릭터의 보행 데이터를 확인할 수 없습니다.
+The native walking-control rotation could not be read.	게임 보행 조작의 방향을 읽을 수 없습니다.
+The next laboratory approach is unavailable from this position.	이 위치에서는 연구소의 다음 목표로 갈 수 없습니다.
+The next laboratory step could not be verified.	연구소의 다음 단계를 확인할 수 없습니다.
+The next local Story step could not be read safely.	이 지역의 다음 스토리 단계를 안전하게 읽을 수 없습니다.
+The non-null walking view target could not be verified.	현재 보행 카메라의 대상을 확인할 수 없습니다.
+The objective is available, but its filtered destinations could not be read safely.	목표는 있지만 선별된 목적지를 안전하게 읽을 수 없습니다.
+The objective is available, but its filtered destinations could not be verified.	목표는 있지만 선별된 목적지를 확인할 수 없습니다.
+The objective is available, but its local destinations could not be read safely.	목표는 확인했습니다. 이 지역의 목적지는 정확히 확인하지 못했습니다.
+The pedestal's approach is unavailable.	받침대로 가는 길을 이용할 수 없습니다.
+The player position could not be read.	플레이어 위치를 읽을 수 없습니다.
+The player position or destination could not be read.	플레이어 위치 또는 목적지를 읽을 수 없습니다.
+The player's walking collision could not be verified for this approach.	플레이어가 이 길을 충돌 없이 지나갈 수 있는지 확인할 수 없습니다.
+The player's walking shape could not be verified.	플레이어가 걸을 때 차지하는 공간을 확인할 수 없습니다.
+The player's walking shape is not upright.	플레이어의 보행 충돌 범위가 수직이 아닙니다.
+The previous walking detour could not be verified from the current position.	현재 위치에서 이전 우회 경로를 확인할 수 없습니다.
+The projected walking point does not give a verified approach to this activation area.	계산한 보행 지점에서 이 작동 범위에 들어가는 길을 확인할 수 없습니다.
+The raft is outside the current Story crossing.	뗏목이 현재 스토리의 건너는 경로를 벗어났습니다.
+The raft's collision could not be verified.	뗏목의 충돌 범위를 확인할 수 없습니다.
+The raft's current position could not be read.	뗏목의 현재 위치를 읽을 수 없습니다.
+The raft's steering directions could not be read.	뗏목의 조종 방향을 읽을 수 없습니다.
+The selected Battlefield exit has changed.	선택한 전장 출구가 바뀌었습니다.
+The selected Story exit has changed. Choose the current destination.	선택한 스토리 출구가 바뀌었습니다. 현재 목적지를 고르세요.
+The selected target is no longer available in this area.	선택한 대상은 더 이상 이 지역에서 이용할 수 없습니다.
+The stereo route beacon points toward the next turn and pulses faster as you approach. F8 speaks directions.	스테레오 길 안내음이 다음에 꺾을 방향에서 들립니다. 가까워지면 소리가 더 빠르게 반복됩니다. F8은 방향을 읽어 줍니다.
+The story destination is ambiguous. A walking route is unavailable.	스토리 목적지가 명확하지 않습니다. 도보 경로를 이용할 수 없습니다.
+The story destination's	스토리 목적지
+The story exit's activation area could not be verified.	스토리 출구의 작동 범위를 확인할 수 없습니다.
+The story exit's current transition could not be read safely.	스토리 출구의 현재 이동 목적지를 안전하게 읽을 수 없습니다.
+The story target could not be verified in the current area.	현재 지역에서 스토리 목표를 확인할 수 없습니다.
+The story target's actor could not be read safely.	스토리 목표의 대상을 안전하게 읽을 수 없습니다.
+The story target's current actor is unavailable.	스토리 목표의 현재 대상을 이용할 수 없습니다.
+The story target's current position could not be read safely.	스토리 목표의 현재 위치를 안전하게 읽을 수 없습니다.
+The story target's position could not be read.	스토리 목표의 위치를 읽을 수 없습니다.
+The story trigger's current state could not be read.	스토리 이벤트의 현재 발동 상태를 읽을 수 없습니다.
+The target's activation area could not be verified.	대상의 작동 범위를 확인할 수 없습니다.
+The walking area changed before its ground check.	지면을 확인하기 전에 보행 구역이 바뀌었습니다.
+The walking area changed during its ground check.	지면을 확인하는 동안 보행 구역이 바뀌었습니다.
+The walking capsule could not verify clear ground ahead.	앞쪽에 캐릭터가 지나갈 공간이 있는지 확인할 수 없습니다.
+The walking path does not reach the boat's boarding point.	도보 경로가 배의 승선 지점에 닿지 않습니다.
+The walking surface inspection could not be prepared.	보행 표면 검사를 준비할 수 없습니다.
+The walking view target is outside the current area.	보행 카메라의 대상이 현재 지역 밖에 있습니다.
+The walking view target's root could not be read.	보행 카메라 대상의 기준 개체를 읽을 수 없습니다.
+The walking view target's root could not be verified.	보행 카메라 대상의 기준 개체를 확인할 수 없습니다.
+The walking-ground inspection could not be prepared.	보행 가능한 지면 검사를 준비할 수 없습니다.
+The walkways connect to the large pedestal. Use it to lower the bridge section below.	통로들이 큰 받침대와 연결되었습니다. 받침대를 사용해 아래의 다리 구간을 내리세요.
+The water is high and the crates are floating. The small pedestal changes the water level.	수위가 높고 나무 상자들이 떠 있습니다. 작은 받침대로 수위를 바꿀 수 있습니다.
+The water is high. Follow the floating crates to the next landing.	수위가 높습니다. 떠 있는 나무 상자들을 따라 다음 발판으로 가세요.
+The water is high. The pedestal here controls the water by the stairs.	수위가 높습니다. 여기 있는 받침대로 계단 옆의 수위를 조절할 수 있습니다.
+The water is high. This pedestal controls the water above the dock stairs.	수위가 높습니다. 이 받침대로 선착장 계단 위의 수위를 조절할 수 있습니다.
+The water is low and the lower stairs are exposed. The small pedestal changes the water level.	수위가 낮아 아래쪽 계단이 드러났습니다. 작은 받침대로 수위를 바꿀 수 있습니다.
+The water is low. The pedestal raises the floating crates toward the upper walkway.	수위가 낮습니다. 받침대를 사용하면 떠 있는 나무 상자들이 위쪽 통로 높이까지 올라옵니다.
+The water is low. The stairs beside the pedestal lead down to the boat dock.	수위가 낮습니다. 받침대 옆의 계단은 아래 선착장으로 이어집니다.
+The water is low. The stairs lead to a water pedestal.	수위가 낮습니다. 계단은 수위 받침대로 이어집니다.
+The {0} is not available at this landing.	이 승강장에서는 {0}를 이용할 수 없습니다.
+Third ladder toward Lake Dorr	돌 호수 쪽 세 번째 사다리
+This battle status shortcut is unavailable with the current bindings.	현재 버튼 배정으로 이 배틀 상태 바로 가기를 사용할 수 없습니다.
+This person's talk area could not be verified.	이 인물에게 말을 걸 수 있는 범위를 확인할 수 없습니다.
+This story destination is no longer active in the area.	이 스토리 목적지는 이 지역에서 더 이상 활성 상태가 아닙니다.
+Throne room doors	알현실 문
+Time remaining. {0}	남은 시간. {0}
+To {0}. Next, {1}. {2}	{0}(으)로 이동합니다. 다음은 {1}입니다. {2}
+To {0}. {1}	목적지 {0}. {1}
+Tornado over Pharm	파름 상공의 회오리
+Total damage could not be matched to a unit.	총 피해량이 어느 유닛의 것인지 확인할 수 없습니다.
+Total damage could not be matched to its unit.	총 피해량을 해당 유닛과 연결할 수 없습니다.
+Total damage could not be read.	총 피해량을 읽을 수 없습니다.
+Tower ladder	탑 사다리
+Tower ladder down	탑 사다리 아래쪽
+Trail across the crystal platforms	크리스털 발판을 건너는 길
+Trail beyond the Forest Path save point	오솔길 저장 포인트 너머의 길
+Trail through the lower tower	타워 하층을 지나는 길
+Train escape door	열차 탈출 문
+Treasure chest	보물상자
+Treasure safe	금고
+Trial platform	시련의 발판
+Trial stele	시련의 비석
+Tunnel entrance from the Rebel Hideout	반란군의 아지트에서 이어지는 터널 입구
+Tutorial controls are unavailable.	튜토리얼 조작을 이용할 수 없습니다.
+Twin Titleholders quest marker	퀘스트 마커: 최고의 두 사람
+Unavailable	사용할 수 없음
+Unit	유닛
+Up	위로
+Upper Reach landing	상층 층계참
+Upper bridge pedestal	위쪽 다리 받침대
+Upper stairs across the crates	나무 상자 건너편의 위쪽 계단
+Upper trail on Mt. Reizan	레이호우산 위쪽 산길
+Upper walkway across the crates	나무 상자 건너편의 위쪽 통로
+Use the call pedestal to bring the {0} here.	호출 받침대를 사용해 {0}를 이곳으로 부르세요.
+Use the dungeon key on the gate.	문에 지하 감옥 열쇠를 사용하세요.
+Use the elevator at this landing.	이 승강장의 엘리베이터를 사용하세요.
+Use the game's interaction control when available.	게임에 표시가 나오면 상호작용하세요.
+Use the interaction control to open the inn door.	상호작용 조작으로 숙소 문을 여세요.
+Use the pedestal to lower the bridge section.	받침대를 사용해 다리 구간을 내리세요.
+Use the pedestal to lower the last catwalk into place.	받침대를 사용해 마지막 발판 통로를 제자리로 내리세요.
+Use the pedestal to raise the next catwalk.	받침대를 사용해 다음 발판 통로를 올리세요.
+Use the pedestal to raise the water in the {0}.	받침대를 사용해 {0}의 수위를 높이세요.
+Use the save point to return to the entrance.	저장 포인트를 사용해 입구로 돌아가세요.
+Use the save point to return to the shrine entrance.	저장 포인트를 사용해 신전 입구로 돌아가세요.
+Use the throne room key on the doors.	문에 왕좌 열쇠를 사용하세요.
+Use the town exit to continue on Gronoa.	마을 출구로 나가 고로노아 여정을 계속하세요.
+Use the town exit to continue toward Gronoa Shrine.	마을 출구로 나가 고로노아 신전 쪽으로 계속 가세요.
+Valiant Advance formation	용맹정진 진형
+Value unavailable	설정값을 확인할 수 없음
+Veil defense up	베일 방어력 증가
+Village Elder	할머니
+Vision	비전
+Vision shop attendant	비전 상인
+Vital point attack	급소 조준
+Wait for the bridge section to settle.	다리 구간이 멈출 때까지 기다리세요.
+Wait for the water to rise to the bank before boarding.	물이 둑까지 차오르면 배에 타세요.
+Wait for the {0} to stop at your landing.	{0}가 현재 승강장에 멈출 때까지 기다리세요.
+Waiting for a walking route. {0}	걸어갈 경로를 기다리는 중입니다. {0}
+Walk onto the elevator.	엘리베이터 위로 걸어 올라가세요.
+Walk through the automatic door into the laboratory.	자동문을 지나 연구실로 들어가세요.
+Walk through the automatic door toward the elevator.	자동문을 지나 엘리베이터 쪽으로 가세요.
+Walk through the automatic door.	자동문을 지나가세요.
+Walk through the open door to the elder's home.	열린 문을 지나 할머니의 집으로 들어가세요.
+Walk through the open inn door.	열린 숙소 문을 지나가세요.
+Walk {0} through the sliding door.	{0} 걸어서 미닫이문을 지나가세요.
+Walking route endpoint reached.	도보 경로의 끝에 도착했습니다.
+Wall tone volume	벽 알림음 음량
+Wall tones	벽 알림음
+Warden of the Waters	물의 수호자
+Warden's Cape	수호자의 곶
+Water Shrine exit	물의 신전 출구
+Water by the orphanage	고아원 옆의 물
+Water immunity	물 속성 무효
+Water ley line	물의 지맥
+Water near the city entrance	도시 입구 근처의 물
+Water on the way to Old Town	구시가지로 가는 길의 물
+Water pedestal by the dock stairs	선착장 계단 옆의 수위 받침대
+Water pedestal by the upper stairs	위쪽 계단 옆의 수위 받침대
+Water-level pedestal	수위 받침대
+Waterfall Way flower	폭포의 회랑의 꽃
+Weapon	무기
+Weapon shop attendant	무기상
+Weapons Factory entrance	병기 공장 입구
+West bridge pedestal	서쪽 다리 받침대
+West console	서쪽 콘솔
+White Jade Stone on the center table	중앙 탁자 위의 백휘석
+White mage	백마도사
+White teleport portal	하얀 텔레포트 포털
+Wind Crystal chamber elevator	바람의 크리스털 방 엘리베이터
+Wind damage up	바람 속성 피해 증가
+Wind immunity	바람 속성 무효
+Winding trail in the Wandering Lands	부유 대륙의 굽이진 길
+Woman	여성
+Workshop technician	공방 기술자
+World map via the far town gate	안쪽 마을 문을 지나 세계 지도로
+World map via the town entrance	마을 입구를 지나 세계 지도로
+You are at {0}.	현재 위치는 {0}입니다.
+You are in the objective's destination area, {0}. The objective identifies no specific point or onward exit here.	목표가 있는 지역인 {0}에 도착했습니다. 목표에 이 지역의 특정 지점이나 다음 출구가 표시되어 있지 않습니다.
+You are in the objective's destination area. The objective identifies no specific point or onward exit here.	목표가 있는 지역에 도착했습니다. 목표에 이 지역의 특정 지점이나 다음 출구가 표시되어 있지 않습니다.
+Zoldaad soldier	졸다드 병사
+across the lower hall	아래층 홀 건너편으로
+across to the upper walkway	건너편 위쪽 통로로
+area could not be verified	지역을 확인할 수 없었습니다
+back down to the main walkway	다시 아래쪽 주 통로로
+bottom choice	아래쪽 선택지
+collection state could not be read	획득 상태를 읽을 수 없었습니다
+collision could not be read	충돌 정보를 읽을 수 없었습니다
+conditional destination list is unreadable	조건부 목적지 목록을 읽을 수 없습니다
+conditional destinations could not be read	조건부 목적지를 읽을 수 없었습니다
+crossing lift	횡단 리프트
+current availability could not be read	현재 이용 가능 여부를 읽을 수 없었습니다
+current binding unavailable	현재 버튼 배정을 확인할 수 없음
+current condition could not be read	현재 조건을 읽을 수 없었습니다
+current destination could not be read	현재 목적지를 읽을 수 없었습니다
+current-area state could not be read	현재 지역에서의 상태를 읽을 수 없었습니다
+delivery availability could not be read	배송 이용 가능 여부를 읽을 수 없었습니다
+door state could not be read	문 상태를 읽을 수 없었습니다
+down	아래로
+down to the lower walkway	아래쪽 통로로
+down-left	왼쪽 아래로
+down-right	오른쪽 아래로
+first elevator	첫 번째 엘리베이터
+first pool	첫 번째 물웅덩이
+higher ground {0}	{0} 위로
+hold Down to climb down.	아래를 길게 눌러 내려가세요.
+hold Up to climb.	위를 길게 눌러 올라가세요.
+identity could not be read	식별 정보를 읽을 수 없었습니다
+interaction box could not be read	상호작용 범위를 읽을 수 없었습니다
+interaction box geometry could not be read	상호작용 범위의 형태를 읽을 수 없었습니다
+interaction prompt could not be read	상호작용 안내를 읽을 수 없었습니다
+interaction state could not be read	상호작용 상태를 읽을 수 없었습니다
+left	왼쪽으로
+left choice	왼쪽 선택지
+level {0}	레벨 {0}
+linked exit could not be read	연결된 출구를 읽을 수 없었습니다
+lower crossing lift	아래쪽 횡단 리프트
+lower ground {0}	{0} 아래로
+mesh visibility could not be read	모델 표시 상태를 읽을 수 없었습니다
+native layout differs from the audited build	네이티브 레이아웃이 검증된 빌드와 다릅니다
+position could not be read	위치를 읽을 수 없었습니다
+removal state could not be read	제거 상태를 읽을 수 없었습니다
+right	오른쪽으로
+right choice	오른쪽 선택지
+second pool	두 번째 물웅덩이
+state could not be read	상태를 읽을 수 없었습니다
+summit elevator	정상 엘리베이터
+then	그다음
+to the summit elevator's landing	정상 엘리베이터 승강장으로
+top choice	위쪽 선택지
+treasure balcony elevator	보물 발코니 엘리베이터
+up	위로
+up to the Wind Crystal chamber	바람의 크리스털 방으로
+up to the highest walkway	가장 높은 통로로
+up to the upper landing	위쪽 승강장으로
+up-left	왼쪽 위로
+up-right	오른쪽 위로
+visibility could not be read	표시 상태를 읽을 수 없었습니다
+walkway elevator	통로 엘리베이터
+west crossing lift	서쪽 횡단 리프트
+{0} Choose the next Story target to continue walking.	{0} 계속 걸으려면 다음 스토리 목표를 고르세요.
+{0} HP recovered	HP {0} 회복
+{0} MP damage	MP {0} 감소
+{0} MP recovered	MP {0} 회복
+{0} Some targets could not be read.	{0} 일부 대상을 읽을 수 없습니다.
+{0} The selection is retained; try again.	{0} 선택은 유지됩니다. 다시 시도하세요.
+{0} damage	피해 {0}
+{0} in a straight line	직선 거리 {0}
+{0} is unavailable from here.	여기에서는 {0} 방향으로 진행할 수 없습니다.
+{0} limit gauge gained	리미트 게이지 {0} 증가
+{0} limit gauge lost	리미트 게이지 {0} 감소
+{0} metre	{0}미터
+{0} metres	{0}미터
+{0} navigation is unavailable because it is assigned to a game control.	{0}은 게임 조작에 이미 배정되어 길 안내에 사용할 수 없습니다.
+{0} navigation is unavailable because its current game binding could not be read.	{0}의 현재 게임 배정을 읽을 수 없어 길 안내에 사용할 수 없습니다.
+{0} navigation unavailable. Its game binding is assigned to another control or could not be read.	{0} 길 안내를 사용할 수 없습니다. 다른 게임 조작에 이미 배정되었거나 배정을 읽을 수 없습니다.
+{0} of {1}	전체 {1}개 중 {0}번째
+{0} or {1}	{0} 또는 {1}
+{0} percent	{0}퍼센트
+{0} plus {1}	{0} 더하기 {1}
+{0} remains selected. Use Page Up or Page Down to choose another target.	{0} 선택이 유지됩니다. 다른 대상을 고르려면 Page Up이나 Page Down을 누르세요.
+{0} {1}	{0} {1}
+{0} {1}.	{0}. {1}.
+{0}%	{0}%
+{0}, target point {1} higher	{0}, 목표 지점은 {1} 더 높습니다
+{0}, target point {1} lower	{0}, 목표 지점은 {1} 더 낮습니다
+{0}.	{0}.
+{0}. Checking reachable targets.	{0}. 도달할 수 있는 대상을 확인하고 있습니다.
+{0}. {1}	{0}. {1}
+{0}. {1} passage. {2}	{0}. 통과 지점 {1}곳. {2}
+{0}. {1} passages. {2}	{0}. 통과 지점 {1}곳. {2}
+{0}: {1}.	{0}: {1}.
