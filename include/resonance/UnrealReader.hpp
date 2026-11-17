@@ -25,6 +25,11 @@ enum Command : unsigned { Repeat=1, Previous=2, Next=4, Route=8, Screen=16, Help
     BattlePanelOpen=1u<<20,BattlePanelClose=1u<<21,BattleVitals=1u<<22,BattleEffects=1u<<23,
     BattleInterrupt=1u<<24,BattleInputKey=1u<<25,ResultUp=1u<<26,ResultDown=1u<<27 };
 inline constexpr unsigned battle_only_commands=BattleInterrupt|BattleInputKey|ResultUp|ResultDown;
+struct JournalScrollInput {
+    unreal::UObject* layout{};
+    int quest{};
+    unsigned long long at{};
+};
 const std::string& reader_stage();
 class UnrealReader {
 public:
@@ -34,7 +39,10 @@ public:
     unsigned controller_commands();
     unsigned area_browse_commands();
     bool battle_commands_available() const {return battle_control_layout_||battle_results_layout_;}
-    void language_changed() { core_.reset(); battle_core_.reset(); battle_result_core_.reset(); }
+    void language_changed(bool read_subtitles) {
+        read_subtitles_=read_subtitles;
+        core_.reset(); battle_core_.reset(); battle_result_core_.reset();
+    }
     bool take_menu_focus_change() { return std::exchange(menu_focus_changed_,false); }
     // Install on the game thread. Called with the latest captured frame/clocks;
     // true defers automatic dialogue. Menu and choice reading remains immediate.
@@ -69,9 +77,11 @@ private:
     std::unordered_map<std::string,unsigned long long> lines_;
     std::atomic<unsigned long> game_thread_{};
     bool menu_focus_changed_{};
+    JournalScrollInput journal_scroll_;
     std::vector<NarrationClock> narration_clocks_;
     std::function<bool(const Frame&)> description_observer_;
     bool description_busy_{};
+    bool read_subtitles_{};
     std::chrono::steady_clock::time_point proximity_sample_{};
     std::string proximity_world_,proximity_player_;
     StoryTracker story_;
@@ -80,11 +90,10 @@ private:
     std::unordered_map<std::string,TargetSelection> navigation_selections_;
     std::string navigation_selection_context_;
     std::size_t navigation_category_{};
-    struct AreaRouteVerdict { Vec3 position; std::uint64_t sampled; bool reachable; };
+    struct AreaRouteVerdict { Vec3 origin,position; std::uint64_t sampled; bool reachable; };
     struct AreaBrowse {
         std::string area;
-        Vec3 origin;
-        std::uint64_t revision{}, touched{}, settle_until{};
+        std::uint64_t revision{};
         std::unordered_map<std::string,AreaRouteVerdict> routes;
         std::vector<std::string> checks;
         std::size_t next{}, category{};

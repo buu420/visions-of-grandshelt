@@ -146,7 +146,7 @@ struct State {
             use_language("en",folder/L"Localization");
             log("LANGUAGE catalog error text="+std::string(language)+" "+error.what());
         }
-        reader.language_changed();
+        reader.language_changed(language!="en");
         load_descriptions();
         return true;
     }
@@ -192,7 +192,9 @@ struct State {
         if(!result.trace.empty())log("NARRATION TRACE "+result.trace);
         if(!result.caption_end_cue.empty())log("NARRATION CAPTION END "+result.caption_end_cue);
         dialogue_deferred=result.defer_dialogue;
-        if(result.stop_speech&&(!describe_with_screen_reader||!capture.audio.active))speech.stop();
+        // Localized descriptions share Prism with subtitles. The description
+        // actions own their playback and must not flush a subtitle when a cue starts.
+        if(result.stop_speech&&!describe_with_screen_reader)speech.stop();
         apply_descriptions(result.actions);
         if(!result.notice.empty())notices.push_back(result.notice);
         return result.defer_dialogue;
@@ -476,7 +478,7 @@ void start_reloaded() {
 
         const auto folder = std::filesystem::path(dll_path).parent_path();
         set_log_path(folder / L"ResonanceAccess.log");
-        log("START Visions of Grandshelt 0.2.54-dev; Reloaded native mod");
+        log("START Visions of Grandshelt 0.2.56-dev; Reloaded native mod");
         if (sha256(exe_path) != "b8c588e46ebadbe37feca7bdf2da0ae63a8538099d14a53ec0c2241b086e5ffa") {
             log("ERROR unsupported game executable; native reader disabled");
             return;

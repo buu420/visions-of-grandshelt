@@ -95,6 +95,72 @@ int main() {
     language.label="Text Language";language.binding_matches=true;
     virtualized.menu=option_menu(language,"language",2,11);
     require(recycled_reader.observe(virtualized).size()==1, "first matching recycled-row capture must speak immediately");
+    ReaderCore details_reader;
+    Frame details{"items",MenuSnapshot{"inventory","Potion","x 8",0,2,true,true,true},{}};
+    auto item=details_reader.observe(details);
+    require(item.size()==1&&item[0].text=="Potion. x 8. 1 of 2", "item focus must speak before delayed help is visible");
+    details.menu->details="Restores HP";
+    auto help=details_reader.observe(details);
+    require(help.size()==1&&help[0].text=="Restores HP"&&!help[0].interrupt&&
+        help[0].delivery==SpeechDelivery::SelectionSupplement, "late help must follow the selection without interrupting it");
+    require(current_review(details,{})=="Potion. x 8. 1 of 2. Restores HP", "repeat must include the current help");
+    require(details_reader.observe(details).empty(), "help must speak once per selection");
+    details.menu->details.reset();
+    require(details_reader.observe(details).empty(), "a transient unbound detail panel stays quiet");
+    details.menu->details="Restores HP";
+    require(details_reader.observe(details).empty(), "the same mounted text does not repeat after an animation gap");
+    details.menu->details=std::string{};
+    require(details_reader.observe(details).empty()&&current_review(details,{})=="Potion. x 8. 1 of 2",
+        "hiding the native tooltip clears it from review");
+    details.menu->details="Restores HP";
+    require(details_reader.observe(details).size()==1, "opening the native tooltip again rereads it");
+    queue.push(item[0]);queue.push(help[0]);
+    require(queue.size()==1&&queue.front()->text=="Potion. x 8. 1 of 2. Restores HP", "pending focus and help must combine");
+    queue.pop();queue.push(help[0]);
+    queue.push({"Ether",true,SpeechDelivery::LatestSelection});
+    require(queue.size()==1&&queue.front()->text=="Ether", "new focus must replace pending help for the previous item");
+    details.menu->index=1;details.menu->label="Ether";details.menu->details="Restores MP";
+    details.menu_hints="Toggle Tooltip, Y";
+    auto latest=details_reader.observe(details);
+    require(latest.size()==1&&latest[0].text=="Ether. x 8. 2 of 2. Restores MP. Toggle Tooltip, Y", "current help and new guides must travel with current focus");
+    details.menu->index=0;details.menu->label="Potion";details.menu->details="Restores HP";
+    latest=details_reader.observe(details);
+    require(latest.size()==1&&latest[0].text=="Potion. x 8. 1 of 2. Restores HP", "unchanged guides must stay quiet while browsing");
+    ReaderCore journal;
+    Frame quest{"quests",MenuSnapshot{"quest","Chapter 1","",0,2,true,true,true},{}};
+    quest.menu->journal=JournalPassage{"Earlier passage",0,0};
+    quest.observed_at=100;
+    auto first=journal.observe(quest);
+    require(first.size()==1&&first[0].text=="Chapter 1. 1 of 2", "chapter title speaks immediately");
+    quest.menu->journal=JournalPassage{"Opening passage",80,0};
+    quest.observed_at=300;
+    require(journal.observe(quest).empty(), "automatic positioning waits for the first visible passage");
+    quest.observed_at=500;
+    auto opened=journal.observe(quest);
+    require(opened.size()==1&&opened[0].text=="Opening passage"&&!opened[0].interrupt,
+        "opening the journal reads the settled passage without cutting off its title");
+    quest.menu->journal=JournalPassage{"Automatic shift",90,0};quest.observed_at=600;
+    require(journal.observe(quest).empty(), "automatic motion must stay quiet after opening");
+    quest.observed_at=820;
+    require(journal.observe(quest).empty(), "settled automatic motion must stay quiet too");
+    quest.menu_hints="Scroll, Page Up or Page Down";
+    quest.menu->journal=JournalPassage{"Passing passage",140,900};quest.observed_at=950;
+    require(journal.observe(quest).empty(), "scrolling reads after the native pane settles");
+    quest.menu->journal=JournalPassage{"Next visible passage",200,970};quest.observed_at=1020;
+    require(journal.observe(quest).empty(), "intermediate scroll passages must not queue up");
+    quest.observed_at=1280;
+    auto passage=journal.observe(quest);
+    require(passage.size()==1&&passage[0].text=="Next visible passage"&&passage[0].interrupt,
+        "a deliberate scroll can replace earlier text with the current passage");
+    require(journal.observe(quest).empty(), "a completed scroll must speak once");
+    require(current_review(quest,{})=="Chapter 1. 1 of 2. Next visible passage",
+        "review reads the current text without a scroll measurement");
+    quest.menu->label="Chapter 2";quest.menu->index=1;quest.menu->journal=JournalPassage{"Different quest",0,970};
+    quest.observed_at=1320;journal.observe(quest);
+    quest.observed_at=1600;
+    auto other=journal.observe(quest);
+    require(other.size()==1&&other[0].text=="Different quest"&&!other[0].interrupt,
+        "a scroll request from earlier focus must not interrupt the new quest");
     std::cout<<"All reader, route and speech queue behavior checks passed\n";
  } catch(const std::exception& e) { std::cerr<<"FAIL: "<<e.what()<<'\n'; return 1; }
 }

@@ -179,13 +179,15 @@ void Speech::run() {
                         }
                     }
                     const auto* pending=queue_.front();
-                    if(pending&&pending->delivery==SpeechDelivery::LatestSelection&&
+                    if(pending&&(pending->delivery==SpeechDelivery::LatestSelection||
+                       pending->delivery==SpeechDelivery::SelectionSupplement)&&
                        can_query_playback&&ordered==OrderedPlayback::Speaking) {
                         // Keep the selection in the app queue while known hit
                         // speech plays so new focus can replace it here.
                         cv_.wait_for(lock,probe_interval,[&] {
                             const auto* next=queue_.front();
-                            return quit_||stopping()||!next||next->delivery!=SpeechDelivery::LatestSelection;
+                            return quit_||stopping()||!next||(next->delivery!=SpeechDelivery::LatestSelection&&
+                                next->delivery!=SpeechDelivery::SelectionSupplement);
                         });
                         continue;
                     }
@@ -222,7 +224,8 @@ void Speech::run() {
                         ordered=OrderedPlayback::Submitted;
                         ordered_submitted=std::chrono::steady_clock::now();
                     }
-                    last_delivery=event->delivery;
+                    last_delivery=event->delivery==SpeechDelivery::SelectionSupplement?
+                        SpeechDelivery::LatestSelection:event->delivery;
                     if(result!=PRISM_OK) {
                         ready_=false;queue_.clear();
                         description_.active=description_.queued=false;

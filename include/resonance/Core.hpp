@@ -6,10 +6,19 @@
 #include <deque>
 
 namespace resonance {
+struct JournalPassage {
+    std::string text;
+    float offset{};
+    unsigned long long scroll_input{};
+};
 struct MenuSnapshot {
     std::string id, label, value;
     int index{-1}, count{};
     bool visible{}, ready{}, enabled{true};
+    // No value while the current detail panel is rebinding. An empty value
+    // records a confirmed close, so reopening it can speak the same text.
+    std::optional<std::string> details;
+    std::optional<JournalPassage> journal;
 };
 struct OptionObservation {
     std::string label;
@@ -35,6 +44,8 @@ struct DialogueSnapshot {
     bool visible{}, ready{};
     DialogueVoice voice{DialogueVoice::Unknown};
     std::string source_event;
+    bool read_as_subtitle{};
+    bool automatically_read() const { return read_as_subtitle||voice!=DialogueVoice::Voiced; }
 };
 struct TargetSnapshot {
     std::string id, label, prompt;
@@ -46,8 +57,10 @@ struct Frame {
     std::optional<DialogueSnapshot> dialogue;
     std::string introduction;
     bool menu_interrupts{true};
+    std::string menu_hints;
+    unsigned long long observed_at{};
 };
-enum class SpeechDelivery : unsigned char { Normal, LatestSelection, OrderedBattle, Description };
+enum class SpeechDelivery : unsigned char { Normal, LatestSelection, SelectionSupplement, OrderedBattle, Description };
 struct SpeechEvent {
     std::string text;
     bool interrupt{true};
@@ -60,7 +73,10 @@ public:
     void output_epoch(unsigned long long);
     const std::string& repeat() const { return last_; }
 private:
-    std::string context_, menu_, dialogue_, last_;
+    std::string context_, menu_, menu_text_, details_, hints_, dialogue_, last_;
+    std::optional<JournalPassage> journal_page_;
+    unsigned long long journal_moved_at_{}, journal_read_input_{};
+    bool journal_opening_read_{};
     bool introduced_{};
     unsigned long long epoch_{};
 };

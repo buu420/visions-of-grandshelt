@@ -254,11 +254,28 @@ UObject* guide_widget(UObject* root,UObject* controller,FName tag) {
 }
 std::string key_name(FName name,FName gamepad) {
     if(!name.ComparisonIndex&&!name.Number)return {};
-    if(name.ToString()==L"Gamepad_FaceButton_Right"&&(gamepad.ComparisonIndex||gamepad.Number)) {
+    if(gamepad.ComparisonIndex||gamepad.Number) {
+        const auto button=name.ToString();
         auto device=gamepad.ToString();
         std::transform(device.begin(),device.end(),device.begin(),[](wchar_t c){return std::towlower(c);});
-        if(device.starts_with(L"xbox")||device==L"xinput"||device==L"generic")return "B";
-        if(device.starts_with(L"ps")||device.starts_with(L"playstation"))return tr("Circle");
+        if(device.starts_with(L"xbox")||device==L"xinput"||device==L"generic") {
+            if(button==L"Gamepad_FaceButton_Bottom")return "A";
+            if(button==L"Gamepad_FaceButton_Right")return "B";
+            if(button==L"Gamepad_FaceButton_Left")return "X";
+            if(button==L"Gamepad_FaceButton_Top")return "Y";
+            if(button==L"Gamepad_LeftShoulder")return "LB";
+            if(button==L"Gamepad_RightShoulder")return "RB";
+        }
+        if(device.starts_with(L"ps")||device.starts_with(L"playstation")) {
+            if(button==L"Gamepad_FaceButton_Bottom")return tr("Cross");
+            if(button==L"Gamepad_FaceButton_Right")return tr("Circle");
+            if(button==L"Gamepad_FaceButton_Left")return tr("Square");
+            if(button==L"Gamepad_FaceButton_Top")return tr("Triangle");
+            if(button==L"Gamepad_LeftShoulder")return "L1";
+            if(button==L"Gamepad_RightShoulder")return "R1";
+        }
+        if(button==L"Gamepad_RightThumbstick")return tr("Right stick click");
+        if(button==L"Gamepad_RightY")return tr("Right stick up or down");
     }
     auto* library=UObjectGlobals::StaticFindObject(L"/Script/Engine.Default__KismetInputLibrary");
     Call call(library,L"Key_GetDisplayName",L"/Script/Engine.KismetInputLibrary:Key_GetDisplayName",48,32,

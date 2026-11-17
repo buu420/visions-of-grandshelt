@@ -19,6 +19,7 @@
 #include "resonance/Localization.hpp"
 #include "resonance/DialogueSource.hpp"
 #include "resonance/WorldPlaceNames.hpp"
+#include "NativeUiPresentation.hpp"
 #include "BuildProfile.hpp"
 #include "ChapterThreeBoats.hpp"
 #include "ChapterThreeWaterShrine.hpp"
@@ -139,11 +140,13 @@ class Call {
     int result_offset_{};
     std::vector<std::max_align_t> storage_;
 public:
-    Call(UObject* object,const wchar_t* name,int size,int result,int void_extent=0) {
+    Call(UObject* object,const wchar_t* name,int size,int result,int void_extent=0,bool static_library=false) {
         stage="prepare getter "+utf8(name);
-        if(!valid(object)) return;
+        if(static_library) {
+            if(!object||!(static_cast<std::uint32_t>(object->GetObjectFlags())&0x10u))return;
+        } else if(!valid(object))return;
         auto* fn=object->GetFunctionByNameInChain(name);
-        if(!fn)return;
+        if(!fn||(static_library&&!fn->HasAnyFunctionFlags(static_cast<EFunctionFlags>(0x2000))))return;
         auto* returned=fn->GetReturnProperty();
         if((result>=0&&(!returned||returned->GetOffset_Internal()!=result||
            !returned->HasAnyPropertyFlags(0x80)||!returned->HasAnyPropertyFlags(0x400)))||
@@ -247,12 +250,12 @@ bool battle_result_layout(UObject* top) {
 bool timer_layout(UObject* widget) {
     return is(widget,L"/Game/UI/System/Timer/Widget/WBP_TimerLayout.WBP_TimerLayout_C");
 }
-std::vector<std::string> widget_lines(UObject* root,bool omit_menus,bool omit_dialogue,bool omit_timer) {
+std::vector<std::string> widget_lines(UObject* root,bool omit_menus,bool omit_dialogue,bool omit_timer,UObject* skip=nullptr) {
     const bool results=battle_result_layout(root);
     std::vector<std::string> pieces,wallet;
     std::set<UObject*> visited,combined;
     std::function<void(UObject*,int,UObject*)> collect=[&](UObject* child,int depth,UObject* wallet_value) {
-        if(depth>(results?64:32)||!visible(child)||(omit_timer&&timer_layout(child))||
+        if(child==skip||depth>(results?64:32)||!visible(child)||(omit_timer&&timer_layout(child))||
            (omit_menus&&is(child,L"/Script/EnhancedUI.CPP_WBP_MenuBase"))||
            (omit_dialogue&&(is(child,L"/Script/mucha.CPP_WBP_Talk")||is(child,L"/Script/mucha.CPP_WBP_TextWindow")))) return;
         if(results&&(visited.size()>=4096||!visited.insert(child).second))return;
@@ -287,9 +290,9 @@ std::vector<std::string> widget_lines(UObject* root,bool omit_menus,bool omit_di
     pieces.insert(pieces.end(),std::make_move_iterator(wallet.begin()),std::make_move_iterator(wallet.end()));
     return pieces;
 }
-std::string widget_text(UObject* root,bool omit_menus=false,bool omit_dialogue=false,bool omit_timer=false) {
+std::string widget_text(UObject* root,bool omit_menus=false,bool omit_dialogue=false,bool omit_timer=false,UObject* skip=nullptr) {
     std::string result;
-    for(const auto& s:widget_lines(root,omit_menus,omit_dialogue,omit_timer)) {
+    for(const auto& s:widget_lines(root,omit_menus,omit_dialogue,omit_timer,skip)) {
         if(result.size()+s.size()>8192) break;
         if(!result.empty()) {const char c=result.back();result+=(c=='.'||c=='?'||c=='!'?" ":". ");}
         result+=s;
@@ -491,19 +494,367 @@ std::optional<MenuSnapshot> option_snapshot(UObject* entry,const Selection& sele
 bool battle_layout(UObject* top) {
     return is(top,L"/Game/UI/Battle/Widget/WBP_BattleLayout.WBP_BattleLayout_C");
 }
-std::optional<MenuSnapshot> menu_snapshot(UObject* top,bool read_screen_text=true) {
+bool presented_within(UObject* widget,UObject* root) {
+    if(!widget)return false;
+    bool found=false;
+    walk(root,[&](auto* child){found|=child==widget;});
+    return found;
+}
+template<class T> std::optional<T> blueprint_member(UObject* widget,const wchar_t* owner,
+    const wchar_t* name,const wchar_t* kind) {
+    if(!valid(widget)||!is(widget,owner))return {};
+    auto* prop=widget->GetPropertyByNameInChain(name);
+    const auto offset=prop?prop->GetOffset_Internal():-1;
+    if(!prop||!prop->field_class()||prop->field_class()->GetName()!=kind||
+       prop->GetSize()!=sizeof(T)||offset<0||offset>widget->GetClassPrivate()->GetPropertiesSize()-static_cast<int>(sizeof(T)))return {};
+    T result{};
+    std::memcpy(&result,reinterpret_cast<const std::byte*>(widget)+offset,sizeof result);
+    return result;
+}
+UObject* blueprint_object(UObject* widget,const wchar_t* owner,const wchar_t* name) {
+    const auto member=blueprint_member<UObject*>(widget,owner,name,L"ObjectProperty");
+    return member&&valid(*member)?*member:nullptr;
+}
+void append_menu_text(std::string& result,const std::string& next) {
+    if(next.empty())return;
+    if(!result.empty()) {
+        const char last=result.back();
+        result+=last=='.'||last=='?'||last=='!'||result.ends_with("。")||
+            result.ends_with("？")||result.ends_with("！")?" ":". ";
+    }
+    result+=next;
+}
+constexpr auto main_menu_class=L"/Game/UI/MainMenu/Widget/WBP_MainMenuLayout.WBP_MainMenuLayout_C";
+constexpr auto journal_class=L"/Game/UI/MainMenu/Journal/Widget/WBP_JournalLayout.WBP_JournalLayout_C";
+constexpr auto journal_row=L"/Game/UI/MainMenu/Journal/Widget/WBP_JournalEntry.WBP_JournalEntry_C";
+constexpr auto journal_info=L"/Game/UI/MainMenu/Journal/Widget/WBP_Journal_QuestInfo.WBP_Journal_QuestInfo_C";
+constexpr auto scroll_class=L"/Game/UI/Common/Scroll/Widget/WBP_CommonScrollBox.WBP_CommonScrollBox_C";
+using PaintGeometry=std::array<std::byte,56>;
+struct PaintPoint {double x{},y{};};
+struct TextClip {double top{},bottom{};};
+bool copy_layout_memory(const void* source,void* destination,std::size_t size) {
+    SIZE_T copied{};
+    return source&&ReadProcessMemory(GetCurrentProcess(),source,destination,size,&copied)&&copied==size;
+}
+template<class T> std::optional<T> layout_field(const void* base,std::size_t offset) {
+    if(!base)return {};
+    T value{};
+    if(!copy_layout_memory(reinterpret_cast<const void*>(reinterpret_cast<std::uintptr_t>(base)+offset),&value,sizeof value))return {};
+    return value;
+}
+template<class T> std::vector<T> layout_array(const void* base,std::size_t offset,int limit) {
+    const auto values=layout_field<Array<T>>(base,offset);
+    if(!values||values->num<=0||values->num>limit||values->max<values->num||values->max>limit*4)return {};
+    std::vector<T> copy(values->num);
+    if(!copy_layout_memory(values->data,copy.data(),copy.size()*sizeof(T)))return {};
+    return copy;
+}
+std::optional<TextClip> journal_clip(UObject* summary,UObject* scroll) {
+    auto* slate=UObjectGlobals::StaticFindObject(L"/Script/UMG.Default__SlateBlueprintLibrary");
+    auto geometry=getter<PaintGeometry>(summary,L"GetPaintSpaceGeometry");
+    auto viewport=getter<PaintGeometry>(scroll,L"GetPaintSpaceGeometry");
+    if(!slate||!geometry||!viewport)return {};
+    Call size(slate,L"GetLocalSize",72,56,0,true);
+    Call to_absolute(slate,L"LocalToAbsolute",88,72,0,true);
+    Call to_text(slate,L"AbsoluteToLocal",88,72,0,true);
+    if(!size||!to_absolute||!to_text)return {};
+    size.put(0,*viewport);
+    size.invoke(slate);
+    const auto extent=size.get<PaintPoint>(56);
+    if(!std::isfinite(extent.x)||!std::isfinite(extent.y)||extent.x<=1||extent.y<=1)return {};
+    to_absolute.put(0,*viewport);
+    to_text.put(0,*geometry);
+    const auto point=[&](double y) {
+        to_absolute.put(56,PaintPoint{0,y});
+        to_absolute.invoke(slate);
+        to_text.put(56,to_absolute.get<PaintPoint>(72));
+        to_text.invoke(slate);
+        return to_text.get<PaintPoint>(72);
+    };
+    const auto top=point(0),bottom=point(extent.y);
+    if(!std::isfinite(top.y)||!std::isfinite(bottom.y)||bottom.y-top.y<=1||
+       !std::isfinite(top.x)||!std::isfinite(bottom.x)||std::abs(bottom.x-top.x)>1)return {};
+    return TextClip{top.y,bottom.y};
+}
+struct SlateTextLine {
+    std::byte blocks_and_highlights[0x30];
+    double x,y,width,height;
+    float text_height,justification_width;
+    int begin,end;
+    unsigned char direction;
+    int model;
+};
+struct SlateTextModel {
+    const void* string;
+    std::byte layout_data[0x68];
+};
+static_assert(sizeof(SlateTextLine)==0x68&&offsetof(SlateTextLine,model)==0x64);
+static_assert(sizeof(SlateTextModel)==0x70&&sizeof(wchar_t)==2);
+
+std::string journal_visible_passage(UObject* summary,UObject* scroll) {
+    // Build 24250053. URichTextBlock::RefreshTextLayout (0x14363de50)
+    // follows MyRichTextBlock and its TextLayoutCache. FSlateTextLayout's
+    // own layout pass (0x141950b20) supplies the model and wrapped line arrays.
+    if(!property(summary,L"Text",L"TextProperty",16)||summary->GetClassPrivate()->GetPropertiesSize()<0x7b0)return {};
+    const auto image=reinterpret_cast<std::uintptr_t>(GetModuleHandleW(nullptr));
+    const auto rich=layout_field<const void*>(summary,0x7a0).value_or(nullptr);
+    if(!image||layout_field<std::uintptr_t>(rich,0)!=image+0x7880748)return {};
+    const auto cache=layout_field<const void*>(rich,0x208).value_or(nullptr);
+    const auto layout=layout_field<const void*>(cache,0).value_or(nullptr);
+    if(layout_field<std::uintptr_t>(layout,0)!=image+0x78753a0||
+       (layout_field<unsigned char>(layout,0x90).value_or(1)&1))return {};
+    const auto layout_scale=layout_field<float>(layout,0x94).value_or(0);
+    const auto render_scale=layout_field<float>(rich,0x600).value_or(0);
+    if(!std::isfinite(layout_scale)||layout_scale<=0||!std::isfinite(render_scale)||render_scale<=0)return {};
+    const auto clip=journal_clip(summary,scroll);
+    if(!clip)return {};
+    const auto models=layout_array<SlateTextModel>(layout,0x20,512);
+    const auto lines=layout_array<SlateTextLine>(layout,0x30,2048);
+    if(models.empty()||lines.empty())return {};
+
+    // Verify Slate has painted the currently bound text. The UMG property
+    // can already hold a different quest while Slate still has the old lines.
+    std::wstring document;
+    std::vector<std::wstring> strings;
+    for(const auto& model:models) {
+        auto chars=layout_array<wchar_t>(model.string,0,32768);
+        if(!chars.empty()&&chars.back()==L'\0')chars.pop_back();
+        if(document.size()+chars.size()>32768)return {};
+        strings.emplace_back(chars.begin(),chars.end());
+        if(!document.empty())document+=L'\n';
+        document+=strings.back();
+    }
+    if(document.empty()||clean(document)!=clean(text(summary,L"Text")))return {};
+
+    std::wstring page;
+    int previous=-1,previous_model=-1,previous_end=0;
+    const double to_local=static_cast<double>(render_scale)/layout_scale;
+    for(std::size_t i=0;i<lines.size();++i) {
+        const auto& line=lines[i];
+        if(line.model<0||static_cast<std::size_t>(line.model)>=strings.size())return {};
+        const auto& source=strings[line.model];
+        if(line.begin<0||line.end<line.begin||static_cast<std::size_t>(line.end)>source.size()||
+           !std::isfinite(line.y)||!std::isfinite(line.text_height)||line.text_height<0)return {};
+        const double baseline=(line.y+line.text_height*.5)*to_local;
+        if(baseline<clip->top||baseline>=clip->bottom||line.begin==line.end)continue;
+        int begin=line.begin;
+        if(previous+1==static_cast<int>(i)&&previous_model==line.model&&previous_end<=begin)
+            begin=previous_end;
+        else if(!page.empty())page+=L'\n';
+        page.append(source,begin,line.end-begin);
+        previous=static_cast<int>(i);previous_model=line.model;previous_end=line.end;
+    }
+    return clean(std::move(page));
+}
+std::string journal_tab(UObject* journal,UObject* model) {
+    constexpr auto tab_class=L"/Game/UI/MainMenu/Journal/Tab/WBP_JournalTabEntry.WBP_JournalTabEntry_C";
+    const auto category=read<unsigned char>(model,L"DisplayQuestCategory",L"EnumProperty");
+    if(!category)return {};
+    std::string label;
+    walk(blueprint_object(journal,journal_class,L"WBP_JournalTab"),[&](auto* widget){
+        if(blueprint_member<unsigned char>(widget,tab_class,L"QuestCategory",L"EnumProperty")!=category)return;
+        auto* name=blueprint_object(widget,tab_class,L"Text_Category");
+        if(presented_within(name,widget))label=clean(text(name,L"Text"));
+    });
+    return label;
+}
+void journal_presentation(UObject* journal,UObject* model,UObject* row,const JournalScrollInput& input,MenuSnapshot& snapshot) {
+    if(!is(row,journal_row))return;
+    auto* row_model=blueprint_object(row,journal_row,L"VM_QuestData");
+    const auto quest=read<int>(row_model,L"QuestId",L"IntProperty");
+    if(!quest||*quest<=0||quest!=read<int>(model,L"FocusQuestId",L"IntProperty"))return;
+    auto* info=blueprint_object(journal,journal_class,L"WBP_Journal_QuestInfo");
+    if(!presented_within(info,journal)||
+       quest!=read<int>(blueprint_object(info,journal_info,L"VM_QuestData"),L"QuestId",L"IntProperty"))return;
+    auto* summary=blueprint_object(info,journal_info,L"Text_Summary");
+    if(auto detail=widget_text(info,false,false,false,summary);!detail.empty())snapshot.details=std::move(detail);
+    auto* owner=blueprint_object(info,journal_info,L"WBP_CommonScrollBox");
+    auto* scroll=blueprint_object(owner,scroll_class,L"CPP_MuchaScrollBox");
+    if(!is(scroll,L"/Script/UMG.ScrollBox")||!presented_within(scroll,info)||
+       !is(summary,L"/Script/UMG.RichTextBlock")||!presented_within(summary,scroll))return;
+    const auto offset=getter<float>(scroll,L"GetScrollOffset");
+    if(!offset||!std::isfinite(*offset))return;
+    auto& page=*snapshot.journal;
+    page.offset=*offset;
+    if(journal==input.layout&&*quest==input.quest)page.scroll_input=input.at;
+    page.text=journal_visible_passage(summary,scroll);
+}
+std::string recovery_recipient(UObject* selector,UObject* row) {
+    constexpr auto selector_class=L"/Game/UI/MainMenu/Party/Widget/WBP_PartySelecter.WBP_PartySelecter_C";
+    constexpr auto unit_row=L"/Game/UI/Common/UnitList/Widget/Entry/WBP_UnitDataEntry.WBP_UnitDataEntry_C";
+    constexpr auto unit_icon=L"/Game/UI/Common/UnitList/Widget/Entry/Parts/Icon/WBP_UnitList_UnitIcon.WBP_UnitList_UnitIcon_C";
+    if(!presented_within(row,selector))return {};
+    if(blueprint_member<unsigned char>(selector,selector_class,L"bAllSelect",L"BoolProperty").value_or(0))
+        return tr("All allies");
+    const auto selected=blueprint_member<int>(selector,selector_class,L"FocusUnitId",L"IntProperty");
+    auto* menu=blueprint_object(selector,selector_class,L"WBP_PathMenu");
+    const auto focus=read<int>(menu,L"FocusUnitId",L"IntProperty");
+    if(!selected||!focus||*selected!=*focus||*focus<=0)return {};
+    std::string label;
+    walk(row,[&](auto* widget){
+        const auto id=blueprint_member<int>(widget,unit_row,L"m_UnitID",L"IntProperty");
+        if(id!=selected)return;
+        auto* portrait=blueprint_object(widget,unit_row,L"WBP_UnitList_UnitIcon");
+        auto* model=blueprint_object(widget,unit_row,L"CPP_VM_UnitParam");
+        if(blueprint_member<int>(portrait,unit_icon,L"UnitId",L"IntProperty")!=id||
+           read<int>(model,L"UnitId",L"IntProperty")!=id||!presented_within(portrait,widget))return;
+        // The native GetUnitName returns the name from the unit parameter
+        // associated with this portrait, including its game localization.
+        auto* unit=object(model,L"UnitParam");
+        if(is(unit,L"/Script/mucha.CPP_UnitParameter"))label=clean(text(unit,L"UnitName"));
+    });
+    return label;
+}
+std::string equipment_parameter_name(UObject* brush) {
+    constexpr std::wstring_view prefix=L"UI.Common.Unit.Status.Icon.";
+    const auto tag=read<FName>(brush,L"BrushTag",L"StructProperty");
+    if(!tag)return {};
+    const auto name=tag->ToString();
+    if(!name.starts_with(prefix))return {};
+    const auto suffix=std::wstring_view(name).substr(prefix.size());
+    if(suffix==L"AP")return "AP";
+    // DA_UI_UnitParamType maps the paint brush on each rendered row to
+    // the game's localized stat name in ST_UI_Unit.
+    constexpr std::wstring_view known[]={L"Attack",L"Defence",L"Intelligence",L"Mind",L"Agility",
+        L"PhysicalAttack",L"PhysicalDefense",L"MagicalAttack",L"MagicalDefense",L"Divine"};
+    if(std::find(std::begin(known),std::end(known),suffix)==std::end(known))return {};
+    auto key=L"UI_UnitParameter"+std::wstring(suffix);
+    auto* library=UObjectGlobals::StaticFindObject(L"/Script/Engine.Default__KismetTextLibrary");
+    auto* fn=library?library->GetFunctionByNameInChain(L"TextFromStringTable"):nullptr;
+    if(path(fn)!=L"/Script/Engine.KismetTextLibrary:TextFromStringTable")return {};
+    const FName table(L"/Game/Datatable/Strings/UI/UI_Common/ST_UI_Unit.ST_UI_Unit",FNAME_Find);
+    if(!table.ComparisonIndex)return {};
+    const auto parameter=[&](const wchar_t* field,const wchar_t* kind,int offset,int size) {
+        auto* p=fn->FindProperty(FName(field,FNAME_Find));
+        return p&&p->field_class()&&p->field_class()->GetName()==kind&&
+            p->HasAnyPropertyFlags(0x80)&&!p->HasAnyPropertyFlags(0x100)&&
+            p->GetOffset_Internal()==offset&&p->GetSize()==size;
+    };
+    if(!parameter(L"TableId",L"NameProperty",0,8)||!parameter(L"Key",L"StrProperty",8,16))return {};
+    Call lookup(library,L"TextFromStringTable",40,24,0,true);
+    if(!lookup)return {};
+    const auto length=static_cast<int>(key.size())+1;
+    lookup.put(0,table);
+    lookup.put(8,Array<wchar_t>{key.data(),length,length});
+    lookup.invoke(library);
+    const auto label=clean(lookup.get_text(24));
+    return label.starts_with("MISSING STRING TABLE ENTRY")||label.starts_with("<MISSING")?std::string{}:label;
+}
+std::optional<std::string> selected_tooltip(UObject* instance,UObject* entry) {
+    if(!instance)return {};
+    constexpr auto layout_class=L"/Game/UI/Common/Info/Tooltip/Widget/WBP_TooltipLayout.WBP_TooltipLayout_C";
+    constexpr auto tip_class=L"/Game/UI/Common/Info/Tooltip/Widget/WBP_Tooltip.WBP_Tooltip_C";
+    constexpr auto action_entry=L"/Game/UI/Common/Action/Widget/WBP_ActionEntryBase.WBP_ActionEntryBase_C";
+    auto* layer=active_layout_layer(instance,L"UI.Layer.Tooltip");
+    auto* vm=blueprint_object(layer,layout_class,L"VM_Tooltip");
+    if(!is(vm,L"/Script/mucha.CPP_VM_Tooltip"))return {};
+    if(!boolean(vm,L"IsDisplayTooltip",true))return std::string{};
+    if(!boolean(vm,L"bDisplay"))return {};
+    auto* anchor=get_object(vm,L"GetTargetWidget");
+    if(!presented_within(anchor,entry))return {};
+    if(is(anchor,action_entry)) {
+        const auto id=[](UObject* owner){return static_cast<const int*>(struct_field(owner,L"ActionKey",L"ID",L"IntProperty",4));};
+        const auto category=[](UObject* owner){return static_cast<const unsigned char*>(struct_field(owner,L"ActionKey",L"Category",L"EnumProperty",1));};
+        const auto* expected_id=id(anchor);
+        const auto* actual_id=id(vm);
+        const auto* expected_category=category(anchor);
+        const auto* actual_category=category(vm);
+        if(!expected_id||!actual_id||!expected_category||!actual_category||
+           *expected_id!=*actual_id||*expected_category!=*actual_category)return {};
+    }
+    auto* tip=blueprint_object(layer,layout_class,L"WBP_Tooltip");
+    if(!is(tip,tip_class)||!presented_within(tip,layer))return {};
+    auto* slot=blueprint_object(tip,tip_class,L"CPP_CommonContentSlot_81");
+    if(!presented_within(slot,tip))return {};
+
+    constexpr auto gear_row=L"/Game/UI/Common/Info/Item/Equipment/WBP_EquipParamEntry.WBP_EquipParamEntry_C";
+    std::string description,stats;
+    walk(slot,[&](auto* widget){
+        if(is(widget,gear_row)) {
+            auto* icon=object(widget,L"WBP_UnitParamIcon");
+            auto* brush=object(icon,L"CPP_WBP_GameplayTagBrush_89");
+            auto* number=object(widget,L"CommonNumericTextBlock_53");
+            if(!presented_within(brush,widget)||!presented_within(number,widget))return;
+            const auto label=equipment_parameter_name(brush);
+            const auto value=clean(get_text(number));
+            if(!label.empty()&&!value.empty())append_menu_text(stats,label+" "+value);
+        } else {
+            auto* label=object(widget,L"Text_Description");
+            if(presented_within(label,widget))append_menu_text(description,clean(text(label,L"Text")));
+        }
+    });
+    append_menu_text(description,stats);
+    return description.empty()?std::nullopt:std::optional<std::string>{std::move(description)};
+}
+std::string menu_guides(UObject* top,UObject* instance) {
+    constexpr auto key_guide=L"/Game/UI/MainMenu/Common/Key/KeyGuide/WBP_KeyGuide.WBP_KeyGuide_C";
+    auto* layer=instance?active_layout_layer(instance,L"UI.Layer.ActionGuide"):nullptr;
+    UObject* owner=nullptr;
+    if(visible(layer))for(auto* subsystem:find(L"CPP_ActionGuideSubsystem")) {
+        if(subsystem->GetOuterPrivate()!=instance)continue;
+        auto* weak=static_cast<const FWeakObjectPtr*>(property(subsystem,L"GuideOwner",L"WeakObjectProperty",8));
+        auto* model=object(subsystem,L"ActionGuideVM");
+        if(weak&&boolean(model,L"bDisplay"))owner=weak->Get();
+        break;
+    }
+    std::vector<std::string> hints;
+    const auto collect=[&](UObject* root){
+        walk(root,[&](auto* widget){
+            if(!is(widget,key_guide)||!get_bool(widget,L"GetIsEnabled"))return;
+            auto* text_widget=object(widget,L"Text_Name");
+            if(!presented_within(text_widget,widget))return;
+            auto label=clean(text(text_widget,L"Text"));
+            if(label.empty())return;
+            std::string bindings;
+            walk(widget,[&](auto* glyph){
+                if(!is(glyph,L"/Script/EnhancedUI.CPP_EU_WBP_CurrentDeviceKeyIcon")&&
+                   !is(glyph,L"/Script/EnhancedUI.CPP_EU_WBP_KeyMappingIcon"))return;
+                std::string chord;
+                for(const auto& key:displayed_key_labels(glyph))
+                    chord=chord.empty()?key:trf("{0} plus {1}",{chord,key});
+                if(!chord.empty())bindings=bindings.empty()?chord:trf("{0} or {1}",{bindings,chord});
+            });
+            if(bindings.empty())return;
+            label+=", "+bindings;
+            if(std::find(hints.begin(),hints.end(),label)==hints.end())hints.push_back(std::move(label));
+        });
+    };
+    collect(top);
+    if(presented_within(owner,top))collect(layer);
+    std::string result;
+    for(const auto& hint:hints)append_menu_text(result,hint);
+    return result;
+}
+std::optional<MenuSnapshot> menu_snapshot(UObject* top,UObject* instance,
+    const JournalScrollInput& journal_input,bool read_screen_text=true) {
     // FindAllOf also sees Blueprint WidgetTree templates with no live Slate/list data.
     // Never invoke menu interfaces outside the current viewport's active widget tree.
     if(!top) return {};
     std::set<UObject*> active;bool dialogue_window=false;
     UObject* equipment_scene=nullptr;
-    const bool main_menu=is(top,L"/Game/UI/MainMenu/Widget/WBP_MainMenuLayout.WBP_MainMenuLayout_C");
+    UObject* journal=nullptr;
+    UObject* recovery=nullptr;
+    const bool main_menu=is(top,main_menu_class);
+    constexpr auto action_layout=L"/Game/UI/MainMenu/Action/Widget/WBP_ActionLayoutBase.WBP_ActionLayoutBase_C";
     walk(top,[&](auto* w){
         active.insert(w);
         if(is(w,L"/Script/mucha.CPP_WBP_TextWindow")&&visible(object(w,L"m_pTextBlock"))) dialogue_window=true;
         if((main_menu||w==top)&&
            is(w,L"/Game/UI/MainMenu/ActionEquip/WBP_ActionEquipmentLayout.WBP_ActionEquipmentLayout_C")) equipment_scene=w;
+        if(main_menu||w==top) {
+            if(is(w,journal_class))journal=w;
+            if(is(w,action_layout))recovery=w;
+        }
     });
+    auto* journal_model=blueprint_object(journal,journal_class,L"VM_Journal");
+    const auto tab=journal_tab(journal,journal_model);
+    const auto scene=main_menu?getter<FName>(top,L"GetCurrentScene"):std::nullopt;
+    const bool journal_scene=journal||(scene&&scene->ToString()==L"UI.MainMenu.Scene.Journal");
+    const auto mark_journal=[journal_scene](MenuSnapshot m) {
+        if(journal_scene)m.journal.emplace();
+        return m;
+    };
+    auto* recipient_selector=blueprint_object(recovery,action_layout,L"WBP_TargetUnitList");
     const bool options_context=is(top,L"/Script/mucha.CPP_OP_Layout");
     UObject* target=top;
     for(int n=0;n<12&&target;++n) {
@@ -519,7 +870,7 @@ std::optional<MenuSnapshot> menu_snapshot(UObject* top,bool read_screen_text=tru
         auto s=selection(menu); if(!s.entry || !visible(s.entry)) continue;
         const bool ready=!boolean(top,L"IsOpeningProcess")&&!boolean(top,L"IsClosingProcess");
         if(!menu_widget_matches_selection(menu,s))
-            return MenuSnapshot{utf8(path(menu)),"","",s.index,s.count,true,false,true};
+            return mark_journal({utf8(path(menu)),"","",s.index,s.count,true,false,true});
         if(options_context) {
             UObject* setting=nullptr;
             walk(s.entry,[&](auto* widget){if(!setting&&is(widget,L"/Script/mucha.CPP_OP_WBP_BaseMenu_EntryBase")) setting=widget;});
@@ -532,13 +883,30 @@ std::optional<MenuSnapshot> menu_snapshot(UObject* top,bool read_screen_text=tru
         if(equipment_scene) {
             if(auto equipment=equipment_row_snapshot(equipment_scene,menu,s.entry,s.index,s.count,label)) {
                 equipment->ready=equipment->ready&&ready;
+                if(equipment->ready)equipment->details=selected_tooltip(instance,s.entry);
                 return equipment;
             }
         }
+        if(presented_within(menu,recipient_selector)) {
+            const auto recipient=recovery_recipient(recipient_selector,s.entry);
+            if(recipient.empty())return MenuSnapshot{utf8(path(menu)),"","",s.index,s.count,true,false,true};
+            label=recipient;
+        }
         if(label.empty()) continue;
-        return MenuSnapshot{utf8(path(menu)),label,"",s.index,s.count,true,ready,get_bool(s.entry,L"GetIsEnabled",true)};
+        auto snapshot=mark_journal({utf8(path(menu)),label,"",s.index,s.count,true,ready,get_bool(s.entry,L"GetIsEnabled",true)});
+        if(ready&&journal) {
+            if(!tab.empty()&&is(s.entry,journal_row))snapshot.label=tab+". "+snapshot.label;
+            journal_presentation(journal,journal_model,s.entry,journal_input,snapshot);
+        } else if(ready)snapshot.details=selected_tooltip(instance,s.entry);
+        return snapshot;
     }
     if(options_context) return MenuSnapshot{utf8(path(top)),"","",-1,0,true,false,true};
+    if(journal_scene) {
+        const auto quests=read<Array<std::byte>>(journal_model,L"DisplayQuestDataList",L"ArrayProperty");
+        const bool empty=quests&&quests->num==0&&quests->max>=0&&!boolean(journal_model,L"bIsInitializing",true);
+        return mark_journal({utf8(path(journal)),tab,"",-1,0,true,
+            empty&&!tab.empty()&&!boolean(top,L"IsOpeningProcess")&&!boolean(top,L"IsClosingProcess"),true});
+    }
     // Battle HUD, timeline, skill banner and target panel have separate roles.
     // Their combined tree text is not a menu selection.
     if(read_screen_text&&!battle_layout(top)&&!dialogue_window && visible(top) && !boolean(top,L"IsOpeningProcess") && !boolean(top,L"IsClosingProcess")) {
@@ -596,7 +964,8 @@ DialogueVoice dialogue_voice(UObject* talk,UObject* data) {
     // already-readable text accessible rather than adding a speech wait.
     return assigned_dialogue_voice({true,active==1&&aborted==0,reflected==1,voice_valid==1,id});
 }
-std::optional<DialogueSnapshot> dialogue_snapshot(UObject* top,const std::unordered_map<std::string,std::string>& speakers,const std::unordered_map<std::string,unsigned long long>& lines) {
+std::optional<DialogueSnapshot> dialogue_snapshot(UObject* top,const std::unordered_map<std::string,std::string>& speakers,
+        const std::unordered_map<std::string,unsigned long long>& lines,bool read_subtitles) {
     if(!top) return {};
     std::vector<UObject*> talks;
     walk(top,[&](auto* widget){if(is(widget,L"/Script/mucha.CPP_WBP_Talk")) talks.push_back(widget);});
@@ -626,7 +995,7 @@ std::optional<DialogueSnapshot> dialogue_snapshot(UObject* top,const std::unorde
         const auto identity=utf8(path(data))+":"+std::to_string(sequence==lines.end()?0:sequence->second);
         const auto voice=dialogue_voice(talk,data);
         std::string source_reason;
-        auto source_event=current_language()=="en"?std::string{}:
+        auto source_event=!read_subtitles?std::string{}:
             capture_dialogue_source_event(caption.get_native_text(0),&source_reason);
         static std::unordered_map<std::string,DialogueVoice> diagnostics;
         if(auto prior=diagnostics.find(identity);prior==diagnostics.end()||prior->second!=voice) {
@@ -636,7 +1005,7 @@ std::optional<DialogueSnapshot> dialogue_snapshot(UObject* top,const std::unorde
                 (!source_event.empty()?" source="+source_event:
                     source_reason.empty()?std::string{}:" source_unavailable="+source_reason));
         }
-        return DialogueSnapshot{identity,speaker,line,true,true,voice,std::move(source_event)};
+        return DialogueSnapshot{identity,speaker,line,true,true,voice,std::move(source_event),read_subtitles};
     }
     return {};
 }
@@ -866,6 +1235,13 @@ UObject* default_walking_surface(UObject* pawn,UObject* system,UObject* preferre
 bool world_map(UObject* world) {
     return path(world)==L"/Game/Map/Wld/Wld_PL.Wld_PL";
 }
+bool earth_shrine_exterior(UObject* world) {
+    return path(world)==L"/Game/Map/Dng/01Gra/01Gra_43/Dng_01Gra_43_PL.Dng_01Gra_43_PL";
+}
+bool earth_shrine_entrance(UObject* target) {
+    return path(target)==L"/Game/Map/Dng/01Gra/01Gra_43/GD/Dng_01Gra_43_GD.Dng_01Gra_43_GD:"
+        L"PersistentLevel.BP_MapTransitionTrigger_C_0"&&read<int>(target,L"m_UniqueId")==0;
+}
 bool crystal_tower_spiral(UObject* world) {
     return path(world)==L"/Game/Map/Dng/10Cry/10Cry_41/Dng_10Cry_41_PL.Dng_10Cry_41_PL";
 }
@@ -889,7 +1265,10 @@ TowerSpiralExit tower_spiral_exit(UObject* actor) {
     return TowerSpiralExit::None;
 }
 bool swept_default_mesh(UObject* world,std::wstring_view mesh) {
-    return mesh.ends_with(L".RecastNavMesh-Default")&&(world_map(world)||crystal_tower_spiral(world));
+    // At the Earth Shrine the Default bake has a connected path around the
+    // merchant. A straight capsule graph can miss that turn from the talk box.
+    return mesh.ends_with(L".RecastNavMesh-Default")&&
+        (world_map(world)||crystal_tower_spiral(world)||earth_shrine_exterior(world));
 }
 bool olderion_south_exit(UObject* target) {
     return path(target)==L"/Game/Map/Town/05Old/05Old_01/GD/Town_05Old_01_01_GD.Town_05Old_01_01_GD:"
@@ -1162,6 +1541,71 @@ bool capsule_floor_on_mesh(const CapsuleSweep& sweep,UObject* system,UObject* me
     const auto projected=project_navigation(sweep.pawn,system,mesh,floor,extent);
     return projected&&projected->on_mesh&&std::abs(projected->position.z-floor.z)<=extent.z&&
         std::hypot(projected->position.x-floor.x,projected->position.y-floor.y)<=extent.x;
+}
+std::optional<direct_nav::Path> route_around_start_contact(UObject* pawn,UObject* system,UObject* mesh,
+        Vec3 feet,const direct_nav::Path& native,double scale,std::size_t& rejoin) {
+    const auto sweep=capture_capsule_sweep(pawn);
+    if(!sweep||native.points.size()<2)return {};
+    const auto clear_first_metres=[&](Vec3 from,const direct_nav::Path& route,
+            std::optional<CapsuleSweep::Contact>* contact=nullptr) {
+        const auto probe=sweep->ground_probe(contact);
+        auto remaining=2.*sweep->radius;
+        for(std::size_t i=1;i<route.points.size()&&remaining>0.;++i) {
+            const auto next=route.points[i];
+            const auto length=std::hypot(next.x-from.x,next.y-from.y);
+            if(length<scale*.01)continue;
+            const auto fraction=std::min(1.,remaining/length);
+            const Vec3 end{from.x+(next.x-from.x)*fraction,from.y+(next.y-from.y)*fraction,from.z};
+            const auto floor=checked_walking_leg(from,end,scale,sweep->floor_z,probe);
+            if(!floor)return false;
+            from=*floor;
+            remaining-=length;
+        }
+        return true;
+    };
+    std::optional<CapsuleSweep::Contact> contact;
+    if(clear_first_metres(feet,native,&contact)||!contact||contact->penetrating||std::abs(contact->normal.z)>.1)
+        return {};
+    const auto normal=std::hypot(contact->normal.x,contact->normal.y);
+    if(normal<.9)return {};
+    const Vec3 away{contact->normal.x/normal,contact->normal.y/normal,0};
+    // When a speaker's capsule obstructs the first baked turn, find a clear
+    // standing point beside it and ask the game again from that position.
+    const std::array headings{away,Vec3{away.x-away.y,away.y+away.x,0},
+        Vec3{away.x+away.y,away.y-away.x,0},Vec3{-1,0,0},Vec3{1,0,0},Vec3{0,-1,0},Vec3{0,1,0}};
+    const auto goal=native.points.back();
+    const auto probe=sweep->ground_probe();
+    const auto join=[&](std::span<const Vec3> prefix)->std::optional<direct_nav::Path> {
+        const auto landing=prefix.back();
+        if(!capsule_floor_on_mesh(*sweep,system,mesh,landing,scale))return {};
+        auto onward=direct_nav::find_path(direct_navigation_api(),pawn,system,mesh,landing,goal);
+        if(!onward.valid||onward.points.size()<2||
+           std::hypot(onward.points.front().x-landing.x,onward.points.front().y-landing.y)>scale*.05||
+           std::hypot(onward.points.back().x-goal.x,onward.points.back().y-goal.y)>scale*.05||
+           std::abs(onward.points.back().z-goal.z)>sweep->step_height)return {};
+        onward.points.back()=goal;
+        if(!clear_first_metres(landing,onward))return {};
+        onward.points.front()=landing;
+        onward.points.insert(onward.points.begin(),prefix.begin(),prefix.end()-1);
+        rejoin=prefix.size()-1;
+        return onward;
+    };
+    if(feet.x>=-5250.&&feet.x<=-4780.&&std::abs(feet.y)<=600.&&std::abs(feet.z+298.)<45.) {
+        // The Shrine merchants stand on either side of the entrance lane.
+        // Back away and cross behind them before connecting to the middle.
+        const Vec3 retreat{-5360.,feet.y,feet.z},aisle{-5360.,0.,feet.z};
+        const auto turn=checked_walking_leg(feet,retreat,scale,sweep->floor_z,probe);
+        const auto middle=turn?checked_walking_leg(*turn,aisle,scale,sweep->floor_z,probe):std::nullopt;
+        if(middle&&std::hypot(middle->x-turn->x,middle->y-turn->y)>scale*.01)
+            if(auto route=join(std::array{feet,*turn,*middle}))return route;
+    }
+    for(const auto radius:{1.5,3.,5.,6.5})for(const auto heading:headings) {
+        const auto step=radius*sweep->radius/std::hypot(heading.x,heading.y);
+        const Vec3 point{feet.x+step*heading.x,feet.y+step*heading.y,feet.z};
+        const auto landing=checked_walking_leg(feet,point,scale,sweep->floor_z,probe);
+        if(landing)if(auto route=join(std::array{feet,*landing}))return route;
+    }
+    return {};
 }
 std::optional<Vec3> swept_capsule_lane(const CapsuleSweep& sweep,UObject* system,UObject* mesh,Vec3 from,Vec3 to,double scale) {
     if(!current_walking_mesh(sweep.pawn,system,mesh)||!swept_default_mesh(actor_world(sweep.pawn),path(mesh)))return {};
@@ -2389,7 +2833,7 @@ std::optional<NativeRoute> capsule_route(UObject* pawn,UObject* target,UObject* 
         for(const auto point:std::array<Vec3,7>{{{-1240,13350,start.z},{-1010,13260,start.z},
             {-995,13520,start.z},{-740,13530,start.z},{-595,13510,start.z},{-615,13360,start.z},{-555,13350,start.z}}})
             graph.push_back({.position=point});
-    } else if(!room&&path(actor_world(pawn))==L"/Game/Map/Dng/01Gra/01Gra_43/Dng_01Gra_43_PL.Dng_01Gra_43_PL") {
+    } else if(!room&&earth_shrine_exterior(actor_world(pawn))) {
         for(const auto point:std::array<Vec3,6>{{{-4480,-20,-198},{-4300,0,-198},{-3925,490,-198},
             {-4000,600,-198},{-3925,805,-198},{-3925,-490,-198}}})
             graph.push_back({.position=point});
@@ -2619,6 +3063,14 @@ std::optional<NativeRoute> mozul_station_approach(UObject* pawn,UObject* target,
     constexpr ActivationBox approach{{-3720,14382,266},{230,120,60},0};
     constexpr std::array turns{Vec3{-3725,14384,265.65},Vec3{-3758.5,14384,265.65}};
     return verified_trigger_turns(pawn,target,start,approach,turns,axes,scale,ground_check,path_id);
+}
+std::optional<NativeRoute> earth_shrine_door_approach(UObject* pawn,UObject* target,Vec3 start,
+        WalkingAxes axes,double scale,bool ground_check,std::uint64_t path_id) {
+    // The bake can lead diagonally into the door's wall. Sweep the centre of
+    // the forecourt to a point that overlaps the live trigger before the wall.
+    constexpr ActivationBox forecourt{{-3880,0,-200},{650,1240,130},0};
+    constexpr std::array turns{Vec3{-3760,0,-197.85},Vec3{-3282,0,-197.85}};
+    return verified_trigger_turns(pawn,target,start,forecourt,turns,axes,scale,ground_check,path_id,640);
 }
 std::optional<NativeRoute> olderion_south_approach(UObject* pawn,UObject* target,Vec3 start,
         WalkingAxes axes,double scale,bool ground_check,std::uint64_t path_id) {
@@ -3478,6 +3930,8 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
         }
     }
     if(!scale)return fail("The area's distance scale is unavailable.");
+    if(earth_shrine_entrance(target)&&actor_world(target)==world)
+        if(auto route=earth_shrine_door_approach(p,target,*start,*axes,*scale,ground_check,path_id))return route;
     if(passage_map(p)==PassageMap::Mitra&&world==actor_world(target)) {
         // The mesh route crosses an uncovered edge beside this stair.
         // Check the walked centerline and the native doorstep interaction.
@@ -4405,10 +4859,17 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
             centered_spiral=true;
         }
     }
+    std::size_t bypass_rejoin{};
+    if(swept_default&&earth_shrine_exterior(world)) {
+        if(auto departure=route_around_start_contact(p,library,mesh,*start,native,*scale,bypass_rejoin)) {
+            native=std::move(*departure);
+            if(log_query)log("NAV collision-proven departure from live feet target="+utf8(path(target))+
+                " from="+coordinates(*start)+" rejoin="+coordinates(native.points[bypass_rejoin]));
+        }
+    }
     PathSnapshot snapshot{std::move(native.points),axes->right,axes->up,*scale,true,false};
     if(!describe_route(snapshot))return fail("The native path points could not be converted to walking instructions.");
     std::optional<GroundCoverage> ground;std::string ground_reason;
-    std::size_t bypass_rejoin{};
     if(ground_check) {
         const auto policy=capture_ground_policy(p,*scale);
         if(policy) {
@@ -4515,7 +4976,12 @@ bool area_target_reachable(UObject* pawn,const AreaTarget& target) {
 bool same_area_position(Vec3 a,Vec3 b) {
     return a.x==b.x&&a.y==b.y&&a.z==b.z;
 }
-constexpr std::uint64_t area_browse_idle_ms=3000;
+bool nearby_area_origin(Vec3 a,Vec3 b,double capsule_radius) {
+    // Keep a positive scanner proof during footing jitter and small steps
+    // in the same field section. Starting a route always checks live feet.
+    return std::isfinite(capsule_radius)&&std::hypot(a.x-b.x,a.y-b.y)<=.5*capsule_radius&&
+        std::abs(a.z-b.z)<=.25*capsule_radius;
+}
 constexpr std::uint64_t area_route_proof_ms=8000;
 struct DestinationOptions {
     std::vector<LiveTravelPassage> first;
@@ -5287,6 +5753,9 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
             if(const auto axes=walking_input_axes(pawn))
                 current=mozul_station_approach(pawn,live_target,*position,*axes,scale,true,navigation_path_id_);
         }
+        if(retain_bypass&&earth_shrine_entrance(live_target))
+            if(const auto axes=walking_input_axes(pawn))
+                current=earth_shrine_door_approach(pawn,live_target,*position,*axes,scale,true,navigation_path_id_);
         if(retain_bypass&&!current) {
             // The native solver can still cut the same corner after a detour
             // was found. Recheck that detour from the live feet until rejoin.
@@ -5583,17 +6052,11 @@ unsigned UnrealReader::area_browse_commands() {
         area_browse_.reset();
         return 0;
     }
-    const auto now=GetTickCount64();
-    if(!same_area_position(*origin,browse.origin)||browse.revision!=area_browse_revision_) {
-        browse.origin=*origin;
-        browse.revision=area_browse_revision_;
-        browse.routes.clear();
-        browse.checks.clear();
-        browse.next=0;
-        browse.settle_until=now+90;
-        return 0;
+    if(browse.revision!=area_browse_revision_) {
+        const auto request=browse.request;
+        area_browse_.reset();
+        return request;
     }
-    if(now<browse.settle_until)return 0;
     if(browse.next>=browse.checks.size())return std::exchange(browse.request,0u);
 
     // Only one native route check may run between engine ticks. Reacquire
@@ -5603,13 +6066,12 @@ unsigned UnrealReader::area_browse_commands() {
     const auto& id=browse.checks[browse.next++];
     const auto target=capture_area_target(guard.pawn,id);
     const bool reachable=target&&area_target_reachable(guard.pawn,*target);
-    if(target)browse.routes.insert_or_assign(id,AreaRouteVerdict{target->position,now,reachable});
+    if(target)browse.routes.insert_or_assign(id,AreaRouteVerdict{*origin,target->position,GetTickCount64(),reachable});
     const auto elapsed=static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(
         std::chrono::steady_clock::now()-started).count());
     ++browse.probes;
     browse.total_us+=elapsed;
     browse.max_us=std::max(browse.max_us,elapsed);
-    browse.touched=now;
     const bool finished=browse.next==browse.checks.size();
     if(finished) {
         log("NAV area checks category="+std::to_string(browse.category)+" probes="+std::to_string(browse.probes)+
@@ -5796,6 +6258,22 @@ void UnrealReader::movement_tick() {
 void UnrealReader::on_event(resonance::unreal::UObject* object,resonance::unreal::UFunction* fn,void* params) {
     if(!game_thread_||GetCurrentThreadId()!=game_thread_||!object||!fn) return;
     const auto name=fn->GetNamePrivate().ToString();
+    if(name==L"InputScroll"&&params&&is(object,journal_class)&&
+       path(fn)==L"/Game/UI/MainMenu/Journal/Widget/WBP_JournalLayout.WBP_JournalLayout_C:InputScroll"&&fn->GetParmsSize()>=5) {
+        auto* axis=fn->FindProperty(FName(L"InAxis",FNAME_Find));
+        if(axis&&axis->GetOffset_Internal()==0&&axis->GetSize()==4&&axis->field_class()&&
+           axis->field_class()->GetName()==L"FloatProperty") {
+            float value{};
+            std::memcpy(&value,params,sizeof value);
+            if(std::isfinite(value)&&std::abs(value)>.01f) {
+                auto* model=blueprint_object(object,journal_class,L"VM_Journal");
+                if(const auto quest=read<int>(model,L"FocusQuestId",L"IntProperty");quest&&*quest>0) {
+                    journal_scroll_={object,*quest,GetTickCount64()};
+                    menu_focus_changed_=true;
+                }
+            }
+        }
+    }
     if((name==L"HandleInputDirection"&&fn->GetParmsSize()==32&&
         is(object,L"/Script/mucha.CPP_GameWidgetInputManager"))||
        ((name==L"BP_OnItemFocused"||name==L"BP_OnFocusedItemByIndex")&&
@@ -6226,23 +6704,29 @@ void UnrealReader::tick(unsigned commands) {
         log("CONTEXT "+context);
     }
     stage="capture menu";
+    auto* instance=p?object(actor_world(p),L"OwningGameInstance"):nullptr;
     auto menu=accessibility_menu_.snapshot()?accessibility_menu_.snapshot():
-        battle.prompt?std::optional<MenuSnapshot>{}:menu_snapshot(top,!battle_results);
+        battle.prompt?std::optional<MenuSnapshot>{}:menu_snapshot(top,instance,journal_scroll_,!battle_results);
     const bool result_focus=battle_results&&menu&&menu->ready&&!menu->label.empty();
     if(battle_results&&!menu)
         menu=MenuSnapshot{utf8(path(top)),"","",-1,0,true,false,true};
     stage="capture dialogue";
     Frame frame{accessibility_options?context+"|accessibility-options":context,
-        std::move(menu),dialogue_snapshot(top,speakers_,lines_)};
+        std::move(menu),dialogue_snapshot(top,speakers_,lines_,read_subtitles_)};
     battle.command_visible=battle.active&&(battle.choosing_target||battle.prompt.has_value()||
         (frame.menu&&frame.menu->ready&&!frame.menu->label.empty()));
     const bool was_command_visible=std::exchange(battle_command_visible_,battle.command_visible)&&continuing_battle;
     const bool tutorial=is(top,L"/Script/mucha.CPP_WBP_Tutorial");
+    const bool journal=frame.menu&&frame.menu->journal.has_value();
+    if(!journal)journal_scroll_={};
     const auto tutorial_review=tutorial&&(commands&(Repeat|Screen))?current_review(frame,{}):std::string{};
     frame.menu_interrupts=!battle_layout(top)&&!battle_results;
+    frame.observed_at=GetTickCount64();
+    if(!tutorial&&!accessibility_options&&!battle_results&&frame.menu&&frame.menu->ready)
+        frame.menu_hints=menu_guides(top,instance);
     if(accessibility_options)
         frame.introduction=tr("Accessibility Options. Left and right adjust the selected value. Back returns to System Menu.");
-    else if(!battle_results&&!battle_layout(top)&&frame.menu&&frame.menu->id!=utf8(path(top)))
+    else if(!journal&&!battle_results&&!battle_layout(top)&&frame.menu&&frame.menu->id!=utf8(path(top)))
         frame.introduction=widget_text(top,true,frame.dialogue&&frame.dialogue->voice==DialogueVoice::Voiced,true);
     BattleResultFrame result_frame;
     if(battle_results) {
@@ -6323,8 +6807,11 @@ void UnrealReader::tick(unsigned commands) {
         auto spoken_frame=speech_frame(frame,description_busy_);
         if(battle_results)spoken_frame.menu.reset();
         for(const auto& event:core_.observe(spoken_frame)) {
-            // A review key can also switch the tutorial's displayed input device.
-            if(tutorial_review.empty()||event.text!=tutorial_review)speech_.say(event);
+            // A review key can also switch the device whose guides are drawn.
+            const bool reviewing_guides=(commands&(Repeat|Screen))&&
+                event.delivery==SpeechDelivery::SelectionSupplement&&event.text==frame.menu_hints;
+            if(!reviewing_guides&&!(journal&&(commands&(Repeat|Screen)))&&
+               (tutorial_review.empty()||event.text!=tutorial_review))speech_.say(event);
         }
         for(const auto& event:battle_core_.observe(battle))speech_.say(event);
         std::string hit_batch;
@@ -6381,7 +6868,10 @@ void UnrealReader::tick(unsigned commands) {
             battle_results?battle_result_core_.review():
             tutorial?tutorial_review:
             (accessibility_options||is(top,L"/Script/mucha.CPP_OP_Layout"))?
-            (frame.menu&&frame.menu->ready?frame.menu->label+(frame.menu->value.empty()?"":". "+frame.menu->value):tr("Current option is loading")):widget_text(top,false,false,true);
+            (frame.menu&&frame.menu->ready?frame.menu->label+(frame.menu->value.empty()?"":". "+frame.menu->value):tr("Current option is loading")):
+            (journal||(frame.menu&&frame.menu->ready&&frame.menu->details&&!frame.menu->details->empty()))?
+            current_review(frame,{}):widget_text(top,false,false,true);
+        append_menu_text(screen,frame.menu_hints);
         if(const auto timer=displayed_timer();!timer.empty())screen+=(screen.empty()?"":". ")+timer;
         if(const auto& snapshot=story_.snapshot();snapshot.field_control&&!snapshot.nearby_clue.empty())
             screen+=(screen.empty()?"":". ")+snapshot.nearby_clue;
@@ -6628,21 +7118,24 @@ void UnrealReader::tick(unsigned commands) {
             area_browse_.reset();
             report.unavailable_reason="The player position could not be read.";
         } else {
-            if(!area_browse_||area_browse_->area!=area||area_browse_->revision!=area_browse_revision_||
-               !same_area_position(area_browse_->origin,*origin)||
-               (area_browse_->next>=area_browse_->checks.size()&&area_now-area_browse_->touched>area_browse_idle_ms))
-                area_browse_=AreaBrowse{.area=area,.origin=*origin,.revision=area_browse_revision_};
+            if(!area_browse_||area_browse_->area!=area||area_browse_->revision!=area_browse_revision_)
+                area_browse_=AreaBrowse{.area=area,.revision=area_browse_revision_};
             auto& browse=*area_browse_;
+            std::erase_if(browse.routes,[area_now](const auto& result) {
+                return area_now-result.second.sampled>area_route_proof_ms;
+            });
             const auto started=std::chrono::steady_clock::now();
             auto entries=capture_area_targets(guard.pawn);
             report=area_capture_report();
+            const auto radius=getter<float>(object(guard.pawn,L"CapsuleComponent"),L"GetScaledCapsuleRadius").value_or(0.f);
             std::vector<std::string> unchecked;
             for(auto& entry:entries) {
                 if(navigation_category_&&entry.category!=navigation_category_)continue;
                 if(!entry.snapshot.interactable) {
                     const auto check=browse.routes.find(entry.snapshot.id);
-                    if(check==browse.routes.end()||area_now-check->second.sampled>area_route_proof_ms||
-                       !same_area_position(check->second.position,entry.position)) {
+                    if(check==browse.routes.end()||!same_area_position(check->second.position,entry.position)||
+                       (!same_area_position(check->second.origin,*origin)&&
+                        !(check->second.reachable&&nearby_area_origin(check->second.origin,*origin,radius)))) {
                         unchecked.push_back(entry.snapshot.id);
                         continue;
                     }
@@ -6660,11 +7153,9 @@ void UnrealReader::tick(unsigned commands) {
                 browse.probes=browse.total_us=browse.max_us=0;
             }
             browse.category=navigation_category_;
-            browse.touched=area_now;
             browse.checks=std::move(unchecked);
             browse.next=0;
             browse.request=0;
-            browse.settle_until=0;
             const auto elapsed=std::chrono::duration_cast<std::chrono::microseconds>(
                 std::chrono::steady_clock::now()-started).count();
             log("NAV area browse category="+std::to_string(browse.category)+" reachable="+std::to_string(current.size())+

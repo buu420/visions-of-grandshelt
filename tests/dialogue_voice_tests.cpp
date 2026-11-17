@@ -33,6 +33,24 @@ int main() {
             reader.output_epoch(2);
             require(reader.observe(frame).empty(),"backend recovery must not replay positively voiced dialogue");
         }},
+        {"localized subtitles read once even while visual descriptions are active",[] {
+            ReaderCore reader;
+            auto frame=line(DialogueVoice::Voiced,"localized-1","Le texte du sous-titre.");
+            frame.dialogue->read_as_subtitle=true;
+            frame.dialogue->ready=false;
+            require(reader.observe(speech_frame(frame,true)).empty(),"an unfinished subtitle must stay quiet");
+            frame.dialogue->ready=true;
+            frame.dialogue->visible=false;
+            require(reader.observe(speech_frame(frame,true)).empty(),"a hidden subtitle must stay quiet");
+            frame.dialogue->visible=true;
+            const auto speech=reader.observe(speech_frame(frame,true));
+            require(speech.size()==1&&speech[0].interrupt&&speech[0].text=="Narrator: Le texte du sous-titre.",
+                "a displayed localized subtitle must be spoken promptly despite voice or descriptions");
+            frame.dialogue->voice=DialogueVoice::Unknown;
+            require(reader.observe(speech_frame(frame,true)).empty(),"voice state changes must not replay the subtitle");
+            frame.dialogue->id="localized-2";
+            require(reader.observe(speech_frame(frame,true)).size()==1,"the next displayed subtitle must speak immediately");
+        }},
         {"unvoiced and unknown lines remain accessible",[] {
             for(auto voice:{DialogueVoice::Unvoiced,DialogueVoice::Unknown}) {
                 ReaderCore reader;auto frame=line(voice);

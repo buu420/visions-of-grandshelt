@@ -23,9 +23,9 @@ Use the game's interaction button when Story guides you to a door, switch or per
 
 ## Languages and beta testing
 
-The mod follows the game's Text Language setting. From version 0.2.54, descriptions use English recordings in English and the screen reader in French, German, Spanish (Spain), Japanese, Korean, Simplified Chinese and Traditional Chinese.
+The mod follows the game's Text Language setting. French, German, Spanish (Spain), Japanese, Korean, Simplified Chinese and Traditional Chinese use the screen reader for displayed subtitles and audio descriptions. English audio descriptions use recordings.
 
-Copied-save controller tests covered Crystal Tower routes and pickups, the finale and clear-save reload, and post-game guidance to Ultima Weapon. The combat recheck covered the stop shortcut and victory review with keyboard and controller. See the [0.2.54 beta notes](docs/release-notes-0.2.54.md) for manual upgrade instructions.
+In 0.2.57, copied-save controller tests reached the Earth Shrine entrance from the merchant and from the far side of the approach, and reached the nearby save point. In-game logs verified French and Japanese caption delivery to NVDA. See the [0.2.57 beta notes](docs/release-notes-0.2.57.md) for release details.
 
 If a route fails, report the area, Story objective, selected target and last announcement in [GitHub Issues](https://github.com/buu420/visions-of-grandshelt/issues). The mod log is at `ResonanceAccess/Reloaded-II/Mods/Resonance.Access/ResonanceAccess.log`.
 

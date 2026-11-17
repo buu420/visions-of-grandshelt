@@ -5,6 +5,18 @@
 #include <iomanip>
 #include <sstream>
 namespace resonance {
+namespace {
+void append_sentence(std::string& message,const std::string& addition) {
+    if(addition.empty())return;
+    if(!message.empty()) {
+        const auto end=message.back();
+        const bool complete=end=='.'||end=='?'||end=='!'||message.ends_with("。")||
+            message.ends_with("？")||message.ends_with("！");
+        message+=complete?" ":". ";
+    }
+    message+=addition;
+}
+}
 MenuSnapshot option_menu(const OptionObservation& option,std::string id,int row,int rows) {
     std::string value=option.presented_value;
     if(value.empty()&&option.selected>=0&&option.selected<static_cast<int>(option.alternatives.size())) value=option.alternatives[option.selected];
@@ -42,10 +54,16 @@ void SpeechQueue::push(SpeechEvent event) {
     if(event.delivery==SpeechDelivery::LatestSelection) {
         std::erase_if(queue_,[&](const auto& pending) {
             return pending.delivery==SpeechDelivery::LatestSelection||
+                pending.delivery==SpeechDelivery::SelectionSupplement||
                 (event.interrupt&&pending.delivery!=SpeechDelivery::OrderedBattle);
         });
         // Allow one current selection even when the ordered queue is at capacity.
         queue_.push_back(std::move(event));
+        return;
+    }
+    if(event.delivery==SpeechDelivery::SelectionSupplement&&!queue_.empty()&&
+       (queue_.back().delivery==SpeechDelivery::LatestSelection||queue_.back().delivery==SpeechDelivery::SelectionSupplement)) {
+        append_sentence(queue_.back().text,event.text);
         return;
     }
     if(event.interrupt)queue_.clear();
@@ -78,7 +96,7 @@ std::vector<SpeechEvent> ReaderCore::observe(const Frame& frame) {
             if(key!=dialogue_) {
                 dialogue_=key;
                 last_=d.speaker.empty()?d.text:d.speaker+": "+d.text;
-                if(d.voice!=DialogueVoice::Voiced)result.push_back({last_,true});
+                if(d.automatically_read())result.push_back({last_,true});
             }
         }
     } else dialogue_.clear();
@@ -86,42 +104,92 @@ std::vector<SpeechEvent> ReaderCore::observe(const Frame& frame) {
         const auto& m=*frame.menu;
         if(m.visible && m.ready && !m.label.empty()) {
             const auto key=m.id+"\n"+std::to_string(m.index)+"\n"+m.label+"\n"+m.value+(m.enabled?"+":"-");
-            if(key!=menu_) {
+            const bool changed=key!=menu_;
+            std::string supplement;
+            if(changed) {
                 menu_=key;
-                last_=m.label;
-                if(!m.value.empty()) last_+=". "+m.value;
-                if(!m.enabled) last_+=". "+tr("Unavailable");
-                if(m.index>=0 && m.count>m.index) last_+=". "+trf("{0} of {1}",{std::to_string(m.index+1),std::to_string(m.count)});
+                menu_text_=m.label;
+                append_sentence(menu_text_,m.value);
+                if(!m.enabled)append_sentence(menu_text_,tr("Unavailable"));
+                if(m.index>=0&&m.count>m.index)
+                    append_sentence(menu_text_,trf("{0} of {1}",{std::to_string(m.index+1),std::to_string(m.count)}));
+                last_=menu_text_;
+                details_=m.details.value_or("");
+                append_sentence(last_,details_);
                 const auto delivery=m.index>=0?SpeechDelivery::LatestSelection:SpeechDelivery::Normal;
                 result.push_back({last_,frame.menu_interrupts&&result.empty(),delivery});
+            } else if(m.details&&*m.details!=details_) {
+                details_=*m.details;
+                supplement=details_;
+                last_=menu_text_;
+                append_sentence(last_,details_);
             }
+            if(changed||!m.journal) {
+                journal_page_.reset();
+                journal_read_input_=m.journal?m.journal->scroll_input:0;
+                journal_opening_read_=false;
+            }
+            std::string scrolled_passage;
+            if(m.journal&&!m.journal->text.empty()) {
+                const auto& page=*m.journal;
+                if(!journal_page_||std::abs(page.offset-journal_page_->offset)>.25f||page.text!=journal_page_->text) {
+                    journal_page_=page;
+                    journal_moved_at_=frame.observed_at;
+                }
+                const bool requested=page.scroll_input>journal_read_input_;
+                constexpr unsigned long long pause=180;
+                if(frame.observed_at>=journal_moved_at_+pause&&
+                   (requested?frame.observed_at>=page.scroll_input+pause:!journal_opening_read_)) {
+                    journal_read_input_=page.scroll_input;
+                    journal_opening_read_=true;
+                    last_=menu_text_;
+                    append_sentence(last_,details_);
+                    append_sentence(last_,page.text);
+                    if(requested)scrolled_passage=page.text;
+                    else append_sentence(supplement,page.text);
+                }
+            }
+            if(frame.menu_hints!=hints_) {
+                hints_=frame.menu_hints;
+                if(changed)append_sentence(result.back().text,hints_);
+                else if(!m.journal)append_sentence(supplement,hints_);
+            }
+            if(!scrolled_passage.empty()) {
+                append_sentence(scrolled_passage,supplement);
+                result.push_back({std::move(scrolled_passage),frame.menu_interrupts&&result.empty(),SpeechDelivery::LatestSelection});
+            } else if(!supplement.empty())result.push_back({std::move(supplement),false,SpeechDelivery::SelectionSupplement});
         }
-    } else menu_.clear();
+    } else { menu_.clear();menu_text_.clear();details_.clear();hints_.clear();journal_page_.reset(); }
     const bool ready=(frame.menu&&frame.menu->visible&&frame.menu->ready&&!frame.menu->label.empty()) ||
         (frame.dialogue&&frame.dialogue->visible&&frame.dialogue->ready&&
-            frame.dialogue->voice!=DialogueVoice::Voiced&&!frame.dialogue->text.empty());
+            frame.dialogue->automatically_read()&&!frame.dialogue->text.empty());
     if(!introduced_&&!frame.introduction.empty()&&ready) {
         introduced_=true;
         if(result.empty()) result.push_back({frame.introduction,frame.menu_interrupts});
         else {
-            const char end=frame.introduction.back();
-            const bool complete=end=='.'||end=='?'||end=='!'||
-                frame.introduction.ends_with("。")||frame.introduction.ends_with("？")||frame.introduction.ends_with("！");
-            result.front().text=frame.introduction+(complete?" ":". ")+result.front().text;
+            auto introduction=frame.introduction;
+            append_sentence(introduction,result.front().text);
+            result.front().text=std::move(introduction);
         }
         last_=result.back().text;
     }
     return result;
 }
-void ReaderCore::reset() { context_.clear(); menu_.clear(); dialogue_.clear(); last_.clear(); introduced_=false; }
+void ReaderCore::reset() {
+    context_.clear();menu_.clear();menu_text_.clear();details_.clear();hints_.clear();dialogue_.clear();last_.clear();
+    journal_page_.reset();journal_moved_at_=journal_read_input_=0;journal_opening_read_=introduced_=false;
+}
 std::string current_review(const Frame& frame,const std::string& previous) {
-    auto review=frame;review.introduction.clear();
+    auto review=frame;review.introduction.clear();review.menu_hints.clear();
     ReaderCore current;current.observe(review);
-    return current.repeat().empty()?previous:current.repeat();
+    auto result=current.repeat();
+    if(!result.empty()&&review.menu&&review.menu->visible&&review.menu->ready&&review.menu->journal)
+        append_sentence(result,review.menu->journal->text);
+    return result.empty()?previous:result;
 }
 Frame speech_frame(const Frame& frame,bool describing) {
     auto automatic=frame;
-    if(describing&&automatic.dialogue&&automatic.dialogue->voice!=DialogueVoice::Voiced)
+    if(describing&&automatic.dialogue&&!automatic.dialogue->read_as_subtitle&&automatic.dialogue->automatically_read())
         automatic.dialogue->ready=false;
     return automatic;
 }

@@ -2,6 +2,8 @@
 
 The game must have focus. The mod reads selected state and visible text. F5 reviews the current ready selection or dialogue and otherwise repeats the last capture, F9 reads the current Options value or captured visible screen text, and F10 reads help and availability status. The game's own movement, menu, dialogue and Confirm controls remain usable.
 
+Item and skill tips and gear stats follow the highlighted entry when the game displays them. F5 rereads the selection and its tip. F9 also reads the displayed shortcut prompts with their current bindings, including Quick Heal in the Main Menu. Recovery speaks the selected party member's name. In Quests, use Up and Down to select a quest. Use Page Up and Page Down or move the right stick vertically to scroll the summary and hear the passage in view. F5 rereads the current passage.
+
 During battle, speech distinguishes the acting ally or enemy, current target and selected command. Displayed damage and recovery results are read for each hit. Press **F4** or click the **right stick** to interrupt the announcements for the current attack. Navigating the battle menus also interrupts them. F9 reviews the presented party and enemy sides, with current ally HP/MP and visible target details. The focused enemy includes its on-screen affinity prediction, stagger status and weakened health indicators when shown.
 
 On the victory screen, use **Up/Down** on the keyboard or **D-pad Up/Down** to review the displayed rows. **F5** repeats the current row. **F9** reads the page.
@@ -31,7 +33,7 @@ The beacon, wall tones, NPC sounds, and object sounds have independent volumes. 
 
 ## Dialogue, tutorials, and field controls
 
-Automatic dialogue speech skips lines with a verified successful native voice result, including when their audio has finished. Unvoiced lines and unknown voice state remain readable. F5 explicitly reviews the current ready selection or dialogue even while a recorded description defers automatic dialogue reading; it falls back to the last capture when none is ready. F9 remains explicit screen review. Opening recorded descriptions retain the visual sentence about the eight colored crystals and omit the three card passages already voiced by the game's narrator.
+Automatic dialogue speech follows the game's Text Language setting. With English text, lines with verified native voice playback stay quiet and unvoiced or unverified lines read automatically. With any other supported text language, displayed subtitles read even when the game voices the line. F5 reviews the current ready selection or dialogue and falls back to the last capture. F9 reviews the screen. Opening English recordings describe the eight colored crystals.
 
 Some sequence-audio-only and battle-sequence captions can still be read twice. Unknown, pre-reflect or inactive native voice state preserves readable text when no successful voice result was captured for that line. A proven voiced line stays quiet across a recorded-description delay. This update does not claim complete voiced-caption detection.
 
