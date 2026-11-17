@@ -1336,6 +1336,12 @@ west crossing lift	西側橫渡升降機
 {0} navigation is unavailable because its current game binding could not be read.	無法用 {0} 導航，因為無法讀取它目前的遊戲綁定。
 {0} navigation unavailable. Its game binding is assigned to another control or could not be read.	{0} 導航無法使用。該鍵已綁定其他遊戲操作，或無法讀取綁定。
 {0} of {1}	共{1}項，第{0}項
+Screen reader descriptions ready.	使用螢幕閱讀器播放的口述影像已就緒。
+Screen reader descriptions unavailable.	暫時無法使用螢幕閱讀器播放口述影像。
+Battle results are still appearing.	戰鬥結果仍在顯示中。
+F4 or right-stick click stops combat announcements. Use the up and down arrows or D-pad to review victory results.	按 F4 或按下右搖桿可停止戰鬥播報。使用上下方向鍵或十字鍵瀏覽勝利結算。
+Weakened	虛弱
+Critically weakened	瀕危
 {0} or {1}	{0}或{1}
 {0} percent	百分之{0}
 {0} plus {1}	{0}加{1}
@@ -1351,3 +1357,10 @@ west crossing lift	西側橫渡升降機
 {0}. {1} passage. {2}	{0}。經過{1}個通道。{2}
 {0}. {1} passages. {2}	{0}。經過{1}個通道。{2}
 {0}: {1}.	{0}：{1}。
+Investigate the radar signal at Ardra Crater.	調查阿朵拉隕石坑的雷達訊號。
+Follow the beacon to Ardra Crater and land the Enterprise.	跟隨信標前往阿朵拉隕石坑，並讓企業號降落。
+Ardra Crater	阿朵拉隕石坑
+At Ardra Crater. Land the Enterprise.	已到達阿朵拉隕石坑。請讓企業號降落。
+Approach Ultima Weapon and interact when ready.	靠近最終究極武器，準備好後進行互動。
+Ultima Weapon	最終究極武器
+Use the Enterprise to reach Ardra Crater.	搭乘企業號前往阿朵拉隕石坑。

@@ -200,7 +200,7 @@ std::vector<Heard> play(BattleResultCore& core,const std::string& page,const std
     for(std::uint64_t t=steps.front().at;t<=until;t+=16){
         const ResultStep* step=&steps.front();
         for(const auto& s:steps)if(s.at<=t)step=&s;
-        for(const auto& e:core.observe({"result:1",page,step->staging,step->text,step->focus,t}))heard.push_back({t,e});
+        for(const auto& e:core.observe({"result:1",page,step->staging,{step->text},step->focus,t}))heard.push_back({t,e});
     }
     return heard;
 }
@@ -273,6 +273,47 @@ void result_screen_closed_forgets_pages(){
     require(core.observe({"",{},{},{},{},5016}).empty(),"no result speech while no result screen is shown");
     require(play(core,"0:Reward",reward_count(9000),14000).size()==1,"the next battle's identical result page is spoken again");
 }
+void result_counters_and_review() {
+    BattleResultCore core;
+    BattleResultFrame f{"result:1","0:Reward",false,{"Battle Result","EXP Gained 0","Gil Obtained 0"},"Next",0,true};
+    core.observe(f);f.now_ms=6000;
+    require(core.observe(f).empty()&&core.review().find(" 0")==std::string::npos,
+        "a stuck zero during count-up is neither announced nor available for review");
+    f.counting_rewards=false;f.lines={"Battle Result","EXP Gained 24","Gil Obtained 0"};
+    core.observe(f);f.now_ms+=1000;
+    const auto heard=core.observe(f);
+    require(heard.size()==1&&heard.front().text=="Battle Result. EXP Gained 24. Gil Obtained 0. Next",
+        "the page includes the settled values, including a real zero, and the focused control");
+    require(core.browse(1)=="Battle Result. 1 of 4"&&core.browse(1)=="EXP Gained 24. 2 of 4"&&
+        core.browse(-1)=="Battle Result. 1 of 4","the same rows can be browsed in both directions");
+    f.page="1:Growth";f.lines={"Growth","Rain"};core.observe(f);f.now_ms+=1000;core.observe(f);
+    require(core.browse(1)=="Growth. 1 of 3","a new page resets the result cursor");
+}
+void interrupt_same_skill_and_resume() {
+    BattleCore core;auto f=frame();f.actor=2;f.banner="Barrage";f.choosing_target=false;f.targets.clear();
+    BattleEvent hit{f.context,1,1,BattleSide::Ally,"Rain",{},"100",true};
+    require(core.events(f,{hit}).size()==1,"hands-off hit announcements still speak");
+    core.interrupt_action(f);
+    f.banner.clear();hit.sequence=2;
+    require(core.events(f,{hit}).empty(),"a disappearing banner does not restart cancelled multi-hit announcements");
+    f.command_visible=true;hit.sequence=3;
+    require(core.events(f,{hit}).empty(),"tail hits do not interrupt the returned menu");
+    f.command_visible=false;hit.sequence=4;
+    require(core.events(f,{hit}).size()==1,"the next action can announce hits from the same actor again");
+    require(core.events(f,{{f.context,2,1,BattleSide::Ally,"Rain",{},"100",true}}).empty(),
+        "a suppressed hit cannot replay later");
+}
+void enemy_target_indicators_are_current() {
+    BattleCore core;auto f=frame();f.focused_target=2;
+    f.units[1].target_prediction="Weak";f.units[1].stagger="Staggered";f.units[1].health_indicator="Weakened";
+    require(contains(core.observe(f),"Weak. Staggered. Weakened"),"displayed affinity, stagger and health band are in the selected enemy row");
+    f.units[1].target_prediction.clear();f.units[1].stagger.clear();f.units[1].health_indicator.clear();
+    const auto changed=core.observe(f);
+    require(contains(changed,"Target.")&&!contains(changed,"Weak")&&!contains(changed,"Staggered"),
+        "a different skill or recovered target cannot reuse indicators");
+    f.choosing_target=false;f.targets.clear();f.units[1].target_prediction="Weak";
+    require(core.review(f).find("Weak")==std::string::npos,"affinity stays scoped to selection");
+}
 void focused_target_and_level_visibility(){
     BattleCore core;auto f=frame();f.units.push_back({3,BattleSide::Enemy,"Watcher","B",20,{},{}});f.targets={2,3};f.focused_target=2;
     require(contains(core.observe(f),"Focused. Enemy Magitek Armor A"),"multi-target speech must identify its current primary focus");
@@ -326,6 +367,9 @@ int main(){int failed=0;for(const auto& [name,test]:{std::pair{"roles_and_myster
     {"result_unreadable_staging_waits_for_still_text",result_unreadable_staging_waits_for_still_text},
     {"result_late_count_does_not_repeat_a_page",result_late_count_does_not_repeat_a_page},
     {"result_native_page_identity_survives_text_changes",result_native_page_identity_survives_text_changes},
-    {"result_screen_closed_forgets_pages",result_screen_closed_forgets_pages}}){try{test();std::cout<<"PASS "<<name<<'\n';}catch(const std::exception& e){++failed;std::cout<<"FAIL "<<name<<": "<<e.what()<<'\n';}}
+    {"result_screen_closed_forgets_pages",result_screen_closed_forgets_pages},
+    {"result_counters_and_review",result_counters_and_review},
+    {"interrupt_same_skill_and_resume",interrupt_same_skill_and_resume},
+    {"enemy_target_indicators_are_current",enemy_target_indicators_are_current}}){try{test();std::cout<<"PASS "<<name<<'\n';}catch(const std::exception& e){++failed;std::cout<<"FAIL "<<name<<": "<<e.what()<<'\n';}}
     return failed?1:0;
 }

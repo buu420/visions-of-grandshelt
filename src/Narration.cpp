@@ -40,7 +40,8 @@ NarrationScheduler::NarrationScheduler(std::vector<NarrationCue> cues) {set_cues
 std::vector<NarrationAction> NarrationScheduler::set_cues(std::vector<NarrationCue> cues) {
     std::set<std::pair<std::string,std::string>> identities;
     for(const auto& cue:cues) {
-        if(!nonblank(cue.scene)||!nonblank(cue.id)||!nonblank(cue.text)||!safe_audio_path(cue.audio)||
+        const bool valid_source=cue.source==DescriptionSource::ScreenReader?cue.audio.empty():safe_audio_path(cue.audio);
+        if(!nonblank(cue.scene)||!nonblank(cue.id)||!nonblank(cue.text)||!valid_source||
            !std::isfinite(cue.start)||!std::isfinite(cue.end)||cue.start<0||cue.end<=cue.start||
            !std::isfinite(cue.duration)||cue.duration<0||cue.duration>cue.end-cue.start)
             throw std::invalid_argument("Invalid narration cue or relative audio path");

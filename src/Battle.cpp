@@ -59,6 +59,11 @@ std::string targets(const BattleFrame& f){
             const auto* libra=f.libra&&f.libra->unit==id?&*f.libra:nullptr;
             auto description=describe(*u,true,level_presented(f,id),libra);
             if(f.choosing_target&&f.focused_target==id)description=trf("Focused. {0}",{description});
+            if(f.choosing_target&&u->side==BattleSide::Enemy) {
+                append(description,u->target_prediction);
+                append(description,u->stagger);
+                append(description,u->health_indicator);
+            }
             append(s,description);
             if(libra)append(s,libra_details(*libra));
         }
@@ -109,6 +114,17 @@ std::vector<SpeechEvent> BattleCore::events(const BattleFrame& f,const std::vect
     if(!f.active||f.context.empty())return {};
     if(context_!=f.context){reset();context_=f.context;}
     remember(known_units_,f.units);
+    if(muted_action_) {
+        auto& muted=*muted_action_;
+        if((muted.actor>=0&&f.actor>=0&&f.actor!=muted.actor)||
+           (!muted.banner.empty()&&!f.banner.empty()&&f.banner!=muted.banner)||
+           (muted.command_seen&&!f.command_visible))muted_action_.reset();
+        else {
+            if(muted.actor<0)muted.actor=f.actor;
+            if(muted.banner.empty())muted.banner=f.banner;
+            muted.command_seen|=f.command_visible;
+        }
+    }
     std::vector<SpeechEvent> result;
     std::vector<const BattleEvent*> ready;
     for(const auto& e:events)if(e.context==f.context&&e.sequence>last_event_&&e.presented&&!e.text.empty())ready.push_back(&e);
@@ -117,6 +133,7 @@ std::vector<SpeechEvent> BattleCore::events(const BattleFrame& f,const std::vect
         const auto& e=*event;
         if(e.sequence<=last_event_)continue;
         last_event_=e.sequence;
+        if(muted_action_)continue;
         BattleUnit recipient{e.unit,e.side,e.name,e.letter};
         if(const auto* known=unit(known_units_,e.unit)){
             if(recipient.name.empty())recipient.name=known->name;
@@ -127,6 +144,11 @@ std::vector<SpeechEvent> BattleCore::events(const BattleFrame& f,const std::vect
         result.push_back({label+". "+e.text,false,SpeechDelivery::OrderedBattle});
     }
     return result;
+}
+void BattleCore::interrupt_action(const BattleFrame& f) {
+    if(!f.active||f.context.empty())return;
+    if(context_!=f.context){reset();context_=f.context;}
+    muted_action_=MutedAction{f.actor,f.banner,f.command_visible};
 }
 std::string BattleCore::review(const BattleFrame& f)const{
     if(!f.active)return {};
@@ -218,7 +240,7 @@ std::string BattleCore::status(const BattleFrame& f, BattleStatusAction action) 
     }
     return speech;
 }
-void BattleCore::reset(){context_.clear();actor_.clear();targets_.clear();banner_.clear();unavailable_.clear();prompt_.clear();prompt_selection_.clear();known_units_.clear();last_event_=0;reviewed_ally_=-1;}
+void BattleCore::reset(){context_.clear();actor_.clear();targets_.clear();banner_.clear();unavailable_.clear();prompt_.clear();prompt_selection_.clear();known_units_.clear();last_event_=0;reviewed_ally_=-1;muted_action_.reset();}
 namespace {
 // Counted values (digits with their group and decimal marks) do not change
 // which page is shown; the rest of its presented text does.
@@ -240,23 +262,56 @@ constexpr std::uint64_t result_still_ms=800,result_staging_still_ms=3000;
 std::vector<SpeechEvent> BattleResultCore::observe(const BattleResultFrame& f){
     if(f.context.empty()){reset();return {};}
     if(context_!=f.context){reset();context_=f.context;}
-    const auto key=f.text.empty()&&f.focus.empty()?std::string{}:
-        f.page.empty()?"text:"+page_shape(f.text):"page:"+f.page;
-    if(key!=key_||f.text!=text_){key_=key;text_=f.text;since_=f.now_ms;}
+    std::string text;
+    for(const auto& line:f.lines) {
+        if(text.size()+line.size()>8192)break;
+        append(text,line);
+    }
+    const auto key=f.page.empty()?(text.empty()?(f.focus.empty()?"":"controls"):"text:"+page_shape(text)):"page:"+f.page;
+    if(key!=key_){key_=key;position_.reset();readable_=false;since_=f.now_ms;}
+    if(f.lines!=lines_){lines_=f.lines;since_=f.now_ms;}
     std::vector<SpeechEvent> result;
     const auto still=f.now_ms>since_?f.now_ms-since_:0;
-    const bool settled=!key_.empty()&&still>=(f.staging.value_or(false)?result_staging_still_ms:result_still_ms);
+    const bool settled=!key_.empty()&&(!lines_.empty()||!f.focus.empty())&&!f.counting_rewards&&
+        still>=(f.staging.value_or(false)?result_staging_still_ms:result_still_ms);
     const bool spoken=std::find(spoken_.begin(),spoken_.end(),key_)!=spoken_.end();
-    auto speech=f.text;append(speech,f.focus);
+    readable_=!f.counting_rewards&&(settled||spoken);
+    const bool focus_changed=f.focus!=focus_;
+    focus_=f.focus;
+    auto speech=std::move(text);append(speech,focus_);
     if(settled&&!spoken){
         // The first page follows the final battle reports; later pages replace the last.
         result.push_back({speech,!spoken_.empty()});
         if(spoken_.size()>=32)spoken_.erase(spoken_.begin());
-        spoken_.push_back(key_);focus_=f.focus;
-    } else if(spoken&&f.focus!=focus_){
-        focus_=f.focus;if(!f.focus.empty())result.push_back({f.focus,true});
+        spoken_.push_back(key_);
+    } else if(readable_&&spoken&&focus_changed&&!focus_.empty()){
+        result.push_back({focus_,true,SpeechDelivery::LatestSelection});
     }
     return result;
 }
-void BattleResultCore::reset(){context_.clear();key_.clear();text_.clear();focus_.clear();since_=0;spoken_.clear();}
+std::string BattleResultCore::browse(int direction) {
+    if(!readable_)return tr("Battle results are still appearing.");
+    const auto count=lines_.size()+(!focus_.empty()?1:0);
+    if(!count)return {};
+    auto index=position_?std::min(*position_,count-1):direction<0?count-1:0;
+    if(position_) {
+        if(direction<0&&index>0)--index;
+        if(direction>0&&index+1<count)++index;
+    }
+    position_=index;
+    auto line=index<lines_.size()?lines_[index]:focus_;
+    append(line,trf("{0} of {1}",{std::to_string(index+1),std::to_string(count)}));
+    return line;
+}
+std::string BattleResultCore::review() const {
+    if(!readable_)return tr("Battle results are still appearing.");
+    std::string text;
+    for(const auto& line:lines_) {
+        if(text.size()+line.size()>8192)break;
+        append(text,line);
+    }
+    append(text,focus_);
+    return text;
+}
+void BattleResultCore::reset(){context_.clear();key_.clear();lines_.clear();focus_.clear();since_=0;spoken_.clear();position_.reset();readable_=false;}
 }

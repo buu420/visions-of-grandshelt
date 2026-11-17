@@ -1336,6 +1336,12 @@ west crossing lift	서쪽 횡단 리프트
 {0} navigation is unavailable because its current game binding could not be read.	{0}의 현재 게임 배정을 읽을 수 없어 길 안내에 사용할 수 없습니다.
 {0} navigation unavailable. Its game binding is assigned to another control or could not be read.	{0} 길 안내를 사용할 수 없습니다. 다른 게임 조작에 이미 배정되었거나 배정을 읽을 수 없습니다.
 {0} of {1}	전체 {1}개 중 {0}번째
+Screen reader descriptions ready.	스크린 리더 화면 해설이 준비되었습니다.
+Screen reader descriptions unavailable.	스크린 리더 화면 해설을 사용할 수 없습니다.
+Battle results are still appearing.	전투 결과가 아직 표시되는 중입니다.
+F4 or right-stick click stops combat announcements. Use the up and down arrows or D-pad to review victory results.	F4 키 또는 오른쪽 스틱을 누르면 전투 안내를 중단합니다. 위아래 화살표 키나 방향 패드로 승리 결과를 살펴볼 수 있습니다.
+Weakened	약화됨
+Critically weakened	빈사 상태
 {0} or {1}	{0} 또는 {1}
 {0} percent	{0}퍼센트
 {0} plus {1}	{0} 더하기 {1}
@@ -1351,3 +1357,10 @@ west crossing lift	서쪽 횡단 리프트
 {0}. {1} passage. {2}	{0}. 통과 지점 {1}곳. {2}
 {0}. {1} passages. {2}	{0}. 통과 지점 {1}곳. {2}
 {0}: {1}.	{0}: {1}.
+Investigate the radar signal at Ardra Crater.	아드라 분화구의 레이더 신호를 조사하세요.
+Follow the beacon to Ardra Crater and land the Enterprise.	비컨을 따라 아드라 분화구로 향하고 엔터프라이즈를 착륙시키세요.
+Ardra Crater	아드라 분화구
+At Ardra Crater. Land the Enterprise.	아드라 분화구에 도착했습니다. 엔터프라이즈를 착륙시키세요.
+Approach Ultima Weapon and interact when ready.	알테마 웨폰에게 다가가 준비가 되면 상호작용하세요.
+Ultima Weapon	알테마 웨폰
+Use the Enterprise to reach Ardra Crater.	엔터프라이즈를 타고 아드라 분화구로 가세요.

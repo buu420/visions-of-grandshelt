@@ -10,6 +10,7 @@
 #include "resonance/BattleInput.hpp"
 #include "resonance/ActivationGoal.hpp"
 #include "resonance/AccessibilityMenu.hpp"
+#include "resonance/Hotkeys.hpp"
 #include <array>
 #include <atomic>
 #include <functional>
@@ -21,7 +22,9 @@ enum Command : unsigned { Repeat=1, Previous=2, Next=4, Route=8, Screen=16, Help
     PreviousCategory=64,NextCategory=128,ToggleGuidance=256,ToggleAutomatic=512,
     PreviousPageTarget=1024,NextPageTarget=2048,ControllerOrigin=4096,ReviewNavigation=8192,StopNavigation=16384,
     BattleHp=1u<<15,BattleMp=1u<<16,BattleGauges=1u<<17,BattleBuffs=1u<<18,BattleDebuffs=1u<<19,
-    BattlePanelOpen=1u<<20,BattlePanelClose=1u<<21,BattleVitals=1u<<22,BattleEffects=1u<<23 };
+    BattlePanelOpen=1u<<20,BattlePanelClose=1u<<21,BattleVitals=1u<<22,BattleEffects=1u<<23,
+    BattleInterrupt=1u<<24,BattleInputKey=1u<<25,ResultUp=1u<<26,ResultDown=1u<<27 };
+inline constexpr unsigned battle_only_commands=BattleInterrupt|BattleInputKey|ResultUp|ResultDown;
 const std::string& reader_stage();
 class UnrealReader {
 public:
@@ -30,6 +33,7 @@ public:
     void movement_tick();
     unsigned controller_commands();
     unsigned area_browse_commands();
+    bool battle_commands_available() const {return battle_control_layout_||battle_results_layout_;}
     void language_changed() { core_.reset(); battle_core_.reset(); battle_result_core_.reset(); }
     bool take_menu_focus_change() { return std::exchange(menu_focus_changed_,false); }
     // Install on the game thread. Called with the latest captured frame/clocks;
@@ -51,6 +55,10 @@ private:
     std::string battle_context_,battle_status_,battle_result_status_;
     unsigned long long battle_output_epoch_{};
     unreal::UObject* battle_review_layout_{};
+    unreal::UObject* battle_control_layout_{};
+    unreal::UObject* battle_results_layout_{};
+    KeyEdges battle_pad_edges_;
+    bool battle_command_visible_{};
     std::uint64_t battle_review_epoch_{1};
     unsigned long long battle_binding_checked_{};
     bool battle_controller_binding_{};

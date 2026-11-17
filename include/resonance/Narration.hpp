@@ -6,10 +6,12 @@
 #include <vector>
 
 namespace resonance {
+enum class DescriptionSource { Recording, ScreenReader };
 struct NarrationCue {
     std::string scene, id, text, audio;
     double start{}, end{};
     double duration{}; // Validated PCM duration; zero keeps the 150 ms legacy policy.
+    DescriptionSource source{DescriptionSource::Recording};
 };
 struct NarrationClock {
     std::string session, scene;

@@ -8,6 +8,7 @@ struct ControllerBackendStatus {
     bool ready{};
     unsigned connected{};
     bool modifier_down{};
+    std::uint16_t buttons{};
 };
 struct ControllerWalkingState {
     bool ready{};

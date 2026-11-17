@@ -18,6 +18,23 @@ using namespace resonance;
 using namespace resonance::story_input_detail;
 namespace {
 void require(bool ok,const char* why){if(!ok)throw std::runtime_error(why);}
+void ultima_story_uses_unlocked_clear_save_and_current_movement() {
+    using Leg=UltimaStoryLeg;
+    require(!ultima_story_leg(false,10,20001,1)&&!ultima_story_leg({},10,20001,1),
+        "a visible post-credits route requires a verified cleared save");
+    require(!ultima_story_leg(true,{},20001,1)&&!ultima_story_leg(true,0,20001,1),
+        "wait for the game's radar scene before offering the route");
+    require(ultima_story_leg(true,10,20002,1)==Leg::Deck&&
+        ultima_story_leg(true,10,20001,1)==Leg::Helm,
+        "a clear save follows the Enterprise deck and helm instead of the tower objective");
+    require(ultima_story_leg(true,10,1000,2)==Leg::Flight&&
+        ultima_story_leg(true,10,1000,1)==Leg::Crater,
+        "Story switches from airship guidance to the world-map walking leg");
+    require(!ultima_story_leg(true,10,3281,1)&&!ultima_story_leg(true,10,1000,{}),
+        "other areas and unknown movement cannot select the crater walking leg");
+    require(!ultima_story_leg(true,20,1000,1)&&!ultima_story_leg(true,30,1000,2),
+        "the native battle and reward retire the approach route");
+}
 void research_lab_requires_current_clearance_and_room() {
     using namespace chapter_six_lab;
     State state;
@@ -902,7 +919,8 @@ void reverse_cleanup_order() {
 }
 int main() {
     int failures=0;
-    const std::array<std::pair<const char*,void(*)()>,40> tests{{
+    const std::array<std::pair<const char*,void(*)()>,41> tests{{
+        {"ultima_story_uses_unlocked_clear_save_and_current_movement",ultima_story_uses_unlocked_clear_save_and_current_movement},
         {"research_lab_requires_current_clearance_and_room",research_lab_requires_current_clearance_and_room},
         {"research_lab_follows_native_puzzle_changes",research_lab_follows_native_puzzle_changes},
         {"research_lab_routes_each_portal_landing_and_elevator",research_lab_routes_each_portal_landing_and_elevator},

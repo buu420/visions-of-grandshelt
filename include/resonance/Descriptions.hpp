@@ -12,6 +12,7 @@ struct DescriptionFrame {
     bool foreground{true},output_ready{true},pause_known{},user_paused{},voice_known{},voice_busy{};
     bool native_event_known{},native_event_active{};
     std::string caption_sha256;
+    bool screen_reader{};
 };
 struct DescriptionDecision {
     std::vector<NarrationAction> actions;
@@ -27,7 +28,7 @@ enum class DescriptionFailureDisposition { Wait, Discard, Speak };
 DescriptionFailureDisposition classify_description_failure(const NarrationAction&,
                                                            const DescriptionFrame&,
                                                            bool dialogue_deferred);
-// Arbitrates one recorded output before the reader emits current dialogue.
+// Arbitrates one description output before the reader emits current dialogue.
 // Only fresh completed native dialogue occurrences trigger paced cues. Unknown
 // native gates release dialogue and report unavailable; they never hold it forever.
 // Missing/ambiguous captures suspend output while preserving same-run occurrence

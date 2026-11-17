@@ -1336,6 +1336,12 @@ west crossing lift	L’ascenseur de traversée ouest
 {0} navigation is unavailable because its current game binding could not be read.	La navigation avec {0} est indisponible, car son affectation actuelle dans le jeu n’a pas pu être lue.
 {0} navigation unavailable. Its game binding is assigned to another control or could not be read.	Navigation avec {0} indisponible. La commande est déjà affectée ou son affectation n’a pas pu être lue.
 {0} of {1}	{0} sur {1}
+Screen reader descriptions ready.	L’audiodescription par lecteur d’écran est prête.
+Screen reader descriptions unavailable.	L’audiodescription par lecteur d’écran est indisponible.
+Battle results are still appearing.	Les résultats du combat sont en cours d’affichage.
+F4 or right-stick click stops combat announcements. Use the up and down arrows or D-pad to review victory results.	Appuyez sur F4 ou sur le stick droit pour arrêter les annonces de combat. Utilisez les flèches ou la croix directionnelle haut et bas pour parcourir les résultats de la victoire.
+Weakened	Affaibli
+Critically weakened	Gravement affaibli
 {0} or {1}	{0} ou {1}
 {0} percent	{0} pour cent
 {0} plus {1}	{0} plus {1}
@@ -1351,3 +1357,10 @@ west crossing lift	L’ascenseur de traversée ouest
 {0}. {1} passage. {2}	{0}. {1} passage. {2}
 {0}. {1} passages. {2}	{0}. {1} passages. {2}
 {0}: {1}.	{0} : {1}.
+Investigate the radar signal at Ardra Crater.	Enquêtez sur le signal radar au Cratère d’Ardra.
+Follow the beacon to Ardra Crater and land the Enterprise.	Suivez la balise jusqu’au Cratère d’Ardra et posez l’Enterprise.
+Ardra Crater	Cratère d’Ardra
+At Ardra Crater. Land the Enterprise.	Vous êtes au Cratère d’Ardra. Posez l’Enterprise.
+Approach Ultima Weapon and interact when ready.	Approchez-vous d’Ultima et interagissez quand vous êtes prêt.
+Ultima Weapon	Ultima
+Use the Enterprise to reach Ardra Crater.	Prenez l’Enterprise pour rejoindre le Cratère d’Ardra.

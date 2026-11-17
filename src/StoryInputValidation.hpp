@@ -15,6 +15,23 @@
 #include <tuple>
 #include <utility>
 namespace resonance::story_input_detail {
+enum class UltimaStoryLeg { Deck, Helm, Flight, Crater };
+inline std::optional<UltimaStoryLeg> ultima_story_leg(
+    std::optional<bool> cleared, std::optional<int> progress, int map,
+    std::optional<unsigned char> movement) {
+    // The Enterprise radar scene sets progress 24 to 10. The encounter
+    // and reward advance it again, so the approach expires automatically.
+    if(cleared!=true||progress!=10)return {};
+    if(map==1000&&movement==2)return UltimaStoryLeg::Flight;
+    if(movement!=1)return {};
+    switch(map) {
+    case 20002:return UltimaStoryLeg::Deck;
+    case 20001:return UltimaStoryLeg::Helm;
+    case 1000:return UltimaStoryLeg::Crater;
+    default:return {};
+    }
+}
+
 enum class NativeLayoutResult { Valid, InvalidBounds, WrongAllocation, WrongReturnOffset, WrongParameterExtent };
 inline NativeLayoutResult native_call_layout(int parms_size,int properties_size,int actual_return_offset,
         int expected_allocation,int return_offset,int return_size,int capacity) {

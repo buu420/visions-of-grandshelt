@@ -204,6 +204,18 @@ int main(int argc,char** argv) {
     const std::string fingerprint(64,'a');
     const std::string fingerprint_row="/Game/Scene\ttable:/game/scene.scene|Look\tpose\tvoice.wav\tA figure turns.\t1\t";
     text(root/"keyed-paced.tsv",fingerprint_header+fingerprint_row+fingerprint+"\n");
+    text(root/"scene-text.tsv",header+"/Game/Opening\tintro\t1\t2\tmissing.wav\tCristaux en suspension.\n");
+    text(root/"paced-text.tsv",fingerprint_header+
+        "/Game/Scene\ttable:/game/scene.scene|Look\tpose\t\tUne silhouette se retourne.\t1\t"+fingerprint+"\n");
+    try {
+        const auto timed=load_narration_manifest(root/"scene-text.tsv",root,DescriptionSource::ScreenReader);
+        const auto paced=load_paced_narration_manifest(root/"paced-text.tsv",root,DescriptionSource::ScreenReader);
+        check(timed.size()==1&&timed[0].audio.empty()&&timed[0].text=="Cristaux en suspension."&&timed[0].start==1,
+            "localized timed description can load without its old recording");
+        check(paced.size()==1&&paced[0].audio.empty()&&paced[0].text=="Une silhouette se retourne."&&
+            paced[0].caption_sha256==fingerprint,"text-only paced description keeps native caption fingerprint");
+    } catch(const std::exception& e){check(false,e.what());}
+    rejects([&]{load_narration_manifest(root/"scene-text.tsv",root);},"recorded manifest still requires its WAV");
     try {
         const auto paced=load_paced_narration_manifest(root/"keyed-paced.tsv",root);
         check(paced.size()==1&&paced[0].event=="table:/game/scene.scene|Look"&&

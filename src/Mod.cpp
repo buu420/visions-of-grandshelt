@@ -62,6 +62,7 @@ struct State {
     std::mutex failure_mutex;
     std::optional<std::pair<NarrationAction,std::string>> failure;
     std::unique_ptr<NarrationOutput> recorded;
+    bool describe_with_screen_reader{};
     RouteBeaconOutput beacon;
     UnrealReader reader;
     std::atomic<bool> active{true};
@@ -87,11 +88,14 @@ struct State {
         folder(std::move(path)) {
         reader.set_description_observer([this](const Frame& frame){return observe_descriptions(frame);});
     }
-    void load_recorded_descriptions() {
+    void load_descriptions() {
         auto assets=folder/L"Descriptions";
-        if(language!="en")assets/=std::string(language);
+        const bool localized=language!="en";
+        if(localized)assets/=std::string(language);
+        const auto source=localized?DescriptionSource::ScreenReader:DescriptionSource::Recording;
         stop_descriptions();
         recorded.reset();
+        describe_with_screen_reader=false;
         {
             std::lock_guard lock(failure_mutex);
             failure.reset();
@@ -100,25 +104,30 @@ struct State {
         descriptions.set_cues({},{});
         std::vector<NarrationCue> timed;
         std::vector<PacedNarrationCue> paced;
-        try {timed=load_narration_manifest(assets/L"cues.tsv",assets);}
+        try {timed=load_narration_manifest(assets/L"cues.tsv",assets,source);}
         catch(const std::exception& e){log(std::string("NARRATION MOVIE LOAD ERROR ")+e.what());}
-        try {paced=load_paced_narration_manifest(assets/L"paced.tsv",assets);}
+        try {paced=load_paced_narration_manifest(assets/L"paced.tsv",assets,source);}
         catch(const std::exception& e){log(std::string("NARRATION SCRIPTED LOAD ERROR ")+e.what());}
         const auto timed_count=timed.size(),paced_count=paced.size();
         for(const auto& cue:paced)paced_scenes.insert(cue.scene);
         try {
             if(timed.empty()&&paced.empty())throw std::runtime_error("No validated description cues");
             descriptions.set_cues(std::move(timed),std::move(paced));
-            recorded=std::make_unique<NarrationOutput>(assets,[this](const NarrationAction& action,const std::string& error) {
-                log("NARRATION ERROR "+action.cue_id+" "+error);
-                std::lock_guard lock(failure_mutex);failure=std::make_pair(action,error);
-            });
-            narration_status=tr(timed_count?"Recorded movie descriptions ready.":"Recorded movie descriptions unavailable.")+
-                " "+tr(paced_count?"Scripted scene descriptions ready.":"Scripted scene descriptions unavailable.");
+            if(localized) {
+                describe_with_screen_reader=true;
+                narration_status=tr("Screen reader descriptions ready.");
+            } else {
+                recorded=std::make_unique<NarrationOutput>(assets,[this](const NarrationAction& action,const std::string& error) {
+                    log("NARRATION ERROR "+action.cue_id+" "+error);
+                    std::lock_guard lock(failure_mutex);failure=std::make_pair(action,error);
+                });
+                narration_status=tr(timed_count?"Recorded movie descriptions ready.":"Recorded movie descriptions unavailable.")+
+                    " "+tr(paced_count?"Scripted scene descriptions ready.":"Scripted scene descriptions unavailable.");
+            }
             log("NARRATION loaded clocked="+std::to_string(timed_count)+" paced="+std::to_string(paced_count)+
-                " language="+std::string(language));
+                " language="+std::string(language)+" output="+(localized?"screen reader":"recording"));
         } catch(const std::exception& error) {
-            narration_status=tr("Recorded descriptions unavailable.");
+            narration_status=tr(localized?"Screen reader descriptions unavailable.":"Recorded descriptions unavailable.");
             log(std::string("NARRATION LOAD ERROR ")+error.what());
         }
     }
@@ -138,7 +147,7 @@ struct State {
             log("LANGUAGE catalog error text="+std::string(language)+" "+error.what());
         }
         reader.language_changed();
-        load_recorded_descriptions();
+        load_descriptions();
         return true;
     }
     void announce_startup() {
@@ -150,8 +159,10 @@ struct State {
         DescriptionFrame capture;capture.ui=frame;capture.clocks=reader.narration_clocks();
         DWORD foreground{};GetWindowThreadProcessId(GetForegroundWindow(),&foreground);
         capture.foreground=foreground==GetCurrentProcessId();
-        capture.output_ready=recorded&&speech.ready();
+        capture.screen_reader=describe_with_screen_reader;
+        capture.output_ready=(recorded||describe_with_screen_reader)&&speech.ready();
         if(recorded)capture.audio=recorded->status();
+        else if(describe_with_screen_reader)capture.audio=speech.description_status();
         if(capture.audio.active&&!capture.audio.queued&&
             (capture.audio.generation!=captured_description.audio.generation||captured_description.audio.queued))
             log("NARRATION OUTPUT "+capture.audio.scene+" "+capture.audio.cue_id);
@@ -181,7 +192,7 @@ struct State {
         if(!result.trace.empty())log("NARRATION TRACE "+result.trace);
         if(!result.caption_end_cue.empty())log("NARRATION CAPTION END "+result.caption_end_cue);
         dialogue_deferred=result.defer_dialogue;
-        if(result.stop_speech)speech.stop();
+        if(result.stop_speech&&(!describe_with_screen_reader||!capture.audio.active))speech.stop();
         apply_descriptions(result.actions);
         if(!result.notice.empty())notices.push_back(result.notice);
         return result.defer_dialogue;
@@ -199,6 +210,8 @@ struct State {
                     action.dialogue_id=captured_description.ui.dialogue->id;
             }
             recorded->submit(contextual);
+        } else if(describe_with_screen_reader) {
+            for(const auto& action:actions)speech.describe(action);
         }
         for(const auto& action:actions)if(action.kind==NarrationActionKind::Play)
             log("NARRATION PLAY "+action.scene+" "+action.cue_id);
@@ -207,7 +220,7 @@ struct State {
         DWORD foreground{};GetWindowThreadProcessId(GetForegroundWindow(),&foreground);
         auto capture=captured_description;
         capture.foreground=foreground==GetCurrentProcessId();
-        capture.output_ready=recorded&&speech.ready();
+        capture.output_ready=(recorded||describe_with_screen_reader)&&speech.ready();
         std::optional<std::pair<NarrationAction,std::string>> failed;
         DescriptionFailureDisposition disposition=DescriptionFailureDisposition::Discard;
         {
@@ -233,6 +246,9 @@ struct State {
         if(recorded) {
             const auto status=recorded->status();
             if(status.active)recorded->submit({{NarrationActionKind::Stop,status.scene,status.cue_id,{},{},0}});
+        } else if(describe_with_screen_reader) {
+            const auto status=speech.description_status();
+            if(status.active)speech.describe({NarrationActionKind::Stop,status.scene,status.cue_id});
         }
         notices.clear();std::lock_guard lock(failure_mutex);failure.reset();
     }
@@ -251,6 +267,7 @@ bool guarded_tick(State* state,unsigned& commands,bool& capture) {
         if(state->refresh_language())capture=true;
         state->announce_startup();
         const auto controller=state->reader.controller_commands();
+        if(!state->reader.battle_commands_available())commands&=~battle_only_commands;
         const auto read_started=GetTickCount64();
         begin_controller_field_read(read_started);
         if(!commands&&controller){commands=controller;capture=true;}
@@ -332,10 +349,15 @@ std::atomic<Runtime*> active_runtime{};
 void poll_keyboard(Runtime& runtime) {
     static constexpr int keys[] = {
         VK_F5, VK_F6, VK_F7, VK_F8, VK_F9, VK_F10, VK_HOME, VK_END, VK_PRIOR, VK_NEXT, VK_DELETE,
-        'H','M','L',VK_F2,VK_F3};
+        'H','M','L',VK_F2,VK_F3,VK_F4,VK_UP,VK_DOWN,VK_LEFT,VK_RIGHT,VK_RETURN,VK_ESCAPE,VK_SPACE,
+        'W','A','S','D','C'};
     static constexpr unsigned commands[] = {
         Repeat, Previous, Next, Route, Screen, Help, PreviousCategory, NextCategory,
-        PreviousPageTarget, NextPageTarget, ToggleGuidance, BattleHp, BattleMp, BattleGauges, BattleBuffs, BattleDebuffs};
+        PreviousPageTarget, NextPageTarget, ToggleGuidance, BattleHp, BattleMp, BattleGauges, BattleBuffs, BattleDebuffs,
+        BattleInterrupt,ResultUp|BattleInputKey,ResultDown|BattleInputKey,BattleInputKey,BattleInputKey,BattleInputKey,
+        BattleInputKey,BattleInputKey,
+        BattleInputKey,BattleInputKey,BattleInputKey,BattleInputKey,BattleInputKey};
+    static_assert(std::size(keys)==std::size(commands)&&std::size(keys)<=32);
     const auto held = [](int key) { return (GetAsyncKeyState(key) & 0x8000) != 0; };
     DWORD pid{};
     GetWindowThreadProcessId(GetForegroundWindow(), &pid);
@@ -454,7 +476,7 @@ void start_reloaded() {
 
         const auto folder = std::filesystem::path(dll_path).parent_path();
         set_log_path(folder / L"ResonanceAccess.log");
-        log("START Visions of Grandshelt 0.2.52; Reloaded native mod");
+        log("START Visions of Grandshelt 0.2.54-dev; Reloaded native mod");
         if (sha256(exe_path) != "b8c588e46ebadbe37feca7bdf2da0ae63a8538099d14a53ec0c2241b086e5ffa") {
             log("ERROR unsupported game executable; native reader disabled");
             return;

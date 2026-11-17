@@ -6,6 +6,7 @@
 #include <prism.h>
 #pragma warning(pop)
 #include "resonance/Speech.hpp"
+#include <algorithm>
 #include <fstream>
 #include <chrono>
 namespace resonance {
@@ -26,12 +27,54 @@ void Speech::say(std::string text,bool interrupt) {
 }
 void Speech::say(SpeechEvent event) {
     if(event.text.empty())return;
-    { std::lock_guard lock(mutex_); queue_.push(std::move(event)); }
+    {
+        std::lock_guard lock(mutex_);
+        queue_.push(std::move(event));
+        if(description_.queued&&!queue_.contains(SpeechDelivery::Description))
+            description_.active=description_.queued=false;
+    }
     cv_.notify_one();
 }
 void Speech::stop() {
-    { std::lock_guard lock(mutex_); queue_.clear(); stop_=true; }
+    {
+        std::lock_guard lock(mutex_);
+        queue_.clear();
+        description_.active=description_.queued=false;
+        stop_=true;
+    }
     cv_.notify_one();
+}
+void Speech::interrupt_battle() {
+    {
+        std::lock_guard lock(mutex_);
+        queue_.discard(SpeechDelivery::OrderedBattle);
+        battle_stop_=true;
+    }
+    cv_.notify_one();
+}
+void Speech::describe(const NarrationAction& action) {
+    using Kind=NarrationActionKind;
+    {
+        std::lock_guard lock(mutex_);
+        // A partially spoken line cannot resume at a reliable word boundary.
+        if(action.kind==Kind::Resume)return;
+        const bool play=action.kind==Kind::Play;
+        if(play&&(action.text.empty()||!ready_))return;
+        if(!play&&(!description_.active||description_.scene!=action.scene||
+                   description_.cue_id!=action.cue_id))return;
+        description_stop_|=description_.active&&!description_.queued;
+        queue_.discard(SpeechDelivery::Description);
+        if(play) {
+            description_={description_.generation+1,action.scene,action.cue_id};
+            description_.active=description_.queued=true;
+            queue_.push({action.text,false,SpeechDelivery::Description});
+        } else description_.active=description_.queued=false;
+    }
+    cv_.notify_one();
+}
+NarrationPlaybackStatus Speech::description_status() const {
+    std::lock_guard lock(mutex_);
+    return description_;
 }
 void Speech::run() {
     const HRESULT com=CoInitializeEx(nullptr,COINIT_MULTITHREADED);
@@ -62,10 +105,13 @@ void Speech::run() {
                 OrderedPlayback ordered=OrderedPlayback::None;
                 auto last_delivery=SpeechDelivery::Normal;
                 auto ordered_submitted=std::chrono::steady_clock::time_point{};
+                auto description_deadline=std::chrono::steady_clock::time_point{};
+                bool description_spoke=false,description_submitted=false;
                 bool can_query_playback=false;
                 constexpr auto probe_interval=std::chrono::milliseconds(25);
                 constexpr auto startup_probe_window=std::chrono::milliseconds(250);
-                const auto work_ready=[&]{return quit_||stop_||queue_.size()!=0;};
+                const auto stopping=[&]{return stop_||battle_stop_||description_stop_;};
+                const auto work_ready=[&]{return quit_||stopping()||queue_.size()!=0;};
                 while(!quit_) {
                     if(!backend) {
                         lock.unlock();backend=prism_registry_acquire_best_fn(context);lock.lock();
@@ -87,29 +133,50 @@ void Speech::run() {
                     // Watch for the start of queued hit speech without postponing a
                     // selection when the backend cannot establish playback.
                     const auto age=std::chrono::steady_clock::now()-ordered_submitted;
-                    if(can_query_playback&&(ordered==OrderedPlayback::Speaking||
-                       (ordered==OrderedPlayback::Submitted&&age<startup_probe_window))) {
+                    if((description_.active&&!description_.queued)||
+                       (can_query_playback&&(ordered==OrderedPlayback::Speaking||
+                       (ordered==OrderedPlayback::Submitted&&age<startup_probe_window)))) {
                         cv_.wait_for(lock,probe_interval,work_ready);
                     } else cv_.wait(lock,work_ready);
                     if(quit_) break;
-                    if(stop_) {
-                        stop_=false;
+                    const bool cut=stop_||(battle_stop_&&ordered!=OrderedPlayback::None)||
+                        (description_stop_&&description_submitted);
+                    stop_=battle_stop_=description_stop_=false;
+                    if(cut) {
                         ordered=OrderedPlayback::None;
+                        description_submitted=false;
+                        if(!description_.queued)description_.active=false;
                         last_delivery=SpeechDelivery::Normal;
                         lock.unlock();
                         const auto e=prism_backend_stop_fn(backend);
                         if(e!=PRISM_OK&&e!=PRISM_ERROR_NOT_SPEAKING)log("Prism stop="+std::to_string(e));
                         lock.lock();
+                        if(quit_||stopping())continue;
                     }
-                    if(can_query_playback&&ordered!=OrderedPlayback::None) {
-                        bool speaking=false;
+                    const auto describing=description_.active&&!description_.queued;
+                    bool speaking=false,playback_known=false;
+                    if(can_query_playback&&(ordered!=OrderedPlayback::None||describing)) {
                         lock.unlock();
                         const auto status=prism_backend_is_speaking_fn(backend,&speaking);
                         lock.lock();
-                        if(quit_||stop_)continue;
+                        if(quit_||stopping())continue;
                         if(status!=PRISM_OK)can_query_playback=false;
-                        else if(speaking)ordered=OrderedPlayback::Speaking;
-                        else if(ordered==OrderedPlayback::Speaking)ordered=OrderedPlayback::None;
+                        else {
+                            playback_known=true;
+                            if(ordered!=OrderedPlayback::None) {
+                                if(speaking)ordered=OrderedPlayback::Speaking;
+                                else if(ordered==OrderedPlayback::Speaking)ordered=OrderedPlayback::None;
+                            }
+                        }
+                    }
+                    if(describing&&description_.active&&!description_.queued) {
+                        description_spoke|=playback_known&&speaking;
+                        if((playback_known&&!speaking&&description_spoke)||
+                           (!(playback_known&&speaking)&&std::chrono::steady_clock::now()>=description_deadline)) {
+                            description_.active=false;
+                            description_.completed=true;
+                            description_submitted=false;
+                        }
                     }
                     const auto* pending=queue_.front();
                     if(pending&&pending->delivery==SpeechDelivery::LatestSelection&&
@@ -118,7 +185,7 @@ void Speech::run() {
                         // speech plays so new focus can replace it here.
                         cv_.wait_for(lock,probe_interval,[&] {
                             const auto* next=queue_.front();
-                            return quit_||stop_||!next||next->delivery!=SpeechDelivery::LatestSelection;
+                            return quit_||stopping()||!next||next->delivery!=SpeechDelivery::LatestSelection;
                         });
                         continue;
                     }
@@ -132,6 +199,20 @@ void Speech::run() {
                             (last_delivery==SpeechDelivery::LatestSelection||
                              (interrupt&&last_delivery!=SpeechDelivery::OrderedBattle));
                     } else if(event->delivery==SpeechDelivery::OrderedBattle)interrupt=false;
+                    if(interrupt) {
+                        description_submitted=false;
+                        if(!description_.queued)description_.active=false;
+                    }
+                    if(event->delivery==SpeechDelivery::Description) {
+                        description_.queued=false;
+                        description_spoke=false;
+                        description_submitted=true;
+                        const auto characters=std::count_if(event->text.begin(),event->text.end(),
+                            [](unsigned char byte){return (byte&0xc0)!=0x80;});
+                        // Some Prism backends cannot report utterance completion.
+                        const auto estimate=std::clamp<long long>(450+85*characters,1600,15000);
+                        description_deadline=std::chrono::steady_clock::now()+std::chrono::milliseconds(estimate);
+                    }
                     lock.unlock();
                     const auto result=prism_backend_speak_fn(backend,event->text.c_str(),interrupt);
                     log("SPEECH result="+std::to_string(result)+" "+event->text);
@@ -144,6 +225,8 @@ void Speech::run() {
                     last_delivery=event->delivery;
                     if(result!=PRISM_OK) {
                         ready_=false;queue_.clear();
+                        description_.active=description_.queued=false;
+                        description_submitted=false;
                         lock.unlock();prism_backend_free_fn(backend);backend=nullptr;lock.lock();
                         // A new output epoch makes the observer replay the CURRENT
                         // native capture after reconnection, instead of stale queued text.

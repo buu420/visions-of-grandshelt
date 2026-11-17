@@ -20,11 +20,11 @@ struct NarrationWave {
 // PCM16 mono/stereo audio is accepted (8-192 kHz, at most 64 MiB per file).
 NarrationWave read_narration_wave(const std::filesystem::path&);
 // Exact UTF-8 TSV header: scene, id, start, end, audio, text. Numeric fields
-// are locale-independent seconds. Validate the entire scheduler table and every
-// WAV before returning; no partial successful table. Assets must resolve inside
-// asset_root, including through symlinks/junctions, and fit their cue interval.
+// are locale-independent seconds. With Recording, every WAV must resolve inside
+// asset_root (including through links) and fit its cue interval before the table
+// is returned. ScreenReader keeps the text and timing without loading WAVs.
 std::vector<NarrationCue> load_narration_manifest(const std::filesystem::path& manifest,
-                                                const std::filesystem::path& asset_root);
+    const std::filesystem::path& asset_root, DescriptionSource source=DescriptionSource::Recording);
 
 class NarrationAudioDevice {
 public:

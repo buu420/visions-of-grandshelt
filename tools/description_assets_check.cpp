@@ -2,11 +2,13 @@
 #include <filesystem>
 #include <iostream>
 int main(int argc,char** argv) {
-    if(argc!=2){std::cerr<<"Usage: description_assets_check <Descriptions directory>\n";return 2;}
+    const bool speech=argc==3&&std::string_view(argv[2])=="--screen-reader";
+    if(argc!=2&&!speech){std::cerr<<"Usage: description_assets_check <Descriptions directory> [--screen-reader]\n";return 2;}
     try {
         const auto root=std::filesystem::absolute(argv[1]);
-        auto clocked=resonance::load_narration_manifest(root/"cues.tsv",root);
-        auto paced=resonance::load_paced_narration_manifest(root/"paced.tsv",root);
+        const auto source=speech?resonance::DescriptionSource::ScreenReader:resonance::DescriptionSource::Recording;
+        auto clocked=resonance::load_narration_manifest(root/"cues.tsv",root,source);
+        auto paced=resonance::load_paced_narration_manifest(root/"paced.tsv",root,source);
         const auto timed_count=clocked.size(),paced_count=paced.size();
         resonance::DescriptionCoordinator policy;
         policy.set_cues(std::move(clocked),std::move(paced));

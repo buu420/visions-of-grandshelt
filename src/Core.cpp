@@ -62,6 +62,12 @@ std::optional<SpeechEvent> SpeechQueue::pop() {
     if(queue_.empty()) return {};
     auto event=std::move(queue_.front()); queue_.pop_front(); return event;
 }
+void SpeechQueue::discard(SpeechDelivery delivery) {
+    std::erase_if(queue_,[delivery](const auto& event){return event.delivery==delivery;});
+}
+bool SpeechQueue::contains(SpeechDelivery delivery) const {
+    return std::any_of(queue_.begin(),queue_.end(),[delivery](const auto& event){return event.delivery==delivery;});
+}
 std::vector<SpeechEvent> ReaderCore::observe(const Frame& frame) {
     if (context_!=frame.context) { reset(); context_=frame.context; }
     std::vector<SpeechEvent> result;

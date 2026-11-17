@@ -2,7 +2,9 @@
 
 The game must have focus. The mod reads selected state and visible text. F5 reviews the current ready selection or dialogue and otherwise repeats the last capture, F9 reads the current Options value or captured visible screen text, and F10 reads help and availability status. The game's own movement, menu, dialogue and Confirm controls remain usable.
 
-During battle, typed speech distinguishes the acting ally or enemy, current target and selected command. Displayed damage and recovery results are read for each hit, including identical repeated numbers. F9 reviews the presented party and enemy sides separately, with current ally HP/MP and visible, revealed target details. Unrevealed enemy statistics and mystery identities remain undisclosed. The mod never selects a combat command or target.
+During battle, speech distinguishes the acting ally or enemy, current target and selected command. Displayed damage and recovery results are read for each hit. Press **F4** or click the **right stick** to interrupt the announcements for the current attack. Navigating the battle menus also interrupts them. F9 reviews the presented party and enemy sides, with current ally HP/MP and visible target details. The focused enemy includes its on-screen affinity prediction, stagger status and weakened health indicators when shown.
+
+On the victory screen, use **Up/Down** on the keyboard or **D-pad Up/Down** to review the displayed rows. **F5** repeats the current row. **F9** reads the page.
 
 Moving through a menu prioritizes the current selection. If you move quickly through several rows, speech can skip rows you already passed. In Equipment & Abilities, the readout pairs the selected slot type with its equipped item or ability.
 
@@ -91,7 +93,7 @@ Use Right Shift with Delete. Left Shift is the game's Dash binding. Either Shift
 
 Walking is continuous on a 3D surface. F8 speaks the native horizontal walking-control directions and the game's world distances, for example “left 2 metres, then up 4 metres.” Up means pushing the up control. F8 describes route elevation separately. The native control heading can come from control rotation, the view target or the character camera. Guidance requires a fresh, complete route.
 
-Both route modes play a two-note HRTF beacon. Use stereo headphones to hear which way to move for the next turn. The pulse interval follows the remaining route distance. If you leave the route during manual guidance, the mod recalculates from your current position. Arrival and route problems are spoken. F8 speaks directions at any time while a route is available. If the audio device is unavailable or a leg has no horizontal direction, guidance uses speech.
+Both route modes play a two-note HRTF beacon. Use stereo headphones to hear which way to move for the next turn. The beacon plays at a lower pitch when the turn is behind you, including behind and to either side. The pulse interval follows the remaining route distance. If you leave the route during manual guidance, the mod recalculates from your current position. Arrival and route problems are spoken. F8 speaks directions at any time while a route is available. If the audio device is unavailable or a leg has no horizontal direction, guidance uses speech.
 
 During field play, nearby NPCs and interactable objects repeat their distinct positional sounds from Echos of Gaia. Each sound follows its target relative to your movement controls and repeats faster as you get closer. You can hear multiple nearby targets with route guidance off. Selecting an entity reads its name, visible role or object type, along with its direction and straight-line distance when available.
 
@@ -115,4 +117,4 @@ On startup and after returning focus, release any held mod keys, then press a fr
 
 Recorded descriptions play automatically only for reviewed cues in the package. Timed scenes follow playback; scenes that wait for the player follow captured scene events. Waiting for Confirm does not create an estimated scene clock. The game's voice/dialogue readiness gates the start of a description. Actual pause or loss of focus pauses audio; choices and menus cancel descriptions and read normally. Deferred dialogue waits for the current recording to finish. F10 reports availability. No description command advances dialogue or selects New Game.
 
-The description pack has 282 recordings in the newer engaged, conversational Echos delivery, with 188 timed cues and 94 scripted-scene cues. It includes selected cutscenes across Chapters 3–8 alongside the prologue and first two chapters. Selected Options speech, NVDA output, and the navigation beacon have been user-confirmed.
+The English description pack has 282 recordings in the newer engaged, conversational Echos delivery, with 188 timed cues and 94 scripted-scene cues. It includes selected cutscenes across Chapters 3–8 alongside the prologue and first two chapters. Selected Options speech, NVDA output, and the navigation beacon have been user-confirmed.

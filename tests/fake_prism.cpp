@@ -10,6 +10,7 @@ std::atomic<bool> available{false}, fail_next{false}, speaking{false}, speaking_
 std::mutex guard;
 std::string output, interruptions;
 std::atomic<unsigned> speaking_queries{};
+std::atomic<unsigned> stops{};
 int context_token{},backend_token{};
 }
 extern "C" {
@@ -18,6 +19,7 @@ __declspec(dllexport) void test_fail_next() {fail_next=true;}
 __declspec(dllexport) void test_speaking(bool state) {speaking=state;}
 __declspec(dllexport) void test_speaking_supported(bool state) {speaking_supported=state;}
 __declspec(dllexport) unsigned test_speaking_queries() {return speaking_queries.load();}
+__declspec(dllexport) unsigned test_stops() {return stops.load();}
 __declspec(dllexport) void test_interruptions(char* buffer,size_t length) {std::lock_guard lock(guard);strncpy_s(buffer,length,interruptions.c_str(),_TRUNCATE);}
 __declspec(dllexport) void test_output(char* buffer,size_t length) {std::lock_guard lock(guard);strncpy_s(buffer,length,output.c_str(),_TRUNCATE);}
 PrismConfig PRISM_CALL prism_config_init() {return {};}
@@ -39,6 +41,6 @@ PrismError PRISM_CALL prism_backend_is_speaking(PrismBackend*,bool* out_speaking
     *out_speaking=speaking;
     return PRISM_OK;
 }
-PrismError PRISM_CALL prism_backend_stop(PrismBackend*) {return PRISM_OK;}
+PrismError PRISM_CALL prism_backend_stop(PrismBackend*) {++stops;speaking=false;return PRISM_OK;}
 void PRISM_CALL prism_backend_free(PrismBackend*) {}
 }

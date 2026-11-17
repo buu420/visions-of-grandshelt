@@ -634,7 +634,11 @@ struct RouteBeaconOutput::Impl {
                     continue;
                 }
             }
-            const int angle=bank.angle(sample.cue.azimuth_degrees);
+            const double azimuth=std::remainder(sample.cue.azimuth_degrees,360.);
+            const int nearest=bank.angle(azimuth);
+            // A cue just behind the side already needs the rear pitch.
+            const int angle=azimuth>90.&&nearest==90?95:
+                azimuth<-90.&&nearest==270?265:nearest;
             const int pulse_volume=volume;
             lock.unlock();
             const bool played=game_focused()&&player.play(bank.pulse(angle),pulse_volume);

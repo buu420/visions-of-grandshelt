@@ -300,7 +300,10 @@ void disable_controller_input() {
 ControllerBackendStatus controller_backend_status() {
     auto& b=backend();const auto now=GetTickCount64();std::lock_guard lock(b.mutex);
     ControllerBackendStatus result{b.ready&&b.enabled.load(std::memory_order_acquire),connections(b,now),false};
-    for(const auto& d:b.devices)if(d.raw.connected&&now-d.sampled<=connection_lifetime)result.modifier_down|=gesture_pad(d.raw,b.modifier).left_trigger>=64;
+    for(const auto& d:b.devices)if(d.raw.connected&&now-d.sampled<=connection_lifetime) {
+        result.modifier_down|=gesture_pad(d.raw,b.modifier).left_trigger>=64;
+        if(result.connected==1)result.buttons=d.raw.buttons;
+    }
     return result;
 }
 void publish_controller_permission(bool permitted,std::uint64_t epoch,bool reserve_field_rb) {

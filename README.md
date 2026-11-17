@@ -1,6 +1,6 @@
 # Visions of Grandshelt
 
-Visions of Grandshelt is an accessibility mod for FINAL FANTASY RESONANCE on Windows. It adds screen reader access to menus, equipment, tutorials, dialogue and combat. Story navigation, auto-walk and a positional audio beacon help you explore. Recorded audio descriptions cover selected movies and scripted scenes.
+Visions of Grandshelt is an accessibility mod for FINAL FANTASY RESONANCE on Windows. It adds screen reader access to menus, equipment, tutorials, dialogue and combat. Story navigation, auto-walk and a positional audio beacon help you explore. Audio descriptions cover selected movies and scripted scenes.
 
 ## Install
 
@@ -10,7 +10,7 @@ In [Accessibility Mod Manager](https://github.com/RealAmethyst/AccessibilityModM
 
 For manual installation, open the game's local files from Steam. Extract the Windows ZIP into that folder so `FFRS` and `ResonanceAccess` are beside `FFRS.exe`. The package places its loader at `FFRS/Binaries/Win64/dwmapi.dll`. Back up an existing loader at that path before replacing it.
 
-The Windows and Amethyst downloads both include the game-local Reloaded loader, Prism, localization and the recorded descriptions.
+The Windows and Amethyst downloads both include the game-local Reloaded loader, Prism, localization and description assets.
 
 ## Start playing
 
@@ -23,9 +23,9 @@ Use the game's interaction button when Story guides you to a door, switch or per
 
 ## Languages and beta testing
 
-The mod follows the game's Text Language setting. English, French, German, Spanish (Spain), Japanese, Korean, Simplified Chinese and Traditional Chinese include mod speech and recorded descriptions. NVDA was used for screen reader testing.
+The mod follows the game's Text Language setting. From version 0.2.54, descriptions use English recordings in English and the screen reader in French, German, Spanish (Spain), Japanese, Korean, Simplified Chinese and Traditional Chinese.
 
-Copied-save controller tests covered Story routes to the Crystal Tower, the lower fight handoff, the Middle Reach landing, the White Teleport Portal and a clear-save reload. A continuous run through the final fights and credits and some optional pickups still need live testing.
+Copied-save controller tests covered Crystal Tower routes and pickups, the finale and clear-save reload, and post-game guidance to Ultima Weapon. The combat recheck covered the stop shortcut and victory review with keyboard and controller. See the [0.2.54 beta notes](docs/release-notes-0.2.54.md) for manual upgrade instructions.
 
 If a route fails, report the area, Story objective, selected target and last announcement in [GitHub Issues](https://github.com/buu420/visions-of-grandshelt/issues). The mod log is at `ResonanceAccess/Reloaded-II/Mods/Resonance.Access/ResonanceAccess.log`.
 

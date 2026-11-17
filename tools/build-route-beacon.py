@@ -148,18 +148,35 @@ def load_mono(path, max_ms):
         return [value[0] / 32768 for value in struct.iter_unpack("<h", source.readframes(frames))]
 
 
-def build_bank(renderer, source, output, step, max_ms, loop=False):
+def lower_two_semitones(samples):
+    ratio = 2 ** (-2 / 12)
+    padded = samples + [0.0]
+    pitched = []
+    for frame in range(math.ceil(len(samples) / ratio)):
+        position = frame * ratio
+        index = int(position)
+        fraction = position - index
+        pitched.append(padded[index] * (1 - fraction) + padded[index + 1] * fraction)
+    return pitched
+
+
+def build_bank(renderer, source, output, step, max_ms, loop=False, lower_rear=False):
     angles = range(0, 360, step)
     dry = load_mono(source, max_ms)
+    rear = lower_two_semitones(dry) if lower_rear else dry
     gain = 0.7
     pcm = []
     for angle in angles:
-        pulse = renderer.render_loop(dry, angle) if loop else renderer.render(dry, angle)
+        source_samples = rear if 90 < angle < 270 else dry
+        pulse = renderer.render_loop(source_samples, angle) if loop else renderer.render(source_samples, angle)
         peak = max(abs(sample) * gain for frame in pulse for sample in frame)
         if not 0 < peak < 1:
             raise ValueError(f"Invalid peak for {angle} degrees")
         pcm.append(b"".join(struct.pack("<hh", round(l * gain * 32767), round(r * gain * 32767))
                             for l, r in pulse))
+    if lower_rear:
+        longest = max(map(len, pcm))
+        pcm = [pulse.ljust(longest, b"\0") for pulse in pcm]
     frames = len(pcm[0]) // 4
     if any(len(pulse) != frames * 4 for pulse in pcm) or frames * 1000 >= max_ms * RATE:
         raise ValueError("Invalid or inconsistent rendered duration")
@@ -196,10 +213,14 @@ def main():
     parser.add_argument("--angle-step", type=int, choices=(5, 10), default=5)
     parser.add_argument("--max-ms", type=int, choices=(220, 1200), default=220)
     parser.add_argument("--loop", action="store_true", help="Bake a seamless repeated cue")
+    parser.add_argument("--lower-rear", action="store_true", help="Lower rear route pulses by two semitones before binaural rendering")
     args = parser.parse_args()
+    if args.loop and args.lower_rear:
+        parser.error("--lower-rear requires a non-looping cue")
     renderer = Renderer(args.steam_audio)
     try:
-        build_bank(renderer, args.source, args.output, args.angle_step, args.max_ms, loop=args.loop)
+        build_bank(renderer, args.source, args.output, args.angle_step, args.max_ms,
+                   loop=args.loop, lower_rear=args.lower_rear)
     finally:
         renderer.close()
 

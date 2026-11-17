@@ -11,6 +11,7 @@ struct PacedNarrationCue {
     std::string scene, event, id, text, audio;
     bool finish_on_advance{true};
     std::string caption_sha256;
+    DescriptionSource source{DescriptionSource::Recording};
 };
 struct PacedNarrationEvent {
     std::string key;
@@ -19,10 +20,10 @@ struct PacedNarrationEvent {
 // UTF-8 TSV: scene, event, id, audio, text, finish_on_advance (0 or 1).
 // A trailing caption_sha256 column may carry scene-unique rendered-caption
 // fingerprints for native StringTable events.
-// Validate every relative PCM asset before returning any cues. A short visual
-// description is bounded to fifteen seconds, independently of a TalkWait hold.
+// With Recording, validate every relative PCM asset and its fifteen-second
+// duration limit. ScreenReader keeps the text and triggers without loading WAVs.
 std::vector<PacedNarrationCue> load_paced_narration_manifest(const std::filesystem::path& manifest,
-                                                          const std::filesystem::path& asset_root);
+    const std::filesystem::path& asset_root, DescriptionSource source=DescriptionSource::Recording);
 struct PacedNarrationFrame {
     std::string map, session, scene;
     // Supply only an event actually observed firing. Do not fill this from a

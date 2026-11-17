@@ -1,5 +1,7 @@
 # Field proximity sounds
 
+Bake `route-beacon.bin` from `ffrs_beacon_twotone.wav` with `--lower-rear`. The rear pulses are pitched down two semitones before applying the directional HRTF.
+
 `field-npc.wav` and `field-interactable.wav` are the canonical 24 kHz mono effects from the user's Echos of Gaia FFIX project. Their original sound identities are `FL_GFX_UI_SciFi_Interface_04.wav` and `FL_GFX_UI_Game_Interface_29.wav`.
 
 Resample each WAV to 48 kHz PCM16 mono before passing it to `tools/build-route-beacon.py`. Use `--angle-step 10 --max-ms 1200` and the pinned 64-bit Steam Audio 4.6.1 `phonon.dll`. Give each output the corresponding `.bin` filename. The banks are baked into the reader and use the same HRTF as the route beacon.

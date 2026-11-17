@@ -247,10 +247,10 @@ bool battle_result_layout(UObject* top) {
 bool timer_layout(UObject* widget) {
     return is(widget,L"/Game/UI/System/Timer/Widget/WBP_TimerLayout.WBP_TimerLayout_C");
 }
-std::string widget_text(UObject* root,bool omit_menus=false,bool omit_dialogue=false,bool omit_timer=false) {
+std::vector<std::string> widget_lines(UObject* root,bool omit_menus,bool omit_dialogue,bool omit_timer) {
     const bool results=battle_result_layout(root);
-    std::vector<std::string> pieces;
-    std::set<UObject*> visited;
+    std::vector<std::string> pieces,wallet;
+    std::set<UObject*> visited,combined;
     std::function<void(UObject*,int,UObject*)> collect=[&](UObject* child,int depth,UObject* wallet_value) {
         if(depth>(results?64:32)||!visible(child)||(omit_timer&&timer_layout(child))||
            (omit_menus&&is(child,L"/Script/EnhancedUI.CPP_WBP_MenuBase"))||
@@ -258,17 +258,42 @@ std::string widget_text(UObject* root,bool omit_menus=false,bool omit_dialogue=f
         if(results&&(visited.size()>=4096||!visited.insert(child).second))return;
         if(results&&is(child,L"/Game/UI/Common/Player/Money/Widget/WBP_Money.WBP_Money_C"))
             wallet_value=object(child,L"Text_Value");
+        if(results&&is(child,L"/Game/UI/Battle/Result/Widget/Parts/WBP_Btl_Result_Text.WBP_Btl_Result_Text_C")) {
+            UObject* label_widget=nullptr;
+            UObject* number_widget=nullptr;
+            walk(child,[&](auto* widget) {
+                const auto name=widget->GetNamePrivate().ToString();
+                if(name==L"CommonTextBlock_288")label_widget=widget;
+                else if(name==L"Text_Value")number_widget=widget;
+            });
+            if(label_widget&&number_widget) {
+                auto label=clean(text(label_widget,L"Text"));
+                auto number=clean(text(number_widget,L"Text"));
+                if(!label.empty()&&!number.empty()) {
+                    pieces.push_back(std::move(label)+" "+number);
+                    combined.insert(label_widget);combined.insert(number_widget);
+                }
+            }
+        }
         const bool gradual=is(child,L"/Script/mucha.CPP_GradualTextBlock");
         auto value=presented_text({clean(text(child,L"Text")),true,gradual,!gradual||get_bool(child,L"IsTextFinished")});
-        if(value&&(results||std::find(pieces.begin(),pieces.end(),*value)==pieces.end())) {
-            if(child==wallet_value)*value=trf("Gil on hand {0}",{*value});
-            pieces.push_back(std::move(*value));
+        if(value&&!combined.contains(child)&&(results||std::find(pieces.begin(),pieces.end(),*value)==pieces.end())) {
+            if(child==wallet_value)wallet.push_back(trf("Gil on hand {0}",{*value}));
+            else pieces.push_back(std::move(*value));
         }
         for(auto* next:children(child)) collect(next,depth+1,wallet_value);
     };
     collect(root,0,nullptr);
+    pieces.insert(pieces.end(),std::make_move_iterator(wallet.begin()),std::make_move_iterator(wallet.end()));
+    return pieces;
+}
+std::string widget_text(UObject* root,bool omit_menus=false,bool omit_dialogue=false,bool omit_timer=false) {
     std::string result;
-    for(const auto& s:pieces) { if(result.size()+s.size()>8192) break; if(!result.empty()) {char c=result.back();result+=(c=='.'||c=='?'||c=='!'?" ":". ");} result+=s; }
+    for(const auto& s:widget_lines(root,omit_menus,omit_dialogue,omit_timer)) {
+        if(result.size()+s.size()>8192) break;
+        if(!result.empty()) {const char c=result.back();result+=(c=='.'||c=='?'||c=='!'?" ":". ");}
+        result+=s;
+    }
     return result;
 }
 std::string displayed_timer() {
@@ -1351,6 +1376,11 @@ std::optional<ActivationBox> story_walkway(UObject* target,Vec3 feet) {
     // These approaches have walkable collision beyond the registered mesh.
     // Scope the live sweep to the traversed parts of each map.
     const auto target_path=path(target);
+    if(target_path==L"/Game/Map/Wld/11Adr/EV/Wld_11Adr_EV.Wld_11Adr_EV:"
+        L"PersistentLevel.BP_MapUnit_NPC_Field_C_1"&&read<int>(target,L"m_UniqueId")==8) {
+        const ActivationBox crater_floor{{-21525,20345,-185},{420,390,140},0};
+        if(inside_box(crater_floor,feet))return crater_floor;
+    }
     if(waterfall_first_passage(target)) {
         const ActivationBox walkway{{950,5950,15},{1700,1250,160},0};
         if(inside_box(walkway,feet))return walkway;
@@ -1856,9 +1886,13 @@ std::optional<GroundCoverage> ordinary_ground_path(UObject* pawn,UObject* librar
     constexpr ActivationBox lower_chamber_ramp{{-270.,-90860.,1000.},{370.,175.,175.},0.};
     constexpr ActivationBox lower_chamber_return_ramp{{-1625.,-90857.,950.},{240.,220.,130.},0.};
     constexpr ActivationBox middle_reach_stairs{{1080.,-297660.,2880.},{905.,330.,435.},0.};
+    constexpr ActivationBox middle_reach_lower_turn{{-3250.,-297045.,975.},{260.,200.,145.},0.};
+    const auto middle_reach_turn_floor=[&](Vec3 feet) {
+        return crystal_tower&&inside_box(middle_reach_lower_turn,feet);
+    };
     const auto tower_ramp_floor=[&](Vec3 feet) {
-        return crystal_tower&&(inside_box(lower_chamber_ramp,feet)||inside_box(lower_chamber_return_ramp,feet)||
-            inside_box(middle_reach_stairs,feet));
+        return middle_reach_turn_floor(feet)||(crystal_tower&&(inside_box(lower_chamber_ramp,feet)||
+            inside_box(lower_chamber_return_ramp,feet)||inside_box(middle_reach_stairs,feet)));
     };
     const auto gaberada_floor=[&](Vec3 feet) {
         return gaberada&&(inside_box(gaberada_elder_ramp,feet)||inside_box(gaberada_upper_ramp,feet));
@@ -1941,7 +1975,8 @@ std::optional<GroundCoverage> ordinary_ground_path(UObject* pawn,UObject* librar
                     }
                     return support;
                 },sweep->step_height/scale,[&](Vec3 a,Vec3 b) {
-                    return gaberada_floor(a)&&gaberada_floor(b);
+                    return (gaberada_floor(a)&&gaberada_floor(b))||
+                        (middle_reach_turn_floor(a)&&middle_reach_turn_floor(b));
                 }};
                 auto physical_budget=native_budget;physical_budget.follow_surface=true;
                 const auto verify=[&](const PathSnapshot& candidate)->std::optional<GroundCoverage> {
@@ -5433,6 +5468,7 @@ unsigned UnrealReader::controller_commands() {
     retry_controller_input();
     const auto status=controller_backend_status();
     if(!status.ready||status.connected!=1) {
+        battle_pad_edges_.observe(0,false);
         controller_unavailable_reason_=!status.ready?"Controller input capture is unavailable.":
             status.connected==0?"No active controller was detected.":"More than one controller is active.";
         publish_controller_permission(false,controller_epoch_);controller_modifier_seen_=status.modifier_down;
@@ -5441,17 +5477,27 @@ unsigned UnrealReader::controller_commands() {
     }
     DWORD foreground{};
     GetWindowThreadProcessId(GetForegroundWindow(),&foreground);
-    const bool battle_input=battle_review_layout_&&foreground==GetCurrentProcessId()&&speech_.ready()&&
-        top_widget()==battle_review_layout_;
-    if(battle_input) {
+    const bool focused=foreground==GetCurrentProcessId();
+    const auto pressed=battle_pad_edges_.observe(status.buttons,focused);
+    auto* top=focused&&battle_commands_available()&&speech_.ready()?top_widget():nullptr;
+    if(top&&top==battle_results_layout_) {
+        publish_controller_permission(false,controller_epoch_);
+        publish_battle_controller_permission(false,battle_review_epoch_);
+        controller_modifier_seen_=status.modifier_down;
+        if(pressed&ControllerDpadUp)return ResultUp|ControllerOrigin;
+        if(pressed&ControllerDpadDown)return ResultDown|ControllerOrigin;
+        return 0;
+    }
+    if(top&&top==battle_control_layout_) {
+        const bool review=battle_review_layout_==top;
         const auto now=GetTickCount64();
-        if(now>=battle_binding_checked_) {
+        if(review&&now>=battle_binding_checked_) {
             battle_binding_checked_=now+500;
             battle_controller_binding_=battle_review_binding_available(L"Gamepad_LeftThumbstick");
         }
         publish_controller_permission(false,controller_epoch_);
         controller_modifier_seen_=status.modifier_down;
-        publish_battle_controller_permission(battle_controller_binding_,battle_review_epoch_);
+        publish_battle_controller_permission(review&&battle_controller_binding_,battle_review_epoch_);
         unsigned request{};
         for(const auto action:take_battle_controller_actions(battle_review_epoch_)) {
             switch(action) {
@@ -5465,6 +5511,8 @@ unsigned UnrealReader::controller_commands() {
             case BattleControllerAction::None: break;
             }
         }
+        if(pressed)request|=BattleInputKey;
+        if(pressed&ControllerR3)request|=BattleInterrupt;
         return request?request|ControllerOrigin:0;
     }
     publish_battle_controller_permission(false,battle_review_epoch_);
@@ -6137,7 +6185,8 @@ void UnrealReader::tick(unsigned commands) {
     stage="capture battle presentation";
     constexpr unsigned battle_requests=PreviousCategory|NextCategory|BattleHp|BattleMp|BattleGauges|
         BattleBuffs|BattleDebuffs|BattlePanelOpen|BattlePanelClose|BattleVitals|BattleEffects;
-    const auto battle=battle_input_.capture(top,(commands&battle_requests)!=0);
+    auto battle=battle_input_.capture(top,(commands&battle_requests)!=0);
+    battle_control_layout_=battle.active?top:nullptr;
     const auto battle_status=battle_input_.diagnostic();
     const bool battle_status_changed=battle_status!=battle_status_;
     if(battle_status_changed){battle_status_=battle_status;log("BATTLE "+battle_status);}
@@ -6161,6 +6210,7 @@ void UnrealReader::tick(unsigned commands) {
     const auto world=p?utf8(path(p->GetOuterPrivate())):std::string{};
     const auto context=world+"|"+utf8(path(top));
     const bool battle_results=battle_result_layout(top);
+    battle_results_layout_=battle_results?top:nullptr;
     const bool finishing_battle=battle_results&&!battle_context_.empty()&&!world.empty()&&context_.starts_with(world+"|");
     if(battle.active)battle_context_=battle.context;
     else if(!finishing_battle)battle_context_.clear();
@@ -6184,6 +6234,9 @@ void UnrealReader::tick(unsigned commands) {
     stage="capture dialogue";
     Frame frame{accessibility_options?context+"|accessibility-options":context,
         std::move(menu),dialogue_snapshot(top,speakers_,lines_)};
+    battle.command_visible=battle.active&&(battle.choosing_target||battle.prompt.has_value()||
+        (frame.menu&&frame.menu->ready&&!frame.menu->label.empty()));
+    const bool was_command_visible=std::exchange(battle_command_visible_,battle.command_visible)&&continuing_battle;
     const bool tutorial=is(top,L"/Script/mucha.CPP_WBP_Tutorial");
     const auto tutorial_review=tutorial&&(commands&(Repeat|Screen))?current_review(frame,{}):std::string{};
     frame.menu_interrupts=!battle_layout(top)&&!battle_results;
@@ -6195,8 +6248,8 @@ void UnrealReader::tick(unsigned commands) {
     if(battle_results) {
         stage="capture visible battle result page";
         const auto result=battle_input_.result_page(top);
-        result_frame={context,result.page,result.staging,widget_text(top,result_focus),
-            result_focus?current_review(frame,{}):std::string{},GetTickCount64()};
+        result_frame={context,result.page,result.staging,widget_lines(top,result_focus,false,false),
+            result_focus?current_review(frame,{}):std::string{},GetTickCount64(),result.counting_rewards};
         if(result.diagnostic!=battle_result_status_) {
             battle_result_status_=result.diagnostic;
             log("BATTLE RESULT "+battle_result_status_);
@@ -6260,6 +6313,13 @@ void UnrealReader::tick(unsigned commands) {
         if(battle_output_epoch_!=speech_.epoch()){
             battle_output_epoch_=speech_.epoch();battle_core_.reset();battle_result_core_.reset();
         }
+        if(battle.active&&(commands&(BattleInterrupt|BattleInputKey|battle_requests|Repeat|Screen))) {
+            speech_.interrupt_battle();
+            if(!battle.command_visible&&(!was_command_visible||(commands&BattleInterrupt))) {
+                battle_core_.interrupt_action(battle);
+                log("BATTLE hit speech interrupted actor="+std::to_string(battle.actor));
+            }
+        }
         auto spoken_frame=speech_frame(frame,description_busy_);
         if(battle_results)spoken_frame.menu.reset();
         for(const auto& event:core_.observe(spoken_frame)) {
@@ -6277,7 +6337,14 @@ void UnrealReader::tick(unsigned commands) {
             if(!hit_batch.empty())hit_batch+=". ";hit_batch+=event.text;
         }
         say_hits();
-        if(battle_results)for(const auto& event:battle_result_core_.observe(result_frame))speech_.say(event.text,event.interrupt);
+        if(battle_results) {
+            const auto events=battle_result_core_.observe(result_frame);
+            if(commands&(ResultUp|ResultDown)) {
+                speech_.interrupt_battle();
+                const auto line=battle_result_core_.browse((commands&ResultUp)?-1:1);
+                speech_.say({line,true,SpeechDelivery::LatestSelection});
+            } else for(const auto& event:events)speech_.say(event);
+        }
         if(battle_layout(top)&&!battle.active&&battle_status_changed)
             speech_.say(battle.unavailable_reason.empty()?tr("Battle information is not ready."):battle.unavailable_reason,false);
         if(!description_busy_&&!navigation_speech_stop_pending_.empty())
@@ -6300,17 +6367,18 @@ void UnrealReader::tick(unsigned commands) {
             "Route beacon unavailable. Navigation will speak directions.")+" ";
         const auto travel_help=tr("Story and Destinations auto-walk resume after their exits and battles. Use Interact when prompted.")+" ";
         const auto accessibility_help=tr("Accessibility Options is in the System menu. In battle, Home and End choose an ally to review. H reads HP, M reads MP, L reads gauges, F2 reads buffs, and F3 reads debuffs. Press the left stick in battle for controller status.")+" ";
-        speech_.say(((commands&ControllerOrigin)?std::string{}:keyboard_help)+controller_help+accessibility_help+travel_help+beacon_help+story_help_status(help_story));
+        const auto battle_help=tr("F4 or right-stick click stops combat announcements. Use the up and down arrows or D-pad to review victory results.")+" ";
+        speech_.say(((commands&ControllerOrigin)?std::string{}:keyboard_help)+controller_help+accessibility_help+battle_help+travel_help+beacon_help+story_help_status(help_story));
     }
     if(commands&Repeat) {
         const auto review=battle.prompt?battle_core_.review(battle):
-            current_review(frame,battle_results?result_frame.text:core_.repeat());
+            battle_results?battle_result_core_.browse(0):current_review(frame,core_.repeat());
         speech_.say(review.empty()?tr("No captured selection or dialogue"):review);
     }
     if(commands&Screen) {
         auto screen=(battle.active||battle_layout(top))?
             (battle.active?battle_core_.review(battle):battle.unavailable_reason.empty()?tr("Battle information is unavailable."):battle.unavailable_reason):
-            battle_results?result_frame.text:
+            battle_results?battle_result_core_.review():
             tutorial?tutorial_review:
             (accessibility_options||is(top,L"/Script/mucha.CPP_OP_Layout"))?
             (frame.menu&&frame.menu->ready?frame.menu->label+(frame.menu->value.empty()?"":". "+frame.menu->value):tr("Current option is loading")):widget_text(top,false,false,true);

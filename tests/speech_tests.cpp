@@ -22,7 +22,8 @@ int main(int argc,char** argv) {
         auto supported=reinterpret_cast<void(*)(bool)>(GetProcAddress(dll,"test_speaking_supported"));
         auto read_interrupts=reinterpret_cast<void(*)(char*,size_t)>(GetProcAddress(dll,"test_interruptions"));
         auto query_count=reinterpret_cast<unsigned(*)()>(GetProcAddress(dll,"test_speaking_queries"));
-        require(available&&fail&&read&&speaking&&supported&&read_interrupts&&query_count,"test backend control exports missing");
+        auto stops=reinterpret_cast<unsigned(*)()>(GetProcAddress(dll,"test_stops"));
+        require(available&&fail&&read&&speaking&&supported&&read_interrupts&&query_count&&stops,"test backend control exports missing");
         auto output=[&]{char value[4096]{};read(value,sizeof(value));return std::string(value);};
         auto interrupts=[&]{char value[4096]{};read_interrupts(value,sizeof(value));return std::string(value);};
         set_log_path(folder/L"speech-test.log");
@@ -72,6 +73,31 @@ int main(int argc,char** argv) {
             select("New focus after playback drains");
             require(until([&]{return interrupts().find("New focus after playback drains")!=std::string::npos;}),
                 "a new focused row can interrupt the prior selection after playback drains");
+
+            speaking(true);
+            speech.say({"Multi-hit to cut",false,SpeechDelivery::OrderedBattle});
+            require(until([&]{return output().find("Multi-hit to cut")!=std::string::npos;}),"interruption fixture hit plays");
+            const auto before_stop=stops();
+            speech.interrupt_battle();
+            select("Target after interruption");
+            require(until([&]{return stops()>before_stop&&output().find("Target after interruption")!=std::string::npos;}),
+                "deliberate interruption cancels backend hit speech and lets current focus speak");
+
+            speaking(true);
+            speech.describe({NarrationActionKind::Play,"scene","localized","Una luz cruza la sala."});
+            require(until([&]{return output().find("Una luz cruza la sala.")!=std::string::npos;}),
+                "localized description text reaches Prism");
+            const auto description=speech.description_status();
+            require(description.active&&!description.queued&&description.generation>0&&description.cue_id=="localized",
+                "a spoken description is tracked in its native scene");
+            speech.describe({NarrationActionKind::Stop,"scene","prior-cue"});
+            require(speech.description_status().active,"another cue's stop cannot clear the current description");
+            const auto before_description_stop=stops();
+            speech.describe({NarrationActionKind::Pause,"scene","localized"});
+            require(until([&]{return stops()>before_description_stop&&!speech.description_status().active;}),
+                "pausing a scene stops its screen-reader description");
+            speech.describe({NarrationActionKind::Resume,"scene","localized"});
+            require(!speech.description_status().active,"resuming cannot replay a partially spoken line");
 
             supported(false);
             speech.say(SpeechEvent{"Legacy ordered hit",false,SpeechDelivery::OrderedBattle});

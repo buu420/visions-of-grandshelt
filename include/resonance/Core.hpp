@@ -47,7 +47,7 @@ struct Frame {
     std::string introduction;
     bool menu_interrupts{true};
 };
-enum class SpeechDelivery : unsigned char { Normal, LatestSelection, OrderedBattle };
+enum class SpeechDelivery : unsigned char { Normal, LatestSelection, OrderedBattle, Description };
 struct SpeechEvent {
     std::string text;
     bool interrupt{true};
@@ -81,6 +81,8 @@ std::vector<int> presented_children(int count,bool switcher,int active_index);
 class SpeechQueue {
 public:
     void push(SpeechEvent);
+    void discard(SpeechDelivery);
+    bool contains(SpeechDelivery) const;
     std::optional<SpeechEvent> pop();
     const SpeechEvent* front() const { return queue_.empty()?nullptr:&queue_.front(); }
     void clear() { queue_.clear(); }

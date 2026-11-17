@@ -26,9 +26,9 @@
 #include <utility>
 
 // Exact-build evidence: story-navigation-native-audit-20261101/NATIVE-STORY.md.
-// The HUD's MainQuestId/QuestData is authoritative. Raw Scenario lists are never
-// used. When the opening has no quest point, a build/map-specific continuation
-// allowlist uses the native read-only event selector and current overlap state.
+// MainQuestId/QuestData authorizes main-story targets. Authored local steps
+// additionally verify the current actors, and the post-credits route uses the
+// clear flag and the Enterprise radar event's own progress slot.
 // This adapter never executes transitions, events or world-map transforms.
 namespace resonance {
 namespace {
@@ -153,6 +153,12 @@ bool output_struct(FProperty* field,const wchar_t* expected,int size) {
         {L"TypeData",8,8},{L"RelatedMapId",24,4},{L"RelatedQuestIdList",32,16},{L"ReferenceActor",48,40}});
     if(name==L"/Script/mucha.MapEventData")return struct_fields(type,{
         {L"Condition",0,16},{L"EventId",16,8},{L"MoveInfo",24,16},{L"FadeInfo",40,16}});
+    if(name==L"/Script/mucha.SaveData_Progress") {
+        if(!struct_fields(type,{{L"Progress",0,16,L"ArrayProperty"}}))return false;
+        auto* array=static_cast<FArrayProperty*>(type->FindProperty(FName(L"Progress",FNAME_Find)));
+        auto* inner=array?array->GetInner():nullptr;
+        return inner&&inner->GetSize()==4&&inner->field_class()&&inner->field_class()->GetName()==L"IntProperty";
+    }
     if(name==L"/Script/mucha.TalkEventFindResult")return struct_fields(type,{
         {L"EventId",0,8},{L"PreActionInfo",8,32}});
     if(name==L"/Script/mucha.MAP_GIMMICK_SAVEPOINT_PARENT_DATA")return struct_fields(type,{
@@ -173,16 +179,20 @@ public:
         const std::wstring_view method(name);
         const bool progress=method==L"GetMainProgress";
         const bool progress_flag=method==L"GetFlag";
+        const bool progress_list=method==L"GetProgressList";
         const auto library_type=progress?L"/Script/mucha.CPP_BFL_Progress":
-            progress_flag?L"/Script/mucha.CPP_BFL_SaveDataProgress":L"/Script/mucha.CPP_BFL_Map";
+            progress_flag?L"/Script/mucha.CPP_BFL_SaveDataProgress":
+            progress_list?L"/Script/mucha.CPP_BFL_DBG_FlagSaveData":L"/Script/mucha.CPP_BFL_Map";
         if(public_library) {
             const auto default_path=progress?L"/Script/mucha.Default__CPP_BFL_Progress":
-                progress_flag?L"/Script/mucha.Default__CPP_BFL_SaveDataProgress":L"/Script/mucha.Default__CPP_BFL_Map";
+                progress_flag?L"/Script/mucha.Default__CPP_BFL_SaveDataProgress":
+                progress_list?L"/Script/mucha.Default__CPP_BFL_DBG_FlagSaveData":L"/Script/mucha.Default__CPP_BFL_Map";
             if(!receiver||path(receiver)!=default_path||
                path(receiver->GetClassPrivate())!=library_type||
                !(static_cast<std::uint32_t>(receiver->GetObjectFlags())&0x10u)||
                (static_cast<std::uint32_t>(receiver->GetObjectFlags())&dying_flags)||
-               (!progress&&!progress_flag&&method!=L"GetCurrentMapId"&&method!=L"GetGroupMapIdListAtMap"))return;
+               (!progress&&!progress_flag&&!progress_list&&
+                method!=L"GetCurrentMapId"&&method!=L"GetGroupMapIdListAtMap"))return;
         } else if(!live(receiver))return;
         rejected_at_="function lookup";
         auto* function=receiver->GetFunctionByNameInChain(name);if(!function)return;
@@ -238,6 +248,10 @@ public:
     bool return_kind(const wchar_t* type)const {
         auto* field=function_?function_->GetReturnProperty():nullptr;
         return field&&field->field_class()&&field->field_class()->GetName()==type;
+    }
+    bool progress_list_return()const {
+        return return_kind(L"StructProperty")&&
+            output_struct(function_->GetReturnProperty(),L"/Script/mucha.SaveData_Progress",48);
     }
     bool event_array(FProperty* field)const {
         if(!field||field->GetSize()!=16||!field->field_class()||field->field_class()->GetName()!=L"ArrayProperty")return false;
@@ -1950,6 +1964,74 @@ bool capture_chapter_eight_leg(StorySnapshot& story,UObject* pawn,UObject* world
 }
 
 
+std::optional<int> ultima_radar_progress() {
+    constexpr int slot=24;
+    auto* library=UObjectGlobals::StaticFindObject(L"/Script/mucha.Default__CPP_BFL_DBG_FlagSaveData");
+    Call read(library,L"GetProgressList",48,0,48,{},true);
+    if(!read||!read.progress_list_return())return {};
+    read.invoke(library);
+    const auto values=copy_array(read.get<NativeArray<int>>(0),4096);
+    if(!values||values->size()<=slot)return {};
+    return (*values)[slot];
+}
+
+bool capture_post_clear_story(StorySnapshot& story,UObject* pawn,UObject* world,UObject* game_instance) {
+    const auto cleared=story_progress_flag(3);
+    if(cleared!=true)return false;
+
+    story.ready=true;
+    story.unavailable_reason=tr("No current main-story objective is displayed.");
+    const auto progress=ultima_radar_progress();
+    if(progress!=10)return true;
+    const auto map=current_map(world);
+    if(!map)return true;
+
+    story.map_id=*map;
+    story.main_progress=main_progress();
+    story.objective_id="post-clear:ardra-radar";
+    story.objective=tr("Investigate the radar signal at Ardra Crater.");
+    story.destination_epoch="post-clear:ardra-radar";
+    story.unavailable_reason.clear();
+
+    const auto movement=read<unsigned char>(pawn,L"m_MapMovementMethod",1920);
+    const auto leg=ultima_story_leg(cleared,progress,*map,movement);
+    if(!leg)return true;
+    if(*leg==UltimaStoryLeg::Deck||*leg==UltimaStoryLeg::Helm) {
+        const auto manager=world_scoped(L"CPP_MapManager",world);
+        if(manager.object&&!manager.ambiguous) {
+            if(*leg==UltimaStoryLeg::Deck)
+                story_gate(story,pawn,world,manager.object,0,20001,22,"ardra-enterprise-interior","Door into the Enterprise",
+                    "Go inside the Enterprise and make your way to the helm.");
+            else
+                story_gate(story,pawn,world,manager.object,1,1000,-1,"ardra-enterprise-helm","Enterprise helm",
+                    "Approach the wheel at the helm to take off.");
+        }
+        return true;
+    }
+
+    if(*leg==UltimaStoryLeg::Flight&&is(pawn,L"/Script/mucha.CPP_MapUnit_AirShip")) {
+        // The Enterprise can land on this part of the crater floor.
+        story_step(story,"ardra-crater-flight","Follow the beacon to Ardra Crater and land the Enterprise.");
+        story.flight_destination=StoryFlightDestination{{-21622,20536,1500},
+            "flight:ardra-crater",tr("Ardra Crater"),tr("At Ardra Crater. Land the Enterprise.")};
+        story.field_control=field_control(pawn,world,game_instance,2);
+        return true;
+    }
+
+    if(*leg==UltimaStoryLeg::Crater) {
+        constexpr std::wstring_view boss=
+            L"/Game/Map/Wld/11Adr/EV/Wld_11Adr_EV.Wld_11Adr_EV:PersistentLevel.BP_MapUnit_NPC_Field_C_1";
+        for(const auto& target:capture_area_targets(pawn)) {
+            if(target.category!=1||path(target.actor)!=boss)continue;
+            story_step(story,"ardra-ultima-weapon","Approach Ultima Weapon and interact when ready.");
+            story_step_actor(story,target.actor,target.position,"ardra-ultima-weapon","Ultima Weapon");
+            return true;
+        }
+        story_step(story,"ardra-reach-crater","Use the Enterprise to reach Ardra Crater.");
+    }
+    return true;
+}
+
 bool capture_later_story_leg(StorySnapshot& story,UObject* pawn,UObject* world,UObject* game_instance,int map,int quest,
         std::span<const FilteredPoint> points) {
     if(quest!=1003&&(quest!=1002||(map!=1000&&map!=2050&&map!=2060&&map!=2061)))return false;
@@ -2466,6 +2548,7 @@ StorySnapshot capture_story_input(UObject* pawn) {
         }
         const auto main_id=read<int>(quest.object,L"MainQuestId",152);
         if(!main_id) {result.unavailable_reason=tr("The current main objective could not be identified.");return result;}
+        if((*main_id==1008||*main_id<0)&&capture_post_clear_story(result,pawn,world,game_instance))return result;
         if(*main_id<0) {result.ready=true;result.unavailable_reason=tr("No current main-story objective is displayed.");return result;}
         std::optional<std::vector<FilteredPoint>> points;
         std::string chapter_title,destination_title;

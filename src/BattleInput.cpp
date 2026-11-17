@@ -34,6 +34,13 @@ constexpr wchar_t limit_vm_class[]=L"/Script/mucha.CPP_VM_LimitPoint";
 constexpr wchar_t banner_class[]=L"/Game/UI/Battle/SkillMessage/WBP_Btl_SkillMsg.WBP_Btl_SkillMsg_C";
 constexpr wchar_t libra_class[]=L"/Game/UI/Battle/Libra/Widget/WBP_Btl_LibraInfoLayout.WBP_Btl_LibraInfoLayout_C";
 constexpr wchar_t unit_ui_class[]=L"/Game/UI/Battle/UnitUI/WBP_Btl_UnitUILayout.WBP_Btl_UnitUILayout_C";
+constexpr wchar_t enemy_ui_class[]=L"/Game/UI/Battle/UnitUI/EnemyStatus/WBP_Btl_EnemyUI.WBP_Btl_EnemyUI_C";
+constexpr wchar_t target_cursor_class[]=L"/Game/UI/Battle/UnitUI/Select/WBP_Btl_UnitSelect.WBP_Btl_UnitSelect_C";
+constexpr wchar_t target_name_class[]=L"/Game/UI/Battle/UnitUI/Select/WBP_Btl_UnitSelectName.WBP_Btl_UnitSelectName_C";
+constexpr wchar_t break_gauge_class[]=L"/Game/UI/Battle/UnitUI/Break/Widget/WBP_BreakPointGauge.WBP_BreakPointGauge_C";
+constexpr wchar_t prediction_widget[]=L"/Game/UI/Battle/Skill/Resist/Predict/Widget/WBP_BtlSkillResistPredict.WBP_BtlSkillResistPredict_C";
+constexpr wchar_t prediction_appearance[]=L"/Game/UI/Battle/Skill/Resist/Predict/Widget/WBP_BtlSkillResistPredictAppearance.WBP_BtlSkillResistPredictAppearance_C";
+constexpr wchar_t prediction_model[]=L"/Script/mucha.CPP_VM_BtlSkillResistPredict";
 constexpr wchar_t damage_class[]=L"/Game/UI/Battle/UnitUI/Damage/Widget/WBP_BtlUnitDamage.WBP_BtlUnitDamage_C";
 constexpr wchar_t popup_class[]=L"/Game/UI/Battle/UnitUI/Damage/Widget/WBP_BtlUnitDamageProp.WBP_BtlUnitDamageProp_C";
 constexpr wchar_t identify_class[]=L"/Game/UI/Battle/UnitUI/EnemyStatus/Identification/Widget/WBP_Btl_Identification.WBP_Btl_Identification_C";
@@ -116,9 +123,14 @@ constexpr Spec unit_manager{L"/Script/mucha.CPP_UI_BattleSubsystem",L"BtlUnitMan
 constexpr Spec battle_display{L"/Script/mucha.CPP_VM_Battle",L"bIsDisplayBattleWidget",128,1,L"BoolProperty"};
 constexpr Spec battle_event{L"/Script/mucha.CPP_VM_Battle",L"bIsEvent",129,1,L"BoolProperty"};
 constexpr Spec battle_actor{L"/Script/mucha.CPP_VM_Battle",L"CurrentActionUnitUniqueId",120,4,L"IntProperty"};
+constexpr Spec battle_skill{L"/Script/mucha.CPP_VM_Battle",L"FocusSkillId",124,4,L"IntProperty"};
 constexpr Spec unit_id{unit_vm_class,L"UniqueID",408,4,L"IntProperty"};
 constexpr Spec unit_select{unit_vm_class,L"TargetSelectState",442,1,L"EnumProperty"};
 constexpr Spec unit_visible{unit_vm_class,L"bIsVisible",443,1,L"BoolProperty"};
+constexpr Spec prediction_target{prediction_model,L"TargetUnitParamVM",112,8,L"ObjectProperty"};
+constexpr Spec prediction_skill{prediction_model,L"SkillId",120,4,L"IntProperty"};
+constexpr Spec prediction_display{prediction_model,L"bDisplay",368,1,L"BoolProperty"};
+constexpr Spec prediction_data{prediction_model,L"PredictProperty",128,240,L"StructProperty"};
 constexpr Spec hit_points{L"/Script/mucha.CPP_VM_UnitParam",L"HitPointVM",144,8,L"ObjectProperty"};
 constexpr Spec magic_points{L"/Script/mucha.CPP_VM_UnitParam",L"MagicPointVM",152,8,L"ObjectProperty"};
 constexpr Spec limit_points{L"/Script/mucha.CPP_VM_UnitParam",L"LimitPointVM",160,8,L"ObjectProperty"};
@@ -150,6 +162,7 @@ constexpr Spec user_tree{L"/Script/UMG.UserWidget",L"WidgetTree",728,8,L"ObjectP
 constexpr Spec user_color{L"/Script/UMG.UserWidget",L"ColorAndOpacity",416,16,L"StructProperty"};
 constexpr Spec tree_root{L"/Script/UMG.WidgetTree",L"RootWidget",48,8,L"ObjectProperty"};
 constexpr Spec text_block{L"/Script/UMG.TextBlock",L"Text",392,16,L"TextProperty"};
+constexpr Spec text_color{L"/Script/UMG.TextBlock",L"ColorAndOpacity",424,20,L"StructProperty"};
 constexpr Spec rich_text{L"/Script/UMG.RichTextBlock",L"Text",392,16,L"TextProperty"};
 constexpr Spec level_world{L"/Script/Engine.Level",L"OwningWorld",192,8,L"ObjectProperty"};
 constexpr Spec controller_player{L"/Script/Engine.PlayerController",L"Player",840,8,L"ObjectProperty"};
@@ -172,12 +185,17 @@ constexpr wchar_t result_layout_class[]=L"/Game/UI/Battle/Result/Widget/WBP_Btl_
 constexpr wchar_t result_page_class[]=L"/Script/mucha.CPP_WBP_Btl_Result_PageListBase";
 constexpr Spec result_pages{L"/Script/mucha.CPP_WBP_Btl_ResultLayout",L"WBP_BtlResultPage_Layout",1432,8,L"ObjectProperty"};
 constexpr Spec result_page_index{L"/Script/mucha.CPP_WBP_Btl_Result_PageList",L"CurrentPageIndex",1392,4,L"IntProperty"};
-constexpr Spec page_staging_on{result_page_class,L"IsPlayStaging",1384,1,L"BoolProperty"};
 constexpr Spec page_staging{result_page_class,L"StagingManager",1400,8,L"ObjectProperty"};
 constexpr Spec staging_steps{L"/Script/mucha.CPP_Btl_Result_StagingManager",L"StagingList",40,16,L"ArrayProperty"};
 constexpr Spec staging_index{L"/Script/mucha.CPP_Btl_Result_StagingManager",L"CurrentIndex",56,4,L"IntProperty"};
 constexpr Spec step_finished{L"/Script/mucha.CPP_Btl_Result_StagingBase",L"IsFinishStaging",245,1,L"BoolProperty"};
+constexpr Spec step_playing{L"/Script/mucha.CPP_Btl_Result_StagingBase",L"IsPlayingStaging",246,1,L"BoolProperty"};
 constexpr wchar_t reward_page[]=L"/Game/UI/Battle/Result/Widget/Page/Reward/WBP_BtlResultPage_RewardWindow.WBP_BtlResultPage_RewardWindow_C";
+constexpr wchar_t reward_list_class[]=L"/Game/UI/Battle/Result/Widget/Page/Reward/WBP_BtlResultPage_RewardList.WBP_BtlResultPage_RewardList_C";
+constexpr wchar_t reward_text_class[]=L"/Game/UI/Battle/Result/Widget/Parts/WBP_Btl_Result_Text.WBP_Btl_Result_Text_C";
+constexpr Spec reward_data{reward_page,L"m_ResultData",-1,192,L"StructProperty"};
+constexpr Spec reward_current{reward_text_class,L"m_CurrentValue",-1,8,L"DoubleProperty"};
+constexpr Spec reward_counting{reward_text_class,L"m_IsStartChangeValue",-1,1,L"BoolProperty"};
 constexpr wchar_t growth_page[]=L"/Game/UI/Battle/Result/Widget/Page/Growth/WBP_BtlResultPage_GrowthWindow.WBP_BtlResultPage_GrowthWindow_C";
 constexpr wchar_t level_up_page[]=L"/Game/UI/Battle/Result/Widget/Page/LevelUp/WBP_BtlResultPage_LevelUpWindow.WBP_BtlResultPage_LevelUpWindow_C";
 constexpr Spec level_up_details{level_up_page,L"WidgetSwitcher_Detail",-1,8,L"ObjectProperty"};
@@ -350,6 +368,33 @@ UObject* visible_top(UObject* widget,UObject* stop=nullptr,bool switchers=false,
     return nullptr;
 }
 bool visible_under(UObject* widget,UObject* root){return widget&&root&&visible_top(widget,root)==root;}
+bool reward_counts_settled(UObject* page,UObject* root) {
+    // RewardList::SetValue binds the page's base and bonus components to
+    // EXP and GILL. Result_Text keeps its own count-up state per row.
+    auto* data_type=struct_of(verified_property(page,reward_data),L"/Script/mucha.BTL_RESULT_DATA",192);
+    if(!members(data_type,{{L"unitDataList",16,16,L"ArrayProperty"},{L"baseExperience",64,4,L"IntProperty"},
+        {L"bonusExperience",68,4,L"IntProperty"},{L"baseMoney",76,4,L"IntProperty"},
+        {L"bonusMoney",84,4,L"IntProperty"},{L"baseAp",92,4,L"IntProperty"},{L"bonusAp",96,4,L"IntProperty"}}))return false;
+    const auto* data=static_cast<const std::byte*>(field(page,reward_data));
+    if(!data||pod<int>(data,24)<=0)return false;
+    auto* list=member(page,reward_page,L"WBP_BtlResultPage_RewardList",reward_list_class);
+    if(!list||visible_top(list,root,true)!=root)return false;
+    struct Row {const wchar_t* name;std::size_t base,bonus;};
+    for(const Row row: {Row{L"EXP",64,68},Row{L"GILL",76,84},Row{L"SP",92,96}}) {
+        auto* widget=member(list,reward_list_class,row.name,reward_text_class);
+        if(!widget)return false;
+        if(visible_top(widget,root,true)!=root)continue;
+        auto* value=member(widget,reward_text_class,L"Text_Value",L"/Script/UMG.TextBlock");
+        if(!value)return false;
+        if(visible_top(value,root,true)!=root)continue;
+        const auto current=read<double>(widget,reward_current);
+        const auto counting=flag(widget,reward_counting);
+        const auto base=pod<int>(data,row.base),bonus=pod<int>(data,row.bonus);
+        if(!current||!counting||*counting||base<0||bonus<0||std::ceil(*current)!=static_cast<double>(base)+bonus)
+            return false;
+    }
+    return true;
+}
 // Texts shown below root, in slot order; collapsed subtrees show nothing.
 // false if any part of the walk cannot be validated.
 bool presented_texts(UObject* root,std::vector<std::string>& out,int depth=0) {
@@ -783,6 +828,63 @@ UnitUi unit_ui_of(UObject* subsystem,int id) {
     } else return {};
     return result;
 }
+UObject* shown_unit_widget(const std::vector<UObject*>& widgets,UObject* root) {
+    UObject* shown=nullptr;
+    for(auto* candidate:widgets)if(visible_top(candidate,root,true)==root) {
+        if(shown)return nullptr;
+        shown=candidate;
+    }
+    return shown;
+}
+std::string target_health(UObject* cursor,UObject* vm,UObject* root) {
+    if(viewmodel(cursor,target_cursor_class,L"CPP_VM_BtlUnitParam",unit_vm_class)!=vm)return {};
+    auto* name=member(cursor,target_cursor_class,L"WBP_Btl_UnitSelectName",target_name_class);
+    auto* label=member(name,target_name_class,L"Text_Name",L"/Script/UMG.TextBlock");
+    if(visible_top(label,root,true)!=root)return {};
+    auto* shape=struct_of(verified_property(label,text_color),L"/Script/SlateCore.SlateColor",20);
+    if(!members(shape,{{L"SpecifiedColor",0,16,L"StructProperty"},{L"ColorUseRule",16,1,L"EnumProperty"}}))return {};
+    const auto* color=static_cast<const std::byte*>(field(label,text_color));
+    if(!color||pod<unsigned char>(color,16)!=0||!(pod<float>(color,12)>0))return {};
+    const auto matches=[&](float g,float b) {
+        return std::abs(pod<float>(color,0)-1.f)<.003f&&
+            std::abs(pod<float>(color,4)-g)<.003f&&std::abs(pod<float>(color,8)-b)<.003f;
+    };
+    // DA_PointRatio's yellow and HP Dying red, as rendered on this target's name.
+    if(matches(.654823f,0.f))return tr("Weakened");
+    if(matches(.026042f,.054156f))return tr("Critically weakened");
+    return {};
+}
+void target_indicators(UObject* subsystem,UObject* vm,BattleUnit& row,int skill,
+                       const std::vector<UObject*>& enemy_widgets,const std::vector<UObject*>& cursors) {
+    const auto ui=unit_ui_of(subsystem,row.id);
+    if(ui.state!=Ownership::Verified||!ui.shown||ui.vm!=vm)return;
+    row.health_indicator=target_health(shown_unit_widget(cursors,ui.root),vm,ui.root);
+    auto* enemy=shown_unit_widget(enemy_widgets,ui.root);
+    if(!enemy)return;
+    auto* gauge=member(enemy,enemy_ui_class,L"WBP_BreakPointGauge",break_gauge_class);
+    auto* broken=member(gauge,break_gauge_class,L"Overlay_Break",L"/Script/UMG.Overlay");
+    std::vector<std::string> stagger;
+    if(visible_top(broken,ui.root,true)==ui.root&&presented_texts(broken,stagger)&&stagger.size()==1)
+        row.stagger=std::move(stagger.front());
+
+    auto* predict=member(enemy,enemy_ui_class,L"WBP_BtlSkillResistPredict",prediction_widget);
+    auto* appearance=member(predict,prediction_widget,L"WBP_BtlSkillResistPredictAppearance",prediction_appearance);
+    auto* label=member(appearance,prediction_appearance,L"Text_EffectName",L"/Script/UMG.TextBlock");
+    if(visible_top(label,ui.root,true)!=ui.root)return;
+    auto* model=viewmodel(predict,prediction_widget,L"VM_BtlSkillResistPredict",prediction_model);
+    if(skill<=0||object(model,prediction_target,unit_vm_class)!=vm||!flag(model,prediction_display).value_or(false)||
+       read<int>(model,prediction_skill)!=skill)return;
+    // Match the visible label to the current widget's per-skill property.
+    // The engine decides when an affinity is known and displays its prediction.
+    auto* shape=struct_of(verified_property(model,prediction_data),L"/Script/mucha.UISkillResistPredictProperty",240);
+    if(!members(shape,{{L"bDisplay",0,1,L"BoolProperty"},{L"TextData",16,192,L"StructProperty"}}))return;
+    auto* text_shape=struct_of(shape->FindProperty(FName(L"TextData",FNAME_Find)),L"/Script/mucha.TextData",192);
+    if(!members(text_shape,{{L"Text",0,16,L"TextProperty"}}))return;
+    const auto* data=static_cast<const std::byte*>(field(model,prediction_data));
+    if(!data||!pod<unsigned char>(data,0))return;
+    auto shown=text_at(field(label,text_block));
+    if(!shown.empty()&&shown==text_at(data+16))row.target_prediction=std::move(shown);
+}
 // Copies the pop-up's rendered texts once MVVM has pushed its view model into
 // them (NumberText <- DisplayNumberText, title <- TitleProperty, visibilities
 // <- bEnable, extra titles <- GetAdditionalParam). Waiting until every shown
@@ -966,22 +1068,23 @@ BattleResultPage BattleInput::result_page(UObject* top) {
             }
         }
         result.diagnostic+=" page="+result.page;
-        const auto enabled=flag(page,page_staging_on);
-        if(enabled&&!*enabled)result.staging=false;
-        else if(enabled) {
-            auto* manager=object(page,page_staging,L"/Script/mucha.CPP_Btl_Result_StagingManager");
-            const auto steps=read<Array<UObject*>>(manager,staging_steps);const auto current=read<int>(manager,staging_index);
-            if(manager&&steps&&current&&story_input_detail::valid_native_array(steps->data,steps->num,steps->max,64)) {
-                if(!steps->num)result.staging=false;
-                else if(*current>=0&&*current<steps->num) {
-                    // A pause between staging steps does not settle the page.
-                    if(*current<steps->num-1)result.staging=true;
-                    else if(const auto finished=flag(steps->data[*current],step_finished))result.staging=!*finished;
-                }
-                result.diagnostic+=" step="+std::to_string(*current)+"/"+std::to_string(steps->num);
+        auto* manager=object(page,page_staging,L"/Script/mucha.CPP_Btl_Result_StagingManager");
+        const auto steps=read<Array<UObject*>>(manager,staging_steps);
+        const auto current=read<int>(manager,staging_index);
+        if(steps&&current&&story_input_detail::valid_native_array(steps->data,steps->num,steps->max,64)) {
+            if(!steps->num||*current==steps->num)result.staging=false;
+            else if(*current>=0&&*current<steps->num) {
+                auto* step=steps->data[*current];
+                // IsPlayStaging stays false during the native count-up. Inspect
+                // the actual manager and retain staging between adjacent steps.
+                if(*current<steps->num-1||flag(step,step_playing).value_or(false))result.staging=true;
+                else if(const auto finished=flag(step,step_finished))result.staging=!*finished;
             }
+            result.diagnostic+=" step="+std::to_string(*current)+"/"+std::to_string(steps->num);
         }
+        if(is(page,reward_page))result.counting_rewards=!reward_counts_settled(page,top);
         result.diagnostic+=" staging="+(result.staging?std::to_string(*result.staging):std::string("unknown"));
+        if(is(page,reward_page))result.diagnostic+=" reward_counts="+std::string(result.counting_rewards?"pending":"finished");
     } catch(const std::exception&) {result={};result.diagnostic="RESULT page could not be read";}
     return result;
 }
@@ -1231,6 +1334,9 @@ BattleFrame BattleInput::capture(UObject* top,bool include_party_status) {
                 // overhead UI and turn-order entry; identity only, no hidden stats.
                 std::vector<int> visible;for(const auto& unit:units)if(unit.visible)visible.push_back(unit.id);
                 std::sort(visible.begin(),visible.end());order.insert(order.end(),visible.begin(),visible.end());
+                const auto enemy_widgets=frame.choosing_target?instances(L"WBP_Btl_EnemyUI_C"):std::vector<UObject*>{};
+                const auto cursors=frame.choosing_target?instances(L"WBP_Btl_UnitSelect_C"):std::vector<UObject*>{};
+                const auto selected_skill=read<int>(model,battle_skill).value_or(0);
                 std::vector<int> added;
                 for(const int id:order) {
                     if(std::find(added.begin(),added.end(),id)!=added.end())continue;
@@ -1245,6 +1351,8 @@ BattleFrame BattleInput::capture(UObject* top,bool include_party_status) {
                         if(include_party_status)row.party_status=party_status(party_card(cards,unit->vm),unit->vm);
                         if((!row.hp||!row.mp)&&issue.empty())issue="Party status could not be read.";
                     }
+                    if(row.side==BattleSide::Enemy&&std::binary_search(frame.targets.begin(),frame.targets.end(),id))
+                        target_indicators(battle.subsystem,unit->vm,row,selected_skill,enemy_widgets,cursors);
                     frame.units.push_back(std::move(row));
                 }
                 auto* banner=member(layout,layout_class,L"WBP_Btl_SkillMsg",banner_class);

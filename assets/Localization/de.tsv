@@ -1336,6 +1336,12 @@ west crossing lift	Der westliche Querlift
 {0} navigation is unavailable because its current game binding could not be read.	Navigation mit {0} ist nicht verfügbar, da die aktuelle Tastenbelegung nicht gelesen werden konnte.
 {0} navigation unavailable. Its game binding is assigned to another control or could not be read.	Navigation mit {0} nicht verfügbar. Die Taste ist anderweitig belegt oder die Belegung konnte nicht gelesen werden.
 {0} of {1}	{0} von {1}
+Screen reader descriptions ready.	Audiodeskription per Screenreader ist bereit.
+Screen reader descriptions unavailable.	Audiodeskription per Screenreader ist nicht verfügbar.
+Battle results are still appearing.	Die Kampfergebnisse werden noch eingeblendet.
+F4 or right-stick click stops combat announcements. Use the up and down arrows or D-pad to review victory results.	F4 oder ein Druck auf den rechten Stick stoppt die Kampfansagen. Mit den Pfeiltasten oder dem Steuerkreuz nach oben und unten kannst du die Siegesergebnisse durchgehen.
+Weakened	Geschwächt
+Critically weakened	Stark geschwächt
 {0} or {1}	{0} oder {1}
 {0} percent	{0} Prozent
 {0} plus {1}	{0} plus {1}
@@ -1351,3 +1357,10 @@ west crossing lift	Der westliche Querlift
 {0}. {1} passage. {2}	{0}. {1} Durchgang. {2}
 {0}. {1} passages. {2}	{0}. {1} Durchgänge. {2}
 {0}: {1}.	{0}: {1}.
+Investigate the radar signal at Ardra Crater.	Untersuche das Radarsignal am Ardra-Krater.
+Follow the beacon to Ardra Crater and land the Enterprise.	Folge dem Leitsignal zum Ardra-Krater und lande mit der Enterprise.
+Ardra Crater	Ardra-Krater
+At Ardra Crater. Land the Enterprise.	Ardra-Krater erreicht. Lande mit der Enterprise.
+Approach Ultima Weapon and interact when ready.	Nähere dich der Ultima-Waffe und interagiere mit ihr, wenn du bereit bist.
+Ultima Weapon	Ultima-Waffe
+Use the Enterprise to reach Ardra Crater.	Fliege mit der Enterprise zum Ardra-Krater.

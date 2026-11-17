@@ -1336,6 +1336,12 @@ west crossing lift	El ascensor de cruce oeste
 {0} navigation is unavailable because its current game binding could not be read.	La navegación con {0} no está disponible porque no se ha podido leer su asignación actual en el juego.
 {0} navigation unavailable. Its game binding is assigned to another control or could not be read.	Navegación con {0} no disponible. El control está asignado a otra acción o no se ha podido leer su asignación.
 {0} of {1}	{0} de {1}
+Screen reader descriptions ready.	La audiodescripción con el lector de pantalla está lista.
+Screen reader descriptions unavailable.	La audiodescripción con el lector de pantalla no está disponible.
+Battle results are still appearing.	Los resultados del combate aún están apareciendo.
+F4 or right-stick click stops combat announcements. Use the up and down arrows or D-pad to review victory results.	Pulsa F4 o el stick derecho para detener los avisos de combate. Usa las flechas o la cruceta arriba y abajo para revisar los resultados de la victoria.
+Weakened	Debilitado
+Critically weakened	Gravemente debilitado
 {0} or {1}	{0} o {1}
 {0} percent	{0} por ciento
 {0} plus {1}	{0} más {1}
@@ -1351,3 +1357,10 @@ west crossing lift	El ascensor de cruce oeste
 {0}. {1} passage. {2}	{0}. {1} paso. {2}
 {0}. {1} passages. {2}	{0}. {1} pasos. {2}
 {0}: {1}.	{0}: {1}.
+Investigate the radar signal at Ardra Crater.	Investiga la señal del radar en el Cráter de Ardra.
+Follow the beacon to Ardra Crater and land the Enterprise.	Sigue la baliza hasta el Cráter de Ardra y aterriza con el Enterprise.
+Ardra Crater	Cráter de Ardra
+At Ardra Crater. Land the Enterprise.	Has llegado al Cráter de Ardra. Aterriza con el Enterprise.
+Approach Ultima Weapon and interact when ready.	Acércate a Arma Artema e interactúa cuando estés listo.
+Ultima Weapon	Arma Artema
+Use the Enterprise to reach Ardra Crater.	Usa el Enterprise para llegar al Cráter de Ardra.

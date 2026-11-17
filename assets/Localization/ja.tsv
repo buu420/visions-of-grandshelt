@@ -1336,6 +1336,12 @@ west crossing lift	西の渡りリフト
 {0} navigation is unavailable because its current game binding could not be read.	{0}の現在の割り当てを読み取れないため、ガイドに使えません。
 {0} navigation unavailable. Its game binding is assigned to another control or could not be read.	{0}でガイドを利用できません。他の操作に割り当てられているか、割り当てを読み取れません。
 {0} of {1}	全{1}項目中{0}番目
+Screen reader descriptions ready.	スクリーンリーダーによる音声解説の準備ができました。
+Screen reader descriptions unavailable.	スクリーンリーダーによる音声解説は利用できません。
+Battle results are still appearing.	バトルリザルトを表示中です。
+F4 or right-stick click stops combat announcements. Use the up and down arrows or D-pad to review victory results.	F4キーか右スティックの押し込みで戦闘中の読み上げを止めます。上下の矢印キーか方向キーで勝利時のリザルトを確認できます。
+Weakened	弱っている
+Critically weakened	瀕死
 {0} or {1}	{0}または{1}
 {0} percent	{0}パーセント
 {0} plus {1}	{0}と{1}を同時に
@@ -1351,3 +1357,10 @@ west crossing lift	西の渡りリフト
 {0}. {1} passage. {2}	{0}。通過する出口は{1}か所。{2}
 {0}. {1} passages. {2}	{0}。通過する出口は{1}か所。{2}
 {0}: {1}.	{0}、{1}。
+Investigate the radar signal at Ardra Crater.	アードラ・クレーターのレーダー反応を調べる。
+Follow the beacon to Ardra Crater and land the Enterprise.	ビーコンを頼りにアードラ・クレーターへ向かい、エンタープライズを着陸させてください。
+Ardra Crater	アードラ・クレーター
+At Ardra Crater. Land the Enterprise.	アードラ・クレーターに到着しました。エンタープライズを着陸させてください。
+Approach Ultima Weapon and interact when ready.	アルテマウェポンに近づき、準備ができたら調べてください。
+Ultima Weapon	アルテマウェポン
+Use the Enterprise to reach Ardra Crater.	エンタープライズでアードラ・クレーターへ向かってください。

@@ -166,7 +166,8 @@ NarrationWave read_narration_wave(const std::filesystem::path& path) {
     if(!format||!pcm||result.samples.size()%(result.channels*2)!=0)throw std::runtime_error("Missing or incomplete PCM16 WAVE frames");
     return result;
 }
-std::vector<NarrationCue> load_narration_manifest(const std::filesystem::path& path,const std::filesystem::path& asset_root) {
+std::vector<NarrationCue> load_narration_manifest(const std::filesystem::path& path,
+        const std::filesystem::path& asset_root,DescriptionSource source_kind) {
     const auto root=checked_root(asset_root);const auto data=read_file(path,4u*1024u*1024u);
     if(data.empty())throw std::runtime_error("Narration manifest has no cues");
     std::string source(reinterpret_cast<const char*>(data.data()),data.size());
@@ -184,12 +185,14 @@ std::vector<NarrationCue> load_narration_manifest(const std::filesystem::path& p
         for(;;){const auto tab=row.find('\t',field);fields.push_back(row.substr(field,tab==std::string::npos?row.size()-field:tab-field));if(tab==std::string::npos)break;field=tab+1;}
         if(fields.size()!=6)throw std::runtime_error("Narration TSV row must contain six fields at line "+std::to_string(line));
         for(const auto& field_value:fields)if(field_value.find('\r')!=std::string::npos)throw std::runtime_error("Unexpected carriage return in narration TSV field");
-        cues.push_back({fields[0],fields[1],fields[5],fields[4],number(fields[2]),number(fields[3])});
+        cues.push_back({fields[0],fields[1],fields[5],
+            source_kind==DescriptionSource::Recording?fields[4]:std::string{},number(fields[2]),number(fields[3]),0,source_kind});
         if(cues.size()>5000)throw std::runtime_error("Narration cue count exceeds limit");
     }
     if(!line||cues.empty())throw std::runtime_error("Narration manifest has no cues");
     NarrationScheduler validated(std::move(cues));
     auto measured=validated.cues();
+    if(source_kind==DescriptionSource::ScreenReader)return measured;
     for(auto& cue:measured) {
         const auto wave=read_narration_wave(asset_path(root,cue.audio));
         cue.duration=wave.duration();
@@ -197,7 +200,8 @@ std::vector<NarrationCue> load_narration_manifest(const std::filesystem::path& p
     }
     return measured;
 }
-std::vector<PacedNarrationCue> load_paced_narration_manifest(const std::filesystem::path& path,const std::filesystem::path& asset_root) {
+std::vector<PacedNarrationCue> load_paced_narration_manifest(const std::filesystem::path& path,
+        const std::filesystem::path& asset_root,DescriptionSource source_kind) {
     const auto root=checked_root(asset_root);const auto data=read_file(path,4u*1024u*1024u);
     if(data.empty())throw std::runtime_error("Paced narration manifest has no cues");
     std::string source(reinterpret_cast<const char*>(data.data()),data.size());
@@ -223,12 +227,14 @@ std::vector<PacedNarrationCue> load_paced_narration_manifest(const std::filesyst
             throw std::runtime_error("Wrong paced narration TSV field count at line "+std::to_string(line));
         for(const auto& value:fields)if(value.find('\r')!=std::string::npos)throw std::runtime_error("Unexpected carriage return in paced narration TSV field");
         if(fields[5]!="0"&&fields[5]!="1")throw std::runtime_error("Invalid paced narration advance policy");
-        cues.push_back({fields[0],fields[1],fields[2],fields[4],fields[3],fields[5]=="1",
-                        caption_column?std::move(fields[6]):std::string{}});
+        cues.push_back({fields[0],fields[1],fields[2],fields[4],
+                        source_kind==DescriptionSource::Recording?fields[3]:std::string{},fields[5]=="1",
+                        caption_column?std::move(fields[6]):std::string{},source_kind});
         if(cues.size()>5000)throw std::runtime_error("Paced narration cue count exceeds limit");
     }
     if(!line||cues.empty())throw std::runtime_error("Paced narration manifest has no cues");
     PacedNarrationScheduler validated(std::move(cues));
+    if(source_kind==DescriptionSource::ScreenReader)return validated.cues();
     for(const auto& cue:validated.cues()) {
         const auto wave=read_narration_wave(asset_path(root,cue.audio));
         if(wave.duration()>15.0)throw std::runtime_error("Paced narration recording exceeds fifteen seconds: "+cue.id);

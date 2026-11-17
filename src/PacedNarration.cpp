@@ -37,11 +37,11 @@ std::vector<NarrationAction> PacedNarrationScheduler::set_cues(std::vector<Paced
     std::set<std::pair<std::string,std::string>> events,identities,captions;
     for(const auto& cue:cues) {
         if(!valid_text(cue.scene,true)||!valid_text(cue.event,true)||!valid_text(cue.id,true)||
-           !valid_text(cue.audio,true)||!valid_text(cue.text,false))
+           (!cue.audio.empty()&&!valid_text(cue.audio,true))||!valid_text(cue.text,false))
             throw std::invalid_argument("Invalid paced narration fields");
         // Reuse the ordinary scheduler's exact relative audio-path policy. Its
         // synthetic interval is validation only and never drives paced output.
-        NarrationScheduler validate({{cue.scene,cue.id,cue.text,cue.audio,0,1}});
+        NarrationScheduler validate({{cue.scene,cue.id,cue.text,cue.audio,0,1,0,cue.source}});
         if(!events.emplace(cue.scene,cue.event).second||!identities.emplace(cue.scene,cue.id).second)
             throw std::invalid_argument("Repeated paced scene/event or scene/cue identity");
         if(!cue.caption_sha256.empty()&&(!cue.event.starts_with("table:")||

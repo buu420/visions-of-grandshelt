@@ -195,7 +195,7 @@ DescriptionDecision DescriptionCoordinator::observe(const DescriptionFrame& f){
     };
     const auto unavailable=[&]{
         if(native_identity&&f.foreground&&!menu&&ready&&(fresh||awaiting_current)&&cue!=paced_.cues().end()) {
-            result.notice=trf(unavailable_reported_?"Description: {0}":"Recorded description unavailable. Description: {0}",
+            result.notice=trf(unavailable_reported_||f.screen_reader?"Description: {0}":"Recorded description unavailable. Description: {0}",
                 {cue->text});
             unavailable_reported_=true;
         }
