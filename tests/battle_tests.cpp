@@ -14,19 +14,20 @@ BattleEvent hit(std::uint64_t sequence,std::string text="12 damage"){
     return {"battle:1",sequence,2,BattleSide::Enemy,"Magitek Armor","A",std::move(text),true};
 }
 void roles_and_mystery_names(){BattleCore c;auto f=frame();auto e=c.observe(f);
-    require(contains(e,"Ally ???"),"acting ally must keep the displayed mystery name and side");
-    require(contains(e,"HP 5151")&&contains(e,"MP 433"),"current ally HUD values are readable");
-    require(contains(e,"Enemy Magitek Armor A")&&contains(e,"level 30"),"target side, display name, duplicate letter and visible level are readable");
+    require(contains(e,"??? acting"),"turn changes keep the displayed mystery name");
+    require(!contains(e,"HP 5151")&&!contains(e,"MP 433"),"turn changes speak the actor's name by itself");
+    require(contains(e,"Magitek Armor A. level 30"),"enemy focus reads the name, duplicate letter and displayed level");
     require(c.observe(f).empty(),"an unchanged frame is not repeated");
 }
 void turns_and_target_changes(){BattleCore c;auto f=frame();c.observe(f);f.actor=2;
-    require(contains(c.observe(f),"Enemy Magitek Armor A"),"enemy turn cannot be announced as an ally");
+    require(contains(c.observe(f),"Magitek Armor A acting"),"enemy turns read the acting enemy and duplicate letter");
     f.targets={1};require(contains(c.observe(f),"Ally ???"),"healing target is announced as an ally");
     f.choosing_target=false;f.targets.clear();c.observe(f);f.choosing_target=true;f.targets={1};
     require(contains(c.observe(f),"Ally ???"),"reopening target selection announces its current target");
 }
 void hidden_enemy_stats(){BattleCore c;auto f=frame();f.units[1].hp=99999;f.units[1].mp=99999;
     f.units.push_back({3,BattleSide::Enemy,"Watcher","B",20,{},{}});
+    f.choosing_target=false;f.targets.clear();
     const auto s=c.review(f);require(s.find("99999")==std::string::npos,"raw enemy numbers cannot enter the party HUD review");
     require(s.find("Enemies.")!=std::string::npos&&s.find("Enemy Watcher B")!=std::string::npos,"screen review separates the full presented enemy side from the party");
     f.libra=BattleLibra{2,900,1000,{"Weak to lightning"}};
@@ -56,7 +57,9 @@ void missing_identity_and_removed_unit(){BattleCore c;auto f=frame();c.observe(f
     const auto e=c.events(f,{b});require(contains(e,"Battle result. 12 damage")&&!contains(e,"99"),"unidentified results remain readable without invented unit names or ids");
 }
 void current_status_and_new_context(){BattleCore c;auto f=frame();c.observe(f);f.units[0].hp=5100;
-    require(c.review(f).find("HP 5100")!=std::string::npos,"review uses current values rather than cached HP");
+    f.choosing_target=false;
+    require(c.review(f).find("HP 5100")!=std::string::npos,"party review uses the current HP");
+    f.choosing_target=true;
     f.context="battle:2";require(!c.observe(f).empty(),"a fresh battle reannounces actor and target");
     auto a=hit(1);a.context=f.context;require(c.events(f,{a}).size()==1,"presentation sequence can restart in a fresh battle context");
 }
@@ -309,15 +312,44 @@ void enemy_target_indicators_are_current() {
     require(contains(core.observe(f),"Weak. Staggered. Weakened"),"displayed affinity, stagger and health band are in the selected enemy row");
     f.units[1].target_prediction.clear();f.units[1].stagger.clear();f.units[1].health_indicator.clear();
     const auto changed=core.observe(f);
-    require(contains(changed,"Target.")&&!contains(changed,"Weak")&&!contains(changed,"Staggered"),
+    require(contains(changed,"Magitek Armor A. level 30")&&!contains(changed,"Weak")&&!contains(changed,"Staggered"),
         "a different skill or recovered target cannot reuse indicators");
+
+    f.units[1].stagger_percent=75;
+    f.libra=BattleLibra{2,240,384,{"Weak to Earth"}};
+    const auto analyzed=core.observe(f);
+    require(contains(analyzed,"HP 240 of 384")&&contains(analyzed,"Stagger gauge 75 percent")&&
+        contains(analyzed,"Weak to Earth"),"the selected enemy reads its presented HP, gauge and Libra affinity");
+    f.units[0].name="Lasswell";
+    f.units.push_back({4,BattleSide::Ally,"Rain","",11,305,42});
+    require(core.review(f)=="Lasswell acting. Magitek Armor A. level 30. HP 240 of 384. Stagger gauge 75 percent. Weak to Earth",
+        "F9 during enemy targeting reads the actor and the focused enemy");
+    core.observe(f);
+    require(core.observe(f).empty(),"a steady stagger bar does not repeat the target");
+    f.units.push_back({3,BattleSide::Enemy,"Damia","B",12,416});
+    f.units.back().stagger_percent=100;
+    f.targets={3};f.focused_target=3;f.libra=BattleLibra{3};
+    const auto unscanned=core.observe(f);
+    require(contains(unscanned,"Damia B. level 12. Stagger gauge full")&&
+        !contains(unscanned,"HP")&&!contains(unscanned,"Earth"),"a new target reads its own visible gauge without unshown details");
+
+    f.units.back().stagger_percent=0;
+    f.units.back().stagger="Staggered";
+    const auto staggered=core.observe(f);
+    require(contains(staggered,"Staggered")&&!contains(staggered,"percent"),
+        "the displayed staggered label replaces the bar reading");
+
     f.choosing_target=false;f.targets.clear();f.units[1].target_prediction="Weak";
-    require(core.review(f).find("Weak")==std::string::npos,"affinity stays scoped to selection");
+    f.libra.reset();
+    const auto review=core.review(f);
+    require(review.find("Rain. HP 305")!=std::string::npos&&review.find("Weak")==std::string::npos&&review.find("Stagger")==std::string::npos,
+        "target indicators stay scoped to selection");
 }
 void focused_target_and_level_visibility(){
     BattleCore core;auto f=frame();f.units.push_back({3,BattleSide::Enemy,"Watcher","B",20,{},{}});f.targets={2,3};f.focused_target=2;
     require(contains(core.observe(f),"Focused. Enemy Magitek Armor A"),"multi-target speech must identify its current primary focus");
     f.focused_target=3;require(contains(core.observe(f),"Focused. Enemy Watcher B"),"changing primary focus within the same target set remains audible");
+    require(core.review(f)=="??? acting. Watcher B. level 20","review of a group selection follows the focused enemy");
     f.choosing_target=false;f.targets.clear();f.focused_target=-1;f.actor=2;
     require(core.review(f).find("level 30")==std::string::npos,"an acting enemy cannot disclose its level without a presented target role");
     f.libra=BattleLibra{2};require(core.review(f).find("level 30")!=std::string::npos,"visible target information may disclose the displayed enemy level");
@@ -344,7 +376,7 @@ void visible_battle_prompt_takes_precedence(){
     const auto changed=core.observe(f);
     require(changed.size()==1&&changed[0].text==f.prompt->text,"new visible choices are announced");
     f.prompt.reset();
-    require(contains(core.observe(f),"Acting. Ally ???"),"regular combat speech resumes after the prompt closes");
+    require(contains(core.observe(f),"??? acting"),"regular combat speech resumes after the prompt closes");
     require(core.review(f).find("Select Resonance")==std::string::npos,"review drops the closed prompt");
     f.prompt=BattlePrompt{"resonance-options",gamepad};
     require(contains(core.observe(f),"Select Resonance"),"a reopened prompt is announced again");

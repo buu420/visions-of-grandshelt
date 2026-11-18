@@ -1370,3 +1370,19 @@ Square	四角
 Triangle	三角
 Right stick click	右スティック押し込み
 Right stick up or down	右スティック上下
+Stagger gauge {0} percent	ブレイクゲージ{0}パーセント
+Stagger gauge full	ブレイクゲージ満タン
+{0} acting	{0}のターン
+an unknown element	不明な属性
+Fire	火
+Ice	氷
+Wind	風
+Earth	土
+Lightning	雷
+Water	水
+Light	光
+Dark	闇
+Weak to {0}	{0}が弱点
+Halves damage from {0}	{0}ダメージ半減
+Immune to {0}	{0}ダメージ無効
+Absorbs {0}	{0}ダメージ吸収

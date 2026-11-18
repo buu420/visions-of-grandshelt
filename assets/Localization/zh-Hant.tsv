@@ -1370,3 +1370,19 @@ Square	方塊鍵
 Triangle	三角鍵
 Right stick click	按下右搖桿
 Right stick up or down	右搖桿向上或向下
+Stagger gauge {0} percent	擊潰量表百分之{0}
+Stagger gauge full	擊潰量表已滿
+{0} acting	{0}行動
+an unknown element	未知屬性
+Fire	火
+Ice	冰
+Wind	風
+Earth	土
+Lightning	雷
+Water	水
+Light	光
+Dark	闇
+Weak to {0}	弱點是{0}
+Halves damage from {0}	{0}傷害減半
+Immune to {0}	{0}傷害無效
+Absorbs {0}	吸收{0}傷害

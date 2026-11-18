@@ -1370,3 +1370,19 @@ Square	方块键
 Triangle	三角键
 Right stick click	按下右摇杆
 Right stick up or down	右摇杆向上或向下
+Stagger gauge {0} percent	破防槽百分之{0}
+Stagger gauge full	破防槽已满
+{0} acting	{0}行动
+an unknown element	未知属性
+Fire	火
+Ice	冰
+Wind	风
+Earth	土
+Lightning	雷
+Water	水
+Light	光
+Dark	暗
+Weak to {0}	弱点是{0}
+Halves damage from {0}	{0}伤害减半
+Immune to {0}	{0}伤害无效
+Absorbs {0}	吸收{0}伤害

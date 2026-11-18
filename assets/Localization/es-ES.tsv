@@ -1370,3 +1370,19 @@ Square	Cuadrado
 Triangle	Triángulo
 Right stick click	Pulsar el stick derecho
 Right stick up or down	Stick derecho hacia arriba o hacia abajo
+Stagger gauge {0} percent	Barra de aturdimiento al {0} por ciento
+Stagger gauge full	Barra de aturdimiento llena
+{0} acting	Turno de {0}
+an unknown element	un elemento desconocido
+Fire	fuego
+Ice	hielo
+Wind	viento
+Earth	tierra
+Lightning	rayo
+Water	agua
+Light	luz
+Dark	oscuridad
+Weak to {0}	Debilidad a {0}
+Halves damage from {0}	Daño de {0} reducido a la mitad
+Immune to {0}	Inmune al daño de {0}
+Absorbs {0}	Absorbe el daño de {0}

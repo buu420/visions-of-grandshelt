@@ -7,9 +7,11 @@ const BattleUnit* unit(const std::vector<BattleUnit>& units,int id){
     const auto found=std::find_if(units.begin(),units.end(),[&](const auto& u){return u.id==id;});
     return found==units.end()?nullptr:&*found;
 }
-std::string identity(const BattleUnit& u){
+std::string identity(const BattleUnit& u,bool include_role=true){
     const auto role=u.side==BattleSide::Ally?"Ally":u.side==BattleSide::Enemy?"Enemy":"Unit";
-    auto s=u.name.empty()?tr(role):trf("{0} {1}",{tr(role),u.name});
+    auto s=u.name;
+    if(s.empty())s=tr(role);
+    else if(include_role)s=trf("{0} {1}",{tr(role),s});
     if(!u.letter.empty())s+=' '+u.letter;
     return s;
 }
@@ -26,8 +28,8 @@ void append(std::string& to,const std::string& text){
 // HP as presented: a shown Libra HP entry gives current and maximum HP for
 // either side, else only an ally's party row shows its current HP. Enemy
 // HP/MP never comes from a raw unit row.
-std::string describe(const BattleUnit& u,bool status,bool level,const BattleLibra* libra=nullptr){
-    auto s=identity(u);
+std::string describe(const BattleUnit& u,bool status,bool level,const BattleLibra* libra=nullptr,bool include_role=true){
+    auto s=identity(u,include_role);
     if(level&&u.level>=0)append(s,trf("level {0}",{std::to_string(u.level)}));
     if(libra&&libra->hp&&*libra->hp>=0) {
         const auto current=std::to_string(*libra->hp);
@@ -38,17 +40,38 @@ std::string describe(const BattleUnit& u,bool status,bool level,const BattleLibr
     if(status&&u.side==BattleSide::Ally&&u.mp&&*u.mp>=0)append(s,trf("MP {0}",{std::to_string(*u.mp)}));
     return s;
 }
-std::string libra_details(const BattleLibra& l){
-    std::string s;
-    for(const auto& d:l.details)append(s,d);
-    return s;
-}
 bool level_presented(const BattleFrame& f,int id){
     return (f.choosing_target&&std::find(f.targets.begin(),f.targets.end(),id)!=f.targets.end())||
         (f.libra&&f.libra->unit==id);
 }
-std::string targets(const BattleFrame& f){
+std::string target_details(const BattleFrame& f,const BattleUnit& u,bool include_role){
+    const auto* libra=f.libra&&f.libra->unit==u.id?&*f.libra:nullptr;
+    auto s=describe(u,true,level_presented(f,u.id),libra,include_role);
+    if(f.choosing_target&&u.side==BattleSide::Enemy) {
+        append(s,u.target_prediction);
+        if(!u.stagger.empty())append(s,u.stagger);
+        else if(u.stagger_percent==100)append(s,tr("Stagger gauge full"));
+        else if(u.stagger_percent)append(s,trf("Stagger gauge {0} percent",{std::to_string(*u.stagger_percent)}));
+        append(s,u.health_indicator);
+    }
+    if(libra)for(const auto& detail:libra->details)append(s,detail);
+    return s;
+}
+const BattleUnit* focused_enemy(const BattleFrame& f) {
+    const auto selected=[&](int id){return std::find(f.targets.begin(),f.targets.end(),id)!=f.targets.end();};
+    int id=-1;
+    if(f.choosing_target&&selected(f.focused_target))id=f.focused_target;
+    else if(f.choosing_target&&f.targets.size()==1)id=f.targets.front();
+    else if(f.libra&&(!f.choosing_target||selected(f.libra->unit)))id=f.libra->unit;
+    const auto* focus=unit(f.units,id);
+    return focus&&focus->side==BattleSide::Enemy?focus:nullptr;
+}
+std::string targets(const BattleFrame& f,bool enemy_review=false){
+    if(enemy_review||!f.choosing_target||f.targets.size()==1)
+        if(const auto* focus=focused_enemy(f))return target_details(f,*focus,false);
+
     std::string s;
+    bool has_enemy=false;
     std::vector<int> ids=f.choosing_target?f.targets:std::vector<int>{};
     if(f.libra&&std::find(ids.begin(),ids.end(),f.libra->unit)==ids.end())ids.push_back(f.libra->unit);
     std::vector<int> seen;
@@ -56,18 +79,13 @@ std::string targets(const BattleFrame& f){
         if(std::find(seen.begin(),seen.end(),id)!=seen.end())continue;
         seen.push_back(id);
         if(const auto* u=unit(f.units,id)){
-            const auto* libra=f.libra&&f.libra->unit==id?&*f.libra:nullptr;
-            auto description=describe(*u,true,level_presented(f,id),libra);
+            has_enemy=has_enemy||u->side==BattleSide::Enemy;
+            auto description=target_details(f,*u,true);
             if(f.choosing_target&&f.focused_target==id)description=trf("Focused. {0}",{description});
-            if(f.choosing_target&&u->side==BattleSide::Enemy) {
-                append(description,u->target_prediction);
-                append(description,u->stagger);
-                append(description,u->health_indicator);
-            }
             append(s,description);
-            if(libra)append(s,libra_details(*libra));
         }
     }
+    if(enemy_review&&!has_enemy)return {};
     return s.empty()?s:trf("Target. {0}",{s});
 }
 void remember(std::vector<BattleUnit>& known,const std::vector<BattleUnit>& current){
@@ -96,13 +114,12 @@ std::vector<SpeechEvent> BattleCore::observe(const BattleFrame& f){
     }
     prompt_.clear();prompt_selection_.clear();
     std::vector<SpeechEvent> result;
-    // HUD values stay current for review, but incoming damage does not keep
-    // repeating the active ally's entire status over the result announcements.
     const auto* acting=unit(f.units,f.actor);
-    const auto actor_key=acting?std::to_string(acting->id)+'|'+identity(*acting):std::string{};
+    const auto actor_name=acting?identity(*acting,false):std::string{};
+    const auto actor_key=acting?std::to_string(acting->id)+'|'+actor_name:std::string{};
     if(actor_key!=actor_){
         actor_=actor_key;
-        if(acting)result.push_back({trf("Acting. {0}",{describe(*acting,true,false)}),false});
+        if(acting)result.push_back({trf("{0} acting",{actor_name}),false});
     }
     const auto selected=targets(f);
     if(selected!=targets_){targets_=selected;if(!selected.empty())result.push_back({selected,false,SpeechDelivery::LatestSelection});}
@@ -155,6 +172,13 @@ std::string BattleCore::review(const BattleFrame& f)const{
     if(f.prompt&&!f.prompt->text.empty()){
         auto text=f.prompt->text;append(text,f.prompt->selection);return text;
     }
+    const auto* acting=unit(f.units,f.actor);
+    const auto target_review=targets(f,true);
+    if(!target_review.empty()) {
+        auto s=acting?trf("{0} acting",{identity(*acting,false)}):std::string{};
+        append(s,target_review);
+        return s;
+    }
     std::string s,party,enemies;
     for(const auto& u:f.units){
         if(u.side==BattleSide::Ally)append(party,describe(u,true,false));
@@ -162,7 +186,7 @@ std::string BattleCore::review(const BattleFrame& f)const{
     }
     if(!party.empty())append(s,trf("Party. {0}",{party}));
     if(!enemies.empty())append(s,trf("Enemies. {0}",{enemies}));
-    if(const auto* acting=unit(f.units,f.actor))append(s,trf("Acting. {0}",{identity(*acting)}));
+    if(acting)append(s,trf("Acting. {0}",{identity(*acting)}));
     append(s,targets(f));append(s,f.banner);append(s,f.unavailable_reason);
     return s.empty()?tr("Battle information is unavailable."):s;
 }

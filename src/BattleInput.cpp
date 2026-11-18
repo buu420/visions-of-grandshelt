@@ -33,11 +33,17 @@ constexpr wchar_t limit_gauge_class[]=L"/Game/UI/Battle/Unit/Statuses/Limit/Widg
 constexpr wchar_t limit_vm_class[]=L"/Script/mucha.CPP_VM_LimitPoint";
 constexpr wchar_t banner_class[]=L"/Game/UI/Battle/SkillMessage/WBP_Btl_SkillMsg.WBP_Btl_SkillMsg_C";
 constexpr wchar_t libra_class[]=L"/Game/UI/Battle/Libra/Widget/WBP_Btl_LibraInfoLayout.WBP_Btl_LibraInfoLayout_C";
+constexpr wchar_t libra_info_class[]=L"/Game/UI/Battle/Libra/Widget/WBP_Btl_LibraInfo.WBP_Btl_LibraInfo_C";
+constexpr wchar_t resist_list_class[]=L"/Game/UI/Battle/Skill/Resist/List/Widget/WBP_BtlSkillResistList.WBP_BtlSkillResistList_C";
+constexpr wchar_t resist_entry_class[]=L"/Game/UI/Battle/Skill/Resist/List/Widget/WBP_BtlSkillResistEntry.WBP_BtlSkillResistEntry_C";
+constexpr wchar_t tag_brush_class[]=L"/Script/mucha.CPP_WBP_GameplayTagBrush";
 constexpr wchar_t unit_ui_class[]=L"/Game/UI/Battle/UnitUI/WBP_Btl_UnitUILayout.WBP_Btl_UnitUILayout_C";
 constexpr wchar_t enemy_ui_class[]=L"/Game/UI/Battle/UnitUI/EnemyStatus/WBP_Btl_EnemyUI.WBP_Btl_EnemyUI_C";
 constexpr wchar_t target_cursor_class[]=L"/Game/UI/Battle/UnitUI/Select/WBP_Btl_UnitSelect.WBP_Btl_UnitSelect_C";
 constexpr wchar_t target_name_class[]=L"/Game/UI/Battle/UnitUI/Select/WBP_Btl_UnitSelectName.WBP_Btl_UnitSelectName_C";
 constexpr wchar_t break_gauge_class[]=L"/Game/UI/Battle/UnitUI/Break/Widget/WBP_BreakPointGauge.WBP_BreakPointGauge_C";
+constexpr wchar_t point_gauge_class[]=L"/Game/UI/Battle/Common/Life/WBP_Btl_PointGauge.WBP_Btl_PointGauge_C";
+constexpr wchar_t unit_point_class[]=L"/Script/mucha.CPP_VM_UnitParamPoint";
 constexpr wchar_t prediction_widget[]=L"/Game/UI/Battle/Skill/Resist/Predict/Widget/WBP_BtlSkillResistPredict.WBP_BtlSkillResistPredict_C";
 constexpr wchar_t prediction_appearance[]=L"/Game/UI/Battle/Skill/Resist/Predict/Widget/WBP_BtlSkillResistPredictAppearance.WBP_BtlSkillResistPredictAppearance_C";
 constexpr wchar_t prediction_model[]=L"/Script/mucha.CPP_VM_BtlSkillResistPredict";
@@ -127,6 +133,10 @@ constexpr Spec battle_skill{L"/Script/mucha.CPP_VM_Battle",L"FocusSkillId",124,4
 constexpr Spec unit_id{unit_vm_class,L"UniqueID",408,4,L"IntProperty"};
 constexpr Spec unit_select{unit_vm_class,L"TargetSelectState",442,1,L"EnumProperty"};
 constexpr Spec unit_visible{unit_vm_class,L"bIsVisible",443,1,L"BoolProperty"};
+constexpr Spec break_points{unit_vm_class,L"BreakPointVM",424,8,L"ObjectProperty"};
+constexpr Spec resist_list_data{L"/Script/mucha.CPP_VM_UnitParam",L"ElemResistDataList",256,16,L"ArrayProperty"};
+constexpr Spec resist_entry_data{resist_entry_class,L"ResistData",-1,3,L"StructProperty"};
+constexpr Spec brush_tag{tag_brush_class,L"BrushTag",392,8,L"StructProperty"};
 constexpr Spec prediction_target{prediction_model,L"TargetUnitParamVM",112,8,L"ObjectProperty"};
 constexpr Spec prediction_skill{prediction_model,L"SkillId",120,4,L"IntProperty"};
 constexpr Spec prediction_display{prediction_model,L"bDisplay",368,1,L"BoolProperty"};
@@ -854,6 +864,96 @@ std::string target_health(UObject* cursor,UObject* vm,UObject* root) {
     if(matches(.026042f,.054156f))return tr("Critically weakened");
     return {};
 }
+void target_stagger(UObject* enemy,UObject* vm,UObject* root,BattleUnit& row) {
+    auto* gauge=member(enemy,enemy_ui_class,L"WBP_BreakPointGauge",break_gauge_class);
+    if(visible_top(gauge,root,true)!=root)return;
+    auto* points=object(vm,break_points,unit_point_class);
+    if(!points||viewmodel(gauge,break_gauge_class,L"CPP_VM_UnitParamPoint",unit_point_class)!=points)return;
+
+    auto* broken=member(gauge,break_gauge_class,L"Overlay_Break",L"/Script/UMG.Overlay");
+    if(visible_top(broken,root,true)==root) {
+        std::vector<std::string> labels;
+        if(presented_texts(broken,labels)&&labels.size()==1)row.stagger=std::move(labels.front());
+        if(!row.stagger.empty())return;
+    }
+    auto* bar=member(gauge,break_gauge_class,L"WBP_PointGauge",point_gauge_class);
+    if(visible_top(bar,root,true)!=root||
+       viewmodel(bar,point_gauge_class,L"CPP_VM_PredictPoint",unit_point_class)!=points)return;
+    // CurrentPercent drives the front fill. The trailing and predicted fills
+    // are separate, and can show different values at the same time.
+    const auto fraction=read<float>(bar,{point_gauge_class,L"CurrentPercent",-1,4,L"FloatProperty"});
+    if(fraction&&std::isfinite(*fraction)&&*fraction>=0.f&&*fraction<=1.f)
+        row.stagger_percent=static_cast<int>(std::lround(*fraction*100.f));
+}
+
+struct ResistanceIconData {
+    unsigned char element, resistance, revealed;
+    bool operator==(const ResistanceIconData&) const = default;
+};
+bool resistance_icon_shape(UStruct* type) {
+    return members(type,{{L"element",0,1,L"EnumProperty"},{L"resistance",1,1,L"EnumProperty"},{L"bIsAnalyzed",2,1,L"BoolProperty"}});
+}
+bool shown_brush(UObject* entry,const wchar_t* name,const wchar_t* tag) {
+    auto* brush=member(entry,resist_entry_class,name,tag_brush_class);
+    if(visible_top(brush,entry,true)!=entry)return false;
+    const auto actual=read<FName>(brush,brush_tag);
+    return actual&&!none(*actual)&&same(*actual,FName(tag,FNAME_Find));
+}
+std::vector<std::string> libra_affinities(UObject* layout,UObject* panel,UObject* target) {
+    auto* info=member(panel,libra_class,L"WBP_Btl_LibraInfo",libra_info_class);
+    auto* list=member(info,libra_info_class,L"WBP_BtlSkillResistList",resist_list_class);
+    if(!list||visible_top(list,layout,true)!=layout||
+       viewmodel(list,resist_list_class,L"CPP_VM_BtlUnitParam",unit_vm_class)!=target)return {};
+    auto* property=verified_property(target,resist_list_data);
+    auto* inner=property?static_cast<FArrayProperty*>(property)->GetInner():nullptr;
+    if(!resistance_icon_shape(struct_of(inner,L"/Script/mucha.UIUnitElemResistData",sizeof(ResistanceIconData))))return {};
+    const auto source=read<Array<ResistanceIconData>>(target,resist_list_data);
+    if(!source||source->num<=0||!story_input_detail::valid_native_array(source->data,source->num,source->max,16))return {};
+
+    struct IconLabel {const wchar_t* tag;const char* label;};
+    // Icon tags from DA_UI_Element and DA_UI_Resistance, indexed by the
+    // game's eElement and eResistance enums.
+    static constexpr IconLabel elements[]{
+        {L"UI.Common.Element.Icon.Unknown","an unknown element"},
+        {L"UI.Common.Element.Icon.Fire","Fire"},
+        {L"UI.Common.Element.Icon.Ice","Ice"},
+        {L"UI.Common.Element.Icon.Wind","Wind"},
+        {L"UI.Common.Element.Icon.Earth","Earth"},
+        {L"UI.Common.Element.Icon.Thunder","Lightning"},
+        {L"UI.Common.Element.Icon.Water","Water"},
+        {L"UI.Common.Element.Icon.Light","Light"},
+        {L"UI.Common.Element.Icon.Dark","Dark"}
+    };
+    static constexpr IconLabel resistances[]{
+        {nullptr,nullptr},
+        {L"UI.Common.Resistance.Icon.Weakness","Weak to {0}"},
+        {L"UI.Common.Resistance.Icon.Halved","Halves damage from {0}"},
+        {L"UI.Common.Resistance.Icon.Invalid","Immune to {0}"},
+        {L"UI.Common.Resistance.Icon.Absorb","Absorbs {0}"}
+    };
+    std::vector<std::string> details(static_cast<std::size_t>(source->num));
+    const auto* begin=source->data;
+    const auto* end=begin+source->num;
+    for(auto* entry:instances(L"WBP_BtlSkillResistEntry_C")) {
+        if(visible_top(entry,list,true)!=list||
+           !resistance_icon_shape(struct_of(verified_property(entry,resist_entry_data),
+                                            L"/Script/mucha.UIUnitElemResistData",sizeof(ResistanceIconData))))continue;
+        const auto shown=read<ResistanceIconData>(entry,resist_entry_data);
+        if(!shown||shown->element==0||shown->element>=std::size(elements)||
+           shown->resistance==0||shown->resistance>=std::size(resistances))continue;
+        const auto* current=std::find(begin,end,*shown);
+        if(current==end)continue;
+        const auto& element=elements[shown->revealed?shown->element:0];
+        const auto& resistance=resistances[shown->resistance];
+        // The VM can already contain the next target's data while the icon
+        // rows still show the previous one. Require both the row and brushes.
+        if(shown_brush(entry,L"ElementBrush",element.tag)&&shown_brush(entry,L"ResistanceBrush",resistance.tag))
+            details[static_cast<std::size_t>(current-begin)]=trf(resistance.label,{tr(element.label)});
+    }
+    std::erase(details,std::string{});
+    return details;
+}
+
 void target_indicators(UObject* subsystem,UObject* vm,BattleUnit& row,int skill,
                        const std::vector<UObject*>& enemy_widgets,const std::vector<UObject*>& cursors) {
     const auto ui=unit_ui_of(subsystem,row.id);
@@ -861,11 +961,7 @@ void target_indicators(UObject* subsystem,UObject* vm,BattleUnit& row,int skill,
     row.health_indicator=target_health(shown_unit_widget(cursors,ui.root),vm,ui.root);
     auto* enemy=shown_unit_widget(enemy_widgets,ui.root);
     if(!enemy)return;
-    auto* gauge=member(enemy,enemy_ui_class,L"WBP_BreakPointGauge",break_gauge_class);
-    auto* broken=member(gauge,break_gauge_class,L"Overlay_Break",L"/Script/UMG.Overlay");
-    std::vector<std::string> stagger;
-    if(visible_top(broken,ui.root,true)==ui.root&&presented_texts(broken,stagger)&&stagger.size()==1)
-        row.stagger=std::move(stagger.front());
+    target_stagger(enemy,vm,ui.root,row);
 
     auto* predict=member(enemy,enemy_ui_class,L"WBP_BtlSkillResistPredict",prediction_widget);
     auto* appearance=member(predict,prediction_widget,L"WBP_BtlSkillResistPredictAppearance",prediction_appearance);
@@ -1327,6 +1423,7 @@ BattleFrame BattleInput::capture(UObject* top,bool include_party_status) {
                         const auto analysed=getter<unsigned char>(libra,L"IsAnalyzed",L"/Script/mucha.CPP_VM_BtlLibra:IsAnalyzed",L"BoolProperty");
                         if(!analysed)issue="Libra details could not be read.";
                         else if(*analysed&&hp_entry){entry.hp=point(target,hit_points,point_current);entry.hp_max=point(target,hit_points,point_max);}
+                        entry.details=libra_affinities(layout,libra_layout,target);
                         frame.libra=std::move(entry);
                     }
                 }

@@ -25,6 +25,7 @@ struct BattleUnit {
     // Attached to rows of the presented party HUD. Missing inner values mean unavailable.
     std::optional<BattlePartyStatus> party_status;
     std::string target_prediction, stagger, health_indicator;
+    std::optional<int> stagger_percent;
 };
 struct BattleLibra {
     int unit{-1};

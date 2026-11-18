@@ -1370,3 +1370,19 @@ Square	네모
 Triangle	세모
 Right stick click	오른쪽 스틱 누르기
 Right stick up or down	오른쪽 스틱 위아래
+Stagger gauge {0} percent	브레이크 게이지 {0}퍼센트
+Stagger gauge full	브레이크 게이지 가득 참
+{0} acting	{0}의 차례
+an unknown element	알 수 없는 속성
+Fire	불
+Ice	얼음
+Wind	바람
+Earth	땅
+Lightning	번개
+Water	물
+Light	빛
+Dark	어둠
+Weak to {0}	{0}에 약함
+Halves damage from {0}	{0} 피해 반감
+Immune to {0}	{0} 피해 무효
+Absorbs {0}	{0} 피해 흡수
