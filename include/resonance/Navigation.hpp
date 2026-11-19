@@ -130,6 +130,7 @@ public:
     NavigationUpdate start(NavigationMode,const NavigationFrame&);
     NavigationUpdate toggle(NavigationMode,const NavigationFrame&);
     NavigationUpdate stop(std::string reason="Navigation stopped.");
+    void pause();
     NavigationUpdate observe(const NavigationFrame&,bool explicit_status=false);
     NavigationMode mode() const { return mode_; }
     const std::string& target() const { return target_; }

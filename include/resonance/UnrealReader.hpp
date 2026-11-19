@@ -98,7 +98,7 @@ private:
         std::vector<std::string> checks;
         std::size_t next{}, category{};
         unsigned request{};
-        bool wait_for_full_list{}, announced_wait{};
+        bool announced_wait{};
         std::uint64_t probes{}, total_us{}, max_us{};
     };
     std::optional<AreaBrowse> area_browse_;
@@ -116,6 +116,7 @@ private:
     std::vector<TravelPassage> destination_crossed_;
     void destination_commands(resonance::unreal::UObject*,unsigned,bool);
     bool suspend_auto_walk_trip();
+    bool pause_field_guidance();
     void cancel_auto_walk_trip();
     void observe_destination(resonance::unreal::UObject*,bool battle);
     void follow_destination_leg(resonance::unreal::UObject*,const TravelLocation&,const TravelPassage&,
@@ -141,6 +142,8 @@ private:
     };
     std::optional<KnownTarget> active_target_;
     NavigationFollower navigation_;
+    struct FieldExit { TravelLocation departure; TravelPassage passage; };
+    std::optional<FieldExit> navigation_field_exit_;
     PathSnapshot navigation_path_;
     double navigation_path_sample_{};
     std::optional<StoryCrossing> navigation_crossing_;

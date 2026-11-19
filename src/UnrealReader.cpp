@@ -5325,6 +5325,7 @@ void UnrealReader::navigation_output(const NavigationUpdate& update,bool passive
         navigation_motion_origin_.reset();
     }
     if(update.mode==NavigationMode::Off) {
+        navigation_field_exit_.reset();
         navigation_path_={};navigation_path_sample_=0;navigation_ground_.reset();
         navigation_crossing_.reset();
         navigation_capsule_mesh_.clear();
@@ -5686,9 +5687,12 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
        (!story_target(target_id_)||utf8(path(live_target))!=navigation_room_door_)) {
         const auto leg=capture_castle_leg(pawn);
         if(!leg||utf8(path(leg->actor))!=navigation_room_door_) {
-            frame.target_available=false;
-            frame.target_unavailable_reason="The current castle doorway has changed. Request the route again.";
-            return frame;
+            if(story_target(target_id_)) {
+                frame.target_available=false;
+                frame.target_unavailable_reason="The current castle doorway has changed. Request the route again.";
+                return frame;
+            }
+            refresh=true;
         }
     }
     const bool shrine_bridge=is_story_shrine_bridge_goal(live_target,active_target_->position);
@@ -5797,6 +5801,8 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
         if(current)navigation_path_reason_.clear();
         else {
             current=route_snapshot(pawn,live_target,goal,automatic,&navigation_path_reason_,navigation_path_id_);
+            if(!current&&navigation_path_reason_.empty())
+                navigation_path_reason_="A complete native walking route is unavailable.";
             navigation_route_goal_=goal;
         }
         // The synchronous query holds the game thread, so stamp the completed
@@ -6042,17 +6048,22 @@ unsigned UnrealReader::area_browse_commands() {
     if(browse.next>=browse.checks.size()&&!browse.request)return 0;
 
     const auto guard=capture_navigation_guard(true);
-    if(!guard.eligible||!guard.walking||!speech_.ready()||navigation_category_!=browse.category||
-       field_selection_context(guard.pawn)!=browse.area) {
+    if(!guard.foreground||!speech_.ready()||navigation_category_!=browse.category) {
         area_browse_.reset();
+        return 0;
+    }
+    if(!guard.eligible||!guard.walking) {
+        if(browse.request)browse.area.clear();
+        else area_browse_.reset();
         return 0;
     }
     const auto origin=controlled_agent_position(guard.pawn);
     if(!origin||!finite(*origin)) {
-        area_browse_.reset();
+        if(browse.request)browse.area.clear();
+        else area_browse_.reset();
         return 0;
     }
-    if(browse.revision!=area_browse_revision_) {
+    if(browse.revision!=area_browse_revision_||field_selection_context(guard.pawn)!=browse.area) {
         const auto request=browse.request;
         area_browse_.reset();
         return request;
@@ -6078,7 +6089,7 @@ unsigned UnrealReader::area_browse_commands() {
             " total_us="+std::to_string(browse.total_us)+" max_frame_us="+std::to_string(browse.max_us));
         browse.probes=browse.total_us=browse.max_us=0;
     }
-    return finished||(reachable&&!browse.wait_for_full_list)?std::exchange(browse.request,0u):0u;
+    return finished?std::exchange(browse.request,0u):0u;
 }
 void UnrealReader::movement_tick() {
     game_thread_=GetCurrentThreadId();
@@ -6121,9 +6132,19 @@ void UnrealReader::movement_tick() {
         stop("");log("NAV stopped because game focus was lost");return;
     }
     if(!guard.eligible) {
-        if(suspend_auto_walk_trip())return;
+        if(suspend_auto_walk_trip()||pause_field_guidance())return;
         stop_navigation(trf("Navigation stopped. {0}",{tr(guard.reason)}),true);
         return;
+    }
+    if(navigation_field_exit_&&navigation_path_sample_==0) {
+        const auto current=loaded_travel_location(guard.pawn);
+        if(current&&current->area>=0&&travel_arrived(navigation_field_exit_->departure,
+                navigation_field_exit_->passage,*current)) {
+            log("NAV crossed selected exit map="+std::to_string(current->point.map)+
+                " entry="+std::to_string(current->point.entry));
+            stop_navigation("",true);
+            return;
+        }
     }
     if(!(navigation_controller_?guard.controller_allowed:guard.allowed[automatic?AutomaticKey:GuidanceKey])){stop("Navigation stopped. Its control binding is unavailable or assigned to another game control.");return;}
     if(automatic&&guard.physical_input) {
@@ -6244,7 +6265,7 @@ void UnrealReader::movement_tick() {
         if(final_foreground!=GetCurrentProcessId()) {
             navigation_speech_stop_pending_="Navigation stopped. Game focus lost.";
             stop("");log("NAV stopped because game focus was lost before movement");
-        } else if(!suspend_auto_walk_trip())stop("Automatic walking stopped. Player control changed.");
+        } else if(!suspend_auto_walk_trip()&&!pause_field_guidance())stop("Automatic walking stopped. Player control changed.");
         return;
     }
     if(!navigation_input_path_id_) {
@@ -6306,6 +6327,19 @@ bool UnrealReader::suspend_auto_walk_trip() {
     else return false;
     stop_navigation("",true);
     log(story_walk_?"STORY WALK suspended":"TRAVEL automatic leg suspended");
+    return true;
+}
+
+bool UnrealReader::pause_field_guidance() {
+    if(navigation_.mode()==NavigationMode::Off||navigation_.target()!=target_id_||
+       story_target(target_id_)||destination_leg_||navigation_crossing_)return false;
+    if(navigation_path_sample_!=0)log("NAV field guidance paused target="+target_id_);
+    navigation_path_={};navigation_path_sample_=0;navigation_ground_.reset();
+    navigation_activation_arrival_metres_.reset();
+    navigation_room_door_.clear();
+    navigation_input_path_id_=0;navigation_start_wait_until_=0;navigation_motion_origin_.reset();
+    navigation_.pause();
+    beacon_.publish(NavigationMode::Off,{});
     return true;
 }
 
@@ -6696,11 +6730,17 @@ void UnrealReader::tick(unsigned commands) {
         context_=context;
         core_.reset();
         if(!continuing_battle&&!finishing_battle)speech_.stop();
-        targets_.clear();target_id_.clear();target_type_.clear();
-        area_browse_.reset();
-        if(!suspend_auto_walk_trip())stop_navigation("Navigation stopped. Screen or area changed.");
-        if(context.ends_with(".WBP_TitleLayout_C")||context.find(".WBP_TitleLayout_C_")!=std::string::npos)
+        const bool title=context.ends_with(".WBP_TitleLayout_C")||context.find(".WBP_TitleLayout_C_")!=std::string::npos;
+        targets_.clear();
+        ++area_browse_revision_;
+        if(title) {
+            area_browse_.reset();
             cancel_auto_walk_trip();
+        }
+        if(title||!pause_field_guidance()) {
+            target_id_.clear();target_type_.clear();
+            if(!suspend_auto_walk_trip())stop_navigation("Navigation stopped. Screen or area changed.");
+        }
         log("CONTEXT "+context);
     }
     stage="capture menu";
@@ -7003,7 +7043,9 @@ void UnrealReader::tick(unsigned commands) {
         current_story.world==utf8(path(actor_world(guard.pawn)))&&current_story.player==utf8(path(guard.pawn));
     if(navigation_selection_context_!=area) {
         navigation_selection_context_=area;
-        target_id_=memory.targets[navigation_category_];target_type_.clear();
+        if(navigation_.mode()==NavigationMode::Off) {
+            target_id_=memory.targets[navigation_category_];target_type_.clear();
+        }
     }
     if(target_id_.empty())target_id_=memory.targets[navigation_category_];
     const bool category_changed=(commands&(PreviousCategory|NextCategory))!=0;
@@ -7099,6 +7141,17 @@ void UnrealReader::tick(unsigned commands) {
             if(navigation_category_==story_category) {
                 if(requested==NavigationMode::Automatic)arm_story_walk(guard.pawn,controller_start,started);
                 else story_walk_.reset();
+            } else if(started.mode!=NavigationMode::Off) {
+                navigation_field_exit_.reset();
+                if(is(live_target,L"/Script/mucha.CPP_MapTransitionTrigger")) {
+                    const auto here=loaded_travel_location(guard.pawn);
+                    const auto exit=capture_story_exit_route(guard.pawn,live_target);
+                    const auto trigger=read<int>(live_target,L"m_UniqueId",L"IntProperty");
+                    if(here&&exit&&trigger&&*trigger>=0&&!exit->event_only&&exit->destination_point&&
+                       target_id_==utf8(path(exit->actor))+exit->route_key)
+                        navigation_field_exit_=FieldExit{*here,{here->point.map,*trigger,
+                            {exit->destination_map,*exit->destination_point}}};
+                }
             }
         }
         return true;
@@ -7162,8 +7215,7 @@ void UnrealReader::tick(unsigned commands) {
                 " pending="+std::to_string(browse.checks.size())+" capture_us="+std::to_string(elapsed));
         }
     }
-    if(selected_unreachable) {
-        stop_for_selection();
+    if(selected_unreachable&&navigation_.mode()==NavigationMode::Off) {
         target_id_.clear();target_type_.clear();memory.targets[navigation_category_].clear();
     }
     const auto issue=!report.unavailable_reason.empty()?report.unavailable_reason:
@@ -7174,28 +7226,20 @@ void UnrealReader::tick(unsigned commands) {
     area_read_status_=issue_key;
     if(checking_routes) {
         auto& browse=*area_browse_;
-        const auto selected=std::find_if(current.begin(),current.end(),
-            [&](const auto& entry){return entry.snapshot.id==target_id_;});
-        const bool needs_next=(commands&Next)&&selected!=current.end()&&std::next(selected)==current.end();
-        const bool needs_last=(commands&Previous)&&(selected==current.end()||selected==current.begin());
-        if(current.empty()||needs_next||needs_last) {
-            // Replay list selection only. An explicit walking request always
-            // uses the player's chosen target and current control state.
-            const auto selection=commands&(Previous|Next);
-            browse.request=selection?selection:ReviewNavigation;
-            browse.wait_for_full_list=needs_last;
-            if(!browse.announced_wait) {
-                browse.announced_wait=true;
-                speech_.say(stopped+trf("{0}. Checking reachable targets.",{tr(target_categories[navigation_category_])}));
-            }
-            return;
+        // Cycling a partial list can skip exits added before the selection.
+        // Replay the selection only; never defer a command that starts walking.
+        const auto selection=commands&(Previous|Next);
+        browse.request=selection?selection:ReviewNavigation;
+        if(!browse.announced_wait) {
+            browse.announced_wait=true;
+            speech_.say(stopped+trf("{0}. Checking reachable targets.",{tr(target_categories[navigation_category_])}));
         }
-        browse.announced_wait=false;
+        return;
     }
+    if(area_browse_)area_browse_->announced_wait=false;
     targets_.clear();for(const auto& target:current)targets_.push_back(target.snapshot);
     if(current.empty()) {
-        stop_for_selection();
-        if(issue.empty()){target_id_.clear();target_type_.clear();}
+        if(issue.empty()&&navigation_.mode()==NavigationMode::Off){target_id_.clear();target_type_.clear();}
         speech_.say(stopped+tr(target_categories[navigation_category_])+". "+
             (navigation_category_==story_category?story_status(story_.snapshot()):
                 issue.empty()?tr("No reachable targets in this area."):tr(issue)));return;
@@ -7205,12 +7249,18 @@ void UnrealReader::tick(unsigned commands) {
     const bool only_exit=navigation_category_==3&&!checking_routes&&current.size()==1&&
         (commands&(Route|ToggleGuidance|ToggleAutomatic));
     if(index<0&&!target_id_.empty()&&(commands&ReviewNavigation)&&!category_changed&&!(commands&(Previous|Next))) {
-        const auto live=refresh_navigation_target(guard.pawn);
-        if(!live&&!navigation_target_reason_.empty()) {
-            stop_navigation("");speech_.say(trf("{0} The selection is retained; try again.",{tr(navigation_target_reason_)}));return;
+        if(navigation_category_==story_category) {
+            const auto live=refresh_navigation_target(guard.pawn);
+            if(!live&&!navigation_target_reason_.empty()) {
+                stop_navigation("");speech_.say(trf("{0} The selection is retained; try again.",{tr(navigation_target_reason_)}));return;
+            }
+            if(live&&active_target_) {
+                speech_.say(trf("{0} remains selected. Use Page Up or Page Down to choose another target.",{active_target_->label}));return;
+            }
         }
-        if(live&&active_target_) {
-            speech_.say(trf("{0} remains selected. Use Page Up or Page Down to choose another target.",{active_target_->label}));return;
+        if(navigation_.mode()!=NavigationMode::Off) {
+            speech_.say(tr("Waiting for a walking route."));
+            return;
         }
     }
     if(index<0&&(category_changed||(commands&ReviewNavigation)||only_exit||(navigation_category_==story_category&&!(commands&(Previous|Next)))))index=0;

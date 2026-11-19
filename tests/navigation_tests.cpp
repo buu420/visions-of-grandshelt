@@ -576,7 +576,20 @@ void reroute_from_live_position() {
     require(update.mode==Mode::Manual&&!update.movement&&speech(update).find("left 2 metres")!=std::string::npos,
         "guidance resumes from the new live position");
     f.field_eligible=false;
-    require(manual.observe(f).mode==Mode::Off,"a real menu still ends guidance");
+    require(manual.observe(f).mode==Mode::Off,"an ineligible field frame cannot drive guidance");
+
+    NavigationFollower suspended;
+    f=frame();f.use_beacon=true;
+    suspended.start(Mode::Manual,f);
+    suspended.pause();
+    require(suspended.mode()==Mode::Manual&&!suspended.leg()&&
+        suspended.target()==f.target,"a temporary interruption silences guidance and retains the selected target");
+    f=at(2.0,{0,370,0},{{0,370,0},{-200,400,0}});
+    require(speech(suspended.observe(f)).find("left 2 metres")!=std::string::npos,
+        "resuming uses a new route from the position where field control returned");
+    suspended.pause();
+    f.world="another-world";
+    require(suspended.observe(f).mode==Mode::Off,"a temporary pause cannot allow guidance into a different world");
 
     NavigationFollower refreshed_manual;
     refreshed_manual.start(Mode::Manual,at(0,{0,0,0},{{0,0,0},{1500,0,0}}));
@@ -591,6 +604,9 @@ void reroute_from_live_position() {
 
     NavigationFollower automatic;
     automatic.start(Mode::Automatic,frame());
+    automatic.pause();
+    require(automatic.mode()==Mode::Automatic&&!automatic.leg(),
+        "a pause keeps the automatic request without an active walking leg");
     f=frame(.25,{-35,0,0});f.path.valid=false;f.route_unavailable_reason="No complete route.";
     update=automatic.observe(f);
     require(update.mode==Mode::Automatic&&!update.movement,

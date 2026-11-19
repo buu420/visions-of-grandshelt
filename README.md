@@ -25,6 +25,8 @@ Use the game's interaction button when Story guides you to a door, switch or per
 
 The mod follows the game's Text Language setting. French, German, Spanish (Spain), Japanese, Korean, Simplified Chinese and Traditional Chinese use the screen reader for displayed subtitles and audio descriptions. English audio descriptions use recordings.
 
+In 0.2.59, exit browsing refreshes when you return from a shop, treasure chests require a verified approach, and guidance recalculates after detours and when field controls return. See the [0.2.59 beta notes](docs/release-notes-0.2.59.md).
+
 In 0.2.58, enemy targeting reads the visible stagger gauge and elemental affinities. While targeting an enemy, F9 reads the acting character and the focused enemy's details. See the [0.2.58 beta notes](docs/release-notes-0.2.58.md).
 
 In 0.2.57, copied-save controller tests reached the Earth Shrine entrance from the merchant and from the far side of the approach, and reached the nearby save point. In-game logs verified French and Japanese caption delivery to NVDA. See the [0.2.57 beta notes](docs/release-notes-0.2.57.md) for release details.

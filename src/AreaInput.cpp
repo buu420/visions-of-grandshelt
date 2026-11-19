@@ -1246,6 +1246,7 @@ std::optional<ActivationBox> capture_interaction_box(UObject* actor,UObject* paw
 }
 bool requires_checked_interaction_box(UObject* actor) {
     return research_lab_warp(actor)||research_lab_rope(actor)||research_lab_pickup_or_console(actor)||
+        native_kind(actor,AreaKind::TreasureChest)||
         native_kind(actor,AreaKind::Door)||native_kind(actor,AreaKind::ElevatorCall)||native_kind(actor,AreaKind::Elevator)||
         (native_kind(actor,AreaKind::Book)&&(library_book(actor)||crystal_tower_pot(actor)))||mobliz_lever_memo(actor)||
         story_check_trigger(actor)||streetcar_timetable(actor)||olderion_inn_door(actor)||chapter_four_story_door(actor)||

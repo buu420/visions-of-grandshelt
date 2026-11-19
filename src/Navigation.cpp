@@ -516,6 +516,10 @@ NavigationUpdate NavigationFollower::stop(std::string reason) {
     points_.clear();waypoint_=1;path_sample_=-1;last_sample_=-1;progress_sample_=0;progress_position_={};path_id_=0;
     return out;
 }
+void NavigationFollower::pause() {
+    waiting_for_route_=mode_!=NavigationMode::Off;
+    retried_blockage_=false;
+}
 NavigationUpdate NavigationFollower::wait_for_route(const std::string& reason) {
     NavigationUpdate out;out.mode=mode_;
     if(!waiting_for_route_)out.speech.push_back({trf("Waiting for a walking route. {0}",{reason}),false});
