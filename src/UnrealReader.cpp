@@ -1626,6 +1626,11 @@ bool inside_box(const ActivationBox& box,Vec3 point) {
     return nearest&&nearest->x==point.x&&nearest->y==point.y&&nearest->z==point.z;
 }
 constexpr ActivationBox mitra_weapon_stair{{1910,4150,394},{620,210,180},0};
+constexpr ActivationBox castle_west_stair{{-30014.,-8883.,410.},{975.,135.,415.},0};
+constexpr ActivationBox castle_gallery_doorway{{-30077.,5855.,802.},{160.,200.,60.},0};
+bool burning_castle_world(UObject* world) {
+    return path(world)==L"/Game/Map/Dng/01Gra/01Gra_42/Dng_01Gra_42_PL.Dng_01Gra_42_PL";
+}
 bool olderion_plaza_floor(UObject* world,Vec3 feet) {
     constexpr ActivationBox plaza{{540,-1690,122},{590,590,55},0};
     return path(world)==L"/Game/Map/Town/05Old/05Old_01/Town_05Old_01_PL.Town_05Old_01_PL"&&
@@ -2320,6 +2325,7 @@ std::optional<GroundCoverage> ordinary_ground_path(UObject* pawn,UObject* librar
     const bool capsule_only=proof!=GroundProof::MeshFirst;
     const bool world_capsule=swept_default_mesh(world,resonance::path(mesh));
     const bool corridor_capsule=world_capsule||(capsule_only&&zoldaad_swept_walkway(world));
+    const bool castle=capsule_only&&burning_castle_world(world);
     const bool mitra=resonance::path(world)==L"/Game/Map/Town/01Gra/01Gra_20/Town_01Gra_20_PL.Town_01Gra_20_PL";
     const bool gaberada=capsule_only&&
         resonance::path(world)==L"/Game/Map/Town/08Gro/08Gro_01/Town_08Gro_01_PL.Town_08Gro_01_PL";
@@ -2410,6 +2416,7 @@ std::optional<GroundCoverage> ordinary_ground_path(UObject* pawn,UObject* librar
                     // the road or stairs. The route and rejoin are native.
                     if(corridor_capsule||on_swept_prefix(point)||gaberada_floor(*support)||
                        olderion_plaza_floor(world,*support)||tower_ramp_floor(*support)||
+                       (castle&&(inside_box(castle_west_stair,*support)||inside_box(castle_gallery_doorway,*support)))||
                        (mitra&&inside_box(mitra_weapon_stair,*support))||
                        (gronoa&&inside_box(gronoa_lower_stair_turn,last_supported)&&
                            inside_box(gronoa_lower_stair_turn,*support)))return support;
@@ -2420,7 +2427,8 @@ std::optional<GroundCoverage> ordinary_ground_path(UObject* pawn,UObject* librar
                     return support;
                 },sweep->step_height/scale,[&](Vec3 a,Vec3 b) {
                     return (gaberada_floor(a)&&gaberada_floor(b))||
-                        (middle_reach_turn_floor(a)&&middle_reach_turn_floor(b));
+                        (middle_reach_turn_floor(a)&&middle_reach_turn_floor(b))||
+                        (castle&&inside_box(castle_west_stair,a)&&inside_box(castle_west_stair,b));
                 }};
                 auto physical_budget=native_budget;physical_budget.follow_surface=true;
                 const auto verify=[&](const PathSnapshot& candidate)->std::optional<GroundCoverage> {
@@ -2584,6 +2592,7 @@ struct NativeRoute {
     std::wstring swept_mesh;
     std::size_t bypass_rejoin{};
     std::optional<ActivationBox> capsule_room;
+    bool door_approach{};
 };
 std::array<Vec3,12> interaction_side_approaches(const ActivationBox& box,WalkingCapsule capsule,double z,double gap,double spread=.32) {
     const auto angle=box.yaw_degrees*3.14159265358979323846/180.;
@@ -3531,7 +3540,7 @@ constexpr std::array factory_maze_turns{
     Vec3{2755,14707,2095.3},Vec3{3548,14707,2095.3},Vec3{3548,13808,2094.3},
     Vec3{4340,13808,2102.15}
 };
-std::optional<NativeRoute> factory_walk_on_live_floor(UObject* pawn,UObject* library,UObject* mesh,
+std::optional<NativeRoute> walk_on_live_floor(UObject* pawn,UObject* library,UObject* mesh,
         std::vector<Vec3> points,WalkingAxes axes,double scale,bool ground_check,std::uint64_t path_id,double arrival) {
     PathSnapshot route{std::move(points),axes.right,axes.up,scale,true,false};
     if(!describe_route(route))return {};
@@ -3547,8 +3556,8 @@ std::optional<NativeRoute> factory_walk_on_live_floor(UObject* pawn,UObject* lib
         .activation_arrival_metres=arrival,.swept_mesh=ground&&ground->swept_ground?path(mesh):std::wstring{},
         .bypass_rejoin=rejoin};
 }
-std::vector<Vec3> factory_walkway_suffix(Vec3 start,std::span<const Vec3> walkway,double scale,
-        double start_height_tolerance_metres=2.25) {
+std::vector<Vec3> walking_lane_suffix(Vec3 start,std::span<const Vec3> walkway,double scale,
+        double start_height_tolerance_metres=2.25,double minimum_join_gap_metres=.07) {
     Vec3 join{};
     double distance=scale*2.7;
     std::size_t next{};
@@ -3566,7 +3575,7 @@ std::vector<Vec3> factory_walkway_suffix(Vec3 start,std::span<const Vec3> walkwa
     }
     if(!next)return {};
     std::vector<Vec3> points{start};
-    if(distance>scale*.07)points.push_back(join);
+    if(distance>scale*minimum_join_gap_metres)points.push_back(join);
     for(;next<walkway.size();++next) {
         const auto point=walkway[next];
         if(std::hypot(points.back().x-point.x,points.back().y-point.y)>scale*.025)
@@ -3607,7 +3616,7 @@ std::optional<NativeRoute> factory_west_walk(UObject* pawn,UObject* target,UObje
     }
     if(std::hypot(start.x-walkway.back().x,start.y-walkway.back().y)<=scale*arrival&&
        std::abs(start.z-walkway.back().z)<scale*.15)return NativeRoute{.activation_reached=true};
-    auto route=factory_walk_on_live_floor(pawn,library,mesh,factory_walkway_suffix(start,walkway,scale),
+    auto route=walk_on_live_floor(pawn,library,mesh,walking_lane_suffix(start,walkway,scale),
         axes,scale,ground_check,path_id,arrival);
     if(route)route->capsule_room=bounds;
     return route;
@@ -3637,7 +3646,7 @@ std::optional<NativeRoute> factory_upper_walk(UObject* pawn,UObject* target,UObj
     }
     if(std::hypot(start.x-walkway.back().x,start.y-walkway.back().y)<=scale*arrival&&
        std::abs(start.z-walkway.back().z)<scale*.15)return NativeRoute{.activation_reached=true};
-    auto route=factory_walk_on_live_floor(pawn,library,mesh,factory_walkway_suffix(start,walkway,scale),
+    auto route=walk_on_live_floor(pawn,library,mesh,walking_lane_suffix(start,walkway,scale),
         axes,scale,ground_check,path_id,arrival);
     if(route)route->capsule_room=factory_upper_walkway;
     return route;
@@ -3654,7 +3663,7 @@ std::optional<NativeRoute> factory_conveyor_walk(UObject* pawn,UObject* library,
         Vec3{2830,16530,339.0},Vec3{2830,16412,302.15}};
     const auto approach=activation_approach(box,capsule,walkway.back(),scale);
     if(!approach)return {};
-    return factory_walk_on_live_floor(pawn,library,mesh,factory_walkway_suffix(start,walkway,scale,4.2),
+    return walk_on_live_floor(pawn,library,mesh,walking_lane_suffix(start,walkway,scale,4.2),
         axes,scale,ground_check,path_id,approach->arrival_metres);
 }
 std::optional<NativeRoute> factory_bridge_walk(UObject* pawn,UObject* target,UObject* library,UObject* mesh,
@@ -3694,7 +3703,7 @@ std::optional<NativeRoute> factory_bridge_walk(UObject* pawn,UObject* target,UOb
     if(std::abs(start.y-end.y)>scale*.20)
         points.push_back({!returning&&start.y<13300.?772.:start.x,end.y,start.z});
     points.push_back(end);
-    return factory_walk_on_live_floor(pawn,library,mesh,std::move(points),axes,scale,ground_check,path_id,approach->arrival_metres);
+    return walk_on_live_floor(pawn,library,mesh,std::move(points),axes,scale,ground_check,path_id,approach->arrival_metres);
 }
 std::optional<NativeRoute> olderion_arsha_approach(UObject* pawn,UObject* target,Vec3 start,
         WalkingAxes axes,double scale,bool ground_check,std::uint64_t path_id) {
@@ -3889,6 +3898,114 @@ std::optional<NativeRoute> sanctissimus_pot_ladder_route(UObject* pawn,UObject* 
         approach->arrival_metres,2400,log_query?"Sanctissimus Magic Pot ladder":"",true);
 }
 
+std::optional<NativeRoute> burning_castle_ladder_route(UObject* pawn,UObject* ladder,UObject* library,UObject* mesh,
+        Vec3 start,WalkingAxes axes,double scale,bool ground_check,std::uint64_t path_id) {
+    if(!is(ladder,L"/Script/mucha.CPP_MapGimmickLadder")||actor_world(ladder)!=actor_world(pawn)||
+       read<int>(ladder,L"m_UniqueId")!=4||start.x>-27200.||start.z>1100.||
+       path(ladder)!=L"/Game/Map/Dng/01Gra/01Gra_42/GD/Dng_01Gra_42_01_GD.Dng_01Gra_42_01_GD:"
+           L"PersistentLevel.BP_MapGimmickLadder_Child_C_1")return {};
+    auto* door=UObjectGlobals::StaticFindObject(L"/Game/Map/Dng/01Gra/01Gra_42/GD/Dng_01Gra_42_01_GD."
+        L"Dng_01Gra_42_01_GD:PersistentLevel.BP_MapGimmick_TriggerDoor_C_2");
+    if(read<int>(door,L"m_UniqueId")!=34)return {};
+    const auto trigger=capture_swing_door_trigger(pawn,door);
+    const auto bottom=capture_ladder_bottom_box(ladder);
+    const auto sweep=trigger&&bottom?capture_capsule_sweep(pawn):std::nullopt;
+    if(!sweep)return {};
+    const WalkingCapsule capsule{sweep->radius,sweep->half_height};
+    if(activation_clearance(*bottom,capsule,start).value_or(0.)>0.)return NativeRoute{.activation_reached=true};
+    constexpr Vec3 threshold{-30069.,5948.,802.15};
+    constexpr ActivationBox landing{{-28830.,6170.,815.},{1550.,760.,190.},0};
+    // Stage just outside the door leaf's sweep, then let the player step
+    // through its opening trigger with the native controls.
+    constexpr double door_arrival=.12;
+    const auto at_door=[](std::optional<NativeRoute> route) {
+        if(route)route->door_approach=true;
+        return route;
+    };
+    if(inside_box(landing,start)) {
+        if(start.x>-30120.) {
+            // Leave the final step onto the ladder to the native climb input.
+            constexpr std::array through{Vec3{-29900.,5950.,802.15},Vec3{-29410.,5948.,802.15},
+                Vec3{-28900.,5945.,802.15},Vec3{-28455.,5943.,802.15},
+                Vec3{-28480.,6549.,802.15},Vec3{-27955.,6549.,802.15}};
+            if(auto route=verified_walking_turns(*sweep,landing,start,through,axes,scale,ground_check,path_id,.15))return route;
+            if(start.x>trigger->center.x+sweep->radius)return {};
+        }
+        constexpr std::array to_door{threshold};
+        if(auto route=verified_walking_turns(*sweep,landing,start,to_door,axes,scale,ground_check,path_id,
+            door_arrival))return at_door(std::move(route));
+    }
+    if(!current_walking_mesh(pawn,library,mesh))return {};
+    // The center stairs are blocked by fire. The western staircase and the
+    // narrow gallery are continuous when their turns follow the standing lane.
+    constexpr std::array stair_and_corridor{
+        Vec3{-30980.,-7850.,22.15},Vec3{-30955.,-8620.,22.15},Vec3{-30955.,-8883.,22.15},
+        Vec3{-30250.,-8883.,282.05},Vec3{-29220.,-8883.,802.15},
+        Vec3{-29102.,-8150.,802.15},Vec3{-30230.,-8119.,802.15},Vec3{-30230.,-4040.,802.15},
+        Vec3{-30225.,-3830.,802.15},Vec3{-29707.,-3810.,802.15},Vec3{-29691.,-1650.,802.15},
+        Vec3{-28992.,-1650.,802.15},Vec3{-28988.,1570.,802.15},Vec3{-29865.,1570.,802.15},
+        Vec3{-29865.,3950.,802.15},Vec3{-30229.,3950.,802.15},Vec3{-30229.,5683.,802.15},threshold};
+    // On the staircase, estimate support from the live feet as the party
+    // climbs. A lateral join has an interpolated height between real treads.
+    const double join_gap=inside_box(castle_west_stair,start)?.25:.07;
+    auto points=walking_lane_suffix(start,stair_and_corridor,scale,1.1,join_gap);
+    if(points.empty()&&start.z<100.&&start.y>-8000.) {
+        auto prefix=direct_nav::find_path(direct_navigation_api(),pawn,library,mesh,start,stair_and_corridor.front());
+        if(prefix.valid&&!prefix.points.empty()&&std::hypot(prefix.points.back().x-stair_and_corridor.front().x,
+            prefix.points.back().y-stair_and_corridor.front().y)<15.) {
+            points=std::move(prefix.points);
+            points.pop_back();
+            points.insert(points.end(),stair_and_corridor.begin(),stair_and_corridor.end());
+        }
+    }
+    if(!points.empty())
+        if(auto route=walk_on_live_floor(pawn,library,mesh,std::move(points),axes,scale,ground_check,path_id,
+            door_arrival))return at_door(std::move(route));
+    auto native=direct_nav::find_path(direct_navigation_api(),pawn,library,mesh,start,threshold);
+    if(!native.valid||native.points.size()<2||
+       std::hypot(native.points.back().x-threshold.x,native.points.back().y-threshold.y)>15.)return {};
+    return at_door(walk_on_live_floor(pawn,library,mesh,std::move(native.points),axes,scale,ground_check,path_id,
+        door_arrival));
+}
+std::optional<NativeRoute> burning_castle_chamber_route(UObject* pawn,UObject* door,UObject* library,UObject* mesh,
+        Vec3 start,WalkingAxes axes,double scale,bool ground_check,std::uint64_t path_id) {
+    constexpr std::wstring_view level=L"/Game/Map/Dng/01Gra/01Gra_42/GD/Dng_01Gra_42_01_GD."
+        L"Dng_01Gra_42_01_GD:PersistentLevel.";
+    if(actor_world(door)!=actor_world(pawn)||read<int>(door,L"m_UniqueId")!=23||
+       path(door)!=std::wstring(level)+L"BP_MapGimmick_Object_Door_Child007_C_0")return {};
+    const auto box=capture_interaction_box(door,pawn);
+    const auto sweep=box?capture_capsule_sweep(pawn):std::nullopt;
+    if(!sweep)return {};
+    const WalkingCapsule capsule{sweep->radius,sweep->half_height};
+    constexpr Vec3 prompt{-11648.,22.,1182.15};
+    const auto arrival=activation_approach(*box,capsule,prompt,scale);
+    if(!arrival)return {};
+    constexpr ActivationBox chamber{{-12350.,-620.,1180.},{800.,920.,175.},0};
+    constexpr std::array final_turn{Vec3{-12043.,-690.,1182.15},Vec3{-12043.,22.,1182.15},prompt};
+    if(auto route=verified_walking_turns(*sweep,chamber,start,final_turn,axes,scale,ground_check,path_id,
+        arrival->arrival_metres,1600,{},true))return route;
+    constexpr ActivationBox west_hall{{-12350.,4900.,1182.},{1620.,1420.,160.},0};
+    if(!inside_box(west_hall,start)||!current_walking_mesh(pawn,library,mesh))return {};
+    constexpr std::array west_passage{Vec3{-13395.,5600.,1182.15},Vec3{-13464.,5600.,1182.15},
+        Vec3{-13506.,3670.,1182.15}};
+    auto prefix=walking_lane_suffix(start,west_passage,scale);
+    if(!prefix.empty())if(auto full=join_verified_walking_prefix(pawn,library,mesh,std::move(prefix),prompt,scale))
+        if(auto route=walk_on_live_floor(pawn,library,mesh,std::move(full->points),axes,scale,ground_check,path_id,
+            arrival->arrival_metres))return route;
+    auto* swing=UObjectGlobals::StaticFindObject((std::wstring(level)+L"BP_MapGimmick_TriggerDoor_C_3").c_str());
+    if(read<int>(swing,L"m_UniqueId")!=35)return {};
+    const auto trigger=capture_swing_door_trigger(pawn,swing);
+    constexpr std::array threshold{Vec3{-10925.,4960.,1182.15},Vec3{-11325.,4960.,1182.15},Vec3{-11325.,5008.,1182.15},
+        Vec3{-11920.,5008.,1182.15},Vec3{-12500.,5008.,1182.15},Vec3{-13065.,5008.,1182.15},
+        Vec3{-13065.,5600.,1182.15},Vec3{-13220.,5600.,1182.15}};
+    const auto approach=trigger?activation_approach(*trigger,capsule,threshold.back(),scale):std::nullopt;
+    if(!approach)return {};
+    auto route=verified_walking_turns(*sweep,west_hall,start,threshold,axes,scale,ground_check,path_id,
+        approach->arrival_metres,2400,"Castle east wing",true);
+    if(route)route->door_approach=true;
+    return route;
+}
+
 std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destination,bool ground_check,
         std::string* reason,std::uint64_t path_id,UObject* alternate=nullptr,bool log_query=true) {
     if(reason)reason->clear();
@@ -3930,6 +4047,10 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
         }
     }
     if(!scale)return fail("The area's distance scale is unavailable.");
+    if(burning_castle_world(world)) {
+        if(auto route=burning_castle_ladder_route(p,target,library,mesh,*start,*axes,*scale,ground_check,path_id))return route;
+        if(auto route=burning_castle_chamber_route(p,target,library,mesh,*start,*axes,*scale,ground_check,path_id))return route;
+    }
     if(earth_shrine_entrance(target)&&actor_world(target)==world)
         if(auto route=earth_shrine_door_approach(p,target,*start,*axes,*scale,ground_check,path_id))return route;
     if(passage_map(p)==PassageMap::Mitra&&world==actor_world(target)) {
@@ -5050,6 +5171,15 @@ bool ordinary_walking(UObject* pawn) {
     // swimming, flying and game-specific travel require separate adapters.
     return travel&&*travel==1&&movement&&*movement==1;
 }
+constexpr auto antlion_warning="Beware the Antlion. Cross by chocobo only.";
+std::optional<WalkingCapsule> antlion_player_capsule(UObject* pawn) {
+    auto* capsule=object(pawn,L"CapsuleComponent");
+    if(!is(capsule,L"/Script/Engine.CapsuleComponent"))return {};
+    const auto radius=getter<float>(capsule,L"GetScaledCapsuleRadius");
+    const auto half=getter<float>(capsule,L"GetScaledCapsuleHalfHeight");
+    if(!radius||!half||!std::isfinite(*radius)||!std::isfinite(*half)||*radius<=0||*half<*radius)return {};
+    return WalkingCapsule{*radius,*half};
+}
 FieldWallCues capture_field_walls(UObject* pawn,const StorySpatialContext& spatial,std::span<const ActivationBox> passages) {
     FieldWallCues cues{};
     if(!ordinary_walking(pawn))return cues;
@@ -5326,6 +5456,7 @@ void UnrealReader::navigation_output(const NavigationUpdate& update,bool passive
     }
     if(update.mode==NavigationMode::Off) {
         navigation_field_exit_.reset();
+        navigation_door_approach_=false;
         navigation_path_={};navigation_path_sample_=0;navigation_ground_.reset();
         navigation_crossing_.reset();
         navigation_capsule_mesh_.clear();
@@ -5697,7 +5828,8 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
     }
     const bool shrine_bridge=is_story_shrine_bridge_goal(live_target,active_target_->position);
     const bool shrine_crate=shrine_crate_push_goal(live_target,active_target_->position);
-    frame.interaction_available=!shrine_bridge&&nearby_navigation_target(pawn,live_target)&&navigation_room_door_.empty();
+    frame.interaction_available=!shrine_bridge&&!navigation_door_approach_&&
+        nearby_navigation_target(pawn,live_target)&&navigation_room_door_.empty();
     if(frame.interaction_available)return frame;
     bool aligned_with_activation=false;
     if(navigation_activation_arrival_metres_&&!navigation_path_.points.empty()) {
@@ -5778,13 +5910,14 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
                         std::string reason;
                         auto* world=actor_world(pawn);
                         const auto proof=swept_default_mesh(world,navigation_swept_mesh_)||crystal_tower_spiral(world)||
-                            zoldaad_swept_walkway(world)?
+                            zoldaad_swept_walkway(world)||(burning_castle_world(world)&&inside_box(castle_gallery_doorway,*position))?
                             GroundProof::CapsuleSweep:GroundProof::MeshFirst;
                         const auto ground=ordinary_ground_path(pawn,library,mesh,snapshot,navigation_path_id_,
                             policy->budget,reason,bypass.rejoin,proof);
                         if(!ground)return {};
                         return NativeRoute{std::move(snapshot),ground,{},navigation_activation_arrival_metres_,
-                            false,navigation_room_door_,{},navigation_swept_mesh_,bypass.rejoin,navigation_capsule_room_};
+                            false,navigation_room_door_,{},navigation_swept_mesh_,bypass.rejoin,navigation_capsule_room_,
+                            navigation_door_approach_};
                     };
                     const auto trimmed_count=remaining->path.points.size();
                     current=check(std::move(*remaining));
@@ -5810,6 +5943,7 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
         frame.sample_seconds=static_cast<double>(GetTickCount64())/1000.;
         navigation_activation_arrival_metres_=current?current->activation_arrival_metres:std::nullopt;
         navigation_room_door_=current?std::move(current->room_door):std::string{};
+        navigation_door_approach_=current&&current->door_approach;
         navigation_capsule_mesh_=current?std::move(current->capsule_mesh):std::wstring{};
         navigation_capsule_room_=current?std::move(current->capsule_room):std::nullopt;
         navigation_swept_mesh_=current?std::move(current->swept_mesh):std::wstring{};
@@ -5832,7 +5966,15 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
         frame.arrival_message=trf("Reached the verified walking point near {0}.",{frame.target_label});
     if(navigation_activation_arrival_metres_&&is(live_target,L"/Script/mucha.CPP_MapGimmick_Object_Raft"))
         frame.arrival_message=trf("At {0}. Use the game's interaction control to board.",{frame.target_label});
-    if(is(live_target,L"/Script/mucha.CPP_MapGimmickLadder")&&
+    if(navigation_door_approach_) {
+        frame.arrival_message=tr("At the door. Start navigation again when it opens.");
+        if(burning_castle_world(actor_world(pawn))&&is(live_target,L"/Script/mucha.CPP_MapGimmickLadder")) {
+            const auto direction=cardinal_motion({1.,0.,0.},walking_input_axes(pawn));
+            if(!direction.empty())frame.arrival_message=trf("At the door. Walk {0} through it, then start navigation again.",
+                {tr(direction)});
+        }
+    }
+    if(!navigation_door_approach_&&is(live_target,L"/Script/mucha.CPP_MapGimmickLadder")&&
        (story_target(target_id_)||sanctissimus_pot_ladder(live_target,active_target_->position))) {
         const auto axes=navigation_path_.valid?std::optional<WalkingAxes>{{navigation_path_.right,navigation_path_.up}}:
             walking_input_axes(pawn);
@@ -5882,8 +6024,10 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
         zoldaad_factory_west_pedestal(live_target,52)||
         amore_south_exit(live_target)||gaberada_elder_door_open(live_target)==false||
         path(live_target).starts_with(L"/Game/Map/Dng/08Gro/08Gro_40/GD/")||
-        wardens_cape_trigger(live_target)||water_shrine_bridge_exit(live_target)||water_shrine_dry_passage(live_target)))||
+        wardens_cape_trigger(live_target)||water_shrine_bridge_exit(live_target)||water_shrine_dry_passage(live_target)||
+        burning_castle_world(actor_world(pawn))))||
         swept_default_mesh(actor_world(pawn),navigation_swept_mesh_)||
+        (burning_castle_world(actor_world(pawn))&&!navigation_swept_mesh_.empty())||
         ((crystal_tower_spiral(actor_world(pawn))||tower_chamber_return(live_target))&&
             !navigation_swept_mesh_.empty()));
     frame.ground_unavailable_reason=navigation_ground_reason_;
@@ -6242,6 +6386,22 @@ void UnrealReader::movement_tick() {
     }
     navigation_output(update,true);
     if(!update.movement)return;
+    if(update.movement_waypoint)if(const auto sinkhole=capture_antlion_sinkhole(guard.pawn,frame.position)) {
+        const auto capsule=antlion_player_capsule(guard.pawn);
+        const auto waypoint=*update.movement_waypoint;
+        const auto length=std::hypot(waypoint.x-frame.position.x,waypoint.y-frame.position.y);
+        const auto braking=std::max(1.25,frame.ground_stop_margin_metres+.65)*frame.path.world_to_metres;
+        const auto fraction=length>braking?braking/length:1.;
+        const Vec3 before_stop{frame.position.x+(waypoint.x-frame.position.x)*fraction,
+            frame.position.y+(waypoint.y-frame.position.y)*fraction,frame.position.z+(waypoint.z-frame.position.z)*fraction};
+        if(!capsule||walking_segment_crosses_activation_box(*sinkhole,*capsule,frame.position,before_stop)) {
+            log("NAV paused before Antlion sinkhole from="+coordinates(frame.position));
+            const bool announced=std::exchange(antlion_warning_announced_,true);
+            stop(announced?tr("Automatic walking paused before quicksand."):
+                trf("Automatic walking paused. {0}",{tr(antlion_warning)}));
+            return;
+        }
+    }
     const auto pivot=(frame.bypass_rejoin||frame.check_route_turns)&&previous_leg&&update.movement_waypoint&&!frame.path.points.empty()&&
         (update.movement_waypoint->x!=frame.path.points.back().x||update.movement_waypoint->y!=frame.path.points.back().y);
     std::wstring_view steering_mesh=navigation_capsule_mesh_;
@@ -6336,6 +6496,7 @@ bool UnrealReader::pause_field_guidance() {
     if(navigation_path_sample_!=0)log("NAV field guidance paused target="+target_id_);
     navigation_path_={};navigation_path_sample_=0;navigation_ground_.reset();
     navigation_activation_arrival_metres_.reset();
+    navigation_door_approach_=false;
     navigation_room_door_.clear();
     navigation_input_path_id_=0;navigation_start_wait_until_=0;navigation_motion_origin_.reset();
     navigation_.pause();
@@ -6584,8 +6745,11 @@ void UnrealReader::observe_story_walk(UObject* pawn,bool battle) {
     auto current=!battle&&!description_busy_&&pawn?loaded_travel_location(pawn):std::nullopt;
     if(current&&(!snapshot.ready||snapshot.map_id!=current->point.map||snapshot.destination_epoch.empty()||
        snapshot.world!=utf8(path(actor_world(pawn)))||snapshot.player!=utf8(path(pawn))))current.reset();
+    const bool same_west_stair_route=current&&current->point.map==3020&&trip.progress==1110&&
+        trip.departure.area==2&&current->area==3&&trip.epoch.ends_with("|step:grandshelt-castle-ladder");
     const bool recover_route=trip.recovering_route&&!battle&&current&&current->point==trip.departure.point&&
-        current->area==trip.departure.area&&snapshot.destination_epoch==trip.epoch&&snapshot.main_progress==trip.progress;
+        (current->area==trip.departure.area||same_west_stair_route)&&
+        snapshot.destination_epoch==trip.epoch&&snapshot.main_progress==trip.progress;
     if(trip.recovering_route&&!battle&&!recover_route) {
         story_walk_.reset();speech_.say(tr("Automatic walking stopped. A fresh route could not be verified."));return;
     }
@@ -6821,6 +6985,15 @@ void UnrealReader::tick(unsigned commands) {
     }
     bool story_can_announce=story_announcement_allowed(frame,foreground==GetCurrentProcessId(),
         speech_.ready(),story_capture.field_control,description_busy_);
+    if(story_can_announce) {
+        const auto feet=world_map(actor_world(p))&&ordinary_walking(p)?controlled_agent_position(p):std::nullopt;
+        const auto sinkhole=feet?capture_antlion_sinkhole(p,*feet):std::nullopt;
+        const auto capsule=sinkhole?antlion_player_capsule(p):std::nullopt;
+        const auto clearance=capsule?activation_clearance(*sinkhole,*capsule,*feet):std::nullopt;
+        if(!clearance||*clearance< -350.)antlion_warning_announced_=false;
+        else if(navigation_.mode()!=NavigationMode::Automatic&&!std::exchange(antlion_warning_announced_,true))
+            speech_.say(tr(antlion_warning),false);
+    }
     if(story_can_announce&&story_.needs_announcement(story_capture,speech_.epoch())) {
         stage="capture story voice readiness";
         const auto voice=capture_narration_input(false);
@@ -7113,7 +7286,8 @@ void UnrealReader::tick(unsigned commands) {
                 log("NAV explicit route points="+std::to_string(path?path->snapshot.points.size():0)+" reason="+reason);
                 const bool doorway=path&&!path->room_door.empty();
                 speech_.say(path&&path->activation_reached?tr(doorway?hall_door_arrival:"At the target's activation area."):
-                    guidance?(doorway?trf("First, go to the door to the hall. {0}",{*guidance}):*guidance):
+                    guidance?(doorway?trf("First, go to the door to the hall. {0}",{*guidance}):
+                        path->door_approach?trf("First, go to the door. {0}",{*guidance}):*guidance):
                     reason.empty()?tr("A complete native walking route is unavailable."):tr(reason));
             }
         }

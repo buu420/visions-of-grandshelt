@@ -25,6 +25,8 @@ Use the game's interaction button when Story guides you to a door, switch or per
 
 The mod follows the game's Text Language setting. French, German, Spanish (Spain), Japanese, Korean, Simplified Chinese and Traditional Chinese use the screen reader for displayed subtitles and audio descriptions. English audio descriptions use recordings.
 
+In 0.2.60, Story guides you up the west staircase at Grandshelt Castle, and auto-walk warns and pauses before the Antlion quicksand. See the [0.2.60 beta notes](docs/release-notes-0.2.60.md).
+
 In 0.2.59, exit browsing refreshes when you return from a shop, treasure chests require a verified approach, and guidance recalculates after detours and when field controls return. See the [0.2.59 beta notes](docs/release-notes-0.2.59.md).
 
 In 0.2.58, enemy targeting reads the visible stagger gauge and elemental affinities. While targeting an enemy, F9 reads the acting character and the focused enemy's details. See the [0.2.58 beta notes](docs/release-notes-0.2.58.md).

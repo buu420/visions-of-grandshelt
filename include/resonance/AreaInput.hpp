@@ -45,6 +45,8 @@ AreaCaptureReport area_capture_report();
 std::optional<Vec3> tracked_actor_position(resonance::unreal::UObject* actor);
 // Owned box of a live transition or story trigger.
 std::optional<ActivationBox> capture_activation_box(resonance::unreal::UObject* actor);
+std::optional<ActivationBox> capture_swing_door_trigger(resonance::unreal::UObject* pawn,
+    resonance::unreal::UObject* actor);
 std::optional<ActivationBox> capture_factory_conveyor(resonance::unreal::UObject* pawn,resonance::unreal::UObject* actor);
 // Owned interaction geometry for a supported live target. Overlap is only a
 // route candidate. The player's native interaction list confirms arrival.
@@ -53,6 +55,7 @@ std::optional<ActivationBox> capture_interaction_box(resonance::unreal::UObject*
 std::optional<ActivationBox> capture_ladder_bottom_box(resonance::unreal::UObject* actor);
 // These interactables need an approach to the live prompt box rather than the actor origin.
 bool requires_checked_interaction_box(resonance::unreal::UObject* actor);
+std::optional<bool> burning_castle_door_open(resonance::unreal::UObject* actor);
 std::optional<bool> olderion_inn_door_open(resonance::unreal::UObject* actor);
 std::optional<bool> chapter_four_story_door_open(resonance::unreal::UObject* actor);
 std::optional<bool> gaberada_elder_door_open(resonance::unreal::UObject* actor);

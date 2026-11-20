@@ -149,6 +149,7 @@ private:
     std::optional<StoryCrossing> navigation_crossing_;
     std::optional<double> navigation_activation_arrival_metres_;
     std::string navigation_room_door_;
+    bool navigation_door_approach_{},antlion_warning_announced_{};
     std::string navigation_path_reason_;
     std::string navigation_target_reason_,area_refresh_status_,area_read_status_;
     std::optional<GroundCoverage> navigation_ground_;

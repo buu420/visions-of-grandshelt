@@ -51,6 +51,27 @@ std::optional<double> activation_clearance(const ActivationBox& box,WalkingCapsu
     if(!std::isfinite(clearance))return std::nullopt;
     return clearance;
 }
+bool walking_segment_crosses_activation_box(const ActivationBox& box,WalkingCapsule capsule,Vec3 from,Vec3 to) {
+    if(!valid(box)||!valid(capsule)||!finite(from)||!finite(to))return false;
+    const Turn yaw=turn(box.yaw_degrees);
+    from.z+=capsule.half_height;
+    to.z+=capsule.half_height;
+    const Vec3 start=local(box,yaw,from),end=local(box,yaw,to);
+    if(!finite(start)||!finite(end))return false;
+    double first=0.,last=1.;
+    const auto clip=[&](double a,double b,double extent) {
+        const double step=b-a;
+        if(!std::isfinite(step)||!std::isfinite(extent))return false;
+        if(step==0.)return std::abs(a)<=extent;
+        const double entry=(-extent-a)/step,exit=(extent-a)/step;
+        first=std::max(first,std::min(entry,exit));
+        last=std::min(last,std::max(entry,exit));
+        return first<=last;
+    };
+    return clip(start.x,end.x,box.half_extent.x+capsule.radius)&&
+        clip(start.y,end.y,box.half_extent.y+capsule.radius)&&
+        clip(start.z,end.z,box.half_extent.z+capsule.half_height);
+}
 bool reaches_activation_before_wall(const ActivationBox& box,WalkingCapsule capsule,Vec3 feet,
         Vec3 stopped_feet,double world_to_metres) {
     const double margin=minimum_arrival*world_to_metres;

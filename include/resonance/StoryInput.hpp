@@ -6,6 +6,7 @@ namespace resonance {
 // Read-only game-thread capture of current main QuestData, active area-wide
 // quest actors and audited opening continuations. Never loads future assets.
 StorySnapshot capture_story_input(resonance::unreal::UObject* controlled_pawn);
+std::optional<ActivationBox> capture_antlion_sinkhole(resonance::unreal::UObject* pawn,Vec3 feet);
 
 // Crate and water observations authorize a lane. The caller must still prove
 // the complete walking route using the live pawn capsule and floor queries.

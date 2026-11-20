@@ -674,6 +674,54 @@ bool story_gate(StorySnapshot& story,UObject* pawn,UObject* world,UObject* manag
     destination.exit_route_key=route->route_key;
     return true;
 }
+bool burning_castle_story(StorySnapshot& story,UObject* pawn,UObject* world,int map,int quest,
+        std::span<const FilteredPoint> points) {
+    if(map!=3020||quest!=1001||(story.main_progress!=1100&&story.main_progress!=1110)||
+       std::none_of(points.begin(),points.end(),[&](const auto& point) {
+           return point.role==0&&point.map_kind==0&&point.map_id==(story.main_progress==1100?2010:3020);
+       }))return false;
+    const auto manager=world_scoped(L"CPP_MapManager",world);
+    const auto area=manager.ambiguous?std::nullopt:getter<int>(manager.object,L"GetMapAreaId");
+    const auto position=getter<Vec3>(pawn,L"K2_GetActorLocation");
+    if(!area||!position)return false;
+    const auto leg=burning_castle_leg(map,quest,story.main_progress,*area,*position);
+    if(!leg)return false;
+    const auto gate=[&](int id,int entry,const char* key,const char* label,const char* instruction) {
+        return story_gate(story,pawn,world,manager.object,id,3020,entry,key,label,instruction);
+    };
+    const auto open_door=[&](int id,const char* key,const char* label,const char* instruction) {
+        const auto registry=registered_story_gimmicks(world);
+        auto* door=registered_gimmick(registry,world,id,L"/Script/mucha.CPP_MapGimmick_Object_DoorBase");
+        if(!story_actor_available(pawn,door)||burning_castle_door_open(door)!=false)return false;
+        const auto box=capture_interaction_box(door,pawn);
+        if(!box)return false;
+        story_step(story,key,instruction);
+        story_step_actor(story,door,box->center,key,label);
+        return true;
+    };
+    switch(*leg) {
+    case BurningCastleLeg::Hall:
+        if(open_door(31,"grandshelt-hall-door","Castle entrance hall door","Open the door at the end of the hall."))return true;
+        return gate(4,7,"grandshelt-castle-hall","Passage farther into the castle","Follow the entrance hall into the castle.");
+    case BurningCastleLeg::UpperLadder: {
+        const auto registry=registered_story_gimmicks(world);
+        auto* ladder=registered_gimmick(registry,world,4,L"/Script/mucha.CPP_MapGimmickLadder");
+        const auto approach=story_ladder_approach(pawn,ladder,false);
+        if(!approach)return false;
+        constexpr auto key="grandshelt-castle-ladder";
+        story_step(story,key,"Use the west staircase and follow the gallery to the ladder.");
+        story_step_actor(story,ladder,*approach,key,"Ladder to the upper passage");
+        story.destinations.back().interactable=false;
+        return true;
+    }
+    case BurningCastleLeg::EastWing:
+        return gate(2,3,"grandshelt-castle-east-wing","Passage to the east wing","Take the passage to the east wing.");
+    case BurningCastleLeg::KingChamber:
+        if(open_door(23,"grandshelt-king-door","King's chamber doors","Open the doors to the king's chamber."))return true;
+        return gate(0,5,"grandshelt-king-chamber","Passage to the king's chamber","Enter the king's chamber.");
+    }
+    return false;
+}
 std::optional<double> shrine_floor_height(UObject* pawn,UObject* floor,Vec3 anchor) {
     if(!story_actor_available(pawn,floor))return {};
     auto* root=object_value(floor,L"m_pRootBoxComponent",760);
@@ -2491,6 +2539,34 @@ std::optional<StoryDestination> mitra_vision_event(UObject* pawn,UObject* world,
 bool is_story_shrine_bridge_goal(UObject* target,Vec3 goal) {
     return shrine_bridge_at_goal(target,goal).has_value();
 }
+std::optional<ActivationBox> capture_antlion_sinkhole(UObject* pawn,Vec3 feet) {
+    // Limit native reads to the visible hollow near its authored sign.
+    if(std::hypot(feet.x-10813.69,feet.y-13272.426)>800.||std::abs(feet.z-30.)>200.)return {};
+    auto* world=actor_world(pawn);
+    if(path(world)!=L"/Game/Map/Wld/Wld_PL.Wld_PL")return {};
+    constexpr auto trigger_path=L"/Game/Map/Wld/EV/Wld_01Gra_EV.Wld_01Gra_EV:"
+        L"PersistentLevel.BP_MapGimmick_EventTrigger_C_1";
+    constexpr auto sign_path=L"/Game/Map/Wld/GD/Wld_02_GD.Wld_02_GD:"
+        L"PersistentLevel.BP_MapGimmick_BlockObject_Signboard001_C_8";
+    auto* trigger=UObjectGlobals::StaticFindObject(trigger_path);
+    auto* sign=UObjectGlobals::StaticFindObject(sign_path);
+    if(!live(trigger)||actor_world(trigger)!=world||path(trigger)!=trigger_path||
+       !is(trigger,L"/Script/mucha.CPP_MapGimmick_EventTrigger")||
+       read<int>(trigger,L"m_UniqueId",808)!=131||
+       !live(sign)||actor_world(sign)!=world||path(sign)!=sign_path||
+       !is(sign,L"/Script/mucha.CPP_MapGimmick_BlockingBase")||read<int>(sign,L"m_UniqueId",808)!=107||
+       !story_actor_available(pawn,sign))return {};
+    try {
+        if(getter<unsigned char>(trigger,L"GetGimmickCondition")!=0||opening_overlap(pawn,trigger)!=true||
+           !story_event_matches(trigger,"C01_ArijigokuEncount")||
+           !story_event_matches(sign,"GimEV_Guide_Wld_02Lan_02"))return {};
+        return capture_activation_box(trigger);
+    } catch(const std::exception& error) {
+        static NativeProblemDeduplicator reported;
+        if(reported.accept(error.what()))log(std::string("Antlion warning unavailable: ")+error.what());
+        return {};
+    }
+}
 std::optional<StoryShrineBridgeRoute> capture_story_shrine_bridge(UObject* pawn,UObject* target,Vec3 goal) {
     using namespace chapter_three;
     try {
@@ -2598,6 +2674,7 @@ StorySnapshot capture_story_input(UObject* pawn) {
             if(capture_chapter_six_lab(result,pawn,world,*map,*main_id,*points))return result;
             if(capture_chapter_seven_leg(result,pawn,world,game_instance,*map,*main_id))return result;
             if(capture_chapter_eight_leg(result,pawn,world,*map,*main_id))return result;
+            if(burning_castle_story(result,pawn,world,*map,*main_id,*points))return result;
             if(capture_chapter_two_legs(result,pawn,world,*map,*main_id,*points))return result;
             if(capture_chapter_four_legs(result,pawn,world,*map,*main_id,*points))return result;
             if(capture_later_story_leg(result,pawn,world,game_instance,*map,*main_id,*points))return result;

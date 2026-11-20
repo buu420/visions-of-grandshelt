@@ -1052,6 +1052,13 @@ std::optional<ActivationBox> capture_factory_conveyor(UObject* pawn,UObject* act
     const auto overlap=overlap_facts(pawn,actor,component);
     return overlap&&enabled_overlap(*overlap)?owned_navigation_box(actor,component):std::nullopt;
 }
+std::optional<ActivationBox> capture_swing_door_trigger(UObject* pawn,UObject* actor) {
+    if(!native_kind(actor,AreaKind::TriggerDoor)||actor_world(actor)!=actor_world(pawn)||
+       byte_call(actor,L"GetGimmickCondition")!=0)return {};
+    auto* trigger=object_value(actor,L"m_pTriggerBox",984);
+    const auto overlap=overlap_facts(pawn,actor,trigger);
+    return overlap&&enabled_overlap(*overlap)?owned_navigation_box(actor,trigger):std::nullopt;
+}
 namespace {
 bool mobliz_lever_memo(UObject* actor) {
     return live(actor)&&path(actor)==L"/Game/Map/Dng/04Dir/04Dir_41/GD/Dng_04Dir_41_02_GD.Dng_04Dir_41_02_GD:PersistentLevel.BP_MapGimmick_BlockObject010_C_1"&&
@@ -1134,6 +1141,17 @@ std::optional<bool> story_door_box_open(UObject* actor) {
 }
 std::optional<bool> olderion_inn_door_open(UObject* actor) {
     return olderion_inn_door(actor)?story_door_box_open(actor):std::nullopt;
+}
+std::optional<bool> burning_castle_door_open(UObject* actor) {
+    if(!native_kind(actor,AreaKind::Door))return {};
+    constexpr std::wstring_view level=L"/Game/Map/Dng/01Gra/01Gra_42/GD/Dng_01Gra_42_01_GD.Dng_01Gra_42_01_GD:PersistentLevel.";
+    const auto name=path(actor);
+    if(!name.starts_with(level))return {};
+    const auto suffix=std::wstring_view(name).substr(level.size());
+    const auto id=read<int>(actor,L"m_UniqueId",808);
+    if((id==31&&suffix==L"BP_MapGimmick_Object_Door_C_1")||
+       (id==23&&suffix==L"BP_MapGimmick_Object_Door_Child007_C_0"))return story_door_box_open(actor);
+    return {};
 }
 std::optional<bool> chapter_four_story_door_open(UObject* actor) {
     return chapter_four_story_door(actor)?story_door_box_open(actor):std::nullopt;

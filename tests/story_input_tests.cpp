@@ -916,10 +916,27 @@ void reverse_cleanup_order() {
     }
     require(order=="ABba","native output parameters must be destroyed in reverse ownership order");
 }
+void burning_castle_uses_the_current_floor_and_rescue_objective() {
+    using resonance::story_input_detail::BurningCastleLeg;
+    using resonance::story_input_detail::burning_castle_leg;
+    require(burning_castle_leg(3020,1001,1110,1,{-40000,0,2.15})==BurningCastleLeg::Hall,
+        "the rescue starts at the entrance hall doors");
+    require(burning_castle_leg(3020,1001,1110,2,{-31797,0,22.15})==BurningCastleLeg::UpperLadder,
+        "the burning lower hall leads around the blocked main stairs to the upper ladder");
+    require(burning_castle_leg(3020,1001,1110,3,{-27700,6550,1320})==BurningCastleLeg::EastWing,
+        "the top of the ladder leads onward into the east wing");
+    require(burning_castle_leg(3020,1001,1110,5,{-10925,5800,1182.15})==BurningCastleLeg::KingChamber,
+        "the east wing leads to the king's chamber");
+    require(!burning_castle_leg(3020,1001,1120,2,{-31797,0,22.15})&&
+        !burning_castle_leg(2014,1001,1110,2,{-31797,0,22.15})&&
+        !burning_castle_leg(3020,1002,1110,2,{-31797,0,22.15}),
+        "the rescue route cannot leak into other castle visits or objectives");
+}
 }
 int main() {
     int failures=0;
-    const std::array<std::pair<const char*,void(*)()>,41> tests{{
+    const std::array<std::pair<const char*,void(*)()>,42> tests{{
+        {"burning_castle_uses_the_current_floor_and_rescue_objective",burning_castle_uses_the_current_floor_and_rescue_objective},
         {"ultima_story_uses_unlocked_clear_save_and_current_movement",ultima_story_uses_unlocked_clear_save_and_current_movement},
         {"research_lab_requires_current_clearance_and_room",research_lab_requires_current_clearance_and_room},
         {"research_lab_follows_native_puzzle_changes",research_lab_follows_native_puzzle_changes},

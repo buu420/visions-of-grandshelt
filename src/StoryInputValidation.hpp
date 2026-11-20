@@ -15,6 +15,21 @@
 #include <tuple>
 #include <utility>
 namespace resonance::story_input_detail {
+enum class BurningCastleLeg { Hall, UpperLadder, EastWing, KingChamber };
+inline std::optional<BurningCastleLeg> burning_castle_leg(int map,int quest,std::optional<int> progress,
+        int area,Vec3 position) {
+    if(map!=3020||quest!=1001||(progress!=1100&&progress!=1110)||
+       !std::isfinite(position.x)||!std::isfinite(position.y)||!std::isfinite(position.z))return {};
+    if(area==1)return BurningCastleLeg::Hall;
+    if(progress!=1110)return {};
+    if(area==2||area==3) {
+        if(position.x<-27200.&&position.z<1200.)return BurningCastleLeg::UpperLadder;
+        if(position.x<-22000.)return BurningCastleLeg::EastWing;
+    }
+    if((area==3||area==5||area==8)&&position.x>-16000.&&position.x<-10000.&&position.z>850.)
+        return BurningCastleLeg::KingChamber;
+    return {};
+}
 enum class UltimaStoryLeg { Deck, Helm, Flight, Crater };
 inline std::optional<UltimaStoryLeg> ultima_story_leg(
     std::optional<bool> cleared, std::optional<int> progress, int map,

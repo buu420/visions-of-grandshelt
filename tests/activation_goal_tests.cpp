@@ -376,8 +376,19 @@ void spiral_route_rejects_positions_off_the_ramp() {
         "non-finite positions cannot join the rest-stop route");
 }
 }
+void walking_segment_checks_the_rotated_hazard_before_moving() {
+    const resonance::ActivationBox quicksand{{0,0,30},{80,152,64},20.};
+    const resonance::WalkingCapsule capsule{18,42};
+    require(resonance::walking_segment_crosses_activation_box(quicksand,capsule,{0,260,0},{0,-260,0}),
+        "an automatic step cannot cross a hazard between two clear endpoints");
+    require(!resonance::walking_segment_crosses_activation_box(quicksand,capsule,{310,260,0},{310,-260,0}),
+        "a nearby path skirting the hazard stays usable");
+    require(!resonance::walking_segment_crosses_activation_box(quicksand,capsule,{0,260,380},{0,-260,380}),
+        "a path on a separate height does not enter the trigger");
+}
 int main() {
-    const std::array<std::pair<const char*,void(*)()>,25> tests{{
+    const std::array<std::pair<const char*,void(*)()>,26> tests{{
+        {"walking_segment_checks_the_rotated_hazard_before_moving",walking_segment_checks_the_rotated_hazard_before_moving},
         {"observed_exit_closest_point_is_on_the_owned_box",observed_exit_closest_point_is_on_the_owned_box},
         {"feet_inside_the_box_are_returned_unmodified",feet_inside_the_box_are_returned_unmodified},
         {"observed_projection_overlaps_the_capsule",observed_projection_overlaps_the_capsule},

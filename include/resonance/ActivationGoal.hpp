@@ -20,6 +20,9 @@ std::optional<Vec3> closest_activation_point(const ActivationBox&,Vec3 feet);
 // length half_height-radius) to the box. Positive overlaps; zero only touches; negative
 // is clear of it. Inside the box the result is the radius. nullopt for invalid input.
 std::optional<double> activation_clearance(const ActivationBox&,WalkingCapsule,Vec3 feet);
+// Checks the swept capsule's conservative envelope against a yawed trigger.
+// This includes contact at either end of the proposed walking segment.
+bool walking_segment_crosses_activation_box(const ActivationBox&,WalkingCapsule,Vec3 from,Vec3 to);
 // True when a horizontal walking capsule enters the box before reaching a blocker.
 // The caller supplies a verified, active automatic transition and the first blocking position.
 bool reaches_activation_before_wall(const ActivationBox&,WalkingCapsule,Vec3 feet,Vec3 stopped_feet,double world_to_metres);
