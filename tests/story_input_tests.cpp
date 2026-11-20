@@ -932,10 +932,29 @@ void burning_castle_uses_the_current_floor_and_rescue_objective() {
         !burning_castle_leg(3020,1002,1110,2,{-31797,0,22.15}),
         "the rescue route cannot leak into other castle visits or objectives");
 }
+void kol_uses_the_current_objective_and_room() {
+    using Kind=KolStoryLeg::Kind;
+    constexpr std::array inn{FilteredPoint{0,0,2020,false,{}},FilteredPoint{0,0,2020,true,{1,10}}};
+    constexpr std::array rental{FilteredPoint{0,0,2020,true,{1,11}}};
+    const auto approach=kol_story_leg(1140,0,inn);
+    const auto keeper=kol_story_leg(1140,3,inn);
+    const auto exit=kol_story_leg(1150,3,rental);
+    const auto stablehand=kol_story_leg(1150,0,rental);
+    require(approach&&approach->kind==Kind::InnApproach&&keeper&&keeper->kind==Kind::Innkeeper&&
+        keeper->contact==&inn[1],"the innkeeper replaces the village marker after entering the inn");
+    require(exit&&exit->kind==Kind::InnExit&&stablehand&&stablehand->kind==Kind::Stablehand&&
+        stablehand->contact==&rental[0],"the rental objective leads out of the inn and then to the stablehand");
+    constexpr std::array path_points{FilteredPoint{1,0,2020,true,{1,11}},FilteredPoint{0,1,2020,true,{1,11}},
+        FilteredPoint{0,0,2040,true,{1,11}}};
+    require(!kol_story_leg(1140,3,std::span{inn}.first(1))&&!kol_story_leg(1150,0,path_points)&&
+        !kol_story_leg(1150,0,inn)&&!kol_story_leg(1150,2,rental)&&!kol_story_leg(1160,0,rental),
+        "Kol steps require the current native goal in a matching room and phase");
+}
 }
 int main() {
     int failures=0;
-    const std::array<std::pair<const char*,void(*)()>,42> tests{{
+    const std::array<std::pair<const char*,void(*)()>,43> tests{{
+        {"kol_uses_the_current_objective_and_room",kol_uses_the_current_objective_and_room},
         {"burning_castle_uses_the_current_floor_and_rescue_objective",burning_castle_uses_the_current_floor_and_rescue_objective},
         {"ultima_story_uses_unlocked_clear_save_and_current_movement",ultima_story_uses_unlocked_clear_save_and_current_movement},
         {"research_lab_requires_current_clearance_and_room",research_lab_requires_current_clearance_and_room},

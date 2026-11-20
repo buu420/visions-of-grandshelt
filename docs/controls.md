@@ -77,6 +77,8 @@ Story reads the current main objective and the game's available quest destinatio
 
 Use Page Up/Down or RB and D-pad Up/Down to choose a Story target. Start auto-walk with Shift+Delete or RB and the right-stick click. After the expected exit or a battle, auto-walk picks up when field control returns and Story can verify the next walking target. Press Interact at doors, gates, and controls when prompted. If several new routes are available, choose the next target and start again. RB+B or moving takes over from auto-walk.
 
+In the Village of Kol, Story guides you to the inn door, the innkeeper, and the Chocobo Stablehand as the objective advances. While riding a chocobo on the world map, use the field controls for target browsing, F8 directions, the beacon, and auto-walk. The beacon recalculates from where you steer the chocobo, and manual movement cancels auto-walk.
+
 When Story sends you to the helm of the Enterprise, follow the deck door and the helm route. Once the airship is flying, press Delete or hold RB and click the left stick to turn on the beacon for the tornado over Pharm. Steer with the game's movement controls. Story offers the entrance to Sian when field control returns after the encounter.
 
 After Umbra, follow Story to the helm again. Once the Enterprise is airborne, press Delete or hold RB and click the left stick. Steer toward the Crystal Tower with the beacon. In the tower, Story announces the next passage or interaction as the game opens it. Use Exits to find the side chamber, the Middle Reach and Upper Reach landings, and the summit rest stop.
@@ -99,7 +101,7 @@ Both route modes play a two-note HRTF beacon. Use stereo headphones to hear whic
 
 During field play, nearby NPCs and interactable objects repeat their distinct positional sounds from Echos of Gaia. Each sound follows its target relative to your movement controls and repeats faster as you get closer. You can hear multiple nearby targets with route guidance off. Selecting an entity reads its name, visible role or object type, along with its direction and straight-line distance when available.
 
-Nearby solid walls produce continuous tones while you are on foot, even when you stand still. Each movement direction has its own pitch, and each sound comes from the direction of the wall. The tones get louder as you approach and fade as you move away. Use stereo headphones to hear where the sounds come from.
+Nearby solid walls produce continuous tones while you are on foot or riding a chocobo, even when you stand still. Each movement direction has its own pitch, and each sound comes from the direction of the wall. The tones get louder as you approach and fade as you move away. Use stereo headphones to hear where the sounds come from.
 
 A second collision check distinguishes a doorway edge from a wall across the opening. The forward tone clears at an open entrance. Nearby walls and door frames can still sound to either side.
 

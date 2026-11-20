@@ -54,7 +54,7 @@ void apply_walking(UObject* pawn,float delta,const void* input) {
     if(!stick||load<double>(input,0x18)!=0.||load<double>(input,0x28)!=0.)return;
     const auto native_gain=load<float>(input,0x30);
     const auto live_maximum=load<float>(active->max_speed);
-    if(!std::isfinite(native_gain)||native_gain<=0||native_gain>1.6f||
+    if(!native_walking_gain_valid(active->travel,native_gain)||
        !std::isfinite(live_maximum)||live_maximum<=0)return;
     std::optional<WalkingAnalogSpeed> analog;
     if(active->min_analog_speed)analog=WalkingAnalogSpeed{live_maximum,*active->min_analog_speed};
@@ -104,9 +104,10 @@ void walking_tick(UObject* pawn,float delta) {
     // one sample. The regular Tick still owns gait, sound, and movement.
     if(foreground!=GetCurrentProcessId()||GetTickCount64()-queued_at>250||
        load<UObject*>(pulse.movement_slot)!=pulse.movement||load<UObject*>(pulse.root_slot)!=pulse.root||
-       load<unsigned char>(pulse.movement_mode)!=1||
+       native_ground_travel(load<unsigned char>(pawn,0x780),load<unsigned char>(pulse.movement_mode),
+           pulse.travel==NativeGroundTravel::Chocobo)!=pulse.travel||
        load<Stick>(pulse.input)!=Stick{}||
-       load<unsigned char>(pawn,0x780)!=1||!load<unsigned char>(pawn,0xa08)||
+       !load<unsigned char>(pawn,0xa08)||
        load<int>(pawn,0x938)!=0||load<unsigned char>(pawn,0x8b8)||load<unsigned char>(pawn,0xb74)) {
         original_tick(pawn,delta);
         return;

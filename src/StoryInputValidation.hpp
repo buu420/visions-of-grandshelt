@@ -93,6 +93,31 @@ struct FilteredPoint {
     ObjectKey object;
     bool operator==(const FilteredPoint&)const=default;
 };
+struct KolStoryLeg {
+    enum class Kind { InnApproach, Innkeeper, InnExit, Stablehand };
+    Kind kind;
+    const FilteredPoint* contact{};
+};
+inline std::optional<KolStoryLeg> kol_story_leg(std::optional<int> progress,int area,
+        std::span<const FilteredPoint> points) {
+    if((progress!=1140&&progress!=1150)||(area!=0&&area!=3))return {};
+    using Kind=KolStoryLeg::Kind;
+    const auto village_goal=[](const FilteredPoint& point) {
+        return point.role==0&&point.map_kind==0&&point.map_id==2020;
+    };
+    if(progress==1140&&area==0) {
+        if(std::any_of(points.begin(),points.end(),village_goal))return KolStoryLeg{Kind::InnApproach};
+        return {};
+    }
+    const ObjectKey contact{1,progress==1140?10:11};
+    const auto goal=std::find_if(points.begin(),points.end(),[&](const FilteredPoint& point) {
+        return village_goal(point)&&point.object_target&&point.object==contact;
+    });
+    if(goal==points.end())return {};
+    if(progress==1140)return KolStoryLeg{Kind::Innkeeper,&*goal};
+    if(area==3)return KolStoryLeg{Kind::InnExit};
+    return KolStoryLeg{Kind::Stablehand,&*goal};
+}
 struct PointEvidence {
     ObjectKey key;
     Vec3 position;

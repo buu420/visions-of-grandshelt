@@ -6,6 +6,19 @@ namespace resonance::unreal { class UObject; }
 
 namespace resonance {
 enum class NativeWalkingInstall { Ready, Retryable, Unavailable };
+enum class NativeGroundTravel : std::uint8_t { Walking=1, Chocobo=3 };
+
+constexpr std::optional<NativeGroundTravel> native_ground_travel(unsigned method,unsigned movement_mode,bool chocobo) {
+    if(movement_mode!=1)return {};
+    if(method==1&&!chocobo)return NativeGroundTravel::Walking;
+    if(method==3&&chocobo)return NativeGroundTravel::Chocobo;
+    return {};
+}
+constexpr bool native_walking_gain_valid(NativeGroundTravel travel,float gain) {
+    // The same native tick multiplies the mounted gait gain by ten.
+    if(travel==NativeGroundTravel::Chocobo)return gain==8.f||gain==16.f;
+    return gain>0.f&&gain<=1.6f;
+}
 
 // Retry a temporary startup failure only on a fresh walking request.
 class NativeWalkingStartup {
@@ -42,6 +55,7 @@ struct NativeWalkingPulse {
     Vec3 world_direction{},stick{};
     double clearance{},side_margin{},acceleration{},braking{},tick{};
     std::optional<double> min_analog_speed;
+    NativeGroundTravel travel=NativeGroundTravel::Walking;
 };
 
 // Install only after the executable and loader hashes have been verified.

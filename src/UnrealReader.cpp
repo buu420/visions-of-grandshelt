@@ -1235,6 +1235,14 @@ UObject* default_walking_surface(UObject* pawn,UObject* system,UObject* preferre
 bool world_map(UObject* world) {
     return path(world)==L"/Game/Map/Wld/Wld_PL.Wld_PL";
 }
+std::optional<NativeGroundTravel> ground_travel(UObject* pawn) {
+    const auto travel=read<unsigned char>(pawn,L"m_MapMovementMethod");
+    const auto movement=read<unsigned char>(object(pawn,L"CharacterMovement"),L"MovementMode",L"ByteProperty");
+    if(!travel||!movement)return {};
+    const bool chocobo=is(pawn,L"/Script/mucha.CPP_MapUnit_Chocobo");
+    if(chocobo&&!world_map(actor_world(pawn)))return {};
+    return native_ground_travel(*travel,*movement,chocobo);
+}
 bool earth_shrine_exterior(UObject* world) {
     return path(world)==L"/Game/Map/Dng/01Gra/01Gra_43/Dng_01Gra_43_PL.Dng_01Gra_43_PL";
 }
@@ -1631,6 +1639,9 @@ constexpr ActivationBox castle_gallery_doorway{{-30077.,5855.,802.},{160.,200.,6
 bool burning_castle_world(UObject* world) {
     return path(world)==L"/Game/Map/Dng/01Gra/01Gra_42/Dng_01Gra_42_PL.Dng_01Gra_42_PL";
 }
+bool kol_village_world(UObject* world) {
+    return path(world)==L"/Game/Map/Town/02Lan/02Lan_20/Town_02Lan_20_PL.Town_02Lan_20_PL";
+}
 bool olderion_plaza_floor(UObject* world,Vec3 feet) {
     constexpr ActivationBox plaza{{540,-1690,122},{590,590,55},0};
     return path(world)==L"/Game/Map/Town/05Old/05Old_01/Town_05Old_01_PL.Town_05Old_01_PL"&&
@@ -1873,6 +1884,9 @@ std::optional<ActivationBox> inn_floor(UObject* pawn) {
 bool mobliz_world(UObject* pawn) {
     return path(actor_world(pawn))==L"/Game/Map/Dng/04Dir/04Dir_41/Dng_04Dir_41_PL.Dng_04Dir_41_PL";
 }
+bool mobliz_service_lift_world(UObject* world) {
+    return path(world)==L"/Game/Map/Dng/04Dir/04Dir_44/Dng_04Dir_44_PL.Dng_04Dir_44_PL";
+}
 bool wind_shrine_world(UObject* pawn) {
     return path(actor_world(pawn))==L"/Game/Map/Dng/04Dir/04Dir_42/Dng_04Dir_42_PL.Dng_04Dir_42_PL";
 }
@@ -2071,6 +2085,7 @@ UObject* swept_walking_mesh(UObject* pawn,UObject* system,Vec3 feet,std::wstring
 std::optional<NativeWalkingPulse> prepare_walking_pulse(UObject* pawn,std::wstring_view mesh_name,Vec3 feet,Vec3 direction,
         Vec3 waypoint,double scale,std::optional<double> checked_metres,std::wstring_view detour_mesh,
         const std::optional<ActivationBox>& room,bool room_pivot) {
+    const auto travel=ground_travel(pawn);
     auto* movement=object(pawn,L"CharacterMovement");
     auto* movement_slot=property(pawn,L"CharacterMovement",L"ObjectProperty",sizeof(UObject*));
     auto* input_slot=property(pawn,L"m_InputActionValue",L"StructProperty",2*sizeof(double));
@@ -2094,7 +2109,7 @@ std::optional<NativeWalkingPulse> prepare_walking_pulse(UObject* pawn,std::wstri
     const auto fail=[](const std::string& reason)->std::optional<NativeWalkingPulse> {
         log("NAV native walking: "+reason);return {};
     };
-    if(!movement_slot||!input_slot||!max_speed||!velocity_slot||!movement_mode||!accumulated_input||!root_slot||!position||
+    if(!travel||!movement_slot||!input_slot||!max_speed||!velocity_slot||!movement_mode||!accumulated_input||!root_slot||!position||
        !finite(*position)||std::hypot(position->x-feet.x,position->y-feet.y)>scale*.001||
        !stick||!threshold||!std::isfinite(*threshold)||*threshold<0||*threshold>=1.f)
         return fail("native movement input layout unavailable");
@@ -2202,7 +2217,7 @@ std::optional<NativeWalkingPulse> prepare_walking_pulse(UObject* pawn,std::wstri
     }
     return NativeWalkingPulse{pawn,input_slot,movement_slot,movement,max_speed,velocity_slot,movement_mode,accumulated_input,
         root_slot,root,position_slot,root_position,direction,*stick,lane-std::min(scale*.04,lane*.2),
-        scale*.01,*acceleration,*braking,*tick,min_analog_speed};
+        scale*.01,*acceleration,*braking,*tick,min_analog_speed,*travel};
 }
 UObject* walking_mesh(UObject* pawn,UObject* system,Vec3 start) {
     if(!valid(system)||path(system->GetClassPrivate())!=L"/Script/NavigationSystem.NavigationSystemV1")return nullptr;
@@ -3366,6 +3381,52 @@ std::optional<NativeRoute> verified_interaction_turns(UObject* pawn,UObject* tar
     return verified_walking_turns(*sweep,bounds,start,turns,axes,scale,ground_check,path_id,
         approach->arrival_metres,1600,diagnostic,repair_corner);
 }
+std::optional<NativeRoute> kol_village_walk(UObject* pawn,UObject* target,Vec3 start,
+        WalkingAxes axes,double scale,bool ground_check,std::uint64_t path_id) {
+    if(actor_world(target)!=actor_world(pawn))return {};
+    constexpr std::wstring_view outdoors=L"/Game/Map/Town/02Lan/02Lan_20/GD/"
+        L"Town_02Lan_20_01_GD.Town_02Lan_20_01_GD:PersistentLevel.";
+    const auto name=path(target);
+    const auto id=read<int>(target,L"m_UniqueId");
+    constexpr ActivationBox street{{7950.,7035.,-35.},{1510.,2035.,180.},0};
+    if(id==11&&is(target,L"/Script/mucha.CPP_MapUnit_NPC")&&
+       name==L"/Game/Map/Town/02Lan/02Lan_20/EV/Town_02Lan_20_01_EV.Town_02Lan_20_01_EV:"
+             L"PersistentLevel.BP_MapUnit_NPC_C_3") {
+        constexpr std::array to_stablehand{Vec3{7374.,6034.,-32.65},Vec3{7374.,6675.,-124.06},
+            Vec3{7041.,6682.,-47.16},Vec3{7022.,7654.,-6.5},Vec3{6905.,7668.,-7.68}};
+        return verified_interaction_turns(pawn,target,start,street,to_stablehand,axes,scale,ground_check,path_id,
+            "Kol stablehand");
+    }
+    if(!name.starts_with(outdoors))return {};
+    const auto suffix=std::wstring_view(name).substr(outdoors.size());
+    // Both native meshes omit part of the lane around the oasis. The bends
+    // come from a controller replay and each route is swept from the live feet.
+    if(id==8&&suffix==L"BP_MapGimmick_Object_Door_Single002_C_5") {
+        constexpr std::array to_inn{Vec3{6650.,8080.,7.},Vec3{6650.,7385.,-7.06},Vec3{7000.,7386.,-3.28},
+            Vec3{7036.,6716.,-45.24},Vec3{7342.,6716.,-113.35},Vec3{7342.,6105.,-40.61},
+            Vec3{8381.,6102.,-44.03},Vec3{8992.,6102.,-16.},Vec3{9094.,6001.,-.8}};
+        return verified_interaction_turns(pawn,target,start,street,to_inn,axes,scale,ground_check,path_id,"Kol inn door");
+    }
+    if(id==5&&suffix==L"BP_MapTransitionTrigger_C_5") {
+        constexpr std::array through_inn{Vec3{9100.,6033.,1.},Vec3{9230.,6033.,2.}};
+        return verified_trigger_turns(pawn,target,start,street,through_inn,axes,scale,ground_check,path_id,400,
+            "Kol inn doorway");
+    }
+    return {};
+}
+std::optional<NativeRoute> mobliz_service_lift_walk(UObject* pawn,UObject* target,Vec3 start,
+        WalkingAxes axes,double scale,bool ground_check,std::uint64_t path_id) {
+    if(actor_world(target)!=actor_world(pawn)||!is(target,L"/Script/mucha.CPP_MapGimmick_Elevator_Interact")||
+       read<int>(target,L"m_UniqueId")!=0||
+       path(target)!=L"/Game/Map/Dng/04Dir/04Dir_43/GD/Dng_04Dir_43_01_GD.Dng_04Dir_43_01_GD:"
+                     L"PersistentLevel.BP_MapGimmick_Floor_Elevator_Interact_002_C_1")return {};
+    const auto dock=getter<Vec3>(target,L"K2_GetActorLocation");
+    if(!dock||!finite(*dock)||std::abs(dock->z+10.)>15.)return {};
+    // The upper walkway meets the docked platform at the opening between the railings.
+    constexpr ActivationBox landing{{3800.,3600.,0.},{1150.,470.,105.},0};
+    constexpr std::array turns{Vec3{3928.,3600.,10.57},Vec3{4560.,3600.,13.29},Vec3{4626.,3812.,13.29}};
+    return verified_interaction_turns(pawn,target,start,landing,turns,axes,scale,ground_check,path_id,"Mobliz lift dock");
+}
 std::optional<NativeRoute> sian_ayaka_approach(UObject* pawn,UObject* target,Vec3 start,
         WalkingAxes axes,double scale,bool ground_check,std::uint64_t path_id,bool diagnostic) {
     constexpr std::wstring_view courtyard=L"/Game/Map/Town/09Pha/09Pha_01/EV/Town_09Pha_01_01_EV."
@@ -4010,8 +4071,7 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
         std::string* reason,std::uint64_t path_id,UObject* alternate=nullptr,bool log_query=true) {
     if(reason)reason->clear();
     const auto fail=[&](const char* message)->std::optional<NativeRoute>{if(reason)*reason=message;return {};};
-    const auto method=read<unsigned char>(p,L"m_MapMovementMethod");
-    if(!method||*method!=1)return fail("Only ordinary walking is supported in this scene.");
+    if(!ground_travel(p))return fail("The current ground travel state could not be verified.");
     const auto start=controlled_agent_position(p);
     std::string basis_reason;
     const auto axes=walking_input_axes(p,&basis_reason);
@@ -4047,6 +4107,10 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
         }
     }
     if(!scale)return fail("The area's distance scale is unavailable.");
+    if(kol_village_world(world))
+        if(auto route=kol_village_walk(p,target,*start,*axes,*scale,ground_check,path_id))return route;
+    if(mobliz_service_lift_world(world))
+        if(auto route=mobliz_service_lift_walk(p,target,*start,*axes,*scale,ground_check,path_id))return route;
     if(burning_castle_world(world)) {
         if(auto route=burning_castle_ladder_route(p,target,library,mesh,*start,*axes,*scale,ground_check,path_id))return route;
         if(auto route=burning_castle_chamber_route(p,target,library,mesh,*start,*axes,*scale,ground_check,path_id))return route;
@@ -5028,6 +5092,13 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
 std::optional<NativeRoute> route_snapshot(UObject* pawn,UObject* target,Vec3 destination,bool ground_check,
         std::string* reason=nullptr,std::uint64_t path_id=0,bool log_query=true) {
     const auto world=actor_world(pawn);
+    if(ground_travel(pawn)==NativeGroundTravel::Chocobo) {
+        auto* system=nav_library(pawn);
+        auto* mesh=system?registered_default_surface(pawn,system):nullptr;
+        if(mesh)return route_on_mesh(pawn,target,destination,ground_check,reason,path_id,mesh,log_query);
+        if(reason)*reason="The world map's mounted route surface is unavailable.";
+        return {};
+    }
     if(actor_world(target)==world&&tower_spiral_exit(target)!=TowerSpiralExit::None) {
         // LocalMap can return a complete path while the party stands in a
         // seam it cannot project onto. Keep the same continuous bake for the
@@ -5158,18 +5229,14 @@ enum NavigationKey : std::size_t { CategoryBack,CategoryForward,TargetBack,Targe
 struct NavigationGuard {
     UObject* pawn{};
     bool eligible{},foreground{},physical_input{},actuator{},field_surface{},controller_allowed{},rowing{},flying{};
-    bool walking{};
+    bool ground{};
     std::array<bool,6> allowed{};
     std::array<std::string,6> conflicts;
     std::string reason="Native navigation input state is unavailable.";
     std::string actuator_reason;
 };
 bool ordinary_walking(UObject* pawn) {
-    const auto travel=read<unsigned char>(pawn,L"m_MapMovementMethod");
-    const auto movement=read<unsigned char>(object(pawn,L"CharacterMovement"),L"MovementMode",L"ByteProperty");
-    // Both exact enums use 1 for ordinary walking. Nav-walking, falling,
-    // swimming, flying and game-specific travel require separate adapters.
-    return travel&&*travel==1&&movement&&*movement==1;
+    return ground_travel(pawn)==NativeGroundTravel::Walking;
 }
 constexpr auto antlion_warning="Beware the Antlion. Cross by chocobo only.";
 std::optional<WalkingCapsule> antlion_player_capsule(UObject* pawn) {
@@ -5182,7 +5249,7 @@ std::optional<WalkingCapsule> antlion_player_capsule(UObject* pawn) {
 }
 FieldWallCues capture_field_walls(UObject* pawn,const StorySpatialContext& spatial,std::span<const ActivationBox> passages) {
     FieldWallCues cues{};
-    if(!ordinary_walking(pawn))return cues;
+    if(!ground_travel(pawn))return cues;
     auto sweep=capture_capsule_sweep(pawn);
     if(!sweep)return cues;
     auto* function=sweep->library->GetFunctionByNameInChain(L"CapsuleTraceSingleByProfile");
@@ -5316,11 +5383,10 @@ NavigationGuard capture_navigation_guard(bool controller_gate_only=false) {
     result.field_surface=result.pawn&&!blocking&&(field_layout||(!top&&input.unit_input_enabled==InputFact::Yes))&&
         input.selecting_key!=InputFact::Yes&&input.text_entry!=InputFact::Yes&&
         input.talk_event!=InputFact::Yes&&input.paused!=InputFact::Yes&&input.blocking_context!=InputFact::Yes;
-    const auto method=read<unsigned char>(result.pawn,L"m_MapMovementMethod");
-    result.walking=ordinary_walking(result.pawn);
+    result.ground=ground_travel(result.pawn).has_value();
     result.rowing=native_rowing(result.pawn);
     result.flying=native_airship(result.pawn);
-    const bool supported_movement=result.walking||result.rowing||result.flying;
+    const bool supported_movement=result.ground||result.rowing||result.flying;
     result.eligible=result.foreground&&input.known&&input.field_control&&supported_movement&&actor_world(result.pawn);
     if(!result.pawn)result.reason="A field character is unavailable.";
     else if(input.selecting_key==InputFact::Yes)result.reason="Key assignment is active.";
@@ -5328,7 +5394,7 @@ NavigationGuard capture_navigation_guard(bool controller_gate_only=false) {
     else if(blocking||input.blocking_context==InputFact::Yes)result.reason="A menu or scene is active.";
     else if(input.talk_event==InputFact::Yes)result.reason="A scripted scene is active.";
     else if(input.paused==InputFact::Yes)result.reason="The game is paused.";
-    else if(!method||!supported_movement)result.reason="Navigation is unavailable in this travel mode.";
+    else if(!supported_movement)result.reason="Navigation is unavailable in this travel mode.";
     else if(!actor_world(result.pawn))result.reason="The current field location could not be read.";
     else if(!input.known)result.reason="Field controls could not be read.";
     else result.reason=result.eligible?"":"Field controls are unavailable.";
@@ -5369,7 +5435,7 @@ NavigationGuard capture_navigation_guard(bool controller_gate_only=false) {
     const bool physical_known=input.native_move_input!=InputFact::Unknown;
     const auto retained_speed=read<float>(object(result.pawn,L"CharacterMovement"),L"MaxWalkSpeed",L"FloatProperty");
     const bool speed_known=retained_speed&&std::isfinite(*retained_speed)&&*retained_speed>0;
-    result.actuator=physical_known&&speed_known&&native_walking_ready();
+    result.actuator=result.ground&&physical_known&&speed_known&&native_walking_ready();
     if(!physical_known)result.actuator_reason="Physical controls could not be read.";
     else if(!speed_known)result.actuator_reason="The current walking speed could not be read.";
     else if(!native_walking_ready())result.actuator_reason="Native walking input is unavailable.";
@@ -5802,7 +5868,7 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
     frame.world=utf8(path(actor_world(pawn)));frame.player=utf8(path(pawn));
     if(!automatic&&native_rowing(pawn))return rowing_frame(pawn,std::move(frame),refresh);
     if(!automatic&&native_airship(pawn))return flight_frame(pawn,std::move(frame),refresh);
-    if(!ordinary_walking(pawn))return frame;
+    if(!ground_travel(pawn))return frame;
     frame.field_eligible=!frame.world.empty();
     frame.target=target_id_;frame.target_available=false;
     const auto position=controlled_agent_position(pawn);
@@ -6025,7 +6091,8 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
         amore_south_exit(live_target)||gaberada_elder_door_open(live_target)==false||
         path(live_target).starts_with(L"/Game/Map/Dng/08Gro/08Gro_40/GD/")||
         wardens_cape_trigger(live_target)||water_shrine_bridge_exit(live_target)||water_shrine_dry_passage(live_target)||
-        burning_castle_world(actor_world(pawn))))||
+        burning_castle_world(actor_world(pawn))||kol_village_world(actor_world(pawn))||
+        mobliz_service_lift_world(actor_world(pawn))))||
         swept_default_mesh(actor_world(pawn),navigation_swept_mesh_)||
         (burning_castle_world(actor_world(pawn))&&!navigation_swept_mesh_.empty())||
         ((crystal_tower_spiral(actor_world(pawn))||tower_chamber_return(live_target))&&
@@ -6154,7 +6221,7 @@ unsigned UnrealReader::controller_commands() {
         "The modifier has another game binding or its binding could not be read.":!crossing_ready?
         "No current Story crossing could be verified.":!speech_.ready()?"Speech output is unavailable.":"";
     const bool reserve_field_rb=guard.foreground&&guard.field_surface&&guard.controller_allowed&&speech_.ready()&&
-        crossing_ready&&(guard.walking||guard.rowing||guard.flying);
+        crossing_ready&&(guard.ground||guard.rowing||guard.flying);
     publish_controller_permission(permitted,controller_epoch_,reserve_field_rb);
     const auto name=controller_modifier()==ControllerModifier::RightShoulder?"RB":
         controller_modifier()==ControllerModifier::RightTrigger?"RT":"LT";
@@ -6196,7 +6263,7 @@ unsigned UnrealReader::area_browse_commands() {
         area_browse_.reset();
         return 0;
     }
-    if(!guard.eligible||!guard.walking) {
+    if(!guard.eligible||!guard.ground) {
         if(browse.request)browse.area.clear();
         else area_browse_.reset();
         return 0;
@@ -6386,7 +6453,7 @@ void UnrealReader::movement_tick() {
     }
     navigation_output(update,true);
     if(!update.movement)return;
-    if(update.movement_waypoint)if(const auto sinkhole=capture_antlion_sinkhole(guard.pawn,frame.position)) {
+    if(update.movement_waypoint&&ordinary_walking(guard.pawn))if(const auto sinkhole=capture_antlion_sinkhole(guard.pawn,frame.position)) {
         const auto capsule=antlion_player_capsule(guard.pawn);
         const auto waypoint=*update.movement_waypoint;
         const auto length=std::hypot(waypoint.x-frame.position.x,waypoint.y-frame.position.y);
@@ -6420,7 +6487,7 @@ void UnrealReader::movement_tick() {
     // Getters and the synchronous path query do not yield the game thread.
     // Recheck asynchronous focus and walking control. The fresh XInput poll
     // above covers controller changes during the path query.
-    if(final_foreground!=GetCurrentProcessId()||player()!=guard.pawn||!ordinary_walking(guard.pawn)||!get_bool(guard.pawn,L"IsEnableUnitInput")||
+    if(final_foreground!=GetCurrentProcessId()||player()!=guard.pawn||ground_travel(guard.pawn)!=pulse->travel||!get_bool(guard.pawn,L"IsEnableUnitInput")||
        get_bool(guard.pawn,L"IsPaused",true)||get_bool(guard.pawn,L"IsMoveInputIgnored",true)) {
         if(final_foreground!=GetCurrentProcessId()) {
             navigation_speech_stop_pending_="Navigation stopped. Game focus lost.";
@@ -6526,7 +6593,7 @@ std::string automatic_resume_issue(const NavigationGuard& guard,bool controller)
 void UnrealReader::follow_destination_leg(UObject* pawn,const TravelLocation& here,
         const TravelPassage& passage,const std::string& target,NavigationMode mode,bool controller,TravelHandoff handoff) {
     const auto guard=capture_navigation_guard();
-    if(guard.pawn!=pawn||!guard.foreground||!guard.eligible||!ordinary_walking(pawn))return;
+    if(guard.pawn!=pawn||!guard.foreground||!guard.eligible||!guard.ground)return;
     const bool automatic=mode==NavigationMode::Automatic;
     const bool resuming=handoff!=TravelHandoff::Wait;
     if(controller&&!guard.controller_allowed) {
@@ -6647,7 +6714,7 @@ void UnrealReader::observe_destination(UObject* pawn,bool battle) {
     if(current&&(current->point!=trip.departure.point||trip.continuation.pending()||
         travel_arrived(trip.departure,trip.passage,*current))) {
         const auto control=capture_navigation_guard();
-        if(control.pawn!=pawn||!control.eligible||!ordinary_walking(pawn))current.reset();
+        if(control.pawn!=pawn||!control.eligible||!control.ground)current.reset();
     }
     const auto handoff=trip.continuation.observe(trip.departure,trip.passage,current,
         battle&&trip.mode==NavigationMode::Automatic);
@@ -6768,7 +6835,7 @@ void UnrealReader::observe_story_walk(UObject* pawn,bool battle) {
         if(guard.pawn!=pawn||!guard.eligible)current.reset();
         else if(recover_route&&guard.physical_input) {
             story_walk_.reset();speech_.say(tr("Automatic walking off."));return;
-        } else if(!ordinary_walking(pawn)) {
+        } else if(!guard.ground) {
             story_walk_.reset();speech_.say(story_status(snapshot));return;
         } else if(trip.at_target&&trip.departure.point==TravelPoint{3250,13}&&trip.departure.area==12&&
                   trip.passage&&trip.passage->trigger==2&&travel_arrived(trip.departure,*trip.passage,*current)&&
@@ -6794,7 +6861,7 @@ void UnrealReader::observe_story_walk(UObject* pawn,bool battle) {
         speech_.say(trf("{0} Choose the next Story target to continue walking.",{story_status(snapshot)}));return;
     }
     const auto guard=capture_navigation_guard();
-    if(guard.pawn!=pawn||!guard.foreground||!guard.eligible||!ordinary_walking(pawn)) {
+    if(guard.pawn!=pawn||!guard.foreground||!guard.eligible||!guard.ground) {
         story_walk_=std::move(previous);
         return;
     }

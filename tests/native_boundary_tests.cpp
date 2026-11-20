@@ -5,6 +5,20 @@
 using namespace resonance;
 void need(bool value,const char* why){if(!value)throw std::runtime_error(why);}
 int main(){try {
+    need(native_ground_travel(1,1,false)==NativeGroundTravel::Walking,"ordinary walking remains eligible");
+    need(native_ground_travel(3,1,true)==NativeGroundTravel::Chocobo,"the verified grounded chocobo is eligible");
+    need(!native_ground_travel(3,1,false),"method 3 alone does not identify the mounted player");
+    need(!native_ground_travel(1,1,true),"a chocobo in a travel transition does not accept foot input");
+    need(!native_ground_travel(3,3,true),"a falling mount cannot receive a ground movement pulse");
+    need(!native_ground_travel(2,1,false)&&!native_ground_travel(4,1,false),"airships and rafts use their own movement checks");
+    need(native_walking_gain_valid(NativeGroundTravel::Walking,.8f)&&
+        native_walking_gain_valid(NativeGroundTravel::Walking,1.6f)&&
+        !native_walking_gain_valid(NativeGroundTravel::Walking,8.f),"the walking tick retains its native gain boundary");
+    need(native_walking_gain_valid(NativeGroundTravel::Chocobo,8.f)&&
+        native_walking_gain_valid(NativeGroundTravel::Chocobo,16.f),"the native mounted tick uses gains of eight and sixteen");
+    need(!native_walking_gain_valid(NativeGroundTravel::Chocobo,0.f)&&
+        !native_walking_gain_valid(NativeGroundTravel::Chocobo,16.1f),"unverified mounted gains cannot submit movement");
+
     NativeWalkingStartup startup;
     need(startup.due(1000,false),"native walking gets an initial setup attempt");
     startup.complete(NativeWalkingInstall::Retryable,1000);

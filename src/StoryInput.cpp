@@ -722,6 +722,67 @@ bool burning_castle_story(StorySnapshot& story,UObject* pawn,UObject* world,int 
     }
     return false;
 }
+bool kol_story(StorySnapshot& story,UObject* pawn,UObject* world,int map,int quest,
+        std::span<const FilteredPoint> points) {
+    if(map!=2020||quest!=1001||(story.main_progress!=1140&&story.main_progress!=1150))return false;
+    const auto manager=world_scoped(L"CPP_MapManager",world);
+    const auto area=manager.ambiguous?std::nullopt:getter<int>(manager.object,L"GetMapAreaId");
+    if(!area)return false;
+    const auto leg=kol_story_leg(story.main_progress,*area,points);
+    if(!leg)return false;
+    using Kind=KolStoryLeg::Kind;
+    if(leg->kind==Kind::InnApproach) {
+        const auto registry=registered_story_gimmicks(world);
+        auto* door=registered_gimmick(registry,world,8,L"/Script/mucha.CPP_MapGimmick_Object_DoorBase");
+        if(kol_inn_door_open(door)==false) {
+            if(const auto box=story_actor_available(pawn,door)?capture_interaction_box(door,pawn):std::nullopt) {
+                constexpr auto key="kol-inn-door";
+                story_step(story,key,"Open the village inn door.");
+                story_step_actor(story,door,box->center,key,"Kol village inn door");
+                return true;
+            }
+        } else if(story_gate(story,pawn,world,manager.object,5,2020,121,"kol-inn-entrance",
+                "Kol village inn entrance","Enter the village inn and speak to the innkeeper."))return true;
+        story.unavailable_reason=tr("The village inn entrance could not be verified.");
+        return true;
+    }
+    if(leg->kind==Kind::InnExit) {
+        if(story_gate(story,pawn,world,manager.object,0,2020,21,"kol-inn-exit",
+                "Door from the inn to the village","Leave the inn to find the Chocobo Stablehand."))return true;
+        story.unavailable_reason=tr("The door from the inn to the village could not be verified.");
+        return true;
+    }
+    const bool keeper=leg->kind==Kind::Innkeeper;
+    const std::string_view actor=keeper?
+        "/Game/Map/Town/02Lan/02Lan_20/EV/Town_02Lan_20_01_EV.Town_02Lan_20_01_EV:PersistentLevel.BP_MapUnit_NPC_C_2":
+        "/Game/Map/Town/02Lan/02Lan_20/EV/Town_02Lan_20_01_EV.Town_02Lan_20_01_EV:PersistentLevel.BP_MapUnit_NPC_C_3";
+    auto local=area_destinations(pawn,world,map,quest,std::span(leg->contact,1),{},story.destination_title);
+    if(local.size()==1&&local.front().actor_available&&local.front().actor_id==actor) {
+        story_step(story,keeper?"kol-innkeeper":"kol-stablehand",keeper?"Speak to the innkeeper.":
+            "Speak to the Chocobo Stablehand to rent a chocobo.");
+        local.front().label=tr(keeper?"Innkeeper":"Chocobo Stablehand");
+        story.destinations=std::move(local);
+    } else story.unavailable_reason=tr(keeper?"The innkeeper could not be verified here.":
+        "The Chocobo Stablehand could not be verified here.");
+    return true;
+}
+bool felicitas_road_story(StorySnapshot& story,UObject* pawn,UObject* world,int map,int quest,
+        std::span<const FilteredPoint> points) {
+    if(map!=1000||quest!=1001||story.main_progress!=1160||std::none_of(points.begin(),points.end(),[](const auto& point) {
+        return point.role==0&&point.map_kind==0&&point.map_id==2040;
+    }))return false;
+    constexpr auto trigger_path=L"/Game/Map/Wld/EV/Wld_01Gra_EV.Wld_01Gra_EV:"
+        L"PersistentLevel.BP_MapGimmick_EventTrigger_C_4";
+    auto* trigger=UObjectGlobals::StaticFindObject(trigger_path);
+    if(!live(trigger)||path(trigger)!=trigger_path||actor_world(trigger)!=world||
+       !is(trigger,L"/Script/mucha.CPP_MapGimmick_EventTrigger")||read<int>(trigger,L"m_UniqueId",808)!=13)return false;
+    const auto point=active_story_trigger(pawn,trigger,"C01_024_02_Fade");
+    if(!point)return false;
+    constexpr auto key="felicitas-road-encounter";
+    story_step(story,key,"Follow the road toward Felicitas.");
+    story_step_actor(story,trigger,*point,key,"Road toward Felicitas",true);
+    return true;
+}
 std::optional<double> shrine_floor_height(UObject* pawn,UObject* floor,Vec3 anchor) {
     if(!story_actor_available(pawn,floor))return {};
     auto* root=object_value(floor,L"m_pRootBoxComponent",760);
@@ -2615,7 +2676,8 @@ StorySnapshot capture_story_input(UObject* pawn) {
            object_getter(controller,L"K2_GetPawn")!=pawn) {
             result.unavailable_reason=tr("The current player could not be identified.");return result;
         }
-        try {result.field_control=field_control(pawn,world,game_instance);}
+        const bool riding=is(pawn,L"/Script/mucha.CPP_MapUnit_Chocobo")&&path(world)==L"/Game/Map/Wld/Wld_PL.Wld_PL";
+        try {result.field_control=field_control(pawn,world,game_instance,riding?3:1);}
         catch(const std::exception&) {result.field_control=false;}
         const auto quest=gi_scoped(L"CPP_QuestSubsystem",game_instance);
         if(quest.ambiguous||!quest.object) {
@@ -2675,6 +2737,8 @@ StorySnapshot capture_story_input(UObject* pawn) {
             if(capture_chapter_seven_leg(result,pawn,world,game_instance,*map,*main_id))return result;
             if(capture_chapter_eight_leg(result,pawn,world,*map,*main_id))return result;
             if(burning_castle_story(result,pawn,world,*map,*main_id,*points))return result;
+            if(kol_story(result,pawn,world,*map,*main_id,*points))return result;
+            if(felicitas_road_story(result,pawn,world,*map,*main_id,*points))return result;
             if(capture_chapter_two_legs(result,pawn,world,*map,*main_id,*points))return result;
             if(capture_chapter_four_legs(result,pawn,world,*map,*main_id,*points))return result;
             if(capture_later_story_leg(result,pawn,world,game_instance,*map,*main_id,*points))return result;

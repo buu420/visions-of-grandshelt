@@ -1153,6 +1153,12 @@ std::optional<bool> burning_castle_door_open(UObject* actor) {
        (id==23&&suffix==L"BP_MapGimmick_Object_Door_Child007_C_0"))return story_door_box_open(actor);
     return {};
 }
+std::optional<bool> kol_inn_door_open(UObject* actor) {
+    if(!native_kind(actor,AreaKind::Door)||read<int>(actor,L"m_UniqueId",808)!=8||
+       path(actor)!=L"/Game/Map/Town/02Lan/02Lan_20/GD/Town_02Lan_20_01_GD.Town_02Lan_20_01_GD:"
+          L"PersistentLevel.BP_MapGimmick_Object_Door_Single002_C_5")return {};
+    return story_door_box_open(actor);
+}
 std::optional<bool> chapter_four_story_door_open(UObject* actor) {
     return chapter_four_story_door(actor)?story_door_box_open(actor):std::nullopt;
 }
