@@ -1639,6 +1639,9 @@ constexpr ActivationBox castle_gallery_doorway{{-30077.,5855.,802.},{160.,200.,6
 bool burning_castle_world(UObject* world) {
     return path(world)==L"/Game/Map/Dng/01Gra/01Gra_42/Dng_01Gra_42_PL.Dng_01Gra_42_PL";
 }
+bool kolobos_ruins_world(UObject* world) {
+    return path(world)==L"/Game/Map/Dng/03Kol/03Kol_40/Dng_03Kol_40_PL.Dng_03Kol_40_PL";
+}
 bool kol_village_world(UObject* world) {
     return path(world)==L"/Game/Map/Town/02Lan/02Lan_20/Town_02Lan_20_PL.Town_02Lan_20_PL";
 }
@@ -4067,6 +4070,53 @@ std::optional<NativeRoute> burning_castle_chamber_route(UObject* pawn,UObject* d
     return route;
 }
 
+std::optional<NativeRoute> kolobos_bridge_walk(UObject* pawn,UObject* target,Vec3 start,
+        WalkingAxes axes,double scale,bool ground_check,std::uint64_t path_id) {
+    if(actor_world(target)!=actor_world(pawn))return {};
+    const auto name=path(target);
+    const auto id=read<int>(target,L"m_UniqueId");
+    if(id==13&&name==L"/Game/Map/Dng/03Kol/03Kol_40/EV/Dng_03Kol_40_01_EV.Dng_03Kol_40_01_EV:"
+            L"PersistentLevel.BP_MapGimmick_EventTrigger_C_1") {
+        // Align with the opening between the bridge rails before crossing the seam.
+        constexpr ActivationBox walkway{{5220.,9520.,-390.},{530.,1020.,125.},0};
+        constexpr std::array turns{Vec3{5200.,10180.,-397.85},Vec3{5200.,10345.,-397.85}};
+        if(auto route=verified_trigger_turns(pawn,target,start,walkway,turns,axes,scale,ground_check,path_id,1600,
+            "Kolobos bridge approach"))return route;
+        // The side room returns behind the railing and the column. Follow the
+        // connected floor around both before entering the same bridge opening.
+        constexpr ActivationBox bridge_hall{{6300.,9470.,-390.},{1640.,1110.,130.},0};
+        constexpr std::array from_side_room{Vec3{7485.,9203.,-397.85},Vec3{7365.,9221.,-397.85},
+            Vec3{6742.,9321.,-397.85},Vec3{6152.,9413.,-397.85},Vec3{6109.,9454.,-397.85},
+            Vec3{6013.,9636.,-397.85},Vec3{5915.,9801.,-397.85},Vec3{5839.,9962.,-397.85},
+            Vec3{5582.,9959.,-397.85},Vec3{5275.,9958.,-397.85},turns[0],turns[1]};
+        return verified_trigger_turns(pawn,target,start,bridge_hall,from_side_room,axes,scale,ground_check,path_id,
+            2800,"Kolobos side room bridge approach",true);
+    }
+    if(id==2&&name==L"/Game/Map/Dng/03Kol/03Kol_40/GD/Dng_03Kol_40_11_GD.Dng_03Kol_40_11_GD:"
+            L"PersistentLevel.BP_MapGimmickLadder_C_0") {
+        constexpr ActivationBox landing{{5750.,24000.,5.},{500.,640.,95.},0};
+        constexpr std::array turns{Vec3{6000.,24000.,2.15},Vec3{6100.,24000.,2.15}};
+        if(const auto sweep=capture_capsule_sweep(pawn))
+            return verified_walking_turns(*sweep,landing,start,turns,axes,scale,ground_check,path_id,.12);
+    }
+    return {};
+}
+bool felicitas_world_exit(UObject* target) {
+    return path(target)==L"/Game/Map/Town/03Kol/03Kol_20/GD/Town_03Kol_20_01_GD.Town_03Kol_20_01_GD:"
+        L"PersistentLevel.BP_MapTransitionTrigger_C_11"&&read<int>(target,L"m_UniqueId")==2;
+}
+std::optional<NativeRoute> felicitas_exit_approach(UObject* pawn,UObject* target,Vec3 start,
+        WalkingAxes axes,double scale,bool ground_check,std::uint64_t path_id) {
+    if(actor_world(target)!=actor_world(pawn))return {};
+    // The return scene leaves the player off the baked mesh. The first turn
+    // clears the wall at the landing, and the second enters the open road.
+    constexpr ActivationBox road{{-4590.,-355.,2.15},{830.,700.,115.},0};
+    constexpr std::array turns{Vec3{-4015.,-380.,2.15},Vec3{-4155.,-410.,2.15},
+        Vec3{-4200.,-692.,2.15},Vec3{-5225.,-692.,2.15}};
+    return verified_trigger_turns(pawn,target,start,road,turns,axes,scale,ground_check,path_id,1800,
+        "Felicitas exit approach",true);
+}
+
 std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destination,bool ground_check,
         std::string* reason,std::uint64_t path_id,UObject* alternate=nullptr,bool log_query=true) {
     if(reason)reason->clear();
@@ -4109,6 +4159,10 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
     if(!scale)return fail("The area's distance scale is unavailable.");
     if(kol_village_world(world))
         if(auto route=kol_village_walk(p,target,*start,*axes,*scale,ground_check,path_id))return route;
+    if(kolobos_ruins_world(world))
+        if(auto route=kolobos_bridge_walk(p,target,*start,*axes,*scale,ground_check,path_id))return route;
+    if(transition&&felicitas_world_exit(target))
+        if(auto route=felicitas_exit_approach(p,target,*start,*axes,*scale,ground_check,path_id))return route;
     if(mobliz_service_lift_world(world))
         if(auto route=mobliz_service_lift_walk(p,target,*start,*axes,*scale,ground_check,path_id))return route;
     if(burning_castle_world(world)) {
@@ -6091,7 +6145,8 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
         amore_south_exit(live_target)||gaberada_elder_door_open(live_target)==false||
         path(live_target).starts_with(L"/Game/Map/Dng/08Gro/08Gro_40/GD/")||
         wardens_cape_trigger(live_target)||water_shrine_bridge_exit(live_target)||water_shrine_dry_passage(live_target)||
-        burning_castle_world(actor_world(pawn))||kol_village_world(actor_world(pawn))||
+        burning_castle_world(actor_world(pawn))||kol_village_world(actor_world(pawn))||kolobos_ruins_world(actor_world(pawn))||
+        felicitas_world_exit(live_target)||
         mobliz_service_lift_world(actor_world(pawn))))||
         swept_default_mesh(actor_world(pawn),navigation_swept_mesh_)||
         (burning_castle_world(actor_world(pawn))&&!navigation_swept_mesh_.empty())||
@@ -6787,6 +6842,17 @@ void UnrealReader::arm_story_walk(UObject* pawn,bool controller,const Navigation
             break;
         }
     }
+    if(!exit_source&&here->point.map==3040&&here->area==3&&snapshot.main_progress==1190&&
+       selected->id.ends_with("|step:kolobos-bridge-ladder")) {
+        // The player climbs with the native controls. The top has a separate
+        // walk-in transition back to the bridge hall.
+        auto* gate=UObjectGlobals::StaticFindObject(
+            L"/Game/Map/Dng/03Kol/03Kol_40/GD/Dng_03Kol_40_11_GD.Dng_03Kol_40_11_GD:"
+            L"PersistentLevel.BP_MapTransitionTrigger_C_5");
+        const auto route=capture_story_exit_route(pawn,gate);
+        if(route&&route->destination_map==3040&&route->destination_point==102&&read<int>(gate,L"m_UniqueId")==8)
+            exit_source=gate;
+    }
     if(const auto route=capture_story_exit_route(pawn,exit_source);route&&route->destination_point&&!route->event_only) {
         const auto trigger=read<int>(route->actor,L"m_UniqueId",L"IntProperty");
         if(trigger&&*trigger>=0)expected=TravelPassage{here->point.map,*trigger,{route->destination_map,*route->destination_point}};
@@ -6827,7 +6893,13 @@ void UnrealReader::observe_story_walk(UObject* pawn,bool battle) {
     const bool crossed_tower_entrance=current&&trip.continuation.pending()&&
         trip.selected.ends_with("|step:tower-barrier")&&trip.departure.point.map==3280&&
         trip.departure.area==0&&current->area==3&&trip.progress==8000&&snapshot.main_progress==8000;
-    const bool next_step=(trip.at_target||crossed_tower_entrance)&&current&&current->point==trip.departure.point&&
+    // The bridge encounter drops the party in the ladder room without using a
+    // transition gate. The entry point and objective stay the same.
+    const bool crossed_kolobos_bridge=current&&trip.continuation.pending()&&trip.departure.point.map==3040&&
+        (trip.departure.area==1||trip.departure.area==6)&&current->area==3&&trip.progress==1190&&snapshot.main_progress==1190&&
+        trip.selected.ends_with("|step:kolobos-bridge-event")&&snapshot.destination_epoch.ends_with("|step:kolobos-bridge-ladder");
+    const bool next_step=(trip.at_target||crossed_tower_entrance||crossed_kolobos_bridge)&&
+        current&&current->point==trip.departure.point&&
         !snapshot.next_step.empty()&&snapshot.destination_epoch!=trip.epoch;
     if(current&&(trip.continuation.pending()||progressed||next_step||recover_route||current->point!=trip.departure.point||
        (trip.passage&&travel_arrived(trip.departure,*trip.passage,*current)))) {
@@ -6837,11 +6909,13 @@ void UnrealReader::observe_story_walk(UObject* pawn,bool battle) {
             story_walk_.reset();speech_.say(tr("Automatic walking off."));return;
         } else if(!guard.ground) {
             story_walk_.reset();speech_.say(story_status(snapshot));return;
-        } else if(trip.at_target&&trip.departure.point==TravelPoint{3250,13}&&trip.departure.area==12&&
-                  trip.passage&&trip.passage->trigger==2&&travel_arrived(trip.departure,*trip.passage,*current)&&
+        } else if(trip.at_target&&trip.passage&&
+                  ((trip.departure.point==TravelPoint{3250,13}&&trip.departure.area==12&&trip.passage->trigger==2)||
+                   (trip.departure.point.map==3040&&trip.departure.area==3&&trip.passage->trigger==8))&&
+                  travel_arrived(trip.departure,*trip.passage,*current)&&
                   (guard.physical_input||controller_walking_state(true).physical_input)) {
             // The same Up input that climbs the ladder can still be held
-            // when the elevator room gives the player control again.
+            // when the passage at the top gives the player control again.
             const auto now=GetTickCount64();
             if(!trip.retry_until)trip.retry_until=now+750;
             if(now<trip.retry_until)return;

@@ -93,6 +93,47 @@ struct FilteredPoint {
     ObjectKey object;
     bool operator==(const FilteredPoint&)const=default;
 };
+enum class KolobosStoryLeg { BridgePassage, Bridge, Ladder, LowerPassage, DeeperPassage,
+    SideRoomReturn, InnerPassage, InnerRoomReturn };
+inline bool kolobos_story_objective(int map,int quest,std::optional<int> progress,
+        std::span<const FilteredPoint> points) {
+    return map==3040&&quest==1001&&progress==1190&&std::any_of(points.begin(),points.end(),[](const auto& point) {
+        return point.role==0&&point.map_kind==0&&point.map_id==3040;
+    });
+}
+inline std::optional<KolobosStoryLeg> kolobos_story_leg(int map,int quest,std::optional<int> progress,
+        int area,Vec3 position,std::span<const FilteredPoint> points,std::optional<bool> bridge_event) {
+    if(!kolobos_story_objective(map,quest,progress,points)||!std::isfinite(position.x)||
+       !std::isfinite(position.y)||!std::isfinite(position.z))return {};
+    using Leg=KolobosStoryLeg;
+    switch(area) {
+    case 0:
+        // One area ID covers both the entrance and the lower hall.
+        if(position.z<-1000.)return Leg::DeeperPassage;
+        [[fallthrough]];
+    case 5:
+        if(position.z>-500.)return Leg::BridgePassage;
+        break;
+    case 1:
+    case 6:
+        if(bridge_event==false)return Leg::Bridge;
+        if(bridge_event==true)return Leg::LowerPassage;
+        break;
+    case 2:return Leg::InnerPassage;
+    case 3:
+        if(position.z<220.)return Leg::Ladder;
+        break;
+    case 4:return Leg::InnerRoomReturn;
+    case 7:return Leg::SideRoomReturn;
+    }
+    return {};
+}
+inline bool grandport_from_felicitas(int map,int quest,std::optional<int> progress,
+        std::span<const FilteredPoint> points) {
+    return map==2040&&quest==1001&&progress==1205&&std::any_of(points.begin(),points.end(),[](const auto& point) {
+        return point.role==0&&point.map_kind==0&&point.map_id==2030;
+    });
+}
 struct KolStoryLeg {
     enum class Kind { InnApproach, Innkeeper, InnExit, Stablehand };
     Kind kind;

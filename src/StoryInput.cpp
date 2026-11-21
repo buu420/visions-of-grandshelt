@@ -1170,6 +1170,78 @@ std::optional<bool> story_progress_flag(int index) {
     const auto flag=read_flag.get<unsigned char>(4);
     return flag<=1?std::optional<bool>(flag==1):std::nullopt;
 }
+bool kolobos_ruins_story(StorySnapshot& story,UObject* pawn,UObject* world,int map,int quest,
+        std::span<const FilteredPoint> points) {
+    if(!kolobos_story_objective(map,quest,story.main_progress,points))return false;
+    const auto manager=world_scoped(L"CPP_MapManager",world);
+    const auto area=manager.ambiguous?std::nullopt:getter<int>(manager.object,L"GetMapAreaId");
+    const auto position=getter<Vec3>(pawn,L"K2_GetActorLocation");
+    // Flag 111 is the native condition that retires the bridge encounter.
+    const auto leg=area&&position?kolobos_story_leg(map,quest,story.main_progress,*area,*position,points,
+        (*area==1||*area==6)?story_progress_flag(111):std::nullopt):std::nullopt;
+    const auto gate=[&](int id,int entry,const char* key,const char* label,const char* instruction) {
+        return story_gate(story,pawn,world,manager.object,id,3040,entry,key,label,instruction);
+    };
+    using Leg=KolobosStoryLeg;
+    if(leg)switch(*leg) {
+    case Leg::BridgePassage:
+        if(gate(1,1,"kolobos-ruins-outer-passage","Passage to the ruins bridge",
+                "Follow the ruins passage toward the bridge."))return true;
+        break;
+    case Leg::Bridge: {
+        const auto registry=registered_story_gimmicks(world);
+        auto* trigger=registered_gimmick(registry,world,13,L"/Script/mucha.CPP_MapGimmick_EventTrigger");
+        if(const auto point=active_story_trigger(pawn,trigger,"C01_ColobosBridge_Trigger")) {
+            constexpr auto key="kolobos-bridge-event";
+            story_step(story,key,"Cross the bridge.");
+            story_step_actor(story,trigger,*point,key,"Kolobos Ruins bridge",true);
+            return true;
+        }
+        break;
+    }
+    case Leg::Ladder: {
+        const auto registry=registered_story_gimmicks(world);
+        auto* ladder=registered_gimmick(registry,world,2,L"/Script/mucha.CPP_MapGimmickLadder");
+        if(const auto approach=story_ladder_approach(pawn,ladder,false)) {
+            constexpr auto key="kolobos-bridge-ladder";
+            story_step(story,key,"Climb the ladder to continue through the ruins.");
+            story_step_actor(story,ladder,*approach,key,"Ladder out of the bridge chamber");
+            story.destinations.back().interactable=false;
+            return true;
+        }
+        break;
+    }
+    case Leg::LowerPassage:
+        if(gate(11,3,"kolobos-ruins-lower-passage","Passage down into the ruins",
+                "Take the lower passage across the ruins."))return true;
+        break;
+    case Leg::DeeperPassage:
+        if(gate(0,5000,"kolobos-ruins-emma","Passage deeper into the ruins",
+                "Follow the passage to look for Emma's mother."))return true;
+        break;
+    case Leg::SideRoomReturn:
+        if(gate(2,4,"kolobos-ruins-side-room-return","Passage back to the bridge hall",
+                "Return to the bridge hall."))return true;
+        break;
+    case Leg::InnerPassage:
+        if(gate(7,6,"kolobos-ruins-inner-passage","Passage to the inner ruins",
+                "Follow the passage into the inner ruins."))return true;
+        break;
+    case Leg::InnerRoomReturn:
+        if(gate(4,8,"kolobos-ruins-inner-room-return","Passage back to the inner hall",
+                "Return to the inner hall."))return true;
+        break;
+    }
+    story.unavailable_reason=tr("The next passage in Kolobos Ruins could not be verified here.");
+    return true;
+}
+bool felicitas_grandport_story(StorySnapshot& story,UObject* pawn,UObject* world,int map,int quest,
+        std::span<const FilteredPoint> points) {
+    if(!grandport_from_felicitas(map,quest,story.main_progress,points))return false;
+    const auto manager=world_scoped(L"CPP_MapManager",world);
+    return !manager.ambiguous&&story_gate(story,pawn,world,manager.object,2,1000,30,"felicitas-grandport-exit",
+        "Exit to the world map","Leave Felicitas for Grandport Harbor.");
+}
 std::optional<Vec3> mobliz_cargo_trigger(UObject* actor) {
     // This authored encounter is a separate kind of trigger from the talk
     // scenes. Its active condition is the two witnessed progress flags;
@@ -2738,6 +2810,8 @@ StorySnapshot capture_story_input(UObject* pawn) {
             if(capture_chapter_eight_leg(result,pawn,world,*map,*main_id))return result;
             if(burning_castle_story(result,pawn,world,*map,*main_id,*points))return result;
             if(kol_story(result,pawn,world,*map,*main_id,*points))return result;
+            if(kolobos_ruins_story(result,pawn,world,*map,*main_id,*points))return result;
+            if(felicitas_grandport_story(result,pawn,world,*map,*main_id,*points))return result;
             if(felicitas_road_story(result,pawn,world,*map,*main_id,*points))return result;
             if(capture_chapter_two_legs(result,pawn,world,*map,*main_id,*points))return result;
             if(capture_chapter_four_legs(result,pawn,world,*map,*main_id,*points))return result;

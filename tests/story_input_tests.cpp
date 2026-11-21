@@ -950,10 +950,49 @@ void kol_uses_the_current_objective_and_room() {
         !kol_story_leg(1150,0,inn)&&!kol_story_leg(1150,2,rental)&&!kol_story_leg(1160,0,rental),
         "Kol steps require the current native goal in a matching room and phase");
 }
+void kolobos_story_follows_the_current_room_and_bridge_state() {
+    using Leg=KolobosStoryLeg;
+    constexpr std::array goal{FilteredPoint{0,0,3040,false,{}}};
+    const auto leg=[&](int area,Vec3 player,std::optional<bool> bridge_event=false) {
+        return kolobos_story_leg(3040,1001,1190,area,player,goal,bridge_event);
+    };
+    require(leg(0,{1736,0,102.15})==Leg::BridgePassage&&
+        leg(0,{7800,300,-1497.85},true)==Leg::DeeperPassage,
+        "the entrance and lower hall share an area ID but lead to different passages");
+    require(leg(1,{5300,8700,-297.6})==Leg::Bridge&&
+        leg(3,{5400,24000,102.15},true)==Leg::Ladder&&
+        leg(1,{6390.642,10696.266,-697.924},true)==Leg::LowerPassage,
+        "follow the live bridge event, then the ladder and the passage from its landing");
+    require(leg(7,{5200,850,-1200})==Leg::SideRoomReturn&&
+        leg(1,{7600,9250,-297.85})==Leg::Bridge&&
+        leg(5,{7600,-1700,300})==Leg::BridgePassage&&
+        leg(6,{7600,8940,-297.85})==Leg::Bridge&&
+        leg(4,{7100,29950,0},true)==Leg::InnerRoomReturn&&
+        leg(2,{7450,28000,0},true)==Leg::InnerPassage,
+        "a detour uses the exit on the current side of the ruins");
+    constexpr std::array markers{FilteredPoint{1,0,3040,false,{}},FilteredPoint{0,1,3040,false,{}}};
+    require(!kolobos_story_leg(3040,1001,1190,0,{1736,0,102.15},markers,false)&&
+        !kolobos_story_leg(3040,1001,1205,0,{1736,0,102.15},goal,false)&&
+        !kolobos_story_leg(3040,1002,1190,0,{1736,0,102.15},goal,false)&&
+        !kolobos_story_leg(2020,1001,1190,0,{1736,0,102.15},goal,false)&&
+        !leg(0,{1736,0,-700})&&!leg(1,{5300,8700,-297.6},std::nullopt),
+        "the route requires the current native goal and a known room, floor and bridge state");
+}
+void kolobos_handoff_uses_the_next_displayed_goal() {
+    constexpr std::array goal{FilteredPoint{0,0,2030,true,{1,1}}};
+    constexpr std::array waypoint{FilteredPoint{1,0,2030,true,{1,1}}};
+    require(grandport_from_felicitas(2040,1001,1205,goal)&&
+        !grandport_from_felicitas(2040,1001,1200,goal)&&
+        !grandport_from_felicitas(3040,1001,1205,goal)&&
+        !grandport_from_felicitas(2040,1001,1205,waypoint),
+        "the exit from Felicitas requires the current Grandport objective after the ruins");
+}
 }
 int main() {
     int failures=0;
-    const std::array<std::pair<const char*,void(*)()>,43> tests{{
+    const std::array<std::pair<const char*,void(*)()>,45> tests{{
+        {"kolobos_story_follows_the_current_room_and_bridge_state",kolobos_story_follows_the_current_room_and_bridge_state},
+        {"kolobos_handoff_uses_the_next_displayed_goal",kolobos_handoff_uses_the_next_displayed_goal},
         {"kol_uses_the_current_objective_and_room",kol_uses_the_current_objective_and_room},
         {"burning_castle_uses_the_current_floor_and_rescue_objective",burning_castle_uses_the_current_floor_and_rescue_objective},
         {"ultima_story_uses_unlocked_clear_save_and_current_movement",ultima_story_uses_unlocked_clear_save_and_current_movement},
