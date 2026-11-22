@@ -987,10 +987,32 @@ void kolobos_handoff_uses_the_next_displayed_goal() {
         !grandport_from_felicitas(2040,1001,1205,waypoint),
         "the exit from Felicitas requires the current Grandport objective after the ruins");
 }
+void siren_story_follows_the_door_ascent_and_return() {
+    using Leg=SirenStoryLeg;
+    constexpr std::array tower{FilteredPoint{0,0,3030,false,{}}};
+    constexpr std::array harbor{FilteredPoint{0,0,2030,true,{1,1}}};
+    constexpr std::array waypoint{FilteredPoint{1,0,3030,false,{}}};
+    require(siren_story_leg(3030,1001,1220,0,{-6500,0,102},tower,false)==Leg::EntranceDoor&&
+        siren_story_leg(3030,1001,1230,0,{-5640,0,99.65},tower,false)==Leg::EntranceDoor&&
+        siren_story_leg(3030,1001,1230,0,{-5640,0,99.65},tower,true)==Leg::Ascent,
+        "the door interaction gives way to the ascent when the native entrance opens");
+    require(siren_story_leg(3030,1001,1230,2,{-2500,-300,3500},tower,{})==Leg::Ascent&&
+        siren_story_leg(3030,1001,1230,5,{11536,0,7095},tower,{})==Leg::Ascent,
+        "the summit passage stays the live objective from the lower and upper walkways");
+    require(siren_story_leg(3030,1001,1240,6,{9060,0,17900},harbor,{})==Leg::SummitReturn&&
+        siren_story_leg(3030,1001,1240,5,{12689,752,6956},harbor,{})==Leg::ReturnSavePoint&&
+        siren_story_leg(3030,1001,1240,0,{-6002,-312,90},harbor,{})==Leg::WorldExit,
+        "the Grandport objective follows the native return point, teleport and entrance exit");
+    require(!siren_story_leg(3030,1001,1230,0,{-5640,0,99.65},waypoint,true)&&
+        !siren_story_leg(3030,1001,1240,6,{9060,0,17900},tower,{})&&
+        !siren_story_leg(3080,1003,1230,0,{-5640,0,99.65},tower,true),
+        "Siren steps require a matching current quest, map and filtered goal");
+}
 }
 int main() {
     int failures=0;
-    const std::array<std::pair<const char*,void(*)()>,45> tests{{
+    const std::array<std::pair<const char*,void(*)()>,46> tests{{
+        {"siren_story_follows_the_door_ascent_and_return",siren_story_follows_the_door_ascent_and_return},
         {"kolobos_story_follows_the_current_room_and_bridge_state",kolobos_story_follows_the_current_room_and_bridge_state},
         {"kolobos_handoff_uses_the_next_displayed_goal",kolobos_handoff_uses_the_next_displayed_goal},
         {"kol_uses_the_current_objective_and_room",kol_uses_the_current_objective_and_room},

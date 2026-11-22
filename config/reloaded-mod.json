@@ -2,7 +2,7 @@
   "ModId": "Resonance.Access",
   "ModName": "Visions of Grandshelt",
   "ModAuthor": "buu420",
-  "ModVersion": "0.2.62",
+  "ModVersion": "0.2.63",
   "ModDescription": "Screen reader access, audio description, and navigation for Final Fantasy Resonance",
   "ModNativeDll64": "ResonanceAccess.dll",
   "SupportedAppIds": [

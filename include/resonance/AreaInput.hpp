@@ -57,6 +57,9 @@ std::optional<ActivationBox> capture_ladder_bottom_box(resonance::unreal::UObjec
 bool requires_checked_interaction_box(resonance::unreal::UObject* actor);
 std::optional<bool> burning_castle_door_open(resonance::unreal::UObject* actor);
 std::optional<bool> kol_inn_door_open(resonance::unreal::UObject* actor);
+std::optional<bool> siren_tower_door_open(resonance::unreal::UObject* actor);
+bool is_siren_tower_lift(resonance::unreal::UObject* actor);
+std::optional<ActivationBox> capture_siren_lift_entry(resonance::unreal::UObject* pawn,resonance::unreal::UObject* actor);
 std::optional<bool> olderion_inn_door_open(resonance::unreal::UObject* actor);
 std::optional<bool> chapter_four_story_door_open(resonance::unreal::UObject* actor);
 std::optional<bool> gaberada_elder_door_open(resonance::unreal::UObject* actor);

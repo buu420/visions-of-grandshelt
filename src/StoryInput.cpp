@@ -569,6 +569,22 @@ void story_step_actor(StorySnapshot& story,UObject* actor,Vec3 point,std::string
         bool overlap=false) {
     story_step_actor_text(story,actor,point,std::move(key),tr(english),overlap);
 }
+bool story_return_save_point(StorySnapshot& story,UObject* pawn,UObject* world,int id,int entrance_id,const char* key) {
+    const auto registry=registered_story_gimmicks(world);
+    auto* actor=registered_gimmick(registry,world,id,L"/Script/mucha.CPP_MapGimmick_SavePoint");
+    auto* entrance=registered_gimmick(registry,world,entrance_id,L"/Script/mucha.CPP_MapGimmick_SavePoint");
+    const auto* link=static_cast<const std::byte*>(property(entrance,L"m_ParentSavePointData",1008,16));
+    auto* field=link?entrance->GetPropertyByNameInChain(L"m_ParentSavePointData"):nullptr;
+    if(!actor||!field||!field->field_class()||field->field_class()->GetName()!=L"StructProperty"||
+        !output_struct(field,L"/Script/mucha.MAP_GIMMICK_SAVEPOINT_PARENT_DATA",16)||
+        pod<UObject*>(link,8)!=actor||read<unsigned char>(entrance,L"m_IsTeleport",1001)!=1||
+        bool_getter(actor,L"CanTeleprot")!=true)return false;
+    const auto approach=capture_interaction_box(actor,pawn);
+    if(!approach||!story_actor_available(pawn,actor))return false;
+    story_step(story,key,"Use the save point to return to the entrance.");
+    story_step_actor(story,actor,approach->center,key,"Save point for the return to the entrance");
+    return true;
+}
 bool wind_story_leg(StorySnapshot& story,UObject* pawn,UObject* world,std::span<UObject* const> registry,
         const chapter_two::LiftLeg& leg) {
     using namespace chapter_two;
@@ -1241,6 +1257,50 @@ bool felicitas_grandport_story(StorySnapshot& story,UObject* pawn,UObject* world
     const auto manager=world_scoped(L"CPP_MapManager",world);
     return !manager.ambiguous&&story_gate(story,pawn,world,manager.object,2,1000,30,"felicitas-grandport-exit",
         "Exit to the world map","Leave Felicitas for Grandport Harbor.");
+}
+bool siren_tower_story(StorySnapshot& story,UObject* pawn,UObject* world,int map,int quest,
+        std::span<const FilteredPoint> points) {
+    if(!siren_story_objective(map,quest,story.main_progress,points))return false;
+    const auto manager=world_scoped(L"CPP_MapManager",world);
+    const auto area=manager.ambiguous?std::nullopt:getter<int>(manager.object,L"GetMapAreaId");
+    const auto position=getter<Vec3>(pawn,L"K2_GetActorLocation");
+    UObject* door=nullptr;
+    if(area==0&&position&&position->x<-5300.&&story.main_progress!=1240) {
+        const auto registry=registered_story_gimmicks(world);
+        door=registered_gimmick(registry,world,12,L"/Script/mucha.CPP_MapGimmick_Object_DoorBase");
+    }
+    const auto leg=area&&position?siren_story_leg(map,quest,story.main_progress,*area,*position,points,
+        siren_tower_door_open(door)):std::nullopt;
+    using Leg=SirenStoryLeg;
+    if(leg)switch(*leg) {
+    case Leg::EntranceDoor:
+        if(siren_tower_door_open(door)==false&&story_actor_available(pawn,door)) {
+            if(const auto box=capture_interaction_box(door,pawn)) {
+                constexpr auto key="siren-tower-door";
+                story_step(story,key,"Use the game's interaction control at the tower door.");
+                story_step_actor(story,door,box->center,key,"Door to Siren's Tower");
+                return true;
+            }
+        }
+        break;
+    case Leg::Ascent:
+        if(story_gate(story,pawn,world,manager.object,0,3030,1,"siren-tower-upper-passage",
+                "Passage to Siren","Climb the tower to reach Siren."))return true;
+        break;
+    case Leg::SummitReturn:
+        if(story_gate(story,pawn,world,manager.object,2,3030,-1,"siren-summit-return",
+                "Return point from Siren's summit","Use the return point to jump down to the upper walkway."))return true;
+        break;
+    case Leg::ReturnSavePoint:
+        if(story_return_save_point(story,pawn,world,2,4,"siren-return-save-point"))return true;
+        break;
+    case Leg::WorldExit:
+        if(story_gate(story,pawn,world,manager.object,1,1000,13,"siren-tower-world-exit",
+                "Exit to the world map","Leave Siren's Tower for Grandport Harbor."))return true;
+        break;
+    }
+    story.unavailable_reason=tr("The next passage in Siren's Tower could not be verified here.");
+    return true;
 }
 std::optional<Vec3> mobliz_cargo_trigger(UObject* actor) {
     // This authored encounter is a separate kind of trigger from the talk
@@ -2251,22 +2311,6 @@ bool capture_later_story_leg(StorySnapshot& story,UObject* pawn,UObject* world,U
         story.destinations.back().interactable=false;
         return true;
     };
-    const auto return_save_point=[&](int id,int entrance_id,const char* key) {
-        const auto registry=registered_story_gimmicks(world);
-        auto* actor=registered_gimmick(registry,world,id,L"/Script/mucha.CPP_MapGimmick_SavePoint");
-        auto* entrance=registered_gimmick(registry,world,entrance_id,L"/Script/mucha.CPP_MapGimmick_SavePoint");
-        const auto* link=static_cast<const std::byte*>(property(entrance,L"m_ParentSavePointData",1008,16));
-        auto* field=link?entrance->GetPropertyByNameInChain(L"m_ParentSavePointData"):nullptr;
-        if(!actor||!field||!field->field_class()||field->field_class()->GetName()!=L"StructProperty"||
-            !output_struct(field,L"/Script/mucha.MAP_GIMMICK_SAVEPOINT_PARENT_DATA",16)||
-            pod<UObject*>(link,8)!=actor||read<unsigned char>(entrance,L"m_IsTeleport",1001)!=1||
-            bool_getter(actor,L"CanTeleprot")!=true)return false;
-        const auto approach=capture_interaction_box(actor,pawn);
-        if(!approach||!story_actor_available(pawn,actor))return false;
-        story_step(story,key,"Use the save point to return to the entrance.");
-        story_step_actor(story,actor,approach->center,key,"Save point for the return to the entrance");
-        return true;
-    };
     if(quest==1002&&map==2061&&*phase==2150&&goal_at(2061))
         return event(5,"C02_227_01","lid-platform","Lid's upper platform","Approach Lid on the upper platform.");
     if(quest!=1003)return false;
@@ -2363,7 +2407,7 @@ bool capture_later_story_leg(StorySnapshot& story,UObject* pawn,UObject* world,U
         const auto area=getter<int>(manager.object,L"GetMapAreaId");
         if(!area)return false;
         if(const auto leg=chapter_three::waterfall_gate(*phase,*area))return gate(*leg);
-        if(*phase==3190&&*area==11)return return_save_point(3,6,"waterfall-return-save-point");
+        if(*phase==3190&&*area==11)return story_return_save_point(story,pawn,world,3,6,"waterfall-return-save-point");
         if(*phase==3140) {
             if(*area==1||*area==2||*area==5)
                 return climb(0,"waterfall-first-ladder","First long ladder","Climb the long ladder to the upper path.");
@@ -2384,7 +2428,7 @@ bool capture_later_story_leg(StorySnapshot& story,UObject* pawn,UObject* world,U
             }
         }
         if(area&&position&&method==1) {
-            if(*phase==3190&&*area==6)return return_save_point(9,12,"water-shrine-return-save-point");
+            if(*phase==3190&&*area==6)return story_return_save_point(story,pawn,world,9,12,"water-shrine-return-save-point");
             if(capture_water_shrine_land(story,pawn,world,manager.object,*phase,*area,*position))return true;
         }
     }
@@ -2428,7 +2472,7 @@ bool capture_later_story_leg(StorySnapshot& story,UObject* pawn,UObject* world,U
                 "Board the boat to return to the second pool and take the other passage.");
         }
         if(*phase==3040&&*area==3&&position->y>=-1700&&position->y<=2500&&position->z>730)
-            return return_save_point(19,13,"cave-return-save-point");
+            return story_return_save_point(story,pawn,world,19,13,"cave-return-save-point");
         if(*phase==3100&&(*area==1||*area==7)&&position->y<-8100) {
             if(position->z<500)return climb(1,"lake-ladder-1","First ladder toward Lake Dorr","Climb the first ladder.");
             if(position->z<950)return climb(2,"lake-ladder-2","Second ladder toward Lake Dorr","Climb the second ladder.");
@@ -2812,6 +2856,7 @@ StorySnapshot capture_story_input(UObject* pawn) {
             if(kol_story(result,pawn,world,*map,*main_id,*points))return result;
             if(kolobos_ruins_story(result,pawn,world,*map,*main_id,*points))return result;
             if(felicitas_grandport_story(result,pawn,world,*map,*main_id,*points))return result;
+            if(siren_tower_story(result,pawn,world,*map,*main_id,*points))return result;
             if(felicitas_road_story(result,pawn,world,*map,*main_id,*points))return result;
             if(capture_chapter_two_legs(result,pawn,world,*map,*main_id,*points))return result;
             if(capture_chapter_four_legs(result,pawn,world,*map,*main_id,*points))return result;

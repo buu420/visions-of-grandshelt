@@ -134,6 +134,29 @@ inline bool grandport_from_felicitas(int map,int quest,std::optional<int> progre
         return point.role==0&&point.map_kind==0&&point.map_id==2030;
     });
 }
+enum class SirenStoryLeg { EntranceDoor, Ascent, SummitReturn, ReturnSavePoint, WorldExit };
+inline bool siren_story_objective(int map,int quest,std::optional<int> progress,
+        std::span<const FilteredPoint> points) {
+    if(map!=3030||quest!=1001||(progress!=1220&&progress!=1230&&progress!=1240))return false;
+    const int goal=progress==1240?2030:3030;
+    return std::any_of(points.begin(),points.end(),[goal](const auto& point) {
+        return point.role==0&&point.map_kind==0&&point.map_id==goal;
+    });
+}
+inline std::optional<SirenStoryLeg> siren_story_leg(int map,int quest,std::optional<int> progress,int area,
+        Vec3 position,std::span<const FilteredPoint> points,std::optional<bool> entrance_open) {
+    if(!siren_story_objective(map,quest,progress,points)||area<0||area>7||
+       !std::isfinite(position.x)||!std::isfinite(position.y)||!std::isfinite(position.z))return {};
+    using Leg=SirenStoryLeg;
+    if(progress==1240) {
+        if(area==6)return Leg::SummitReturn;
+        if(area==5)return Leg::ReturnSavePoint;
+        return Leg::WorldExit;
+    }
+    if(area==0&&position.x<-5300.&&(progress==1220||entrance_open==false))return Leg::EntranceDoor;
+    if(progress==1230&&area!=6)return Leg::Ascent;
+    return {};
+}
 struct KolStoryLeg {
     enum class Kind { InnApproach, Innkeeper, InnExit, Stablehand };
     Kind kind;

@@ -21,13 +21,13 @@
 namespace resonance::area_input_detail {
 enum class AreaKind : std::uint8_t {
     Person, TreasureChest, FieldItem, SavePoint, Door, Ladder, MovableObject, Switch, Mailbox, Exit,
-    TriggerDoor, ElevatorCall, Elevator, Book, Interaction
+    TriggerDoor, ElevatorCall, Elevator, Book, Interaction, AutomaticLift
 };
 // native_size is the exact-build native class PropertiesSize checked before any read.
 // owner begins a generic read-failure sentence; it never names the entity.
 struct AreaKindInfo { AreaKind kind; const wchar_t* type; const char* label; std::size_t category; int native_size; const char* owner; };
 // Categories match the reader's All/People/Objects/Exits, doors and ladders/Save points/Story order.
-inline constexpr std::array<AreaKindInfo,15> area_kinds{{
+inline constexpr std::array<AreaKindInfo,16> area_kinds{{
     {AreaKind::Person,L"CPP_MapUnit_NPC","Local resident",1,2912,"A person's"},
     {AreaKind::TreasureChest,L"CPP_MapGimmick_TreasureBox","Treasure chest",2,1272,"A treasure chest's"},
     {AreaKind::FieldItem,L"CPP_MapGimmick_FieldItem","Ground pickup",2,1064,"A field item's"},
@@ -42,7 +42,8 @@ inline constexpr std::array<AreaKindInfo,15> area_kinds{{
     {AreaKind::ElevatorCall,L"CPP_MapGimmick_CallSwitch","Elevator call button",2,1312,"An elevator button's"},
     {AreaKind::Elevator,L"CPP_MapGimmick_Elevator_Interact","Elevator",3,1512,"An elevator's"},
     {AreaKind::Book,L"CPP_MapGimmick_BlockingBase","Book",2,1016,"A book's"},
-    {AreaKind::Interaction,L"CPP_MapGimmick_InteractEventTrigger","Quest marker",2,984,"A quest marker's"}}};
+    {AreaKind::Interaction,L"CPP_MapGimmick_InteractEventTrigger","Quest marker",2,984,"A quest marker's"},
+    {AreaKind::AutomaticLift,L"CPP_MapGimmick_Floor_Elevator","Lift",3,1504,"A lift's"}}};
 inline constexpr bool gimmick_kind(AreaKind kind) {return kind!=AreaKind::Person&&kind!=AreaKind::Exit;}
 inline constexpr bool area_kinds_ordered() {
     for(std::size_t i=0;i<area_kinds.size();++i)if(static_cast<std::size_t>(area_kinds[i].kind)!=i)return false;
@@ -51,6 +52,29 @@ inline constexpr bool area_kinds_ordered() {
 static_assert(area_kinds_ordered());
 inline const AreaKindInfo& area_kind_info(AreaKind kind) {
     return area_kinds[static_cast<std::size_t>(kind)];
+}
+struct SirenLiftPlacement {
+    int id;
+    std::wstring_view actor;
+    const char* label;
+    Vec3 upper_entry;
+    double lower_entry_z;
+};
+inline constexpr std::wstring_view siren_gimmick_level=
+    L"/Game/Map/Dng/02Lan/02Lan_40/GD/Dng_02Lan_40_01_GD.Dng_02Lan_40_01_GD:PersistentLevel.";
+inline constexpr std::array siren_lifts{
+    SirenLiftPlacement{13,L"BP_MapGimmick_Floor_Elevator_009_C_13","Upper tower lift",{9750.,2492.,6834.},5424.},
+    SirenLiftPlacement{14,L"BP_MapGimmick_Floor_Elevator_009_C_4","West tower lift",{-1855.,277.5,4473.},3274.}
+};
+inline const SirenLiftPlacement* siren_lift_placement(std::wstring_view path,int id) {
+    if(!path.starts_with(siren_gimmick_level))return nullptr;
+    const auto actor=path.substr(siren_gimmick_level.size());
+    for(const auto& lift:siren_lifts)if(lift.id==id&&lift.actor==actor)return &lift;
+    return nullptr;
+}
+inline bool siren_lift_docked(const SirenLiftPlacement& lift,Vec3 entry) {
+    return std::hypot(entry.x-lift.upper_entry.x,entry.y-lift.upper_entry.y)<=10.&&
+        (std::abs(entry.z-lift.upper_entry.z)<=10.||std::abs(entry.z-lift.lower_entry_z)<=10.);
 }
 // The fallback identifies the type or its verified visible state.
 inline const char* area_label(AreaKind kind,std::optional<bool> state={}) {

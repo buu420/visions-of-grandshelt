@@ -411,6 +411,25 @@ void visible_interactive_props() {
         interactive_prop_verdict(true,0,4,std::nullopt).state==Availability::Unknown,
         "unavailable and unreadable interaction boxes retain distinct verdicts");
 }
+void siren_tower_objects() {
+    constexpr auto upper=L"/Game/Map/Dng/02Lan/02Lan_40/GD/Dng_02Lan_40_01_GD.Dng_02Lan_40_01_GD:"
+        L"PersistentLevel.BP_MapGimmick_Floor_Elevator_009_C_13";
+    constexpr auto west=L"/Game/Map/Dng/02Lan/02Lan_40/GD/Dng_02Lan_40_01_GD.Dng_02Lan_40_01_GD:"
+        L"PersistentLevel.BP_MapGimmick_Floor_Elevator_009_C_4";
+    constexpr auto pot=L"/Game/Map/Dng/02Lan/02Lan_40/GD/Dng_02Lan_40_01_GD.Dng_02Lan_40_01_GD:"
+        L"PersistentLevel.BP_MapGimmick_BlockingBase_Child_MagicPot_C_1";
+    const auto* upper_lift=siren_lift_placement(upper,13);
+    const auto* west_lift=siren_lift_placement(west,14);
+    require(upper_lift&&west_lift&&!siren_lift_placement(upper,14)&&!siren_lift_placement(L"Other.BP_MapGimmick_Floor_Elevator_009_C_13",13),
+        "the automatic lifts are scoped to their registered tower placements");
+    require(siren_lift_docked(*upper_lift,{9750.,2492.,6834.})&&siren_lift_docked(*upper_lift,{9750.,2492.,5424.})&&
+        siren_lift_docked(*west_lift,{-1855.,277.5,3274.}),"lift entry geometry at either dock is available");
+    require(!siren_lift_docked(*upper_lift,{9750.,2492.,6100.})&&!siren_lift_docked(*west_lift,{-2100.,277.5,4473.}),
+        "a moving or misplaced lift has no current boarding route");
+    const auto* label=exact_placement_label(AreaKind::Book,pot,3);
+    require(label&&std::string_view(label)=="Pot"&&!exact_placement_label(AreaKind::Book,pot,15),
+        "the visible pot is named without revealing the encounter");
+}
 void proximity_approach() {
     const StorySpatialContext control{{0,0,0},{1,0,0},{0,1,0},100.};
     std::array targets{
@@ -497,7 +516,7 @@ void wall_apertures() {
 
 }
 int main() {
-    const std::array<std::pair<const char*,void(*)()>,25> tests{{
+    const std::array<std::pair<const char*,void(*)()>,26> tests{{
         {"native_transition_resolution",native_transition_resolution},
         {"offscreen_and_prior_sight_independent",offscreen_and_prior_sight_independent},{"live_position_movement",live_position_movement},
         {"area_unload_flag_hide_and_tick",area_unload_flag_hide_and_tick},{"verified_negative_outranks_unknown",verified_negative_outranks_unknown},
@@ -509,7 +528,9 @@ int main() {
         {"presented_person_service",presented_person_service},
         {"bitfields_and_native_bools",bitfields_and_native_bools},{"deterministic_order",deterministic_order},
         {"castle_room_and_exit_legs",castle_room_and_exit_legs},{"mitra_labels_and_mailbox",mitra_labels_and_mailbox},
-        {"named_world_exits",named_world_exits},{"visible_interactive_props",visible_interactive_props},{"proximity_approach",proximity_approach}, {"field_wall_positions",field_wall_positions},{"wall_apertures",wall_apertures}}};
+        {"named_world_exits",named_world_exits},{"visible_interactive_props",visible_interactive_props},
+        {"siren_tower_objects",siren_tower_objects},{"proximity_approach",proximity_approach},
+        {"field_wall_positions",field_wall_positions},{"wall_apertures",wall_apertures}}};
     int failures=0;
     for(const auto& [name,test]:tests)try{test();std::cout<<"PASS "<<name<<'\n';}
         catch(const std::exception& error){++failures;std::cout<<"FAIL "<<name<<": "<<error.what()<<'\n';}

@@ -511,6 +511,15 @@ const MitraDoor* mitra_door(UObject* actor) {
     for(const auto& door:mitra_doors)if(door.suffix==suffix)return &door;
     return nullptr;
 }
+bool siren_tower_door(UObject* actor) {
+    return native_kind(actor,AreaKind::Door)&&read<int>(actor,L"m_UniqueId",808)==12&&
+        path(actor)==L"/Game/Map/Dng/02Lan/02Lan_40/GD/Dng_02Lan_40_01_GD.Dng_02Lan_40_01_GD:"
+            L"PersistentLevel.BP_MapGimmick_Object_Door002_C_1";
+}
+const SirenLiftPlacement* siren_lift(UObject* actor) {
+    return native_kind(actor,AreaKind::AutomaticLift)?
+        siren_lift_placement(path(actor),read<int>(actor,L"m_UniqueId",808).value_or(-1)):nullptr;
+}
 bool mitra_mailbox(UObject* actor) {
     return native_kind(actor,AreaKind::Mailbox)&&path(actor)==
         L"/Game/Map/Town/01Gra/01Gra_20/GD/Town_01Gra_20_GD.Town_01Gra_20_GD:PersistentLevel.BP_MapGimmick_DLC_C_1";
@@ -528,7 +537,7 @@ std::optional<std::uint8_t> mailbox_collision(UObject* actor) {
 constexpr auto library_book_class=
     L"/Game/BP/Map/Gimmick/Child/BlockObject/BP_MapGimmick_MagicBook.BP_MapGimmick_MagicBook_C";
 bool library_book(UObject* actor) {return is(actor,library_book_class);}
-bool crystal_tower_pot(UObject* actor) {
+bool placed_pot(UObject* actor) {
     return exact_placement_label(AreaKind::Book,path(actor),read<int>(actor,L"m_UniqueId",808).value_or(-1));
 }
 std::optional<bool> visible_owned_mesh(UObject* actor,UObject* mesh) {
@@ -580,7 +589,9 @@ Verdict interactive_prop(UObject* actor,UObject* world,AreaKind kind) {
     auto* component=kind==AreaKind::Elevator?object_value(actor,L"m_pActiveBoxComponent",1504):
         object_value(actor,L"m_pRootBoxComponent",760);
     // Pearly Pots register their own prompt while the native interact mode is None.
-    const std::uint8_t interact_mode=kind==AreaKind::Book&&crystal_tower_pot(actor)?0:4;
+    const bool pearly_pot=kind==AreaKind::Book&&
+        path(actor).starts_with(L"/Game/Map/Dng/10Cry/10Cry_40/GD/")&&placed_pot(actor);
+    const std::uint8_t interact_mode=pearly_pot?0:4;
     const auto verdict=interactive_prop_verdict(visible_owned_mesh(actor,mesh),byte_call(actor,L"GetGimmickCondition"),
         byte_value(actor,L"m_MapInteractType",833),interaction_box_enabled(actor,component),interact_mode);
     if(verdict.state==Availability::Available&&!owned_navigation_box(actor,component))
@@ -818,8 +829,10 @@ std::vector<AreaTarget> scan(UObject* pawn,const std::string* only,const StorySp
             if(const auto* name=exact_placement_label(kind,path(actor),read<int>(actor,L"m_UniqueId",808).value_or(-1)))
                 label=tr(name);
         }
+        if(kind==AreaKind::AutomaticLift)if(const auto* lift=siren_lift(actor))label=tr(lift->label);
         if(kind==AreaKind::Door) {
             if(const auto* door=mitra_door(actor)) label=tr(door->label);
+            else if(siren_tower_door(actor))label=tr("Door to Siren's Tower");
             else if(auto* linked=blueprint_object_value(actor,L"m_TransitionTrigger",info.native_size);
                 native_kind(linked,AreaKind::Exit)&&actor_world(linked)==world) {
                 const auto destination=effective_transition(linked,map);
@@ -855,7 +868,8 @@ std::vector<AreaTarget> scan(UObject* pawn,const std::string* only,const StorySp
         if(skip_dead(actor))continue;
         // Unsupported gimmick classes (triggers, event volumes) are not listed targets.
         const auto kind=chain_kind(actor,true);if(!kind)continue;
-        if(kind->kind==AreaKind::Book&&!library_book(actor)&&!crystal_tower_pot(actor))continue;
+        if(kind->kind==AreaKind::Book&&!library_book(actor)&&!placed_pot(actor))continue;
+        if(kind->kind==AreaKind::AutomaticLift&&!capture_siren_lift_entry(pawn,actor))continue;
         if(kind->kind==AreaKind::Interaction&&
            !exact_placement_label(kind->kind,path(actor),read<int>(actor,L"m_UniqueId",808).value_or(-1)))continue;
         const auto door_meshes=kind->kind==AreaKind::TriggerDoor?trigger_door_meshes(actor):std::span<const wchar_t* const>{};
@@ -1159,6 +1173,25 @@ std::optional<bool> kol_inn_door_open(UObject* actor) {
           L"PersistentLevel.BP_MapGimmick_Object_Door_Single002_C_5")return {};
     return story_door_box_open(actor);
 }
+std::optional<bool> siren_tower_door_open(UObject* actor) {
+    return siren_tower_door(actor)?story_door_box_open(actor):std::nullopt;
+}
+bool is_siren_tower_lift(UObject* actor) {
+    return siren_lift(actor)!=nullptr;
+}
+std::optional<ActivationBox> capture_siren_lift_entry(UObject* pawn,UObject* actor) {
+    const auto* lift=siren_lift(actor);
+    if(!lift||!field_object_available(actor_facts(actor,actor_world(pawn)))||
+       byte_call(actor,L"GetGimmickCondition")!=0||
+       visible_owned_mesh(actor,object_value(actor,L"m_pStaticMeshComponent",1144))!=true)return {};
+    auto* entry=blueprint_object_value(actor,L"m_EntryBox",area_kind_info(AreaKind::AutomaticLift).native_size);
+    if(!entry)return {};
+    const auto overlap=overlap_facts(pawn,actor,entry);
+    if(!overlap||!enabled_overlap(*overlap))return {};
+    const auto box=owned_navigation_box(actor,entry);
+    if(!box||!siren_lift_docked(*lift,box->center))return {};
+    return box;
+}
 std::optional<bool> chapter_four_story_door_open(UObject* actor) {
     return chapter_four_story_door(actor)?story_door_box_open(actor):std::nullopt;
 }
@@ -1259,7 +1292,7 @@ std::optional<ActivationBox> capture_interaction_box(UObject* actor,UObject* paw
     if(is(actor,L"/Script/mucha.CPP_MapGimmick_Object_Raft")&&byte_value(actor,L"m_MapInteractType",833)==15)
         return player_overlap(object_value(actor,L"m_pInteractBoxComponent",1016));
     if(native_kind(actor,AreaKind::ElevatorCall)||
-       (native_kind(actor,AreaKind::Book)&&(library_book(actor)||crystal_tower_pot(actor)))||mobliz_lever_memo(actor))
+       (native_kind(actor,AreaKind::Book)&&(library_book(actor)||placed_pot(actor)))||mobliz_lever_memo(actor))
         return player_overlap(object_value(actor,L"m_pRootBoxComponent",760));
     if(mitra_mailbox(actor)) {
         const auto mode=mailbox_collision(actor);
@@ -1272,7 +1305,7 @@ bool requires_checked_interaction_box(UObject* actor) {
     return research_lab_warp(actor)||research_lab_rope(actor)||research_lab_pickup_or_console(actor)||
         native_kind(actor,AreaKind::TreasureChest)||
         native_kind(actor,AreaKind::Door)||native_kind(actor,AreaKind::ElevatorCall)||native_kind(actor,AreaKind::Elevator)||
-        (native_kind(actor,AreaKind::Book)&&(library_book(actor)||crystal_tower_pot(actor)))||mobliz_lever_memo(actor)||
+        (native_kind(actor,AreaKind::Book)&&(library_book(actor)||placed_pot(actor)))||mobliz_lever_memo(actor)||
         story_check_trigger(actor)||streetcar_timetable(actor)||olderion_inn_door(actor)||chapter_four_story_door(actor)||
         factory_shortcut_ladder(actor)||
         is(actor,L"/Script/mucha.CPP_MapGimmick_Object_Raft");
