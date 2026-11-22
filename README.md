@@ -25,6 +25,8 @@ Use the game's interaction button when Story guides you to a door, switch or per
 
 The mod follows the game's Text Language setting. French, German, Spanish (Spain), Japanese, Korean, Simplified Chinese and Traditional Chinese use the screen reader for displayed subtitles and audio descriptions. English audio descriptions use recordings.
 
+In 0.2.64, town navigation improves routes through Grandport and Felicitas, adds reachable bulletin boards, streetcar stops and portals, and keeps target browsing responsive when NPCs move. [0.2.64 beta notes](docs/release-notes-0.2.64.md)
+
 In 0.2.63, Story guides you through Siren’s Tower. Exits lists reachable lifts, and Objects gives you routes to reachable pickups, chests and the pot. See the [0.2.63 beta notes](docs/release-notes-0.2.63.md).
 
 In 0.2.62, Story guides you through Kolobos Ruins and back to the route after a side-room detour. Auto-walk resumes after the bridge fight and after you climb the ladder. See the [0.2.62 beta notes](docs/release-notes-0.2.62.md).

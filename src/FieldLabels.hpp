@@ -100,7 +100,7 @@ inline const char* exact_placement_label(AreaKind kind,std::wstring_view actor,i
     return nullptr;
 }
 
-// These exact arrival points have matching facility markers on the minimap.
+// These exact arrival points identify verified town entrances and return doors.
 inline const char* facility_passage(int map,int exit,int arrival) {
     struct Passage {int map,exit,arrival;const char* label;};
     static constexpr Passage passages[]={
@@ -109,9 +109,12 @@ inline const char* facility_passage(int map,int exit,int arrival) {
         {2030,1,120,"Door to the item shop"}, {2030,0,20,"Door from the item shop to the harbor"},
         {2030,4,121,"Door to the weapon and armor shop"}, {2030,3,21,"Door from the weapon and armor shop to the harbor"},
         {2030,6,122,"Door to the inn"}, {2030,5,22,"Door from the inn to the harbor"},
+        {2030,8,123,"Door to the harbor house"}, {2030,7,23,"Door from the house to the harbor"},
         {2040,1,120,"Door to the inn"}, {2040,3,121,"Door to the weapon and armor shop"}, {2040,4,122,"Door to the item shop"},
         {2040,0,20,"Door from the inn to the street"}, {2040,7,21,"Door from the weapon and armor shop to the street"},
         {2040,8,22,"Door from the item shop to the street"},
+        {2040,5,123,"Door to the lower house"}, {2040,9,23,"Door from the lower house to the street"},
+        {2040,6,124,"Door to the upper house"}, {2040,10,24,"Door from the upper house to the upper walk"},
         {2060,3,121,"Door to the inn"}, {2060,4,122,"Door to the item shop"}, {2060,5,123,"Door to the weapon and armor shop"},
         {2060,0,21,"Door from the inn to the street"}, {2060,7,22,"Door from the item shop to the street"},
         {2060,8,23,"Door from the weapon and armor shop to the street"},
@@ -145,7 +148,7 @@ inline std::optional<int> facility_door_exit(int map,int door) {
     struct Pair {int map,door,exit;};
     static constexpr Pair pairs[]={
         {2015,11,17},{2020,8,5},
-        {2030,10,4},{2030,11,1},{2030,12,6},
+        {2030,10,4},{2030,11,1},{2030,12,6},{2030,13,8},
         {2060,11,3},{2060,12,4},{2060,13,5},{2070,74,15},
         {2090,10,9},{2090,11,10},{2090,12,1},
         {2140,11,4},{2140,12,5},{2140,13,1},

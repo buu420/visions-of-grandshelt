@@ -1,6 +1,7 @@
 #include "../src/AreaInputValidation.hpp"
 #include "../src/FieldLabels.hpp"
 #include "../src/MapTitles.hpp"
+#include "../src/TownInteractions.hpp"
 #include <array>
 #include <cmath>
 #include <iostream>
@@ -11,6 +12,27 @@ using namespace resonance;
 using namespace resonance::area_input_detail;
 namespace {
 void require(bool ok,const char* why){if(!ok)throw std::runtime_error(why);}
+void town_interactions_match_placements() {
+    int boards=0,streetcars=0,warps=0;
+    for(const auto& item:town_interactions::placements) {
+        require(town_interactions::find(item.actor_path,item.id)==&item,
+            "each supported interaction resolves to its unique native placement");
+        require(town_interactions::find(item.actor_path,item.id+1000)==nullptr,
+            "the actor path alone does not prove identity");
+        if(item.interaction==7) {
+            ++boards;
+            require(item.category==2&&item.event_id.empty(),"boards use Objects and the current native notice");
+        } else {
+            require(item.category==3&&!item.event_id.empty(),"transit uses Exits and requires its native chooser");
+            if(item.map==2130)++warps;
+            else {
+                ++streetcars;
+                require(item.interaction==(item.map==2112?4:34),"Capital Market inherits the Check prompt");
+            }
+        }
+    }
+    require(boards==8&&streetcars==5&&warps==4,"the verified town placements are covered");
+}
 struct Candidate { TargetSnapshot snapshot; double distance{}; Vec3 position; };
 Candidate candidate(const char* id,Vec3 origin,Vec3 position) {
     return {{id,"Person","",true,false},planar_distance(origin,position),position};
@@ -393,8 +415,11 @@ void named_world_exits() {
         "object labels describe the visible variant");
     require(std::string_view(facility_passage(2030,4,121))=="Door to the weapon and armor shop"&&
         !facility_passage(2030,4,120)&&!facility_passage(2090,4,121),"facility labels require their exact active arrival");
-    require(facility_door_exit(2030,12)==6&&!facility_door_exit(2030,13)&&!facility_door_exit(2000,12),
+    require(facility_door_exit(2030,12)==6&&facility_door_exit(2030,13)==8&&
+        !facility_door_exit(2030,14)&&!facility_door_exit(2000,12),
         "a visible facility door only borrows the name of its paired passage");
+    require(std::string_view(facility_passage(2040,9,23))=="Door from the lower house to the street"&&
+        !facility_passage(2040,9,24),"the two Felicitas houses retain distinct return passages");
 }
 void visible_interactive_props() {
     require(verdict_is(interactive_prop_verdict(true,0,4,true),Availability::Available),
@@ -516,7 +541,8 @@ void wall_apertures() {
 
 }
 int main() {
-    const std::array<std::pair<const char*,void(*)()>,26> tests{{
+    const std::array<std::pair<const char*,void(*)()>,27> tests{{
+        {"town_interactions_match_placements",town_interactions_match_placements},
         {"native_transition_resolution",native_transition_resolution},
         {"offscreen_and_prior_sight_independent",offscreen_and_prior_sight_independent},{"live_position_movement",live_position_movement},
         {"area_unload_flag_hide_and_tick",area_unload_flag_hide_and_tick},{"verified_negative_outranks_unknown",verified_negative_outranks_unknown},

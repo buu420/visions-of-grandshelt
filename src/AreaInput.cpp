@@ -8,9 +8,11 @@
 #include "resonance/Localization.hpp"
 #include "resonance/NativeBoundary.hpp"
 #include "resonance/NativeMetadata.hpp"
+#include "resonance/StoryInput.hpp"
 #include "resonance/WorldPlaceNames.hpp"
 #include "AreaInputValidation.hpp"
 #include "FieldLabels.hpp"
+#include "TownInteractions.hpp"
 #include <array>
 #include <cmath>
 #include <cstring>
@@ -203,7 +205,8 @@ std::optional<Vec3> box_vector(UObject* box,const wchar_t* name,const wchar_t* f
     if(!result->field_class()||result->field_class()->GetName()!=L"StructProperty")return {};
     return call.call<Vec3>(box);
 }
-std::optional<ActivationBox> owned_navigation_box(UObject* actor,UObject* box,double tilt_limit=0.) {
+std::optional<ActivationBox> owned_navigation_box(UObject* actor,UObject* box,double tilt_limit=0.,
+        bool vertical=false) {
     if(!live(actor)||!live(box)||!is(box,L"/Script/Engine.BoxComponent"))return {};
     Getter owner(box,L"GetOwner",8,0,8);
     if(!owner||path(owner.function())!=L"/Script/Engine.ActorComponent:GetOwner"||owner.call<UObject*>(box)!=actor)return {};
@@ -212,7 +215,11 @@ std::optional<ActivationBox> owned_navigation_box(UObject* actor,UObject* box,do
     const auto rotation=box_vector(box,L"K2_GetComponentRotation",L"/Script/Engine.SceneComponent:K2_GetComponentRotation");
     if(!center||!extent||!rotation||!std::isfinite(rotation->x)||!std::isfinite(rotation->z))return {};
     Vec3 half=*extent;
-    if(std::abs(rotation->x)>1e-4||std::abs(rotation->z)>1e-4) {
+    if(vertical&&std::abs(std::abs(std::remainder(rotation->x,360.))-90.)<1e-4&&
+       std::abs(std::remainder(rotation->z,180.))<1e-4) {
+        // A right-angle pitch swaps the horizontal and vertical extents.
+        std::swap(half.x,half.z);
+    } else if(std::abs(rotation->x)>1e-4||std::abs(rotation->z)>1e-4) {
         const double tilt=std::abs(std::remainder(rotation->x,360.))+std::abs(std::remainder(rotation->z,360.));
         if(tilt_limit<=0.||tilt>tilt_limit)return {};
         // Inset by the maximum displacement of any corner under the tilt.
@@ -540,6 +547,27 @@ bool library_book(UObject* actor) {return is(actor,library_book_class);}
 bool placed_pot(UObject* actor) {
     return exact_placement_label(AreaKind::Book,path(actor),read<int>(actor,L"m_UniqueId",808).value_or(-1));
 }
+const town_interactions::Placement* town_interaction(UObject* actor) {
+    if(!native_kind(actor,AreaKind::Interaction))return nullptr;
+    return town_interactions::find(path(actor),read<int>(actor,L"m_UniqueId",808).value_or(-1));
+}
+bool mysidia_warp(UObject* actor) {
+    if(!native_shape(actor,L"/Script/mucha.CPP_MapGimmick_Warp",1368))return false;
+    const auto id=read<int>(actor,L"m_UniqueId",808);
+    const auto name=path(actor);
+    constexpr std::wstring_view level=L"/Game/Map/Town/07Mys/07Mys_01/GD/Town_07Mys_01_01_GD.Town_07Mys_01_01_GD:PersistentLevel.";
+    if(!name.starts_with(level))return false;
+    const auto placement=std::wstring_view(name).substr(level.size());
+    return (id==14&&placement==L"BP_MapGimmick_Warp_Child01_C_1")||
+           (id==15&&placement==L"BP_MapGimmick_Warp_Child01_C_5");
+}
+struct MysidiaWarpEnd {
+    ActivationBox box;
+    int side;
+    bool goes_up;
+};
+constexpr std::string_view warp_key_prefix="|warp=";
+std::optional<MysidiaWarpEnd> mysidia_warp_end(UObject* actor,UObject* pawn);
 std::optional<bool> visible_owned_mesh(UObject* actor,UObject* mesh) {
     if(!is(mesh,L"/Script/Engine.StaticMeshComponent"))return {};
     Getter owner(mesh,L"GetOwner",8,0,8);
@@ -800,9 +828,13 @@ std::vector<AreaTarget> scan(UObject* pawn,const std::string* only,const StorySp
         ++considered;return id;
     };
     auto add=[&](UObject* actor,std::string id,AreaKind kind,std::optional<bool> object_state,
-            const EffectiveTransition* transition=nullptr) {
+            const EffectiveTransition* transition=nullptr,const town_interactions::Placement* town=nullptr) {
         const auto& info=area_kind_info(kind);
-        const auto position=navigation_position(actor);
+        const auto category=town?town->category:info.category;
+        const auto ladder=kind==AreaKind::Ladder&&is_town_ladder(actor);
+        const auto end=ladder?capture_interaction_box(actor,pawn):std::nullopt;
+        if(ladder&&!end)return;
+        const auto position=end?std::optional{end->center}:navigation_position(actor);
         if(!position) {tally.admit(unknown("position could not be read"),kind);return;}
         tally.listed();
         const bool interactable=nearby.actors.contains(actor);
@@ -820,11 +852,12 @@ std::vector<AreaTarget> scan(UObject* pawn,const std::string* only,const StorySp
                 }
                 if(!enabled)return;
             }
-            result.push_back({{std::move(id),{},{},true,interactable},actor,0,info.category,{},*position});
+            result.push_back({{std::move(id),{},{},true,interactable},actor,0,category,{},*position});
             return;
         }
         std::string label=tr(kind==AreaKind::Person?person_label(actor):
             object_appearance_label(kind,actor->GetClassPrivate()->GetNamePrivate().ToString(),object_state));
+        if(town)label=tr(town->label);
         if(kind==AreaKind::FieldItem||kind==AreaKind::Interaction||kind==AreaKind::Book) {
             if(const auto* name=exact_placement_label(kind,path(actor),read<int>(actor,L"m_UniqueId",808).value_or(-1)))
                 label=tr(name);
@@ -851,7 +884,7 @@ std::vector<AreaTarget> scan(UObject* pawn,const std::string* only,const StorySp
         }
         const auto distance=std::hypot(position->x-origin->x,position->y-origin->y,position->z-origin->z);
         result.push_back({{std::move(id),std::move(label),interactable?tr("Interaction available"):std::string{},true,interactable},
-            actor,distance,info.category,info.type,*position});
+            actor,distance,category,info.type,*position});
     };
     const auto layout=unknown("native layout differs from the audited build");
     for(auto* actor:native.units) {
@@ -867,10 +900,28 @@ std::vector<AreaTarget> scan(UObject* pawn,const std::string* only,const StorySp
         if(selected&&actor!=selected)continue;
         if(skip_dead(actor))continue;
         // Unsupported gimmick classes (triggers, event volumes) are not listed targets.
-        const auto kind=chain_kind(actor,true);if(!kind)continue;
+        const auto kind=chain_kind(actor,true);
+        if(!kind) {
+            if(map.current_map()!=2130||proximity)continue;
+            const auto warp=mysidia_warp_end(actor,pawn);
+            if(!warp)continue;
+            auto id=utf8(path(actor));
+            if(only&&id!=*only)continue;
+            id+=warp_key_prefix;
+            id+=std::to_string(warp->side);
+            ++considered;
+            tally.listed();
+            const auto at=nearby.actors.contains(actor);
+            const auto position=warp->box.center;
+            const auto distance=std::hypot(position.x-origin->x,position.y-origin->y,position.z-origin->z);
+            result.push_back({{std::move(id),tr(warp->goes_up?"Portal to upper Mysidia":"Portal to lower Mysidia"),
+                at?tr("Interaction available"):std::string{},true,at},actor,distance,3,L"CPP_MapGimmick_Warp",position});
+            continue;
+        }
         if(kind->kind==AreaKind::Book&&!library_book(actor)&&!placed_pot(actor))continue;
         if(kind->kind==AreaKind::AutomaticLift&&!capture_siren_lift_entry(pawn,actor))continue;
-        if(kind->kind==AreaKind::Interaction&&
+        const auto* town=kind->kind==AreaKind::Interaction?town_interaction(actor):nullptr;
+        if(kind->kind==AreaKind::Interaction&&!town&&
            !exact_placement_label(kind->kind,path(actor),read<int>(actor,L"m_UniqueId",808).value_or(-1)))continue;
         const auto door_meshes=kind->kind==AreaKind::TriggerDoor?trigger_door_meshes(actor):std::span<const wchar_t* const>{};
         if(kind->kind==AreaKind::TriggerDoor&&door_meshes.empty())continue;
@@ -892,6 +943,8 @@ std::vector<AreaTarget> scan(UObject* pawn,const std::string* only,const StorySp
         }
         if(kind->kind==AreaKind::Interaction&&
            (byte_call(actor,L"GetGimmickCondition")!=0||!capture_interaction_box(actor,pawn)))continue;
+        if(town&&(map.current_map()!=town->map||
+           !field_gimmick_offers_event(actor,utf8(std::wstring(town->event_id)))))continue;
         if(kind->kind==AreaKind::ElevatorCall||kind->kind==AreaKind::Elevator||kind->kind==AreaKind::Book) {
             if(!tally.admit(interactive_prop(actor,world,kind->kind),kind->kind))continue;
         }
@@ -904,7 +957,7 @@ std::vector<AreaTarget> scan(UObject* pawn,const std::string* only,const StorySp
             if(opened)uncollected=!*opened;
             if(!tally.admit(check(uncollected,Rule::Conditional,"collection state could not be read"),AreaKind::FieldItem))continue;
         }
-        add(actor,*id,kind->kind,object_state);
+        add(actor,*id,kind->kind,object_state,nullptr,town);
     }
     if(proximity) {
         auto* capsule=object_value(pawn,L"CapsuleComponent",824);
@@ -1134,14 +1187,35 @@ bool research_lab_pickup_or_console(UObject* actor) {
         return native_kind(actor,AreaKind::Switch)&&path(actor).starts_with(chapter_six_lab::gd_path);
     return false;
 }
-bool research_lab_warp_effect_visible(UObject* actor) {
-    auto* effect=object_value(actor,L"m_pNiagaraComponent",1024);
+bool warp_effect_visible(UObject* actor,bool second=false) {
+    auto* effect=second?object_value(actor,L"m_pNiagaraComponent2",1032):
+        object_value(actor,L"m_pNiagaraComponent",1024);
     if(!is(effect,L"/Script/Niagara.NiagaraComponent"))return false;
     Getter owner(effect,L"GetOwner",8,0,8);
     if(!owner||path(owner.function())!=L"/Script/Engine.ActorComponent:GetOwner"||owner.call<UObject*>(effect)!=actor)return false;
     const auto visible=byte_value(effect,L"bVisible",416),hidden=byte_value(effect,L"bHiddenInGame",417);
     return visible&&hidden&&masked(*visible,0x20)&&!masked(*hidden,0x08)&&
         is(object_value(effect,L"Asset",1312),L"/Script/Niagara.NiagaraSystem");
+}
+std::optional<MysidiaWarpEnd> mysidia_warp_end(UObject* actor,UObject* pawn) {
+    if(!mysidia_warp(actor)||!story_actor_available(pawn,actor)||
+       byte_value(actor,L"m_MapInteractType",833)!=4||byte_call(actor,L"GetGimmickCondition")!=0)return {};
+    auto* first=object_value(actor,L"m_pWarpPointBoxComponent",984);
+    auto* second=object_value(actor,L"m_pWarpPointBoxComponent2",992);
+    const auto from=owned_navigation_box(actor,first),to=owned_navigation_box(actor,second);
+    const auto origin=navigation_position(pawn);
+    if(!from||!to||!origin||std::abs(from->center.z-to->center.z)<3000.)return {};
+    // The two pads share their map position and are on separate terraces.
+    const bool other=std::abs(to->center.z-origin->z)<std::abs(from->center.z-origin->z);
+    const auto permitted=byte_value(actor,L"m_CanWarpPoint",1044);
+    const int side=other?2:1;
+    if(!permitted||!chapter_six_lab::warp_allowed(*permitted,side))return {};
+    const auto overlap=overlap_facts(pawn,actor,other?second:first);
+    if(!overlap||!enabled_overlap(*overlap))return {};
+    auto* mesh=other?object_value(actor,L"m_pWarpPointStaticMeshComponent2",1016):
+        object_value(actor,L"m_pWarpPointStaticMeshComponent",1008);
+    if(!warp_effect_visible(actor,other)&&visible_owned_mesh(actor,mesh)!=true)return {};
+    return MysidiaWarpEnd{other?*to:*from,side,other?from->center.z>to->center.z:to->center.z>from->center.z};
 }
 std::optional<bool> story_door_box_open(UObject* actor) {
     if(bool_call(actor,L"GetActorEnableCollision")!=true)return {};
@@ -1253,6 +1327,19 @@ std::optional<ActivationBox> capture_ladder_bottom_box(UObject* actor) {
     if(!native_kind(actor,AreaKind::Ladder))return {};
     return queryable_interaction_box(actor,object_value(actor,L"m_pBottomBoxComponent",1000));
 }
+bool is_town_ladder(UObject* actor) {
+    if(!native_kind(actor,AreaKind::Ladder))return false;
+    const auto name=path(actor);
+    const auto id=read<int>(actor,L"m_UniqueId",808);
+    if(id==0&&name==L"/Game/Map/Town/01Gra/01Gra_22/GD/Town_01Gra_22_01_GD.Town_01Gra_22_01_GD:"
+        L"PersistentLevel.BP_MapGimmickLadder_C_1")return true;
+    constexpr std::wstring_view level=L"/Game/Map/Town/03Kol/03Kol_20/GD/Town_03Kol_20_01_GD.Town_03Kol_20_01_GD:"
+        L"PersistentLevel.";
+    if(!name.starts_with(level))return false;
+    const auto instance=std::wstring_view(name).substr(level.size());
+    return (id==2&&instance==L"BP_MapGimmick_Object_Ladderwood02_C_0")||
+           (id==3&&instance==L"BP_MapGimmick_Object_Ladderwood02_C_1");
+}
 
 std::optional<ActivationBox> capture_interaction_box(UObject* actor,UObject* pawn) {
     const auto player_overlap=[&](UObject* component)->std::optional<ActivationBox> {
@@ -1265,12 +1352,26 @@ std::optional<ActivationBox> capture_interaction_box(UObject* actor,UObject* paw
         if(!permitted||!chapter_six_lab::warp_allowed(*permitted,1)||
            byte_value(actor,L"m_MapInteractType",833)!=4||byte_call(actor,L"GetGimmickCondition")!=0||
            !story_actor_available(pawn,actor)||
-           (!research_lab_warp_effect_visible(actor)&&
+           (!warp_effect_visible(actor)&&
             visible_owned_mesh(actor,object_value(actor,L"m_pWarpPointStaticMeshComponent",1008))!=true))return {};
         const auto box=player_overlap(object_value(actor,L"m_pWarpPointBoxComponent",984));
         if(!box||std::hypot(box->center.x-site->source.x,box->center.y-site->source.y)>40.||
            std::abs(box->center.z-site->source.z)>45.)return {};
         return box;
+    }
+    if(mysidia_warp(actor)) {
+        const auto end=mysidia_warp_end(actor,pawn);
+        return end?std::optional{end->box}:std::nullopt;
+    }
+    if(is_town_ladder(actor)&&actor_world(actor)==actor_world(pawn)&&byte_call(actor,L"GetGimmickCondition")==0) {
+        const auto origin=navigation_position(pawn);
+        auto* low=object_value(actor,L"m_pBottomBoxComponent",1000);
+        auto* high=object_value(actor,L"m_pTopBoxComponent",992);
+        const auto bottom=owned_navigation_box(actor,low,0.,true);
+        const auto top=owned_navigation_box(actor,high,0.,true);
+        if(!origin||!bottom||!top||top->center.z<=bottom->center.z)return {};
+        const bool upper=std::abs(top->center.z-origin->z)<std::abs(bottom->center.z-origin->z);
+        return interaction_box_enabled(actor,upper?high:low)==true?(upper?top:bottom):std::nullopt;
     }
     if(research_lab_rope(actor))
         return player_overlap(object_value(actor,L"m_pRootBoxComponent",760));
@@ -1286,6 +1387,9 @@ std::optional<ActivationBox> capture_interaction_box(UObject* actor,UObject* paw
         return queryable_interaction_box(actor,object_value(actor,L"m_pRootBoxComponent",760));
     if(native_kind(actor,AreaKind::Elevator))
         return player_overlap(object_value(actor,L"m_pActiveBoxComponent",1504));
+    if(const auto* town=town_interaction(actor))
+        return byte_value(actor,L"m_MapInteractType",833)==town->interaction?
+            player_overlap(object_value(actor,L"m_pRootBoxComponent",760)):std::nullopt;
     if(story_check_trigger(actor)||streetcar_timetable(actor)||olderion_inn_door(actor)||chapter_four_story_door(actor)||
        factory_shortcut_ladder(actor))
         return player_overlap(object_value(actor,L"m_pRootBoxComponent",760));
@@ -1302,7 +1406,8 @@ std::optional<ActivationBox> capture_interaction_box(UObject* actor,UObject* paw
     return {};
 }
 bool requires_checked_interaction_box(UObject* actor) {
-    return research_lab_warp(actor)||research_lab_rope(actor)||research_lab_pickup_or_console(actor)||
+    return town_interaction(actor)||mysidia_warp(actor)||is_town_ladder(actor)||research_lab_warp(actor)||research_lab_rope(actor)||
+        research_lab_pickup_or_console(actor)||
         native_kind(actor,AreaKind::TreasureChest)||
         native_kind(actor,AreaKind::Door)||native_kind(actor,AreaKind::ElevatorCall)||native_kind(actor,AreaKind::Elevator)||
         (native_kind(actor,AreaKind::Book)&&(library_book(actor)||placed_pot(actor)))||mobliz_lever_memo(actor)||
@@ -1485,7 +1590,7 @@ std::optional<MitraLeg> capture_mitra_leg(UObject* pawn) {
 }
 std::optional<AreaTarget> capture_area_target(UObject* pawn,const std::string& target_id) {
     if(target_id.empty()) {scan_report={};capture_summary="no selection";legacy_reason.clear();return std::nullopt;}
-    const auto actor_id=target_id.substr(0,target_id.find(exit_key_prefix));
+    const auto actor_id=target_id.substr(0,std::min(target_id.find(exit_key_prefix),target_id.find(warp_key_prefix)));
     const auto current=scan(pawn,&actor_id);
     return current_target<AreaTarget>(current,target_id);
 }

@@ -98,7 +98,7 @@ private:
         std::vector<std::string> checks;
         std::size_t next{}, category{};
         unsigned request{};
-        bool announced_wait{};
+        bool announced_wait{}, completed{};
         std::uint64_t probes{}, total_us{}, max_us{};
     };
     std::optional<AreaBrowse> area_browse_;

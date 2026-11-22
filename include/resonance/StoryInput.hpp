@@ -7,6 +7,8 @@ namespace resonance {
 // quest actors and audited opening continuations. Never loads future assets.
 StorySnapshot capture_story_input(resonance::unreal::UObject* controlled_pawn);
 std::optional<ActivationBox> capture_antlion_sinkhole(resonance::unreal::UObject* pawn,Vec3 feet);
+// Resolve the currently active native interaction event without starting it.
+bool field_gimmick_offers_event(resonance::unreal::UObject* actor,std::string_view expected);
 
 // Crate and water observations authorize a lane. The caller must still prove
 // the complete walking route using the live pawn capsule and floor queries.

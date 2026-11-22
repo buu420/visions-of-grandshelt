@@ -1319,17 +1319,27 @@ std::string ladder_instruction(bool down,Vec3 mount,const std::optional<WalkingA
     if(!direction.empty())return trf("Move {0} onto the ladder, then {1}",{tr(direction),hold});
     return trf("Move toward the ladder, then {0}",{hold});
 }
+std::optional<Vec3> ladder_component_position(UObject* ladder,const wchar_t* field) {
+    auto* component=object(ladder,field);
+    if(!is(component,L"/Script/Engine.SceneComponent")||get_object(component,L"GetOwner")!=ladder)return {};
+    const auto point=getter<Vec3>(component,L"K2_GetComponentLocation");
+    return point&&finite(*point)?point:std::nullopt;
+}
 std::optional<std::string> live_ladder_instruction(UObject* ladder,Vec3 goal,const std::optional<WalkingAxes>& axes) {
-    const auto position=[&](const wchar_t* field)->std::optional<Vec3> {
-        auto* component=object(ladder,field);
-        if(!is(component,L"/Script/Engine.SceneComponent")||get_object(component,L"GetOwner")!=ladder)return {};
-        const auto point=getter<Vec3>(component,L"K2_GetComponentLocation");
-        return point&&finite(*point)?point:std::nullopt;
-    };
-    const auto landing=position(L"m_TopLandingPoint"),top=position(L"m_pTopBoxComponent"),bottom=position(L"m_pBottomBoxComponent");
+    const auto landing=ladder_component_position(ladder,L"m_TopLandingPoint");
+    const auto top=ladder_component_position(ladder,L"m_pTopBoxComponent");
+    const auto bottom=ladder_component_position(ladder,L"m_pBottomBoxComponent");
     if(!landing||!top||!bottom)return {};
     const auto matches=[&](Vec3 point){return std::hypot(point.x-goal.x,point.y-goal.y,point.z-goal.z)<5.;};
-    if(matches(*landing))return ladder_instruction(true,{top->x-landing->x,top->y-landing->y,0},axes);
+    if(matches(*landing)||(is_town_ladder(ladder)&&matches(*top))) {
+        const Vec3 mount{top->x-landing->x,top->y-landing->y,0};
+        if(is_town_ladder(ladder)&&path(ladder).starts_with(L"/Game/Map/Town/01Gra/01Gra_22/GD/")) {
+            const auto direction=cardinal_motion(mount,axes);
+            return direction.empty()?tr("Move toward the ladder. Use the game's interaction control, then hold Down to climb down."):
+                trf("Move {0} onto the ladder. Use the game's interaction control, then hold Down to climb down.",{tr(direction)});
+        }
+        return ladder_instruction(true,mount,axes);
+    }
     if(matches(*bottom))return ladder_instruction(false,{landing->x-top->x,landing->y-top->y,0},axes);
     return {};
 }
@@ -1671,6 +1681,19 @@ bool kolobos_ruins_world(UObject* world) {
 bool kol_village_world(UObject* world) {
     return path(world)==L"/Game/Map/Town/02Lan/02Lan_20/Town_02Lan_20_PL.Town_02Lan_20_PL";
 }
+constexpr std::array grandport_stairs{
+    ActivationBox{{534.,-2460.,440.},{165.,335.,90.},0.}, // Harbor entrance
+    ActivationBox{{1280.,-3515.,502.},{430.,160.,135.},0.}, // Lower terrace
+    ActivationBox{{3090.,-3310.,702.},{385.,155.,135.},0.}, // Upper terrace
+};
+bool grandport_world(UObject* world) {
+    return path(world)==L"/Game/Map/Town/02Lan/02Lan_21/Town_02Lan_21_PL.Town_02Lan_21_PL";
+}
+bool grandport_stair_step(Vec3 from,Vec3 to) {
+    return std::any_of(grandport_stairs.begin(),grandport_stairs.end(),[&](const auto& stair) {
+        return inside_box(stair,from)&&inside_box(stair,to);
+    });
+}
 bool olderion_plaza_floor(UObject* world,Vec3 feet) {
     constexpr ActivationBox plaza{{540,-1690,122},{590,590,55},0};
     return path(world)==L"/Game/Map/Town/05Old/05Old_01/Town_05Old_01_PL.Town_05Old_01_PL"&&
@@ -1861,6 +1884,30 @@ bool shrine_lower_ladder_top(UObject* target,Vec3 destination) {
 bool zoldaad_capital_street(UObject* actor) {
     return path(actor_world(actor))==L"/Game/Map/Town/06Zol/06Zol_01/Town_06Zol_01_PL.Town_06Zol_01_PL";
 }
+bool zoldaad_slums_timetable(UObject* actor) {
+    return path(actor)==L"/Game/Map/Town/06Zol/06Zol_05/EV/Town_06Zol_05_01_EV.Town_06Zol_05_01_EV:"
+        L"PersistentLevel.BP_MapGimmick_InteractEventTrigger_C_1"&&read<int>(actor,L"m_UniqueId")==0;
+}
+bool felicitas_world(UObject* world) {
+    return path(world)==L"/Game/Map/Town/03Kol/03Kol_20/Town_03Kol_20_PL.Town_03Kol_20_PL";
+}
+constexpr ActivationBox felicitas_street{{-3290.,-900.,120.},{2440.,3000.,245.},0.};
+std::optional<ActivationBox> felicitas_floor(Vec3 feet) {
+    // The shops and houses share the persistent level at separate heights.
+    // Keep each collision search on the player's current street or room.
+    constexpr std::array floors{
+        felicitas_street,
+        ActivationBox{{-3350.,155.,850.},{1450.,1300.,220.},0.},
+        ActivationBox{{-2850.,-3400.,850.},{575.,1500.,220.},0.},
+        ActivationBox{{-1115.,3945.,3030.},{1280.,1280.,165.},0.},
+        ActivationBox{{-1115.,3945.,5030.},{1280.,1280.,165.},0.},
+        ActivationBox{{-1115.,3945.,7030.},{1280.,1280.,165.},0.},
+        ActivationBox{{-1115.,8024.,3030.},{1280.,1280.,165.},0.},
+        ActivationBox{{-1115.,8004.,5030.},{1280.,1280.,165.},0.},
+    };
+    for(const auto& floor:floors)if(inside_box(floor,feet))return floor;
+    return {};
+}
 std::optional<ActivationBox> story_walkway(UObject* target,Vec3 feet) {
     // These approaches have walkable collision beyond the registered mesh.
     // Scope the live sweep to the traversed parts of each map.
@@ -1883,6 +1930,14 @@ std::optional<ActivationBox> story_walkway(UObject* target,Vec3 feet) {
         // The only baked polygons in this map belong to the inn interior.
         const ActivationBox street{{1740,-1050,30},{2570,2150,240},0};
         if(inside_box(street,feet))return street;
+    }
+    if(zoldaad_slums_timetable(target)) {
+        const ActivationBox platform{{360.,-420.,60.},{650.,720.,160.},0.};
+        if(inside_box(platform,feet))return platform;
+    }
+    if(is_town_ladder(target)&&target_path.starts_with(L"/Game/Map/Town/01Gra/01Gra_22/GD/")) {
+        constexpr ActivationBox landing{{-11190.,5800.,1185.},{440.,230.,115.},0.};
+        if(inside_box(landing,feet))return landing;
     }
     if(is(target,L"/Script/mucha.CPP_MapTransitionTrigger")&&
        path(actor_world(target))==L"/Game/Map/Dng/06Zol/06Zol_45/Dng_06Zol_45_PL.Dng_06Zol_45_PL") {
@@ -2372,6 +2427,7 @@ std::optional<GroundCoverage> ordinary_ground_path(UObject* pawn,UObject* librar
     const bool corridor_capsule=world_capsule||(capsule_only&&zoldaad_swept_walkway(world));
     const bool castle=capsule_only&&burning_castle_world(world);
     const bool siren=capsule_only&&siren_tower_world(world);
+    const bool grandport=grandport_world(world);
     const bool mitra=resonance::path(world)==L"/Game/Map/Town/01Gra/01Gra_20/Town_01Gra_20_PL.Town_01Gra_20_PL";
     const bool gaberada=capsule_only&&
         resonance::path(world)==L"/Game/Map/Town/08Gro/08Gro_01/Town_08Gro_01_PL.Town_08Gro_01_PL";
@@ -2435,6 +2491,7 @@ std::optional<GroundCoverage> ordinary_ground_path(UObject* pawn,UObject* librar
         auto origin=path.points.front();
         std::optional<CapsuleSweep::Contact> contact;
         const bool local_ramp=feet&&((mitra&&inside_box(mitra_weapon_stair,*feet))||tower_ramp_floor(*feet)||
+            (grandport&&grandport_stair_step(*feet,*feet))||
             (siren&&siren_stair_step(*feet,*feet)));
         if((corridor_capsule||local_ramp)&&sweep&&feet&&
            std::hypot(feet->x-origin.x,feet->y-origin.y)<=scale*(local_ramp?.25:.05)) {
@@ -2465,6 +2522,7 @@ std::optional<GroundCoverage> ordinary_ground_path(UObject* pawn,UObject* librar
                        olderion_plaza_floor(world,*support)||tower_ramp_floor(*support)||
                        (castle&&(inside_box(castle_west_stair,*support)||inside_box(castle_gallery_doorway,*support)))||
                        (siren&&(siren_stair_step(last_supported,*support)||siren_dock_step(last_supported,*support)))||
+                       (grandport&&grandport_stair_step(last_supported,*support))||
                        (mitra&&inside_box(mitra_weapon_stair,*support))||
                        (gronoa&&inside_box(gronoa_lower_stair_turn,last_supported)&&
                            inside_box(gronoa_lower_stair_turn,*support)))return support;
@@ -2476,6 +2534,7 @@ std::optional<GroundCoverage> ordinary_ground_path(UObject* pawn,UObject* librar
                 },sweep->step_height/scale,[&](Vec3 a,Vec3 b) {
                     return (gaberada_floor(a)&&gaberada_floor(b))||
                         (middle_reach_turn_floor(a)&&middle_reach_turn_floor(b))||
+                        (grandport&&grandport_stair_step(a,b))||
                         (siren&&siren_stair_step(a,b))||
                         (castle&&inside_box(castle_west_stair,a)&&inside_box(castle_west_stair,b));
                 }};
@@ -2841,7 +2900,7 @@ std::optional<NativeRoute> capsule_route(UObject* pawn,UObject* target,UObject* 
         room_bounds->half_extent.y+=scale;
     }
     const bool person=is(target,L"/Script/mucha.CPP_MapUnit_NPC");
-    if(!interaction&&(person||requires_checked_interaction_box(target)))return {};
+    if(!box&&(person||requires_checked_interaction_box(target)))return {};
     struct Junction {
         Vec3 position;
         bool goal{};
@@ -2861,6 +2920,15 @@ std::optional<NativeRoute> capsule_route(UObject* pawn,UObject* target,UObject* 
             {2175,-1573,2.15},{2795,-1669,2.15},{3394,-1689,2.15},{3653,-1260,2.15},
             {3039,-2436,2.15},{4121,-2574,2.15}};
         for(const auto point:street)if(inside_box(*room,point))graph.push_back({.position=point});
+    } else if(room&&!direct_only&&felicitas_world(actor_world(pawn))&&inside_box(felicitas_street,start)) {
+        // These junctions join the fast-travel arrival and the inn approach
+        // along the street. The live capsule checks every connecting leg.
+        constexpr Vec3 street[]{{-4488.,-1200.,2.15},{-4507.,-801.,2.15},{-4200.,-692.,2.15},
+            {-4155.,-410.,2.15},{-4015.,-380.,2.15},{-4006.,311.,2.15},{-4173.,648.,2.15}};
+        for(const auto point:street)graph.push_back({.position=point});
+    } else if(room&&!direct_only&&zoldaad_slums_timetable(target)) {
+        // The streetcar arrives at this standing point on the platform.
+        graph.push_back({.position={425.,-775.,2.15}});
     } else if(room&&!direct_only&&mobliz_world(pawn)) {
         // Taken from the copied-game walk around the railings, stair approach
         // and upper passage. Every edge still needs its own live capsule and
@@ -4262,8 +4330,38 @@ std::optional<NativeRoute> felicitas_exit_approach(UObject* pawn,UObject* target
         "Felicitas exit approach",true);
 }
 
+std::optional<NativeRoute> town_ladder_landing_route(UObject* pawn,UObject* target,UObject* library,UObject* mesh,
+        Vec3 start,WalkingAxes axes,double scale,bool ground_check,std::uint64_t path_id,
+        const std::optional<ActivationBox>& room) {
+    if(!room)return {};
+    const auto end=capture_interaction_box(target,pawn);
+    const auto top=ladder_component_position(target,L"m_pTopBoxComponent");
+    const auto landing=ladder_component_position(target,L"m_TopLandingPoint");
+    if(!end||!top||!landing||std::abs(end->center.z-top->z)>scale*.05||!inside_box(*room,{landing->x,landing->y,start.z}))
+        return {};
+    const auto sweep=capture_capsule_sweep(pawn);
+    if(!sweep)return {};
+    // The top box extends over the drop. Walk to the native standing marker
+    // so that the player can move from the landing onto the ladder.
+    std::optional<CapsuleSweep::Contact> contact;
+    const auto floor=sweep->ground_probe(&contact).project({landing->x,landing->y,start.z});
+    if(!floor||std::abs(floor->z-landing->z)>scale*.75)return {};
+    if(std::hypot(start.x-floor->x,start.y-floor->y)<scale*.15&&std::abs(start.z-floor->z)<scale*.15)
+        return NativeRoute{.activation_reached=true};
+    if(felicitas_world(actor_world(pawn))&&read<int>(target,L"m_UniqueId")==3) {
+        // Follow the walkway around the corner of the upper house.
+        constexpr double walkway_z=922.15;
+        const std::array turns{Vec3{-2920.,0.,walkway_z},Vec3{-2920.,565.,walkway_z},*floor};
+        if(auto route=verified_walking_turns(*sweep,*room,start,turns,axes,scale,ground_check,path_id,
+            .12,1200,"Felicitas upper walkway",true))return route;
+    }
+    const ActivationBox approach{{floor->x,floor->y,floor->z+scale*.3},{scale*.13,scale*.13,scale*.2},0.};
+    return capsule_route(pawn,target,library,mesh,start,*floor,axes,scale,approach,ground_check,path_id,room);
+}
+
 std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destination,bool ground_check,
-        std::string* reason,std::uint64_t path_id,UObject* alternate=nullptr,bool log_query=true) {
+        std::string* reason,std::uint64_t path_id,UObject* alternate=nullptr,bool log_query=true,
+        bool felicitas_collision=false) {
     if(reason)reason->clear();
     const auto fail=[&](const char* message)->std::optional<NativeRoute>{if(reason)*reason=message;return {};};
     if(!ground_travel(p))return fail("The current ground travel state could not be verified.");
@@ -4288,6 +4386,7 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
     auto room=inn_floor(p);
     if(!room)room=wind_boarding_floor(p,target,*start);
     if(!room)room=story_walkway(target,*start);
+    if(!room&&felicitas_collision&&actor_world(target)==world)room=felicitas_floor(*start);
     if(!room)if(auto floor=mobliz_escape_floor(p,target,*start)) {
         const auto surface=has_mesh?project_navigation(p,library,mesh,*start):std::nullopt;
         if(!surface||!surface->on_mesh)room=std::move(floor);
@@ -4302,6 +4401,11 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
         }
     }
     if(!scale)return fail("The area's distance scale is unavailable.");
+    if(is_town_ladder(target)) {
+        const auto landing=room?room:felicitas_world(world)?felicitas_floor(*start):std::nullopt;
+        if(auto route=town_ladder_landing_route(p,target,library,mesh,*start,*axes,*scale,ground_check,path_id,landing))
+            return route;
+    }
     if(kol_village_world(world))
         if(auto route=kol_village_walk(p,target,*start,*axes,*scale,ground_check,path_id))return route;
     if(kolobos_ruins_world(world))
@@ -5280,8 +5384,9 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
         const auto policy=capture_ground_policy(p,*scale);
         if(policy) {
             const auto swept_prefix=surveyed_turn_prefix?surveyed_turn_prefix:(approach?approach->lift_prefix:0);
+            const bool harbor_stair=grandport_world(world)&&grandport_stair_step(*start,*start);
             const auto proof=elder_door?GroundProof::CapsuleSweep:swept_prefix?GroundProof::CapsulePrefix:
-                (swept_default||centered_spiral||tunnel_exit||castle_stairs||siren_tower_passage(target)||tower_lift)?
+                (swept_default||centered_spiral||tunnel_exit||castle_stairs||siren_tower_passage(target)||tower_lift||harbor_stair)?
                     GroundProof::CapsuleSweep:GroundProof::MeshFirst;
             ground=ordinary_ground_path(p,library,mesh,snapshot,path_id,policy->budget,ground_reason,bypass_rejoin,
                 proof,swept_prefix);
@@ -5359,6 +5464,9 @@ std::optional<NativeRoute> route_snapshot(UObject* pawn,UObject* target,Vec3 des
     const auto start=controlled_agent_position(pawn);
     auto* system=nav_library(pawn);
     if(!start||!system)return {};
+    if(felicitas_world(world)&&felicitas_floor(*start))
+        if(auto local=route_on_mesh(pawn,target,destination,ground_check,reason,path_id,nullptr,log_query,true))
+            return local;
     auto* preferred=walking_mesh(pawn,system,*start);
     if(!preferred)return {};
     // Some levels stream only the Default mesh. Use it only when the player
@@ -5389,6 +5497,9 @@ bool area_target_reachable(UObject* pawn,const AreaTarget& target) {
 }
 bool same_area_position(Vec3 a,Vec3 b) {
     return a.x==b.x&&a.y==b.y&&a.z==b.z;
+}
+bool same_area_origin(Vec3 a,Vec3 b) {
+    return std::hypot(a.x-b.x,a.y-b.y)<=.05&&std::abs(a.z-b.z)<=.05;
 }
 bool nearby_area_origin(Vec3 a,Vec3 b,double capsule_radius) {
     // Keep a positive scanner proof during footing jitter and small steps
@@ -6265,7 +6376,8 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
         }
     }
     if(!navigation_door_approach_&&is(live_target,L"/Script/mucha.CPP_MapGimmickLadder")&&
-       (story_target(target_id_)||sanctissimus_pot_ladder(live_target,active_target_->position))) {
+       (story_target(target_id_)||is_town_ladder(live_target)||
+        sanctissimus_pot_ladder(live_target,active_target_->position))) {
         const auto axes=navigation_path_.valid?std::optional<WalkingAxes>{{navigation_path_.right,navigation_path_.up}}:
             walking_input_axes(pawn);
         auto instruction=live_ladder_instruction(live_target,active_target_->position,axes);
@@ -6316,7 +6428,7 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
         path(live_target).starts_with(L"/Game/Map/Dng/08Gro/08Gro_40/GD/")||
         wardens_cape_trigger(live_target)||water_shrine_bridge_exit(live_target)||water_shrine_dry_passage(live_target)||
         burning_castle_world(actor_world(pawn))||kol_village_world(actor_world(pawn))||kolobos_ruins_world(actor_world(pawn))||
-        felicitas_world_exit(live_target)||siren_tower_passage(live_target)||
+        felicitas_world(actor_world(pawn))||zoldaad_slums_timetable(live_target)||siren_tower_passage(live_target)||
         mobliz_service_lift_world(actor_world(pawn))))||
         swept_default_mesh(actor_world(pawn),navigation_swept_mesh_)||
         (burning_castle_world(actor_world(pawn))&&!navigation_swept_mesh_.empty())||
@@ -6521,6 +6633,7 @@ unsigned UnrealReader::area_browse_commands() {
     browse.max_us=std::max(browse.max_us,elapsed);
     const bool finished=browse.next==browse.checks.size();
     if(finished) {
+        browse.completed=true;
         log("NAV area checks category="+std::to_string(browse.category)+" probes="+std::to_string(browse.probes)+
             " total_us="+std::to_string(browse.total_us)+" max_frame_us="+std::to_string(browse.max_us));
         browse.probes=browse.total_us=browse.max_us=0;
@@ -7666,15 +7779,25 @@ void UnrealReader::tick(unsigned commands) {
             auto entries=capture_area_targets(guard.pawn);
             report=area_capture_report();
             const auto radius=getter<float>(object(guard.pawn,L"CapsuleComponent"),L"GetScaledCapsuleRadius").value_or(0.f);
+            const bool completed=std::exchange(browse.completed,false)&&browse.category==navigation_category_;
             std::vector<std::string> unchecked;
             for(auto& entry:entries) {
                 if(navigation_category_&&entry.category!=navigation_category_)continue;
                 if(!entry.snapshot.interactable) {
                     const auto check=browse.routes.find(entry.snapshot.id);
-                    if(check==browse.routes.end()||!same_area_position(check->second.position,entry.position)||
-                       (!same_area_position(check->second.origin,*origin)&&
-                        !(check->second.reachable&&nearby_area_origin(check->second.origin,*origin,radius)))) {
+                    const bool person=entry.type==L"CPP_MapUnit_NPC";
+                    const bool origin_matches=check!=browse.routes.end()&&
+                        (same_area_origin(check->second.origin,*origin)||
+                         (check->second.reachable&&nearby_area_origin(check->second.origin,*origin,radius)));
+                    if(!origin_matches) {
                         unchecked.push_back(entry.snapshot.id);
+                        continue;
+                    }
+                    if(!same_area_position(check->second.position,entry.position)&&
+                       !(person&&check->second.reachable&&nearby_area_origin(check->second.position,entry.position,radius))) {
+                        // A moving person can invalidate their result during the scan.
+                        // Finish this selection with the routes that are still current.
+                        if(!completed||!person)unchecked.push_back(entry.snapshot.id);
                         continue;
                     }
                     if(!check->second.reachable) {

@@ -624,11 +624,14 @@ bool wind_story_leg(StorySnapshot& story,UObject* pawn,UObject* world,std::span<
     }
     return true;
 }
-bool story_event_matches(UObject* actor,std::string_view event) {
+std::string active_gimmick_event(UObject* actor) {
     Call events(actor,L"GetEventList",16,0,16);
-    if(!events||!events.event_array_return())return false;
+    if(!events||!events.event_array_return())return {};
     events.invoke(actor);
-    return matching_trigger_event(actor,events)==event;
+    return matching_trigger_event(actor,events);
+}
+bool story_event_matches(UObject* actor,std::string_view event) {
+    return active_gimmick_event(actor)==event&&!event.empty();
 }
 std::optional<Vec3> active_story_trigger(UObject* pawn,UObject* actor,std::string_view event) {
     if(getter<unsigned char>(actor,L"GetGimmickCondition")!=0||opening_overlap(pawn,actor)!=true||
@@ -2774,6 +2777,17 @@ std::optional<StoryShrineBridgeRoute> capture_story_shrine_bridge(UObject* pawn,
         return {};
     }
 }
+bool field_gimmick_offers_event(UObject* actor,std::string_view expected) {
+    try {
+        const auto active=active_gimmick_event(actor);
+        return !active.empty()&&active!="None"&&(expected.empty()||active==expected);
+    } catch(const std::exception& error) {
+        static NativeProblemDeduplicator reported;
+        if(reported.accept(error.what()))log(std::string("FIELD event unavailable: ")+error.what());
+        return false;
+    }
+}
+
 StorySnapshot capture_story_input(UObject* pawn) {
     StorySnapshot result;
     try {
