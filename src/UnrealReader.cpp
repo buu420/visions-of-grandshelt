@@ -1891,6 +1891,7 @@ bool zoldaad_slums_timetable(UObject* actor) {
 bool felicitas_world(UObject* world) {
     return path(world)==L"/Game/Map/Town/03Kol/03Kol_20/Town_03Kol_20_PL.Town_03Kol_20_PL";
 }
+bool town_world(UObject* world) {return path(world).starts_with(L"/Game/Map/Town/");}
 constexpr ActivationBox felicitas_street{{-3290.,-900.,120.},{2440.,3000.,245.},0.};
 std::optional<ActivationBox> felicitas_floor(Vec3 feet) {
     // The shops and houses share the persistent level at separate heights.
@@ -1907,6 +1908,14 @@ std::optional<ActivationBox> felicitas_floor(Vec3 feet) {
     };
     for(const auto& floor:floors)if(inside_box(floor,feet))return floor;
     return {};
+}
+std::optional<ActivationBox> nearby_town_floor(Vec3 start,Vec3 target,double scale) {
+    const Vec3 span{std::abs(target.x-start.x),std::abs(target.y-start.y),std::abs(target.z-start.z)};
+    if(std::hypot(span.x,span.y)>scale*48.||span.z>scale*4.)return {};
+    // Native routes still handle longer trips and separated town floors. Keep
+    // the capsule search around this pair of positions and check support live.
+    return ActivationBox{{(start.x+target.x)*.5,(start.y+target.y)*.5,(start.z+target.z)*.5},
+        {span.x*.5+scale*5.,span.y*.5+scale*5.,span.z*.5+scale*2.},0.};
 }
 std::optional<ActivationBox> story_walkway(UObject* target,Vec3 feet) {
     // These approaches have walkable collision beyond the registered mesh.
@@ -2901,6 +2910,7 @@ std::optional<NativeRoute> capsule_route(UObject* pawn,UObject* target,UObject* 
     }
     const bool person=is(target,L"/Script/mucha.CPP_MapUnit_NPC");
     if(!box&&(person||requires_checked_interaction_box(target)))return {};
+    const bool felicitas_lane=room&&!direct_only&&felicitas_world(actor_world(pawn))&&inside_box(felicitas_street,start);
     struct Junction {
         Vec3 position;
         bool goal{};
@@ -2920,11 +2930,16 @@ std::optional<NativeRoute> capsule_route(UObject* pawn,UObject* target,UObject* 
             {2175,-1573,2.15},{2795,-1669,2.15},{3394,-1689,2.15},{3653,-1260,2.15},
             {3039,-2436,2.15},{4121,-2574,2.15}};
         for(const auto point:street)if(inside_box(*room,point))graph.push_back({.position=point});
-    } else if(room&&!direct_only&&felicitas_world(actor_world(pawn))&&inside_box(felicitas_street,start)) {
-        // These junctions join the fast-travel arrival and the inn approach
-        // along the street. The live capsule checks every connecting leg.
+    } else if(felicitas_lane) {
+        // Include the lanes behind the inn and past the retaining walls so
+        // the same street graph works from each of the building returns.
         constexpr Vec3 street[]{{-4488.,-1200.,2.15},{-4507.,-801.,2.15},{-4200.,-692.,2.15},
-            {-4155.,-410.,2.15},{-4015.,-380.,2.15},{-4006.,311.,2.15},{-4173.,648.,2.15}};
+            {-4155.,-410.,2.15},{-4015.,-380.,2.15},{-4006.,311.,2.15},{-4173.,648.,2.15},
+            {-4310.,-1350.,2.15},{-4210.,-1650.,2.15},{-4040.,-1840.,2.15},{-3480.,-1840.,2.15},
+            {-2470.,-1830.,2.15},{-2350.,-1770.,2.15},{-1670.,-1750.,2.15},{-1430.,-1590.,2.15},
+            {-4470.,-230.,2.15},{-3920.,640.,2.15},{-3810.,1000.,2.15},{-3670.,1190.,2.15},
+            {-3750.,290.,2.15},{-3510.,245.,2.15},{-2650.,130.,2.15},{-1910.,10.,2.15},
+            {-1910.,-390.,2.15},{-1750.,-630.,2.15},{-1670.,-1350.,2.15}};
         for(const auto point:street)graph.push_back({.position=point});
     } else if(room&&!direct_only&&zoldaad_slums_timetable(target)) {
         // The streetcar arrives at this standing point on the platform.
@@ -3026,14 +3041,22 @@ std::optional<NativeRoute> capsule_route(UObject* pawn,UObject* target,UObject* 
                 const auto y=side.y*(activation->half_extent.y+.55*capsule.radius);
                 add_goal({activation->center.x+x*c-y*s,activation->center.y+x*s+y*c,goal.z});
             }
-            if(room)for(const auto point:interaction_side_approaches(*activation,capsule,start.z,.85))add_goal(point);
+            if(room)for(const auto gap:{.85,.94})
+                for(const auto point:interaction_side_approaches(*activation,capsule,start.z,gap))add_goal(point);
         }
         add_goal(goal);
     }
     // A collision-only fallback may try several nearby faces of a large box.
     // Share a probe budget across those attempts on the game thread.
     std::size_t remaining_probes=640;
-    const auto proof=[&](Vec3 from,Vec3 to) {
+    const auto flat_probe=sweep->ground_probe();
+    const auto proof=[&](Vec3 from,Vec3 to)->std::optional<Vec3> {
+        if(felicitas_lane&&std::abs(from.z-2.15)<.2&&std::hypot(to.x-from.x,to.y-from.y)>3.*scale) {
+            // The street's level stretches can reject wall crossings with
+            // one sweep. The full floor check still certifies clear legs.
+            const auto end=flat_probe.project({to.x,to.y,from.z});
+            if(end&&std::abs(end->z-from.z)<.2&&flat_probe.blocked(from,*end)==true)return {};
+        }
         return room_bounds?room_lane(*sweep,*room_bounds,from,to,scale,direct_only?&remaining_probes:nullptr):
             capsule_lane(*sweep,system,mesh,from,to,scale);
     };
@@ -3070,11 +3093,22 @@ std::optional<NativeRoute> capsule_route(UObject* pawn,UObject* target,UObject* 
         }
         if(direct_only)return {};
     }
+    const auto priority=[&](const Junction& point) {
+        if(!felicitas_lane||point.goal)return point.distance;
+        double nearest=std::numeric_limits<double>::infinity();
+        for(const auto& goal:graph)if(goal.goal)nearest=std::min(nearest,
+            std::hypot(goal.position.x-point.position.x,goal.position.y-point.position.y)+goal.goal_cost);
+        return point.distance+nearest;
+    };
     while(true) {
         auto best=graph.end();
+        double lowest=std::numeric_limits<double>::infinity();
         for(auto it=graph.begin();it!=graph.end();++it)
-            if(!it->visited&&std::isfinite(it->distance)&&(best==graph.end()||it->distance<best->distance))best=it;
-        if(best==graph.end())return {};
+            if(!it->visited&&std::isfinite(it->distance)) {
+                const auto cost=priority(*it);
+                if(cost<lowest){best=it;lowest=cost;}
+            }
+        if(best==graph.end())break;
         if(best->goal)return result(*best);
         best->visited=true;
         for(auto& next:graph) {
@@ -3083,6 +3117,7 @@ std::optional<NativeRoute> capsule_route(UObject* pawn,UObject* target,UObject* 
             const auto length=std::hypot(next.position.x-from.x,next.position.y-from.y);
             const auto distance=best->distance+length+next.goal_cost;
             if(length<scale*.01||distance>=next.distance)continue;
+            if(felicitas_lane&&length>13.*scale)continue;
             if(room&&best==graph.begin()&&next.goal)continue; // Already checked the direct approaches.
             const auto floor=proof(from,next.position);
             if(!floor)continue;
@@ -3094,6 +3129,36 @@ std::optional<NativeRoute> capsule_route(UObject* pawn,UObject* target,UObject* 
             next.path=best->path;next.path.push_back(*floor);next.distance=distance;
         }
     }
+    if(!room_bounds||!box||direct_only||!town_world(actor_world(pawn)))return {};
+    std::vector<Vec3> approaches;
+    for(const auto& point:graph)if(point.goal)approaches.push_back(point.position);
+    const auto stride=std::clamp(1.5*sweep->radius,.4*scale,.65*scale);
+    // Use short sweeps to choose a candidate and check continuous ground
+    // only along its legs. A sampled path can still cross a gap.
+    const auto probe=sweep->ground_probe();
+    std::size_t search_probes=1650;
+    const auto walk=[&](Vec3 from,Vec3 to)->std::optional<Vec3> {
+        to.z=from.z;
+        if(search_probes<2||!inside_box(*room_bounds,to))return {};
+        --search_probes;
+        const auto feet=probe.project(to);
+        if(!feet||!inside_box(*room_bounds,*feet))return {};
+        --search_probes;
+        return probe.blocked(from,*feet)==false?feet:std::nullopt;
+    };
+    const auto arrive=[&](Vec3 feet){return activation_approach(*box,capsule,feet,scale);};
+    auto path=checked_walking_path(start,approaches,stride,260,walk,[&](Vec3 feet){return arrive(feet).has_value();});
+    if(!path)return {};
+    std::size_t proof_probes=900;
+    for(std::size_t i=1;i<path->size();++i) {
+        const auto feet=room_lane(*sweep,*room_bounds,(*path)[i-1],(*path)[i],scale,&proof_probes);
+        if(!feet)return {};
+        (*path)[i]=*feet;
+    }
+    const auto approach=arrive(path->back());
+    if(!approach)return {};
+    Junction end{.path=std::move(*path),.arrival=approach->arrival_metres};
+    return result(end);
 }
 std::optional<NativeRoute> verified_walking_turns(const CapsuleSweep& sweep,const ActivationBox& walkway,
         Vec3 start,std::span<const Vec3> turns,WalkingAxes axes,double scale,bool ground_check,
@@ -4361,7 +4426,7 @@ std::optional<NativeRoute> town_ladder_landing_route(UObject* pawn,UObject* targ
 
 std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destination,bool ground_check,
         std::string* reason,std::uint64_t path_id,UObject* alternate=nullptr,bool log_query=true,
-        bool felicitas_collision=false) {
+        bool town_collision=false) {
     if(reason)reason->clear();
     const auto fail=[&](const char* message)->std::optional<NativeRoute>{if(reason)*reason=message;return {};};
     if(!ground_travel(p))return fail("The current ground travel state could not be verified.");
@@ -4386,7 +4451,6 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
     auto room=inn_floor(p);
     if(!room)room=wind_boarding_floor(p,target,*start);
     if(!room)room=story_walkway(target,*start);
-    if(!room&&felicitas_collision&&actor_world(target)==world)room=felicitas_floor(*start);
     if(!room)if(auto floor=mobliz_escape_floor(p,target,*start)) {
         const auto surface=has_mesh?project_navigation(p,library,mesh,*start):std::nullopt;
         if(!surface||!surface->on_mesh)room=std::move(floor);
@@ -4401,6 +4465,12 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
         }
     }
     if(!scale)return fail("The area's distance scale is unavailable.");
+    if(!room&&town_collision&&actor_world(target)==world) {
+        if(felicitas_world(world))room=felicitas_floor(*start);
+        else if(transition||local_interaction||is(target,L"/Script/mucha.CPP_MapGimmick_Trigger_DoorBase"))
+            room=nearby_town_floor(*start,destination,*scale);
+        if(!room)return {};
+    }
     if(is_town_ladder(target)) {
         const auto landing=room?room:felicitas_world(world)?felicitas_floor(*start):std::nullopt;
         if(auto route=town_ladder_landing_route(p,target,library,mesh,*start,*axes,*scale,ground_check,path_id,landing))
@@ -5468,13 +5538,13 @@ std::optional<NativeRoute> route_snapshot(UObject* pawn,UObject* target,Vec3 des
         if(auto local=route_on_mesh(pawn,target,destination,ground_check,reason,path_id,nullptr,log_query,true))
             return local;
     auto* preferred=walking_mesh(pawn,system,*start);
-    if(!preferred)return {};
     // Some levels stream only the Default mesh. Use it only when the player
     // has no surface on the preferred mesh and their real capsule fits the route.
-    auto* alternate=default_walking_surface(pawn,system,preferred,*start);
-    if(!alternate&&(olderion_south_exit(target)||wandering_crystal_gate(target)||
+    auto* alternate=preferred?default_walking_surface(pawn,system,preferred,*start):nullptr;
+    if(!alternate&&(town_world(world)||wandering_crystal_gate(target)||
        crystal_tower_spiral(actor_world(pawn)))) {
-        // The local bake can cover the party while ending before a gate or spiral seam.
+        // The local bake can cover the party while ending before another
+        // town walkway, a gate, or a spiral seam.
         // Confirm that the alternate bake is connected at the party's feet.
         auto* candidate=registered_default_surface(pawn,system);
         const auto projected=candidate&&candidate!=preferred?
@@ -5482,8 +5552,14 @@ std::optional<NativeRoute> route_snapshot(UObject* pawn,UObject* target,Vec3 des
         if(projected&&projected->on_mesh&&std::hypot(projected->position.x-start->x,projected->position.y-start->y)<25.)
             alternate=candidate;
     }
-    if(!alternate)return {};
-    return route_on_mesh(pawn,target,destination,ground_check,reason,path_id,alternate,log_query);
+    if(alternate)
+        if(auto route=route_on_mesh(pawn,target,destination,ground_check,reason,path_id,alternate,log_query))return route;
+    if(town_world(world)&&!felicitas_world(world)) {
+        std::string fallback_reason;
+        if(auto local=route_on_mesh(pawn,target,destination,ground_check,&fallback_reason,path_id,nullptr,log_query,true))
+            return local;
+    }
+    return {};
 }
 bool area_target_reachable(UObject* pawn,const AreaTarget& target) {
     if(target.snapshot.interactable)return true;

@@ -1,7 +1,9 @@
 #pragma once
 #include "resonance/Core.hpp"
 #include "resonance/GroundCoverage.hpp"
+#include <functional>
 #include <optional>
+#include <span>
 #include <string>
 #include <utility>
 #include <vector>
@@ -36,6 +38,11 @@ bool navmesh_supports_capsule(double config_radius,double config_height,double m
 // previous floor height, and the sweep verifies each successive pose.
 std::optional<Vec3> checked_walking_leg(Vec3 from,Vec3 to,double world_to_metres,
     double walkable_floor_z,const GroundProbe&);
+// Search for a walk to an interaction when a direct leg is blocked. The caller
+// checks each leg against the live floor and capsule and validates the endpoint.
+std::optional<std::vector<Vec3>> checked_walking_path(Vec3 start,std::span<const Vec3> approaches,
+    double stride,std::size_t expansion_limit,const std::function<std::optional<Vec3>(Vec3,Vec3)>& leg,
+    const std::function<bool(Vec3)>& arrived);
 struct WalkingBypass { PathSnapshot path; std::size_t rejoin; };
 // Find a nearby lane around an unusable edge and rejoin the same route.
 // The normal can be zero when no contact was reported. The supplied probe

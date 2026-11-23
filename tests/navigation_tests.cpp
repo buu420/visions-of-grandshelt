@@ -529,6 +529,30 @@ void nearby_target_does_not_require_a_route() {
             "native interaction must end navigation even when the target centre cannot be routed");
     }
 }
+void walking_path_around_a_town_building() {
+    const Vec3 entrance{100,200,0},door{1050,200,0};
+    const std::array approaches{door};
+    bool closed=false;
+    const GroundProbe floor{
+        [&](Vec3 a,Vec3 b)->std::optional<bool> {
+            return std::min(a.x,b.x)<760&&std::max(a.x,b.x)>350&&
+                (closed||std::min(a.y,b.y)<480);
+        },
+        [](Vec3 p)->std::optional<Vec3> {
+            return p.x>=0&&p.x<=1200&&p.y>=0&&p.y<=800?std::optional{p}:std::nullopt;
+        }};
+    const auto walk=[&](Vec3 from,Vec3 to){return checked_walking_leg(from,to,100.,.71,floor);};
+    const auto at_door=[&](Vec3 feet){return std::hypot(feet.x-door.x,feet.y-door.y)<=1.;};
+    require(!walk(entrance,door),"the direct approach crosses the building");
+    const auto route=checked_walking_path(entrance,approaches,80.,160,walk,at_door);
+    require(route&&route->size()>2&&at_door(route->back()),
+        "the buffer must find the door around the building from the entrance");
+    for(std::size_t i=1;i<route->size();++i)
+        require(walk((*route)[i-1],(*route)[i]).has_value(),"every leg needs its own walking proof");
+    closed=true;
+    require(!checked_walking_path(entrance,approaches,80.,160,walk,at_door),
+        "a door beyond a solid wall has no walking approach");
+}
 void capsule_route_renewal_keeps_the_turn() {
     const std::vector<Vec3> points{{0,0,0},{300,0,0},{300,600,0}};
     NavigationFollower nav;
@@ -730,7 +754,7 @@ int main() {
     try {
         native_walking_basis();activation_endpoint_arrival();native_agent_and_speed_policy();capsule_speed_bound();manual_and_auto();corners_and_replanning();cancellation_guards();freshness_blocking_and_geometry();arrival_and_explicit_mode_switch();
         chatter_and_turns();manual_without_ground_proof();active_target_following();native_route_failure_feedback();target_read_failure_feedback();speech_output_priority();surface_following_corridor_and_progress();
-        verified_capsule_routes();nearby_target_does_not_require_a_route();capsule_route_renewal_keeps_the_turn();
+        verified_capsule_routes();walking_path_around_a_town_building();nearby_target_does_not_require_a_route();capsule_route_renewal_keeps_the_turn();
         slow_progress_into_a_narrow_interaction();reroute_from_live_position();directional_beacon();rowing_around_obstacles();
         std::cout<<"Navigation follower checks passed\n";return 0;
     } catch(const std::exception& e) {std::cerr<<e.what()<<'\n';return 1;}

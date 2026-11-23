@@ -4,7 +4,10 @@
 #include <array>
 #include <cmath>
 #include <limits>
+#include <map>
+#include <queue>
 #include <string_view>
+#include <tuple>
 #include <utility>
 namespace resonance {
 std::optional<WalkingYawSource> walking_yaw_source(const WalkingBasisFlags& flags) {
@@ -149,6 +152,68 @@ std::optional<Vec3> checked_walking_leg(Vec3 from,Vec3 to,double scale,double fl
         previous=*floor;
     }
     return previous;
+}
+std::optional<std::vector<Vec3>> checked_walking_path(Vec3 start,std::span<const Vec3> approaches,
+        double stride,std::size_t expansion_limit,const std::function<std::optional<Vec3>(Vec3,Vec3)>& leg,
+        const std::function<bool(Vec3)>& arrived) {
+    if(!finite(start)||!std::isfinite(stride)||stride<=0||approaches.empty()||!leg||!arrived||
+       !std::all_of(approaches.begin(),approaches.end(),finite))return {};
+    const auto distance=[](Vec3 a,Vec3 b){return std::hypot(a.x-b.x,a.y-b.y);};
+    const auto distance_to_target=[&](Vec3 feet) {
+        double best=std::numeric_limits<double>::infinity();
+        for(const auto goal:approaches)best=std::min(best,distance(feet,goal));
+        return best;
+    };
+    // Include height so a traversable upper level can reuse an XY cell.
+    using Cell=std::tuple<int,int,double>;
+    using Pending=std::pair<double,std::size_t>;
+    struct Node {Vec3 feet;Cell cell;double cost;std::size_t parent;};
+    std::vector<Node> nodes{{start,{0,0,0},0,0}};
+    std::map<Cell,std::size_t> best{{nodes.front().cell,0}};
+    std::priority_queue<Pending,std::vector<Pending>,std::greater<>> pending;
+    pending.emplace(distance_to_target(start),0);
+    const auto finish=[&](std::size_t index,Vec3 feet) {
+        std::vector<Vec3> path{feet};
+        if(distance(feet,nodes[index].feet)>0.)path.push_back(nodes[index].feet);
+        while(index!=0) {
+            index=nodes[index].parent;
+            path.push_back(nodes[index].feet);
+        }
+        std::reverse(path.begin(),path.end());
+        return path;
+    };
+    constexpr std::array offsets{std::pair{1,0},std::pair{-1,0},std::pair{0,1},std::pair{0,-1},
+        std::pair{1,1},std::pair{1,-1},std::pair{-1,1},std::pair{-1,-1}};
+    while(!pending.empty()&&expansion_limit) {
+        const auto index=pending.top().second;
+        pending.pop();
+        const auto current=nodes[index];
+        if(best.at(current.cell)!=index)continue;
+        --expansion_limit;
+        if(index&&arrived(current.feet))return finish(index,current.feet);
+        for(const auto goal:approaches) {
+            const auto gap=distance(current.feet,goal);
+            if(gap<=stride*.001||gap>2.*stride)continue;
+            const auto feet=leg(current.feet,goal);
+            if(feet&&finite(*feet)&&arrived(*feet))return finish(index,*feet);
+        }
+        const auto [column,row,height]=current.cell;
+        for(const auto [dx,dy]:offsets) {
+            const auto x=column+dx,y=row+dy;
+            const Vec3 sample{start.x+x*stride,start.y+y*stride,current.feet.z};
+            const auto feet=leg(current.feet,sample);
+            if(!feet||!finite(*feet))continue;
+            const Cell cell{x,y,std::round((feet->z-start.z)/(.5*stride))};
+            const auto cost=current.cost+distance(current.feet,*feet);
+            const auto old=best.find(cell);
+            if(old!=best.end()&&nodes[old->second].cost<=cost)continue;
+            const auto next=nodes.size();
+            nodes.push_back({*feet,cell,cost,index});
+            best.insert_or_assign(cell,next);
+            pending.emplace(cost+distance_to_target(*feet),next);
+        }
+    }
+    return {};
 }
 std::optional<WalkingBypass> checked_walking_bypass(const PathSnapshot& route,RouteLocation at,
         Vec3 from,Vec3 normal,double radius,double floor_z,const GroundProbe& probe,double rejoin_lookahead_metres) {

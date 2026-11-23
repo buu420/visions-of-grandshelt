@@ -478,7 +478,7 @@ void start_reloaded() {
 
         const auto folder = std::filesystem::path(dll_path).parent_path();
         set_log_path(folder / L"ResonanceAccess.log");
-        log("START Visions of Grandshelt 0.2.64-dev; Reloaded native mod");
+        log("START Visions of Grandshelt 0.2.65-dev; Reloaded native mod");
         if (sha256(exe_path) != "b8c588e46ebadbe37feca7bdf2da0ae63a8538099d14a53ec0c2241b086e5ffa") {
             log("ERROR unsupported game executable; native reader disabled");
             return;
