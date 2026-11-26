@@ -25,6 +25,8 @@ Use the game's interaction button when Story guides you to a door, switch or per
 
 The mod follows the game's Text Language setting. French, German, Spanish (Spain), Japanese, Korean, Simplified Chinese and Traditional Chinese use the screen reader for displayed subtitles and audio descriptions. English audio descriptions use recordings.
 
+In 0.2.70, the route to Onion Knight's Sanctum of Light continues through Thunderclap's lower exit. The Esper map marker carries guidance through the high trail to Ramuh's encounter. [0.2.70 beta notes](docs/release-notes-0.2.70.md)
+
 In 0.2.69, Story and Destinations take you to the Dwarven Forge from Mt. Thunderclap’s east exit. The Esper map marker leads to the high-trail entrance, and Objects finds chests and medal pickups from the trails that reach them. [0.2.69 beta notes](docs/release-notes-0.2.69.md)
 
 In 0.2.68, Story guides you across Mt. Thunderclap, and Oblivion Palace has routes through the reward doors and back to the world map. Map Markers and Side Quests appear when the game shows a supported marker. [0.2.68 beta notes](docs/release-notes-0.2.68.md)
