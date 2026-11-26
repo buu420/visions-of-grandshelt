@@ -30,6 +30,7 @@ struct JournalScrollInput {
     int quest{};
     unsigned long long at{};
 };
+struct NativeMapMarker;
 const std::string& reader_stage();
 class UnrealReader {
 public:
@@ -112,8 +113,11 @@ private:
         NavigationMode mode;
         bool controller{};
         TravelContinuation continuation;
+        bool esper_marker{};
     };
     std::optional<DestinationLeg> destination_leg_;
+    std::string thunderclap_esper_id_;
+    std::vector<NativeMapMarker> navigation_markers(resonance::unreal::UObject*,std::string_view only_id={});
     std::vector<TravelPassage> destination_crossed_;
     void destination_commands(resonance::unreal::UObject*,unsigned,bool);
     bool suspend_auto_walk_trip();

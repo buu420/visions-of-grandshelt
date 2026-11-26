@@ -3073,7 +3073,36 @@ bool finite_point(Vec3 v) {return std::isfinite(v.x)&&std::isfinite(v.y)&&std::i
 // drawn base icon of a verified kind or as a marker of the exact tracked Sub quest
 // (QuestSubsystem.PreferredQuestId @0x9C, entry bIsMarkedQuestTarget @0xBC). No quest
 // rows are enumerated and no transition destinations are read.
-std::vector<NativeMapMarker> capture_map_markers(UObject* pawn,UObject* game_instance,UObject* minimap_vm,std::string_view only_id) {
+bool thunderclap_esper_marker(UObject* actor) {
+    return live(actor)&&path(actor)==L"/Game/Map/Wld/GD/Wld_GD.Wld_GD:PersistentLevel.BP_DestAreaBox_C_2";
+}
+std::optional<NativeMapMarker> capture_thunderclap_esper(UObject* pawn,std::string_view selected_esper) {
+    if(selected_esper.empty())return {};
+    auto* world=actor_world(pawn);
+    if(!world||current_map(world)!=3050)return {};
+    try {
+        constexpr std::wstring_view level=L"/Game/Map/Dng/04Dir/04Dir_40/EV/"
+            L"Dng_04Dir_40_01_EV.Dng_04Dir_40_01_EV:PersistentLevel.";
+        const auto registry=registered_story_gimmicks(world);
+        auto* encounter=registered_gimmick(registry,world,10,L"/Script/mucha.CPP_MapGimmick_EventTrigger");
+        if(encounter&&path(encounter)==std::wstring(level)+L"CPP_MapGimmick_EventTrigger_1"&&
+           story_actor_available(pawn,encounter))
+            if(const auto position=active_story_trigger(pawn,encounter,"Summon620_Ramuh_02"))
+                return NativeMapMarker{std::string(selected_esper),tr("Esper"),encounter,*position};
+        auto* retry=registered_gimmick(registry,world,7,L"/Script/mucha.CPP_MapGimmick_InteractEventTrigger");
+        if(retry&&path(retry)==std::wstring(level)+L"BP_MapGimmick_InteractEventTrigger_C_2"&&
+           story_actor_available(pawn,retry)&&getter<unsigned char>(retry,L"GetGimmickCondition")==0&&
+           story_event_matches(retry,"Summon620_Ramuh_NF"))
+            if(const auto prompt=capture_interaction_box(retry,pawn))
+                return NativeMapMarker{std::string(selected_esper),tr("Esper"),retry,prompt->center};
+    } catch(const std::exception& error) {
+        static NativeProblemDeduplicator reported;
+        if(reported.accept(error.what()))log(std::string("FIELD Esper site unavailable: ")+error.what());
+    }
+    return {};
+}
+std::vector<NativeMapMarker> capture_map_markers(UObject* pawn,UObject* game_instance,UObject* minimap_vm,
+        std::string_view only_id,std::string_view selected_esper) {
     std::vector<NativeMapMarker> result;
     try {
         auto* world=actor_world(pawn);
@@ -3178,8 +3207,11 @@ std::vector<NativeMapMarker> capture_map_markers(UObject* pawn,UObject* game_ins
             if(!live(actor)||actor==pawn||actor_world(actor)!=world||!story_actor_available(pawn,actor))continue;
             const auto position=tracked_actor_position(actor);
             if(!position||!finite_point(*position))continue;
-            // The minimap projects the same root location; clipped entries are not shown.
-            if(!side_quest&&!edge&&!marker_within_minimap_range(std::hypot(position->x-origin->x,position->y-origin->y),
+            auto marker_id=marker_identity_text({side_quest,side_quest?*tracked:-1,id,type,key});
+            // A selected Esper route can leave the minimap crop while walking
+            // around the mountain. Its entry must still pass the native display checks.
+            const bool retained=marker_id==selected_esper&&thunderclap_esper_marker(actor);
+            if(!side_quest&&!edge&&!retained&&!marker_within_minimap_range(std::hypot(position->x-origin->x,position->y-origin->y),
                 *projection,*zoom,range_x,range_y))continue;
             std::string label;
             if(side_quest)label=tracked_title;
@@ -3190,7 +3222,7 @@ std::vector<NativeMapMarker> capture_map_markers(UObject* pawn,UObject* game_ins
             }
             if(label.empty())continue;
             NativeMapMarker marker;
-            marker.id=marker_identity_text({side_quest,side_quest?*tracked:-1,id,type,key});
+            marker.id=std::move(marker_id);
             marker.label=std::move(label);
             marker.actor=actor;
             marker.position=*position;

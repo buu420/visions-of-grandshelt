@@ -1152,7 +1152,7 @@ UObject* actor_world(UObject* actor) {
     auto* world=object(level,L"OwningWorld");
     return valid(world)&&is(world,L"/Script/Engine.World")?world:nullptr;
 }
-std::vector<NativeMapMarker> presented_map_markers(UObject* pawn,std::string_view only_id={}) {
+std::vector<NativeMapMarker> presented_map_markers(UObject* pawn,std::string_view only_id,std::string_view selected_esper) {
     auto* world=actor_world(pawn);
     auto* instance=object(world,L"OwningGameInstance");
     auto* controller=object(pawn,L"Controller");
@@ -1176,7 +1176,7 @@ std::vector<NativeMapMarker> presented_map_markers(UObject* pawn,std::string_vie
         if(model&&model!=vm)return {};
         model=vm;
     }
-    return model?capture_map_markers(pawn,instance,model,only_id):std::vector<NativeMapMarker>{};
+    return model?capture_map_markers(pawn,instance,model,only_id,selected_esper):std::vector<NativeMapMarker>{};
 }
 UObject* nav_library(UObject* pawn) {
     auto* world=actor_world(pawn);if(!world)return nullptr;
@@ -1798,6 +1798,10 @@ constexpr auto thunderclap_high_gate=
     L"/Game/Map/Wld/GD/Wld_GD.Wld_GD:PersistentLevel.BP_MapTransitionTrigger_C_10";
 bool thunderclap_high_entrance(UObject* target) {
     return path(target)==thunderclap_high_gate&&read<int>(target,L"m_UniqueId")==7;
+}
+bool thunderclap_lower_exit(UObject* target) {
+    return path(target)==L"/Game/Map/Dng/04Dir/04Dir_40/GD/Dng_04Dir_40_01_GD.Dng_04Dir_40_01_GD:"
+        L"PersistentLevel.BP_MapTransitionTrigger_C_3"&&read<int>(target,L"m_UniqueId")==2;
 }
 std::optional<Vec3> thunderclap_collectible_approach(UObject* target) {
     constexpr std::wstring_view level=L"/Game/Map/Dng/04Dir/04Dir_40/GD/"
@@ -3496,6 +3500,7 @@ std::optional<direct_nav::Path> surveyed_walking_turn(UObject* pawn,UObject* tar
     const bool lower_chest=name.starts_with(mountain)&&
         ((id==24&&std::wstring_view(name).substr(mountain.size())==L"BP_MapGimmick_TreasureBox002_C_1")||
          (id==25&&std::wstring_view(name).substr(mountain.size())==L"BP_MapGimmick_TreasureBox002_C_2"));
+    const bool lower_exit=id==2&&thunderclap_lower_exit(target);
     const bool tower_chamber=tower_chamber_return(target);
     const bool lower_tower_portal=id==2&&name==L"/Game/Map/Dng/10Cry/10Cry_40/GD/Dng_10Cry_40_01_GD.Dng_10Cry_40_01_GD:"
         L"PersistentLevel.BP_MapTransitionTrigger_C_4";
@@ -3514,7 +3519,7 @@ std::optional<direct_nav::Path> surveyed_walking_turn(UObject* pawn,UObject* tar
         if(route)prefix_legs=1;
         return route;
     }
-    if(!reizan&&!thunderclap&&!lower_chest&&!tower_chamber&&!middle_reach&&!lower_tower_portal)return {};
+    if(!reizan&&!thunderclap&&!lower_chest&&!lower_exit&&!tower_chamber&&!middle_reach&&!lower_tower_portal)return {};
     const auto interaction=(thunderclap||lower_chest)&&arrival?capture_interaction_box(target,pawn):std::nullopt;
     if((thunderclap||lower_chest)&&!interaction)return {};
     constexpr ActivationBox lower{{-9285.,8820.,1445.},{335.,610.,180.},0};
@@ -3555,7 +3560,7 @@ std::optional<direct_nav::Path> surveyed_walking_turn(UObject* pawn,UObject* tar
     else if(middle_reach&&start.x<920.&&inside_box(middle_approach,start)){lane=&middle_approach;turns=middle_stairway;}
     else if(lower_tower_portal&&start.x<9360.&&inside_box(portal_walkway,start)){lane=&portal_walkway;turns=portal_turn;}
     else if(thunderclap&&start.y<2110.&&inside_box(descent,start)){lane=&descent;turns=ramp_turn;}
-    else if(lower_chest&&start.x>3035.&&inside_box(side_descent,start)){lane=&side_descent;turns=side_turn;}
+    else if((lower_chest||lower_exit)&&start.x>3035.&&inside_box(side_descent,start)){lane=&side_descent;turns=side_turn;}
     else if(reizan&&inside_box(lower,start)&&start.x<-9095.){lane=&lower;turns=low_turn;}
     else if(reizan&&inside_box(middle,start)&&start.y<8415.){lane=&middle;turns=mid_turn;}
     else if(reizan&&inside_box(upper,start)&&(start.x<-6810.||start.y>10540.)){lane=&upper;turns=high_turn;}
@@ -4698,6 +4703,15 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
     }
     if(earth_shrine_entrance(target)&&actor_world(target)==world)
         if(auto route=earth_shrine_door_approach(p,target,*start,*axes,*scale,ground_check,path_id))return route;
+    if(transition&&actor_world(target)==world&&read<int>(target,L"m_UniqueId")==74&&
+       path(target)==L"/Game/Map/Wld/GD/Wld_04Dir_GD.Wld_04Dir_GD:PersistentLevel.BP_MapTransitionTrigger_C_3") {
+        // The diagonal mesh approach clips the sanctum wall. Cross the
+        // forecourt to the open side before walking into the trigger.
+        constexpr ActivationBox forecourt{{13378.,-1562.,-45.},{230.,195.,60.},0};
+        constexpr std::array turns{Vec3{13228.75,-1455.54,-34.47},Vec3{13228.75,-1689.74,-70.83}};
+        if(auto route=verified_trigger_turns(p,target,*start,forecourt,turns,*axes,*scale,ground_check,path_id,640,
+            log_query?"Sanctum forecourt":""))return route;
+    }
     if(passage_map(p)==PassageMap::Mitra&&world==actor_world(target)) {
         // The mesh route crosses an uncovered edge beside this stair.
         // Check the walked centerline and the native doorstep interaction.
@@ -5320,6 +5334,9 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
         // Approaching the high-trail gate at the near edge of its trigger
         // cuts the inside wall. Aim for the open surface farther in.
         else if(thunderclap_high_entrance(target))road=Vec3{17545.,2899.,589.};
+        // The exit box overlaps disconnected polygons. Approach from the
+        // lower trail's connected floor on its east side.
+        else if(thunderclap_lower_exit(target))road=Vec3{-306.513,-16556.625,7.054};
         else if(const auto zoldaad=zoldaad_world_approach(target))road=*zoldaad;
         else if(tunnel_exit)road=Vec3{-10644,14960,-1087};
         else if(zoldaad_dungeon_castle_exit(target))road=Vec3{4000,-47520,74.04};
@@ -6200,17 +6217,28 @@ void UnrealReader::apply_story_update(const StoryUpdate& update) {
     target_id_.clear();target_type_.clear();
     for(auto& [key,selection]:navigation_selections_)selection.targets[story_category].clear();
 }
+std::vector<NativeMapMarker> UnrealReader::navigation_markers(UObject* pawn,std::string_view only_id) {
+    if(!thunderclap_esper_id_.empty()&&(only_id.empty()||only_id==thunderclap_esper_id_)) {
+        if(auto encounter=capture_thunderclap_esper(pawn,thunderclap_esper_id_)) {
+            if(!only_id.empty())return {std::move(*encounter)};
+            auto markers=presented_map_markers(pawn,{},thunderclap_esper_id_);
+            markers.push_back(std::move(*encounter));
+            return markers;
+        }
+    }
+    return presented_map_markers(pawn,only_id,thunderclap_esper_id_);
+}
 resonance::unreal::UObject* UnrealReader::refresh_navigation_target(resonance::unreal::UObject* pawn) {
     active_target_.reset();
     navigation_target_reason_.clear();
     if(!valid(pawn)||target_id_.empty())return nullptr;
     const auto world=utf8(path(actor_world(pawn))),owner=utf8(path(pawn));
     if(navigation_category_>=markers_category) {
-        const auto markers=presented_map_markers(pawn,target_id_);
+        const auto markers=navigation_markers(pawn,target_id_);
         for(const auto& marker:markers) {
             if(marker.id!=target_id_||marker.side_quest!=(navigation_category_==side_quests_category))continue;
-            if(!marker.side_quest&&
-               path(marker.actor)==L"/Game/Map/Wld/GD/Wld_GD.Wld_GD:PersistentLevel.BP_DestAreaBox_C_2") {
+            if(!marker.side_quest&&thunderclap_esper_marker(marker.actor)) {
+                thunderclap_esper_id_=marker.id;
                 // The Esper pin represents the high trail region. Its centre
                 // is in the air, so route to the live entrance to that trail.
                 auto* gate=UObjectGlobals::StaticFindObject(thunderclap_high_gate);
@@ -7357,7 +7385,7 @@ void UnrealReader::destination_commands(UObject* pawn,unsigned commands,bool cat
 }
 
 void UnrealReader::observe_destination(UObject* pawn,bool battle) {
-    if(!destination_leg_||navigation_category_!=destination_category)return;
+    if(!destination_leg_||navigation_category_!=(destination_leg_->esper_marker?markers_category:destination_category))return;
     DWORD foreground{};GetWindowThreadProcessId(GetForegroundWindow(),&foreground);
     if(foreground!=GetCurrentProcessId()||!speech_.ready()) {
         destination_leg_.reset();
@@ -7381,6 +7409,31 @@ void UnrealReader::observe_destination(UObject* pawn,bool battle) {
         destination_crossed_.clear();
         speech_.say(tr(handoff==TravelHandoff::Stopped?"Automatic walking stopped. Start it again to continue.":
             "Destination kept. Start guidance to find a route from here."));
+        return;
+    }
+    if(previous.esper_marker) {
+        const auto guard=capture_navigation_guard();
+        if(guard.pawn!=pawn||!guard.foreground||!guard.eligible||!guard.ground)return;
+        const bool automatic=previous.mode==NavigationMode::Automatic;
+        if(automatic) {
+            if(const auto issue=automatic_resume_issue(guard,previous.controller);!issue.empty()) {
+                speech_.say(tr(issue));return;
+            }
+        } else if(previous.controller&&(!guard.controller_allowed||controller_backend_status().connected!=1)) {
+            speech_.say(tr("Destination kept. Start guidance when controller navigation is available."));return;
+        }
+        target_id_=thunderclap_esper_id_;
+        target_type_.clear();
+        if(navigation_selections_.size()>=64)navigation_selections_.clear();
+        navigation_selections_[field_selection_context(pawn)].targets[markers_category]=target_id_;
+        const auto frame=navigation_frame(pawn,true,guard.eligible,guard.foreground,guard.physical_input,automatic);
+        const auto update=navigation_.start(previous.mode,frame);
+        navigation_controller_=update.mode!=NavigationMode::Off&&previous.controller;
+        navigation_output(update);
+        if(handoff==TravelHandoff::BattleReturn&&(update.mode!=NavigationMode::Off||update.reached_target))
+            destination_leg_=DestinationLeg{*current,previous.passage,previous.mode,previous.controller,{},true};
+        log("TRAVEL Esper marker resumed map="+std::to_string(current->point.map)+
+            " entry="+std::to_string(current->point.entry));
         return;
     }
     const auto name=localized_map_title(destination_map_,current_language());
@@ -7642,6 +7695,8 @@ void UnrealReader::tick(unsigned commands) {
         if(title) {
             area_browse_.reset();
             cancel_auto_walk_trip();
+            if(destination_leg_&&destination_leg_->esper_marker)destination_leg_.reset();
+            thunderclap_esper_id_.clear();
         }
         if(title||!pause_field_guidance()) {
             target_id_.clear();target_type_.clear();
@@ -7967,7 +8022,7 @@ void UnrealReader::tick(unsigned commands) {
     const bool entering_markers=(commands&PreviousCategory)?navigation_category_==0:
         ((commands&NextCategory)&&navigation_category_==destination_category);
     const auto markers=entering_markers||navigation_category_>=markers_category?
-        presented_map_markers(guard.pawn):std::vector<NativeMapMarker>{};
+        navigation_markers(guard.pawn):std::vector<NativeMapMarker>{};
     const auto category_available=[&](std::size_t category) {
         if(category<markers_category)return true;
         return std::any_of(markers.begin(),markers.end(),[category](const auto& marker) {
@@ -7983,6 +8038,7 @@ void UnrealReader::tick(unsigned commands) {
     std::string stopped;
     const auto stop_for_selection=[&] {
         story_walk_.reset();
+        if(destination_leg_&&destination_leg_->esper_marker)destination_leg_.reset();
         if(navigation_.mode()==NavigationMode::Automatic)stopped=tr("Automatic walking off.")+" ";
         else if(navigation_.mode()==NavigationMode::Manual)stopped=tr("Guidance off.")+" ";
         stop_navigation("");
@@ -8058,8 +8114,10 @@ void UnrealReader::tick(unsigned commands) {
             }
             if(navigation_.mode()==requested) {
                 if(commands&ControllerOrigin){speech_.say(tr(requested==NavigationMode::Automatic?"Automatic walking is already on.":"Guidance is already on."));return true;}
+                if(destination_leg_&&destination_leg_->esper_marker)destination_leg_.reset();
                 navigation_output(navigation_.toggle(requested,{}));return true;
             }
+            if(destination_leg_&&destination_leg_->esper_marker)destination_leg_.reset();
             if(requested==NavigationMode::Automatic&&!guard.actuator) {
                 speech_.say(trf("Automatic walking unavailable. {0}",{tr(guard.actuator_reason)}));return true;
             }
@@ -8075,7 +8133,8 @@ void UnrealReader::tick(unsigned commands) {
             if(navigation_category_==story_category) {
                 if(requested==NavigationMode::Automatic)arm_story_walk(guard.pawn,controller_start,started);
                 else story_walk_.reset();
-            } else if(started.mode!=NavigationMode::Off) {
+            } else if(started.mode!=NavigationMode::Off||
+                      (started.reached_target&&navigation_category_==markers_category)) {
                 navigation_field_exit_.reset();
                 if(is(live_target,L"/Script/mucha.CPP_MapTransitionTrigger")) {
                     const auto here=loaded_travel_location(guard.pawn);
@@ -8085,6 +8144,11 @@ void UnrealReader::tick(unsigned commands) {
                        target_id_==utf8(path(exit->actor))+exit->route_key)
                         navigation_field_exit_=FieldExit{*here,{here->point.map,*trigger,
                             {exit->destination_map,*exit->destination_point}}};
+                    else if(here&&here->point.map==1000&&exit&&trigger==7&&exit->destination_map==3050&&
+                            exit->destination_point==1&&thunderclap_high_entrance(live_target)&&
+                            navigation_category_==markers_category&&target_id_==thunderclap_esper_id_)
+                        destination_leg_=DestinationLeg{*here,{1000,*trigger,{3050,1}},requested,
+                            (commands&ControllerOrigin)!=0,{},true};
                 }
             }
         }

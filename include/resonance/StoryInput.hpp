@@ -13,7 +13,9 @@ struct NativeMapMarker { std::string id; std::string label; unreal::UObject* act
 // minimap_vm is the caller's current, owned and displayed CPP_VM_MiniMap. only_id limits the
 // read to one registry entry. Nothing is cached, loaded, written or executed.
 std::vector<NativeMapMarker> capture_map_markers(unreal::UObject* pawn,unreal::UObject* game_instance,
-    unreal::UObject* minimap_vm,std::string_view only_id={});
+    unreal::UObject* minimap_vm,std::string_view only_id={},std::string_view selected_esper={});
+bool thunderclap_esper_marker(unreal::UObject* actor);
+std::optional<NativeMapMarker> capture_thunderclap_esper(unreal::UObject* pawn,std::string_view selected_esper);
 // Read-only game-thread capture of current main QuestData, active area-wide
 // quest actors and audited opening continuations. Never loads future assets.
 StorySnapshot capture_story_input(resonance::unreal::UObject* controlled_pawn);
