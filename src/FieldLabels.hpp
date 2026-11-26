@@ -86,6 +86,12 @@ inline const char* exact_placement_label(AreaKind kind,std::wstring_view actor,i
             L"PersistentLevel.BP_MapGimmick_InteractEventTrigger_C_2","Water ley line"},
         {AreaKind::Interaction,9,L"/Game/Map/Dng/04Dir/04Dir_40/EV/Dng_04Dir_40_01_EV.Dng_04Dir_40_01_EV:"
             L"PersistentLevel.BP_MapGimmick_InteractEventTrigger_C_3","Lightning ley line"},
+        {AreaKind::Interaction,2,L"/Game/Map/Dng/04Dir/04Dir_40/EV/Dng_04Dir_40_01_EV.Dng_04Dir_40_01_EV:"
+            L"PersistentLevel.CPP_MapGimmick_InteractEventTrigger_2","Lid's ladder shortcut"},
+        {AreaKind::Interaction,8,L"/Game/Map/Dng/04Dir/04Dir_40/EV/Dng_04Dir_40_01_EV.Dng_04Dir_40_01_EV:"
+            L"PersistentLevel.BP_MapGimmick_InteractEventTrigger_C_1","White tree"},
+        {AreaKind::Interaction,7,L"/Game/Map/Dng/04Dir/04Dir_40/EV/Dng_04Dir_40_01_EV.Dng_04Dir_40_01_EV:"
+            L"PersistentLevel.BP_MapGimmick_InteractEventTrigger_C_2","Gravestone"},
         {AreaKind::Interaction,8,L"/Game/Map/Town/08Gro/08Gro_01/EV/Town_08Gro_01_01_EV.Town_08Gro_01_01_EV:"
             L"PersistentLevel.BP_MapGimmick_InteractEventTrigger_C_1","Quest prompt in the inn"},
         {AreaKind::Interaction,2,L"/Game/Map/Dng/01Gra/01Gra_44/EV/Dng_01Gra_44_01_EV.Dng_01Gra_44_01_EV:"
@@ -110,6 +116,10 @@ inline const char* facility_passage(int map,int exit,int arrival) {
         {2030,4,121,"Door to the weapon and armor shop"}, {2030,3,21,"Door from the weapon and armor shop to the harbor"},
         {2030,6,122,"Door to the inn"}, {2030,5,22,"Door from the inn to the harbor"},
         {2030,8,123,"Door to the harbor house"}, {2030,7,23,"Door from the house to the harbor"},
+        {2031,2,1,"Passage to the first reward chamber"}, {2031,1,5,"Return to the palace hall"},
+        {2031,3,2,"Passage to the second reward chamber"}, {2031,6,6,"Return to the palace hall"},
+        {2031,4,3,"Passage to the third reward chamber"}, {2031,7,7,"Return to the palace hall"},
+        {2031,5,4,"Passage to the fourth reward chamber"}, {2031,8,8,"Return to the palace hall"},
         {2040,1,120,"Door to the inn"}, {2040,3,121,"Door to the weapon and armor shop"}, {2040,4,122,"Door to the item shop"},
         {2040,0,20,"Door from the inn to the street"}, {2040,7,21,"Door from the weapon and armor shop to the street"},
         {2040,8,22,"Door from the item shop to the street"},

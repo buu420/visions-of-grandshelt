@@ -23,7 +23,7 @@ enum Command : unsigned { Repeat=1, Previous=2, Next=4, Route=8, Screen=16, Help
     PreviousPageTarget=1024,NextPageTarget=2048,ControllerOrigin=4096,ReviewNavigation=8192,StopNavigation=16384,
     BattleHp=1u<<15,BattleMp=1u<<16,BattleGauges=1u<<17,BattleBuffs=1u<<18,BattleDebuffs=1u<<19,
     BattlePanelOpen=1u<<20,BattlePanelClose=1u<<21,BattleVitals=1u<<22,BattleEffects=1u<<23,
-    BattleInterrupt=1u<<24,BattleInputKey=1u<<25,ResultUp=1u<<26,ResultDown=1u<<27 };
+    BattleInterrupt=1u<<24,BattleInputKey=1u<<25,ResultUp=1u<<26,ResultDown=1u<<27,AreaSelectionReady=1u<<28 };
 inline constexpr unsigned battle_only_commands=BattleInterrupt|BattleInputKey|ResultUp|ResultDown;
 struct JournalScrollInput {
     unreal::UObject* layout{};
@@ -86,7 +86,7 @@ private:
     std::string proximity_world_,proximity_player_;
     StoryTracker story_;
     std::atomic<bool> story_dirty_{true};
-    struct TargetSelection {std::array<std::string,7> targets;};
+    struct TargetSelection {std::array<std::string,9> targets;};
     std::unordered_map<std::string,TargetSelection> navigation_selections_;
     std::string navigation_selection_context_;
     std::size_t navigation_category_{};
@@ -96,9 +96,10 @@ private:
         std::uint64_t revision{};
         std::unordered_map<std::string,AreaRouteVerdict> routes;
         std::vector<std::string> checks;
+        Vec3 origin;
+        double capsule_radius{};
         std::size_t next{}, category{};
         unsigned request{};
-        bool announced_wait{}, completed{};
         std::uint64_t probes{}, total_us{}, max_us{};
     };
     std::optional<AreaBrowse> area_browse_;

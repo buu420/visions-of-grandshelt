@@ -736,6 +736,13 @@ void directional_beacon() {
     require(route_beacon_interval_ms(0)==220&&route_beacon_interval_ms(1e9)<=1200,
         "the cadence must allow the cue to finish and remain bounded at long distances");
 
+    NavigationFollower detour;
+    f=at(0,{0,0,0},{{0,0,0},{4000,0,0},{4000,200,0},{0,200,0}});
+    f.use_beacon=true;
+    const auto around_wall=detour.start(Mode::Manual,f);
+    require(around_wall.beacon&&speech(around_wall).find("Walking route is 82 metres.")!=std::string::npos,
+        "a long detour to an adjacent target must explain the full walking distance at beacon start");
+
     NavigationFollower steep;
     f=at(0,{0,0,0},{{0,0,0},{100,0,1000}});
     f.use_beacon=true;

@@ -599,6 +599,7 @@ struct RouteBeaconOutput::Impl {
         constexpr auto buffer_timeout=650ms;
         std::uint64_t seen_generation{};
         std::optional<Clock::time_point> last_pulse;
+        double last_played_azimuth{};
         int last_reported_angle{},last_reported_spacing{};
         std::unique_lock lock(mutex);
         while(!quit) {
@@ -624,7 +625,11 @@ struct RouteBeaconOutput::Impl {
                 continue;
             }
             const auto sample=*current;
-            const int spacing=static_cast<int>(route_beacon_interval_ms(sample.cue.remaining_metres));
+            const double azimuth=std::remainder(sample.cue.azimuth_degrees,360.);
+            const bool sharp_turn=last_pulse&&sample.mode==NavigationMode::Manual&&
+                std::abs(std::remainder(azimuth-last_played_azimuth,360.))>=60.;
+            const auto cadence=route_beacon_interval_ms(sample.cue.remaining_metres);
+            const int spacing=static_cast<int>(sharp_turn?std::min(cadence,300u):cadence);
             if(last_pulse) {
                 if(now-*last_pulse>=buffer_timeout&&player.busy())
                     throw std::runtime_error("WinMM beacon buffer did not finish");
@@ -634,7 +639,6 @@ struct RouteBeaconOutput::Impl {
                     continue;
                 }
             }
-            const double azimuth=std::remainder(sample.cue.azimuth_degrees,360.);
             const int nearest=bank.angle(azimuth);
             // A cue just behind the side already needs the rear pitch.
             const int angle=azimuth>90.&&nearest==90?95:
@@ -646,6 +650,7 @@ struct RouteBeaconOutput::Impl {
                 const bool report=!last_pulse||std::abs(std::remainder(angle-last_reported_angle,360.))>=30||
                     std::abs(spacing-last_reported_spacing)>=100;
                 last_pulse=Clock::now();
+                last_played_azimuth=azimuth;
                 if(report) {
                     const auto mode=sample.mode==NavigationMode::Automatic?"automatic":"manual";
                     log(std::string("BEACON pulse mode=")+mode+" azimuth="+std::to_string(angle)+

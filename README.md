@@ -25,6 +25,8 @@ Use the game's interaction button when Story guides you to a door, switch or per
 
 The mod follows the game's Text Language setting. French, German, Spanish (Spain), Japanese, Korean, Simplified Chinese and Traditional Chinese use the screen reader for displayed subtitles and audio descriptions. English audio descriptions use recordings.
 
+In 0.2.68, Story guides you across Mt. Thunderclap, and Oblivion Palace has routes through the reward doors and back to the world map. Map Markers and Side Quests appear when the game shows a supported marker. [0.2.68 beta notes](docs/release-notes-0.2.68.md)
+
 In 0.2.65, People and Exits can find reachable targets around buildings while you are still at a town entrance. Felicitas’s inn and shop doors also appear right after you return to the street. [0.2.65 beta notes](docs/release-notes-0.2.65.md)
 
 In 0.2.64, town navigation improves routes through Grandport and Felicitas, adds reachable bulletin boards, streetcar stops and portals, and keeps target browsing responsive when NPCs move. [0.2.64 beta notes](docs/release-notes-0.2.64.md)

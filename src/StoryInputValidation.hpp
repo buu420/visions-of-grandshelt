@@ -143,6 +143,12 @@ inline bool siren_story_objective(int map,int quest,std::optional<int> progress,
         return point.role==0&&point.map_kind==0&&point.map_id==goal;
     });
 }
+inline bool thunderclap_crossing(int map,int quest,std::optional<int> progress,
+        std::span<const FilteredPoint> points) {
+    return (map==1000||map==3050)&&quest==1002&&progress==2040&&std::any_of(points.begin(),points.end(),[](const auto& point) {
+        return point.role==0&&point.map_kind==0&&point.map_id==3050&&!point.object_target;
+    });
+}
 inline std::optional<SirenStoryLeg> siren_story_leg(int map,int quest,std::optional<int> progress,int area,
         Vec3 position,std::span<const FilteredPoint> points,std::optional<bool> entrance_open) {
     if(!siren_story_objective(map,quest,progress,points)||area<0||area>7||
@@ -397,6 +403,68 @@ inline void fail_story_capture(StorySnapshot& snapshot) {
         snapshot.ready=false;snapshot.objective.clear();snapshot.objective_id.clear();
         snapshot.unavailable_reason=tr("The native current story objective could not be read safely.");
     }
+}
+// Native minimap markers (story-marker-presentation-20261101/PRESENTATION.md section 3).
+// Edge-pinned entries are always drawn; other entries are clipped by the range
+// rectangle after projection and rotation. The inscribed circle never admits an
+// entry the game clips, so a conservative test discloses no undrawn marker.
+inline bool marker_within_minimap_range(double planar_distance,double projection_scale,double zoom_scale,
+        double range_x,double range_y) {
+    if(!std::isfinite(planar_distance)||planar_distance<0||!std::isfinite(projection_scale)||projection_scale<=0||
+       !std::isfinite(zoom_scale)||zoom_scale<=0||!std::isfinite(range_x)||!std::isfinite(range_y)||
+       range_x<=0||range_y<=0)return false;
+    return planar_distance*projection_scale*zoom_scale<=std::min(range_x,range_y)*.5;
+}
+// Shipped minimap appearance and icon bindings. Capture also checks that the game draws the entry.
+// nullptr: not a default-displayed kind; "": a person marker labelled from the actor.
+inline const char* marker_kind_label(std::wstring_view interact_tag) {
+    constexpr std::wstring_view prefix=L"Field.Object.Interact.Type.";
+    if(!interact_tag.starts_with(prefix))return nullptr;
+    const auto kind=interact_tag.substr(prefix.size());
+    if(kind==L"Shop.Vision")return "Vision shop";
+    if(kind==L"Shop.Inn")return "Inn";
+    if(kind==L"Shop.Tool")return "Item shop";
+    if(kind==L"Shop.Weapon")return "Weapon shop";
+    if(kind==L"Shop.Armor")return "Armor shop";
+    if(kind==L"Shop.Accessory")return "Accessory shop";
+    if(kind==L"Shop.Chocobo")return "Chocobo shop";
+    if(kind==L"Shop.DLC")return "Delivery shop";
+    if(kind==L"Shop.Bank")return "Bank";
+    if(kind==L"Shop.Fortunetelling")return "Fortune teller";
+    if(kind==L"Shop.Music")return "Music shop";
+    if(kind==L"Shop.Race")return "Chocobo race";
+    if(kind==L"Save")return "Save point";
+    if(kind==L"MythicalBeast")return "Esper";
+    if(kind==L"Colosseum")return "Colosseum";
+    if(kind==L"Landmark")return "Landmark";
+    if(kind==L"Talk")return "";
+    return nullptr;
+}
+// Stable marker identity: the registry id, typed map key and, for a tracked
+// side quest, the quest id. Registry ids are stable while the area is loaded.
+struct MarkerIdentity { bool side_quest{}; int quest{-1}; int object{-1}; std::uint8_t type{}; int key{-1}; };
+inline std::string marker_identity_text(const MarkerIdentity& m) {
+    return (m.side_quest?"side-quest:"+std::to_string(m.quest)+":":std::string("marker:"))+
+        std::to_string(m.object)+":"+std::to_string(m.type)+":"+std::to_string(m.key);
+}
+// The registry id inside a marker identity, so a refresh can read one entry.
+inline std::optional<int> marker_identity_object(std::string_view id) {
+    std::size_t skip=0;
+    if(id.starts_with("marker:"))skip=1;
+    else if(id.starts_with("side-quest:"))skip=2;
+    else return {};
+    std::size_t start=0;
+    for(std::size_t i=0;i<skip;++i) {
+        const auto colon=id.find(':',start);
+        if(colon==std::string_view::npos)return {};
+        start=colon+1;
+    }
+    const auto end=id.find(':',start);
+    const auto digits=id.substr(start,end==std::string_view::npos?std::string_view::npos:end-start);
+    if(digits.empty()||digits.size()>9||!std::all_of(digits.begin(),digits.end(),[](char c){return c>='0'&&c<='9';}))return {};
+    int value=0;
+    for(const char c:digits)value=value*10+(c-'0');
+    return value;
 }
 template<class Property> class ScopedNativeValue {
     Property* property_;

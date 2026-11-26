@@ -663,6 +663,8 @@ void journal_presentation(UObject* journal,UObject* model,UObject* row,const Jou
     auto* row_model=blueprint_object(row,journal_row,L"VM_QuestData");
     const auto quest=read<int>(row_model,L"QuestId",L"IntProperty");
     if(!quest||*quest<=0||quest!=read<int>(model,L"FocusQuestId",L"IntProperty"))return;
+    if(is(row_model,L"/Script/mucha.CPP_VM_QuestData")&&boolean(row_model,L"bIsPreferred",false))
+        append_menu_text(snapshot.label,tr("Tracked"));
     auto* info=blueprint_object(journal,journal_class,L"WBP_Journal_QuestInfo");
     if(!presented_within(info,journal)||
        quest!=read<int>(blueprint_object(info,journal_info,L"VM_QuestData"),L"QuestId",L"IntProperty"))return;
@@ -1102,8 +1104,10 @@ std::optional<WalkingAxes> walking_input_axes(UObject* pawn,std::string* reason=
 }
 constexpr std::size_t story_category=5;
 constexpr std::size_t destination_category=6;
-constexpr std::array<const char*,7> target_categories={
-    "All","People","Objects","Exits, doors and ladders","Save points","Story","Destinations"};
+constexpr std::size_t markers_category=7;
+constexpr std::size_t side_quests_category=8;
+constexpr std::array<const char*,9> target_categories={
+    "All","People","Objects","Exits, doors and ladders","Save points","Story","Destinations","Map Markers","Side Quests"};
 struct Target { TargetSnapshot snapshot; UObject* actor; double distance;std::size_t category;std::wstring type;std::optional<Vec3> position;bool story{};std::string story_detail; };
 std::optional<StorySpatialContext> story_spatial_context(UObject* pawn) {
     auto* world=actor_world(pawn);
@@ -1147,6 +1151,32 @@ UObject* actor_world(UObject* actor) {
     if(!valid(level)||!is(level,L"/Script/Engine.Level"))return nullptr;
     auto* world=object(level,L"OwningWorld");
     return valid(world)&&is(world,L"/Script/Engine.World")?world:nullptr;
+}
+std::vector<NativeMapMarker> presented_map_markers(UObject* pawn,std::string_view only_id={}) {
+    auto* world=actor_world(pawn);
+    auto* instance=object(world,L"OwningGameInstance");
+    auto* controller=object(pawn,L"Controller");
+    if(!world||!instance||!is(controller,L"/Script/Engine.PlayerController")||!get_bool(controller,L"IsLocalPlayerController")||
+       get_object(controller,L"K2_GetPawn")!=pawn)return {};
+    auto* field=top_widget();
+    if(!is(field,L"/Game/UI/Field/Widget/WBP_FieldLayout.WBP_FieldLayout_C"))return {};
+    constexpr auto minimap_widget=L"/Game/UI/Field/MiniMap/Widget/WBP_MiniMap.WBP_MiniMap_C";
+    UObject* model=nullptr;
+    for(auto* widget:find(L"WBP_MiniMap_C")) {
+        if(!is(widget,minimap_widget)||get_object(widget,L"GetOwningPlayer")!=controller)continue;
+        // The live instance belongs to the active HUD through its nested widget trees.
+        auto* owner=widget;
+        for(int depth=0;owner!=field&&valid(owner)&&depth<8;++depth) {
+            if(is(owner,L"/Script/UMG.UserWidget")&&!visible(owner))break;
+            owner=owner->GetOuterPrivate();
+        }
+        if(owner!=field||!visible(field))continue;
+        auto* vm=blueprint_object(widget,minimap_widget,L"VM_MiniMap");
+        if(!is(vm,L"/Script/mucha.CPP_VM_MiniMap"))continue;
+        if(model&&model!=vm)return {};
+        model=vm;
+    }
+    return model?capture_map_markers(pawn,instance,model,only_id):std::vector<NativeMapMarker>{};
 }
 UObject* nav_library(UObject* pawn) {
     auto* world=actor_world(pawn);if(!world)return nullptr;
@@ -1331,7 +1361,7 @@ std::optional<std::string> live_ladder_instruction(UObject* ladder,Vec3 goal,con
     const auto bottom=ladder_component_position(ladder,L"m_pBottomBoxComponent");
     if(!landing||!top||!bottom)return {};
     const auto matches=[&](Vec3 point){return std::hypot(point.x-goal.x,point.y-goal.y,point.z-goal.z)<5.;};
-    if(matches(*landing)||(is_town_ladder(ladder)&&matches(*top))) {
+    if(matches(*landing)||((is_town_ladder(ladder)||is_thunderclap_ladder(ladder))&&matches(*top))) {
         const Vec3 mount{top->x-landing->x,top->y-landing->y,0};
         if(is_town_ladder(ladder)&&path(ladder).starts_with(L"/Game/Map/Town/01Gra/01Gra_22/GD/")) {
             const auto direction=cardinal_motion(mount,axes);
@@ -1645,7 +1675,7 @@ bool inside_box(const ActivationBox& box,Vec3 point) {
 }
 constexpr ActivationBox mitra_weapon_stair{{1910,4150,394},{620,210,180},0};
 constexpr ActivationBox castle_west_stair{{-30014.,-8883.,410.},{975.,135.,415.},0};
-constexpr ActivationBox castle_gallery_doorway{{-30077.,5855.,802.},{160.,200.,60.},0};
+constexpr ActivationBox castle_north_chest_floor{{-30500.,7960.,22.15},{500.,480.,90.},0};
 constexpr ActivationBox siren_entrance_stairs{{-4930.,0.,160.},{1760.,470.,240.},0};
 constexpr ActivationBox siren_upper_ramp{{1850.,-1540.,4350.},{450.,400.,215.},0};
 constexpr ActivationBox siren_bridge_stairs{{4830.,-105.,4620.},{1770.,350.,285.},0};
@@ -1680,6 +1710,9 @@ bool kolobos_ruins_world(UObject* world) {
 }
 bool kol_village_world(UObject* world) {
     return path(world)==L"/Game/Map/Town/02Lan/02Lan_20/Town_02Lan_20_PL.Town_02Lan_20_PL";
+}
+bool oblivion_palace_world(UObject* world) {
+    return path(world)==L"/Game/Map/Town/02Lan/02Lan_22/Town_02Lan_22_PL.Town_02Lan_22_PL";
 }
 constexpr std::array grandport_stairs{
     ActivationBox{{534.,-2460.,440.},{165.,335.,90.},0.}, // Harbor entrance
@@ -2433,8 +2466,11 @@ std::optional<GroundCoverage> ordinary_ground_path(UObject* pawn,UObject* librar
     const bool rechecking_bypass=bypass_rejoin!=0;
     const bool capsule_only=proof!=GroundProof::MeshFirst;
     const bool world_capsule=swept_default_mesh(world,resonance::path(mesh));
-    const bool corridor_capsule=world_capsule||(capsule_only&&zoldaad_swept_walkway(world));
     const bool castle=capsule_only&&burning_castle_world(world);
+    // The burning castle's baked route has holes in continuous, standable
+    // floors. Keep the complete native route and prove each upcoming step
+    // against the actual floor and character capsule.
+    const bool corridor_capsule=world_capsule||castle||(capsule_only&&zoldaad_swept_walkway(world));
     const bool siren=capsule_only&&siren_tower_world(world);
     const bool grandport=grandport_world(world);
     const bool mitra=resonance::path(world)==L"/Game/Map/Town/01Gra/01Gra_20/Town_01Gra_20_PL.Town_01Gra_20_PL";
@@ -2529,7 +2565,6 @@ std::optional<GroundCoverage> ordinary_ground_path(UObject* pawn,UObject* librar
                     // the road or stairs. The route and rejoin are native.
                     if(corridor_capsule||on_swept_prefix(point)||gaberada_floor(*support)||
                        olderion_plaza_floor(world,*support)||tower_ramp_floor(*support)||
-                       (castle&&(inside_box(castle_west_stair,*support)||inside_box(castle_gallery_doorway,*support)))||
                        (siren&&(siren_stair_step(last_supported,*support)||siren_dock_step(last_supported,*support)))||
                        (grandport&&grandport_stair_step(last_supported,*support))||
                        (mitra&&inside_box(mitra_weapon_stair,*support))||
@@ -3296,6 +3331,75 @@ std::optional<NativeRoute> earth_shrine_door_approach(UObject* pawn,UObject* tar
     constexpr std::array turns{Vec3{-3760,0,-197.85},Vec3{-3282,0,-197.85}};
     return verified_trigger_turns(pawn,target,start,forecourt,turns,axes,scale,ground_check,path_id,640);
 }
+constexpr ActivationBox oblivion_reward_hall{{820.,80800.,122.},{2440.,1730.,180.},0};
+std::array<Vec3,4> oblivion_reward_turns(double y) {
+    return {Vec3{2415.,y+164.,97.},Vec3{2800.,y+164.,157.15},
+        Vec3{2800.,y+4.,157.15},Vec3{3060.,y+4.,157.15}};
+}
+std::optional<NativeRoute> oblivion_reward_passage_walk(UObject* pawn,UObject* target,Vec3 start,
+        WalkingAxes axes,double scale,bool ground_check,std::uint64_t path_id,bool log_query) {
+    if(!inside_box(oblivion_reward_hall,start))return {};
+    const auto gate=capture_oblivion_reward_passage(pawn,target);
+    if(!gate)return {};
+    // The open door leads across a low threshold, then around the alcove wall.
+    // Sweep the walked lane to the game's live transition box on the far side.
+    return verified_trigger_turns(pawn,target,start,oblivion_reward_hall,oblivion_reward_turns(gate->center.y),
+        axes,scale,ground_check,path_id,1100,
+        log_query?std::string_view{"Oblivion Palace reward passage"}:std::string_view{});
+}
+std::optional<NativeRoute> oblivion_return_to_hall(UObject* pawn,UObject* target,UObject* library,UObject* mesh,
+        Vec3 start,Vec3 destination,WalkingAxes axes,double scale,bool ground_check,std::uint64_t path_id,bool log_query) {
+    if(!inside_box(oblivion_reward_hall,destination)||actor_world(target)!=actor_world(pawn))return {};
+    const auto gate=capture_oblivion_reward_alcove(pawn,start);
+    const auto sweep=gate?capture_capsule_sweep(pawn):std::nullopt;
+    if(!sweep)return {};
+    // The game returns the party behind the same wall. Rejoin the hall through
+    // the open threshold before routing to an exit, door or interaction.
+    const auto through=oblivion_reward_turns(gate->center.y);
+    const bool across_hall=destination.x>1800.&&std::abs(destination.y-through.front().y)>scale*3.5;
+    const Vec3 hall{across_hall?1900.:2200.,through.front().y,97.15};
+    std::vector<Vec3> turns{through[2],through[1],through[0],hall};
+    double arrival;
+    if(const auto onward_gate=capture_oblivion_reward_passage(pawn,target)) {
+        const auto onward=oblivion_reward_turns(onward_gate->center.y);
+        const auto end=activation_approach(*onward_gate,{sweep->radius,sweep->half_height},onward.back(),scale);
+        if(!end)return {};
+        if(across_hall)turns.push_back({hall.x,onward.front().y,hall.z});
+        turns.insert(turns.end(),onward.begin(),onward.end());
+        arrival=end->arrival_metres;
+    } else {
+        const auto box=is(target,L"/Script/mucha.CPP_MapTransitionTrigger")?capture_activation_box(target):
+            capture_interaction_box(target,pawn);
+        if(!box||!current_walking_mesh(pawn,library,mesh))return {};
+        // Cross the hall before turning toward the next door, clear of the resident.
+        if(across_hall)turns.push_back({hall.x,destination.y,hall.z});
+        const auto from=turns.back();
+        auto onward=interaction_route_on_mesh(*sweep,library,mesh,from,*box,destination.z,scale);
+        if(!onward||onward->path.points.size()<2)return {};
+        const auto join=onward->path.points.front();
+        if(std::hypot(join.x-from.x,join.y-from.y)>scale*.05)return {};
+        turns.insert(turns.end(),onward->path.points.begin()+1,onward->path.points.end());
+        arrival=onward->arrival_metres;
+    }
+    return verified_walking_turns(*sweep,oblivion_reward_hall,start,turns,axes,scale,ground_check,path_id,arrival,1700,
+        log_query?std::string_view{"Oblivion Palace return to hall"}:std::string_view{});
+}
+bool oblivion_first_chamber_safe(UObject* target) {
+    return read<int>(target,L"m_UniqueId")==58&&
+        path(target)==L"/Game/Map/Town/02Lan/02Lan_22/GD/Town_02Lan_22_01_GD.Town_02Lan_22_01_GD:"
+            L"PersistentLevel.BP_MapGimmick_TreasureBox_Safe_C_2";
+}
+std::optional<NativeRoute> oblivion_safe_walk(const CapsuleSweep& sweep,const ActivationBox& interaction,Vec3 start,
+        WalkingAxes axes,double scale,bool ground_check,std::uint64_t path_id,bool log_query) {
+    constexpr ActivationBox chamber{{2790.,67280.,350.},{2048.,1280.,350.},0};
+    // Use the centre aisle to climb, then turn to the safe's lower-left corner.
+    constexpr std::array turns{Vec3{2760.22,67250.,302.149},Vec3{2760.22,67510.732,305.996},
+        Vec3{2789.276,67510.732,307.575}};
+    const auto arrival=activation_approach(interaction,{sweep.radius,sweep.half_height},turns.back(),scale);
+    if(!arrival)return {};
+    return verified_walking_turns(sweep,chamber,start,turns,axes,scale,ground_check,path_id,arrival->arrival_metres,650,
+        log_query?std::string_view{"Oblivion Palace first chamber safe"}:std::string_view{});
+}
 std::optional<NativeRoute> olderion_south_approach(UObject* pawn,UObject* target,Vec3 start,
         WalkingAxes axes,double scale,bool ground_check,std::uint64_t path_id) {
     constexpr ActivationBox road{{3240,-3420,420},{5000,3710,450},0};
@@ -3586,8 +3690,11 @@ std::optional<NativeRoute> kol_village_walk(UObject* pawn,UObject* target,Vec3 s
     if(actor_world(target)!=actor_world(pawn))return {};
     constexpr std::wstring_view outdoors=L"/Game/Map/Town/02Lan/02Lan_20/GD/"
         L"Town_02Lan_20_01_GD.Town_02Lan_20_01_GD:PersistentLevel.";
+    constexpr std::wstring_view scott_path=L"/Game/Map/Town/02Lan/02Lan_20/EV/"
+        L"Town_02Lan_20_01_EV.Town_02Lan_20_01_EV:PersistentLevel.BP_MapUnit_NPC_C_18";
     const auto name=path(target);
     const auto id=read<int>(target,L"m_UniqueId");
+    const bool scott=id==9&&is(target,L"/Script/mucha.CPP_MapUnit_NPC")&&name==scott_path;
     constexpr ActivationBox street{{7950.,7035.,-35.},{1510.,2035.,180.},0};
     if(id==11&&is(target,L"/Script/mucha.CPP_MapUnit_NPC")&&
        name==L"/Game/Map/Town/02Lan/02Lan_20/EV/Town_02Lan_20_01_EV.Town_02Lan_20_01_EV:"
@@ -3597,15 +3704,64 @@ std::optional<NativeRoute> kol_village_walk(UObject* pawn,UObject* target,Vec3 s
         return verified_interaction_turns(pawn,target,start,street,to_stablehand,axes,scale,ground_check,path_id,
             "Kol stablehand");
     }
-    if(!name.starts_with(outdoors))return {};
-    const auto suffix=std::wstring_view(name).substr(outdoors.size());
+    if(!scott&&!name.starts_with(outdoors))return {};
+    const auto suffix=scott?std::wstring_view{}:std::wstring_view(name).substr(outdoors.size());
     // Both native meshes omit part of the lane around the oasis. The bends
     // come from a controller replay and each route is swept from the live feet.
-    if(id==8&&suffix==L"BP_MapGimmick_Object_Door_Single002_C_5") {
-        constexpr std::array to_inn{Vec3{6650.,8080.,7.},Vec3{6650.,7385.,-7.06},Vec3{7000.,7386.,-3.28},
-            Vec3{7036.,6716.,-45.24},Vec3{7342.,6716.,-113.35},Vec3{7342.,6105.,-40.61},
-            Vec3{8381.,6102.,-44.03},Vec3{8992.,6102.,-16.},Vec3{9094.,6001.,-.8}};
-        return verified_interaction_turns(pawn,target,start,street,to_inn,axes,scale,ground_check,path_id,"Kol inn door");
+    if(scott||(id==8&&suffix==L"BP_MapGimmick_Object_Door_Single002_C_5")) {
+        constexpr ActivationBox oasis_street{{7800.,7035.,-35.},{1660.,2035.,180.},0};
+        if(!inside_box(oasis_street,start))return {};
+        std::vector<Vec3> street_turns{{6650.,8080.,7.},{6650.,7385.,-7.06},{7000.,7386.,-3.28},
+            {7036.,6716.,-45.24},{7342.,6716.,-113.35},{7342.,6105.,-40.61}};
+        if(scott) {
+            street_turns.insert(street_turns.end(),{{7406.83,6118.23,-46.74},{7406.83,5789.95,2.38}});
+            const auto box=capture_interaction_box(target,pawn);
+            const auto sweep=box?capture_capsule_sweep(pawn):std::nullopt;
+            if(!sweep)return {};
+            const WalkingCapsule capsule{sweep->radius,sweep->half_height};
+            const auto approaches=box_corner_approaches(*box,capsule,street_turns.back().z);
+            // The approach has a rounded obstacle beside the talk box.
+            // A single chord cuts through it where native walking slides around.
+            constexpr ActivationBox talk_area{{7375.,5750.,3.},{170.,155.,70.},0};
+            std::size_t probes=480;
+            const auto route=checked_walking_path(street_turns.back(),approaches,scale*.20,90,
+                [&](Vec3 from,Vec3 to){return room_lane(*sweep,talk_area,from,to,scale,&probes);},
+                [&](Vec3 feet){return activation_approach(*box,capsule,feet,scale).has_value();});
+            if(!route)return {};
+            street_turns.insert(street_turns.end(),route->begin()+1,route->end());
+        } else street_turns.insert(street_turns.end(),{{8381.,6102.,-44.03},{8992.,6102.,-16.},{9094.,6001.,-.8}});
+        if(auto route=verified_interaction_turns(pawn,target,start,oasis_street,street_turns,axes,scale,ground_check,path_id,
+            scott?"Kol Scott":"Kol inn door",true))return route;
+        // Along the north bank, a straight connection to the street cuts the oasis wall.
+        constexpr ActivationBox bank{{7150.,8410.,-35.},{800.,650.,100.},0};
+        if(!inside_box(bank,start))return {};
+        const auto sweep=capture_capsule_sweep(pawn);
+        if(!sweep)return {};
+        const std::array street_joins{Vec3{6650.,8440.,4.},street_turns.front()};
+        const auto probe=sweep->ground_probe();
+        const auto walk=[&](Vec3 from,Vec3 to)->std::optional<Vec3> {
+            to.z=from.z;
+            if(!inside_box(bank,to))return {};
+            const auto floor=probe.project(to);
+            return floor&&probe.blocked(from,*floor)==false?floor:std::nullopt;
+        };
+        const auto joined=[&](Vec3 feet) {
+            return std::any_of(street_joins.begin(),street_joins.end(),[&](Vec3 join) {
+                return std::hypot(feet.x-join.x,feet.y-join.y)<=scale*.18&&std::abs(feet.z-join.z)<=scale*.2;
+            });
+        };
+        const auto prefix=checked_walking_path(start,street_joins,scale*.30,420,walk,joined);
+        if(!prefix)return {};
+        std::vector<Vec3> turns;
+        for(std::size_t i=1;i+1<prefix->size();++i) {
+            const auto a=(*prefix)[i-1],b=(*prefix)[i],c=(*prefix)[i+1];
+            const auto x=b.x-a.x,y=b.y-a.y,u=c.x-b.x,v=c.y-b.y;
+            if(std::abs(x*v-y*u)>scale*scale*.0001||x*u+y*v<=0.)turns.push_back(b);
+        }
+        turns.push_back(prefix->back());
+        turns.insert(turns.end(),street_turns.begin(),street_turns.end());
+        return verified_interaction_turns(pawn,target,start,oasis_street,turns,axes,scale,ground_check,path_id,
+            {},true);
     }
     if(id==5&&suffix==L"BP_MapTransitionTrigger_C_5") {
         constexpr std::array through_inn{Vec3{9100.,6033.,1.},Vec3{9230.,6033.,2.}};
@@ -4256,7 +4412,8 @@ std::optional<NativeRoute> burning_castle_chamber_route(UObject* pawn,UObject* d
     auto* swing=UObjectGlobals::StaticFindObject((std::wstring(level)+L"BP_MapGimmick_TriggerDoor_C_3").c_str());
     if(read<int>(swing,L"m_UniqueId")!=35)return {};
     const auto trigger=capture_swing_door_trigger(pawn,swing);
-    constexpr std::array threshold{Vec3{-10925.,4960.,1182.15},Vec3{-11325.,4960.,1182.15},Vec3{-11325.,5008.,1182.15},
+    const std::array threshold{Vec3{-10925.,std::clamp(start.y,4960.,6320.),1182.15},
+        Vec3{-10925.,4960.,1182.15},Vec3{-11325.,4960.,1182.15},Vec3{-11325.,5008.,1182.15},
         Vec3{-11920.,5008.,1182.15},Vec3{-12500.,5008.,1182.15},Vec3{-13065.,5008.,1182.15},
         Vec3{-13065.,5600.,1182.15},Vec3{-13220.,5600.,1182.15}};
     const auto approach=trigger?activation_approach(*trigger,capsule,threshold.back(),scale):std::nullopt;
@@ -4471,13 +4628,19 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
             room=nearby_town_floor(*start,destination,*scale);
         if(!room)return {};
     }
-    if(is_town_ladder(target)) {
+    if(is_town_ladder(target)||is_thunderclap_ladder(target)) {
         const auto landing=room?room:felicitas_world(world)?felicitas_floor(*start):std::nullopt;
         if(auto route=town_ladder_landing_route(p,target,library,mesh,*start,*axes,*scale,ground_check,path_id,landing))
             return route;
     }
     if(kol_village_world(world))
         if(auto route=kol_village_walk(p,target,*start,*axes,*scale,ground_check,path_id))return route;
+    if(oblivion_palace_world(world)) {
+        if(transition)if(auto route=oblivion_reward_passage_walk(p,target,*start,*axes,*scale,ground_check,path_id,log_query))
+            return route;
+        if(auto route=oblivion_return_to_hall(p,target,library,mesh,*start,destination,*axes,*scale,ground_check,path_id,log_query))
+            return route;
+    }
     if(kolobos_ruins_world(world))
         if(auto route=kolobos_bridge_walk(p,target,*start,*axes,*scale,ground_check,path_id))return route;
     if(transition&&siren_tower_world(world)) {
@@ -4491,6 +4654,13 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
     if(burning_castle_world(world)) {
         if(auto route=burning_castle_ladder_route(p,target,library,mesh,*start,*axes,*scale,ground_check,path_id))return route;
         if(auto route=burning_castle_chamber_route(p,target,library,mesh,*start,*axes,*scale,ground_check,path_id))return route;
+        if(inside_box(castle_north_chest_floor,*start)&&actor_world(target)==world&&
+           is(target,L"/Script/mucha.CPP_MapGimmick_TreasureBox")&&read<int>(target,L"m_UniqueId")==63&&
+           path(target)==L"/Game/Map/Dng/01Gra/01Gra_42/GD/Dng_01Gra_42_01_GD.Dng_01Gra_42_01_GD:"
+               L"PersistentLevel.BP_MapGimmick_TreasureBox2_C_1") {
+            if(auto route=capsule_route(p,target,library,mesh,*start,destination,*axes,*scale,std::nullopt,
+                ground_check,path_id,castle_north_chest_floor,true))return route;
+        }
     }
     if(earth_shrine_entrance(target)&&actor_world(target)==world)
         if(auto route=earth_shrine_door_approach(p,target,*start,*axes,*scale,ground_check,path_id))return route;
@@ -5210,6 +5380,11 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
     if(person&&(!interaction||!sweep||actor_world(target)!=world))
         return fail("This person's talk area could not be verified.");
     auto preferred_approach=olderion_harbor_check(target)?std::optional{Vec3{-1984.62,4960.98,-65.}}:std::nullopt;
+    if(read<int>(target,L"m_UniqueId")==22&&
+       path(target)==L"/Game/Map/Dng/04Dir/04Dir_40/GD/Dng_04Dir_40_01_GD.Dng_04Dir_40_01_GD:"
+                     L"PersistentLevel.BP_MapGimmick_FieldItem_Medal_C_10")
+        // The pickup's centre projects onto an isolated polygon. Approach from the trail's side.
+        preferred_approach=Vec3{5736.,6582.,407.054};
     const bool lab_portal=is(target,L"/Script/mucha.CPP_MapGimmick_Warp")&&
         path(target).starts_with(L"/Game/Map/Dng/08Gro/08Gro_40/GD/");
     if(lab_portal&&read<int>(target,L"m_UniqueId")==18)preferred_approach=Vec3{-31.475,-9852.154,103.215};
@@ -5219,6 +5394,8 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
         interaction_route_on_mesh(*sweep,library,mesh,*start,*interaction,destination.z,*scale,
             chest||mailbox||interact_door||checked_prop,elder_door?std::optional{elder_prompt}:preferred_approach,
             lab_portal):std::nullopt;
+    if(!approach&&chest&&sweep&&interaction&&oblivion_first_chamber_safe(target))
+        if(auto route=oblivion_safe_walk(*sweep,*interaction,*start,*axes,*scale,ground_check,path_id,log_query))return route;
     if(!approach&&elder_door&&interaction&&sweep&&has_mesh) {
         // The door's standing prompt is ahead of the authored outside spawn.
         // Join its native route to a swept approach across the stone landing.
@@ -5456,7 +5633,8 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
             const auto swept_prefix=surveyed_turn_prefix?surveyed_turn_prefix:(approach?approach->lift_prefix:0);
             const bool harbor_stair=grandport_world(world)&&grandport_stair_step(*start,*start);
             const auto proof=elder_door?GroundProof::CapsuleSweep:swept_prefix?GroundProof::CapsulePrefix:
-                (swept_default||centered_spiral||tunnel_exit||castle_stairs||siren_tower_passage(target)||tower_lift||harbor_stair)?
+                (swept_default||centered_spiral||tunnel_exit||castle_stairs||burning_castle_world(world)||
+                 siren_tower_passage(target)||tower_lift||harbor_stair)?
                     GroundProof::CapsuleSweep:GroundProof::MeshFirst;
             ground=ordinary_ground_path(p,library,mesh,snapshot,path_id,policy->budget,ground_reason,bypass_rejoin,
                 proof,swept_prefix);
@@ -5578,7 +5756,7 @@ bool same_area_origin(Vec3 a,Vec3 b) {
     return std::hypot(a.x-b.x,a.y-b.y)<=.05&&std::abs(a.z-b.z)<=.05;
 }
 bool nearby_area_origin(Vec3 a,Vec3 b,double capsule_radius) {
-    // Keep a positive scanner proof during footing jitter and small steps
+    // Keep a browse result during footing jitter and small steps
     // in the same field section. Starting a route always checks live feet.
     return std::isfinite(capsule_radius)&&std::hypot(a.x-b.x,a.y-b.y)<=.5*capsule_radius&&
         std::abs(a.z-b.z)<=.25*capsule_radius;
@@ -5992,6 +6170,17 @@ resonance::unreal::UObject* UnrealReader::refresh_navigation_target(resonance::u
     navigation_target_reason_.clear();
     if(!valid(pawn)||target_id_.empty())return nullptr;
     const auto world=utf8(path(actor_world(pawn))),owner=utf8(path(pawn));
+    if(navigation_category_>=markers_category) {
+        const auto markers=presented_map_markers(pawn,target_id_);
+        for(const auto& marker:markers) {
+            if(marker.id!=target_id_||marker.side_quest!=(navigation_category_==side_quests_category))continue;
+            const auto type=path(marker.actor->GetClassPrivate());
+            active_target_=KnownTarget{marker.id,world,owner,marker.label,type,marker.position};
+            return marker.actor;
+        }
+        navigation_target_reason_="The map no longer shows this marker.";
+        return nullptr;
+    }
     if(story_target(target_id_)) {
         const auto& snapshot=story_.snapshot();
         if(!snapshot.ready||snapshot.map_id<0||snapshot.destination_epoch.empty()) {
@@ -6385,7 +6574,7 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
                         std::string reason;
                         auto* world=actor_world(pawn);
                         const auto proof=swept_default_mesh(world,navigation_swept_mesh_)||crystal_tower_spiral(world)||
-                            zoldaad_swept_walkway(world)||(burning_castle_world(world)&&inside_box(castle_gallery_doorway,*position))?
+                            zoldaad_swept_walkway(world)||burning_castle_world(world)?
                             GroundProof::CapsuleSweep:GroundProof::MeshFirst;
                         const auto ground=ordinary_ground_path(pawn,library,mesh,snapshot,navigation_path_id_,
                             policy->budget,reason,bypass.rejoin,proof);
@@ -6452,7 +6641,7 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
         }
     }
     if(!navigation_door_approach_&&is(live_target,L"/Script/mucha.CPP_MapGimmickLadder")&&
-       (story_target(target_id_)||is_town_ladder(live_target)||
+       (story_target(target_id_)||is_town_ladder(live_target)||is_thunderclap_ladder(live_target)||
         sanctissimus_pot_ladder(live_target,active_target_->position))) {
         const auto axes=navigation_path_.valid?std::optional<WalkingAxes>{{navigation_path_.right,navigation_path_.up}}:
             walking_input_axes(pawn);
@@ -6504,6 +6693,7 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
         path(live_target).starts_with(L"/Game/Map/Dng/08Gro/08Gro_40/GD/")||
         wardens_cape_trigger(live_target)||water_shrine_bridge_exit(live_target)||water_shrine_dry_passage(live_target)||
         burning_castle_world(actor_world(pawn))||kol_village_world(actor_world(pawn))||kolobos_ruins_world(actor_world(pawn))||
+        oblivion_palace_world(actor_world(pawn))||
         felicitas_world(actor_world(pawn))||zoldaad_slums_timetable(live_target)||siren_tower_passage(live_target)||
         mobliz_service_lift_world(actor_world(pawn))))||
         swept_default_mesh(actor_world(pawn),navigation_swept_mesh_)||
@@ -6669,30 +6859,30 @@ unsigned UnrealReader::controller_commands() {
 unsigned UnrealReader::area_browse_commands() {
     if(!area_browse_)return 0;
     auto& browse=*area_browse_;
-    if(browse.next>=browse.checks.size()&&!browse.request)return 0;
+    if(browse.next>=browse.checks.size())return 0;
+    if(navigation_.mode()!=NavigationMode::Off) {
+        browse.next=browse.checks.size();browse.request=0;
+        return 0;
+    }
 
     const auto guard=capture_navigation_guard(true);
-    if(!guard.foreground||!speech_.ready()||navigation_category_!=browse.category) {
+    if(!guard.foreground||!speech_.ready()||!guard.eligible||!guard.ground||
+       browse.revision!=area_browse_revision_||field_selection_context(guard.pawn)!=browse.area) {
         area_browse_.reset();
         return 0;
     }
-    if(!guard.eligible||!guard.ground) {
-        if(browse.request)browse.area.clear();
-        else area_browse_.reset();
+    if(navigation_category_!=browse.category) {
+        browse.next=browse.checks.size();browse.request=0;
         return 0;
     }
     const auto origin=controlled_agent_position(guard.pawn);
-    if(!origin||!finite(*origin)) {
-        if(browse.request)browse.area.clear();
-        else area_browse_.reset();
+    if(!origin||!finite(*origin)||(!same_area_origin(browse.origin,*origin)&&
+       !nearby_area_origin(browse.origin,*origin,browse.capsule_radius))) {
+        // A new command can browse from the new position. Never restart this
+        // pass automatically or replay a selection from the old position.
+        browse.next=browse.checks.size();browse.request=0;
         return 0;
     }
-    if(browse.revision!=area_browse_revision_||field_selection_context(guard.pawn)!=browse.area) {
-        const auto request=browse.request;
-        area_browse_.reset();
-        return request;
-    }
-    if(browse.next>=browse.checks.size())return std::exchange(browse.request,0u);
 
     // Only one native route check may run between engine ticks. Reacquire
     // the actor from the current registries before inspecting its route.
@@ -6709,12 +6899,14 @@ unsigned UnrealReader::area_browse_commands() {
     browse.max_us=std::max(browse.max_us,elapsed);
     const bool finished=browse.next==browse.checks.size();
     if(finished) {
-        browse.completed=true;
         log("NAV area checks category="+std::to_string(browse.category)+" probes="+std::to_string(browse.probes)+
             " total_us="+std::to_string(browse.total_us)+" max_frame_us="+std::to_string(browse.max_us));
         browse.probes=browse.total_us=browse.max_us=0;
     }
-    return finished?std::exchange(browse.request,0u):0u;
+    // Only an empty list needs a deferred reply. The first usable result is
+    // enough to answer it, and the replay cannot start another pass.
+    if(!browse.request||(!reachable&&!finished))return 0;
+    return std::exchange(browse.request,0u)|AreaSelectionReady;
 }
 void UnrealReader::movement_tick() {
     game_thread_=GetCurrentThreadId();
@@ -7722,8 +7914,18 @@ void UnrealReader::tick(unsigned commands) {
     }
     if(target_id_.empty())target_id_=memory.targets[navigation_category_];
     const bool category_changed=(commands&(PreviousCategory|NextCategory))!=0;
+    const bool entering_markers=(commands&PreviousCategory)?navigation_category_==0:
+        ((commands&NextCategory)&&navigation_category_==destination_category);
+    const auto markers=entering_markers||navigation_category_>=markers_category?
+        presented_map_markers(guard.pawn):std::vector<NativeMapMarker>{};
+    const auto category_available=[&](std::size_t category) {
+        if(category<markers_category)return true;
+        return std::any_of(markers.begin(),markers.end(),[category](const auto& marker) {
+            return marker.side_quest==(category==side_quests_category);
+        });
+    };
     if(commands==static_cast<unsigned>(ReviewNavigation|ControllerOrigin)&&navigation_category_!=story_category&&
-       navigation_category_!=destination_category) {
+       navigation_category_<destination_category) {
         // Leave the game thread free for the next controller gesture.
         speech_.say(tr(target_categories[navigation_category_])+".");
         return;
@@ -7739,9 +7941,17 @@ void UnrealReader::tick(unsigned commands) {
         destination_leg_.reset();
         destination_crossed_.clear();
         stop_for_selection();
-        if(commands&PreviousCategory)navigation_category_=(navigation_category_+target_categories.size()-1)%target_categories.size();
-        if(commands&NextCategory)navigation_category_=(navigation_category_+1)%target_categories.size();
+        const auto step=commands&PreviousCategory?target_categories.size()-1:1;
+        do navigation_category_=(navigation_category_+step)%target_categories.size();
+        while(!category_available(navigation_category_));
         target_id_=memory.targets[navigation_category_];target_type_.clear();
+    } else if(!category_available(navigation_category_)) {
+        stop_for_selection();
+        memory.targets[navigation_category_].clear();
+        navigation_category_=0;
+        target_id_=memory.targets[0];target_type_.clear();
+        speech_.say(stopped+tr("The map no longer shows this marker."));
+        return;
     }
     if(navigation_category_==destination_category) {
         destination_commands(guard.pawn,commands,category_changed);
@@ -7832,11 +8042,23 @@ void UnrealReader::tick(unsigned commands) {
     };
     constexpr unsigned selection_commands=Previous|Next|PreviousCategory|NextCategory;
     if(!(commands&selection_commands)&&operate_navigation())return;
-    bool selected_unreachable=false,checking_routes=false;
+    const bool area_selection_ready=(commands&AreaSelectionReady)!=0;
+    bool selected_unreachable=false,unchecked_routes=false;
     AreaCaptureReport report;
     std::vector<Target> current;
     if(navigation_category_==story_category) {
         current=collect_story_targets(guard.pawn,story_.snapshot());
+    } else if(navigation_category_>=markers_category) {
+        const auto origin=controlled_agent_position(guard.pawn);
+        for(const auto& marker:markers) {
+            if(marker.side_quest!=(navigation_category_==side_quests_category))continue;
+            const auto distance=origin?std::hypot(marker.position.x-origin->x,marker.position.y-origin->y):0.;
+            current.push_back({{marker.id,marker.label,marker.interactable?tr("Interaction available"):std::string{},
+                true,marker.interactable},marker.actor,distance,navigation_category_,path(marker.actor->GetClassPrivate()),marker.position});
+        }
+        std::sort(current.begin(),current.end(),[](const auto& a,const auto& b) {
+            return a.distance==b.distance?a.snapshot.id<b.snapshot.id:a.distance<b.distance;
+        });
     } else {
         stage="capture live area entries";
         const auto origin=controlled_agent_position(guard.pawn);
@@ -7855,8 +8077,8 @@ void UnrealReader::tick(unsigned commands) {
             auto entries=capture_area_targets(guard.pawn);
             report=area_capture_report();
             const auto radius=getter<float>(object(guard.pawn,L"CapsuleComponent"),L"GetScaledCapsuleRadius").value_or(0.f);
-            const bool completed=std::exchange(browse.completed,false)&&browse.category==navigation_category_;
             std::vector<std::string> unchecked;
+            bool pickup_in_reach=false;
             for(auto& entry:entries) {
                 if(navigation_category_&&entry.category!=navigation_category_)continue;
                 if(!entry.snapshot.interactable) {
@@ -7864,65 +8086,63 @@ void UnrealReader::tick(unsigned commands) {
                     const bool person=entry.type==L"CPP_MapUnit_NPC";
                     const bool origin_matches=check!=browse.routes.end()&&
                         (same_area_origin(check->second.origin,*origin)||
-                         (check->second.reachable&&nearby_area_origin(check->second.origin,*origin,radius)));
+                         nearby_area_origin(check->second.origin,*origin,radius));
                     if(!origin_matches) {
                         unchecked.push_back(entry.snapshot.id);
                         continue;
                     }
                     if(!same_area_position(check->second.position,entry.position)&&
                        !(person&&check->second.reachable&&nearby_area_origin(check->second.position,entry.position,radius))) {
-                        // A moving person can invalidate their result during the scan.
-                        // Finish this selection with the routes that are still current.
-                        if(!completed||!person)unchecked.push_back(entry.snapshot.id);
+                        unchecked.push_back(entry.snapshot.id);
                         continue;
                     }
                     if(!check->second.reachable) {
                         selected_unreachable|=entry.snapshot.id==target_id_;
                         continue;
                     }
-                }
+                } else if(entry.type==L"CPP_MapGimmick_FieldItem")pickup_in_reach=true;
                 current.push_back({std::move(entry.snapshot),entry.actor,entry.distance,entry.category,
                     std::move(entry.type),entry.position});
             }
-            checking_routes=!unchecked.empty();
-            if(browse.category!=navigation_category_) {
-                browse.announced_wait=false;
+            std::stable_partition(current.begin(),current.end(),[](const auto& target) {
+                return target.snapshot.interactable;
+            });
+            unchecked_routes=!unchecked.empty();
+            if(!area_selection_ready) {
+                const auto selection=commands&(Previous|Next);
+                // At a native pickup prompt, opening or reviewing Objects has
+                // all it needs. Cycling can request other reachable objects.
+                if(pickup_in_reach&&!selection)unchecked.clear();
+                browse.category=navigation_category_;
+                browse.origin=*origin;
+                browse.capsule_radius=radius;
+                browse.checks=std::move(unchecked);
+                browse.next=0;
+                browse.request=current.empty()&&!browse.checks.empty()?(selection?selection:ReviewNavigation):0u;
                 browse.probes=browse.total_us=browse.max_us=0;
             }
-            browse.category=navigation_category_;
-            browse.checks=std::move(unchecked);
-            browse.next=0;
-            browse.request=0;
             const auto elapsed=std::chrono::duration_cast<std::chrono::microseconds>(
                 std::chrono::steady_clock::now()-started).count();
-            log("NAV area browse category="+std::to_string(browse.category)+" reachable="+std::to_string(current.size())+
-                " pending="+std::to_string(browse.checks.size())+" capture_us="+std::to_string(elapsed));
+            log("NAV area browse category="+std::to_string(navigation_category_)+" reachable="+std::to_string(current.size())+
+                " pending="+std::to_string(browse.checks.size()-browse.next)+" capture_us="+std::to_string(elapsed));
         }
     }
     if(selected_unreachable&&navigation_.mode()==NavigationMode::Off) {
         target_id_.clear();target_type_.clear();memory.targets[navigation_category_].clear();
     }
+    const auto unreadable=navigation_category_<report.unreadable.size()?report.unreadable[navigation_category_]:0;
     const auto issue=!report.unavailable_reason.empty()?report.unavailable_reason:
-        report.unreadable[navigation_category_]?report.first_issue[navigation_category_]:std::string{};
-    const auto issue_key=area+"|"+std::to_string(navigation_category_)+"|"+std::to_string(report.unreadable[navigation_category_])+"|"+issue;
+        unreadable?report.first_issue[navigation_category_]:std::string{};
+    const auto issue_key=area+"|"+std::to_string(navigation_category_)+"|"+std::to_string(unreadable)+"|"+issue;
     const auto partial_warning=!issue.empty()&&issue_key!=area_read_status_?
         trf("{0} Some targets could not be read.",{tr(issue)})+" ":std::string{};
     area_read_status_=issue_key;
-    if(checking_routes) {
-        auto& browse=*area_browse_;
-        // Cycling a partial list can skip exits added before the selection.
-        // Replay the selection only; never defer a command that starts walking.
-        const auto selection=commands&(Previous|Next);
-        browse.request=selection?selection:ReviewNavigation;
-        if(!browse.announced_wait) {
-            browse.announced_wait=true;
-            speech_.say(stopped+trf("{0}. Checking reachable targets.",{tr(target_categories[navigation_category_])}));
-        }
-        return;
-    }
-    if(area_browse_)area_browse_->announced_wait=false;
     targets_.clear();for(const auto& target:current)targets_.push_back(target.snapshot);
     if(current.empty()) {
+        if(!area_selection_ready&&area_browse_&&area_browse_->request&&navigation_category_==area_browse_->category) {
+            if(!stopped.empty())speech_.say(stopped);
+            return;
+        }
         if(issue.empty()&&navigation_.mode()==NavigationMode::Off){target_id_.clear();target_type_.clear();}
         speech_.say(stopped+tr(target_categories[navigation_category_])+". "+
             (navigation_category_==story_category?story_status(story_.snapshot()):
@@ -7930,7 +8150,7 @@ void UnrealReader::tick(unsigned commands) {
     }
     auto selected=std::find_if(current.begin(),current.end(),[&](const auto& target){return target.snapshot.id==target_id_;});
     int index=selected==current.end()?-1:static_cast<int>(selected-current.begin());
-    const bool only_exit=navigation_category_==3&&!checking_routes&&current.size()==1&&
+    const bool only_target=(navigation_category_==3||navigation_category_>=markers_category)&&!unchecked_routes&&current.size()==1&&
         (commands&(Route|ToggleGuidance|ToggleAutomatic));
     if(index<0&&!target_id_.empty()&&(commands&ReviewNavigation)&&!category_changed&&!(commands&(Previous|Next))) {
         if(navigation_category_==story_category) {
@@ -7947,7 +8167,7 @@ void UnrealReader::tick(unsigned commands) {
             return;
         }
     }
-    if(index<0&&(category_changed||(commands&ReviewNavigation)||only_exit||(navigation_category_==story_category&&!(commands&(Previous|Next)))))index=0;
+    if(index<0&&(category_changed||(commands&ReviewNavigation)||only_target||(navigation_category_==story_category&&!(commands&(Previous|Next)))))index=0;
     if(commands&Next)index=(index+1)%static_cast<int>(current.size());
     if(commands&Previous)index=(index<=0?static_cast<int>(current.size()):index)-1;
     if(index<0){speech_.say(tr("Choose a target with Page Up or Page Down, or F6 and F7."));return;}
@@ -7972,7 +8192,7 @@ void UnrealReader::tick(unsigned commands) {
                 if(!detail.empty())selected_text+=". "+detail;
             }
         }
-        const auto position=checking_routes?std::string{}:". "+trf("{0} of {1}",{std::to_string(index+1),std::to_string(current.size())});
+        const auto position=unchecked_routes?std::string{}:". "+trf("{0} of {1}",{std::to_string(index+1),std::to_string(current.size())});
         speech_.say(SpeechEvent{stopped+((category_changed||(commands&ReviewNavigation))?
             tr(target_categories[navigation_category_])+". ":"")+partial_warning+selected_text+position,
             true,SpeechDelivery::LatestSelection});

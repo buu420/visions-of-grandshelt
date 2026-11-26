@@ -613,6 +613,30 @@ void destination_identity_changes() {
     require(first!=filtered_destination_epoch({}),
         "an unavailable destination list must never reuse an authorized signature");
 }
+void minimap_marker_gates() {
+    // Shipped field minimap: ProjectionScale 0.03, RangeSize 220 by 220 (da-area-minimap.txt).
+    require(marker_within_minimap_range(3600,.03,1.,220,220),"an entry 36 metres away at zoom 1 is inside the range rectangle");
+    require(!marker_within_minimap_range(3700,.03,1.,220,220),"an entry past the inscribed range circle is not disclosed");
+    require(!marker_within_minimap_range(3600,.03,2.,220,220),"zooming in shrinks the drawn range");
+    require(marker_within_minimap_range(3600,.03,.5,220,220),"zooming out extends the drawn range");
+    for(const auto bad:std::array<std::array<double,5>,5>{{{-1,.03,1,220,220},{100,0,1,220,220},{100,.03,0,220,220},
+            {100,.03,1,0,220},{100,.03,1,220,-1}}})
+        require(!marker_within_minimap_range(bad[0],bad[1],bad[2],bad[3],bad[4]),"non-positive or unreadable range inputs disclose nothing");
+    require(std::string_view(marker_kind_label(L"Field.Object.Interact.Type.Shop.Vision"))=="Vision shop","the Vision shop icon has a verified kind label");
+    require(std::string_view(marker_kind_label(L"Field.Object.Interact.Type.Shop.Inn"))=="Inn","the inn icon has a verified kind label");
+    require(marker_kind_label(L"Field.Object.Interact.Type.Talk")&&!*marker_kind_label(L"Field.Object.Interact.Type.Talk"),
+        "a talk marker is labelled from its actor");
+    for(const auto tag:{L"Field.Object.Interact.Type.Treasure",L"Field.Object.Interact.Type.Transition",L"Field.Object.Interact.Type.Check",
+            L"Field.Object.Interact.Type.Gimmick",L"None",L"",L"Shop.Vision"})
+        require(!marker_kind_label(tag),"kinds the minimap does not draw by default have no label");
+    const MarkerIdentity icon{false,-1,17,1,42},quest{true,2003,17,2,7};
+    require(marker_identity_text(icon)=="marker:17:1:42"&&marker_identity_text(quest)=="side-quest:2003:17:2:7",
+        "marker identities are stable per kind");
+    require(marker_identity_object(marker_identity_text(icon))==17&&marker_identity_object(marker_identity_text(quest))==17,
+        "the registry id is recoverable from both identity forms");
+    for(const auto id:{"","marker:","marker:x:1:2","side-quest:2003","story:1","marker:12345678901:1:2","marker:-1:1:2"})
+        require(!marker_identity_object(id),"malformed identities select nothing");
+}
 void filtered_quest_authority() {
     auto p=point();require(point_authorized(p),"a proven filtered-main-quest visible destination must remain usable");
     p.source=DestinationSource::RawScenario;
@@ -987,6 +1011,16 @@ void kolobos_handoff_uses_the_next_displayed_goal() {
         !grandport_from_felicitas(2040,1001,1205,waypoint),
         "the exit from Felicitas requires the current Grandport objective after the ruins");
 }
+void thunderclap_crossing_uses_the_current_mountain_objective() {
+    constexpr std::array mountain{FilteredPoint{0,0,3050,false,{}}};
+    constexpr std::array other{FilteredPoint{0,0,2050,false,{}}};
+    constexpr std::array local_object{FilteredPoint{0,0,3050,true,{2,4}}};
+    require(thunderclap_crossing(3050,1002,2040,mountain)&&thunderclap_crossing(1000,1002,2040,mountain),
+        "the crossing uses the local passage and the main world-map entrance for the current objective");
+    require(!thunderclap_crossing(3050,1002,2050,mountain)&&!thunderclap_crossing(3050,1002,2040,other)&&
+        !thunderclap_crossing(3050,1002,2040,local_object)&&!thunderclap_crossing(2031,1002,2040,mountain),
+        "the authored far-side passage applies only to the active map-level crossing objective");
+}
 void siren_story_follows_the_door_ascent_and_return() {
     using Leg=SirenStoryLeg;
     constexpr std::array tower{FilteredPoint{0,0,3030,false,{}}};
@@ -1011,8 +1045,9 @@ void siren_story_follows_the_door_ascent_and_return() {
 }
 int main() {
     int failures=0;
-    const std::array<std::pair<const char*,void(*)()>,46> tests{{
+    const std::array<std::pair<const char*,void(*)()>,48> tests{{
         {"siren_story_follows_the_door_ascent_and_return",siren_story_follows_the_door_ascent_and_return},
+        {"thunderclap_crossing_uses_the_current_mountain_objective",thunderclap_crossing_uses_the_current_mountain_objective},
         {"kolobos_story_follows_the_current_room_and_bridge_state",kolobos_story_follows_the_current_room_and_bridge_state},
         {"kolobos_handoff_uses_the_next_displayed_goal",kolobos_handoff_uses_the_next_displayed_goal},
         {"kol_uses_the_current_objective_and_room",kol_uses_the_current_objective_and_room},
@@ -1041,6 +1076,7 @@ int main() {
         {"native_array_bounds",native_array_bounds},{"active_key_validation",active_key_validation},
         {"current_world_scope",current_world_scope},{"destination_identity_changes",destination_identity_changes},
         {"filtered_quest_authority",filtered_quest_authority},{"filtered_point_epoch",filtered_point_epoch},
+        {"minimap_marker_gates",minimap_marker_gates},
         {"point_authorization",point_authorization},{"unique_point_selection",unique_point_selection},
         {"objective_survives_destination_failure",objective_survives_destination_failure},
         {"rendered_ancestor_chain",rendered_ancestor_chain},{"filtered_goal_areas",filtered_goal_areas},

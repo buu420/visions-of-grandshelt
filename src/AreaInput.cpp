@@ -314,6 +314,8 @@ const char* person_label(UObject* npc) {
     }
     if(actor_path==L"/Game/Map/Town/08Gro/08Gro_01/EV/Town_08Gro_01_01_EV.Town_08Gro_01_01_EV:"
         L"PersistentLevel.BP_MapUnit_NPC_C_18")return "Fryevia";
+    if(actor_path==L"/Game/Map/Town/02Lan/02Lan_22/EV/Town_02Lan_22_01_EV.Town_02Lan_22_01_EV:"
+        L"PersistentLevel.BP_MapUnit_NPC_C_1")return "Palace resident";
     return npc_appearance_label(read<int>(npc,L"m_MapUnitId",2048).value_or(-1));
 }
 std::optional<Vec3> vector_call(UObject* object,const wchar_t* name) {
@@ -664,7 +666,51 @@ Link landmark_link(UObject* landmark,MapContext& map,UObject* pawn) {
     return link;
 }
 
+constexpr std::wstring_view thunderclap_gd=L"/Game/Map/Dng/04Dir/04Dir_40/GD/Dng_04Dir_40_01_GD.Dng_04Dir_40_01_GD:PersistentLevel.";
+const char* thunderclap_rope_label(UObject* actor) {
+    if(!is(actor,L"/Script/mucha.CPP_MapGimmick_StringLadder"))return nullptr;
+    const auto name=path(actor);
+    if(!name.starts_with(thunderclap_gd))return nullptr;
+    const auto instance=std::wstring_view(name).substr(thunderclap_gd.size());
+    const auto id=read<int>(actor,L"m_UniqueId",808);
+    if(id==18&&instance==L"BP_MapGimmick_StringLadder_C_0")return "Rope ladder to the main trail";
+    if(id==19&&instance==L"BP_MapGimmick_StringLadder_C_1")return "Rope ladder to the middle ledge";
+    if(id==20&&instance==L"BP_MapGimmick_StringLadder_C_2")return "Entrance shortcut rope ladder";
+    return nullptr;
+}
+bool thunderclap_far_passage(int map_id,UObject* actor) {
+    return map_id==3050&&read<int>(actor,L"m_UniqueId",1040)==4&&
+        path(actor)==L"/Game/Map/Dng/04Dir/04Dir_40/GD/Dng_04Dir_40_01_GD.Dng_04Dir_40_01_GD:"
+                     L"PersistentLevel.BP_MapTransitionTrigger_C_5";
+}
+constexpr std::wstring_view oblivion_palace_level=
+    L"/Game/Map/Town/02Lan/02Lan_22/GD/Town_02Lan_22_01_GD.Town_02Lan_22_01_GD:PersistentLevel.";
+struct OblivionRewardDoor {
+    int door_id,exit_id;
+    double entrance_y;
+    std::wstring_view door,passage;
+    const char* label;
+};
+constexpr OblivionRewardDoor oblivion_reward_doors[]{
+    {63,2,79600.,L"BP_MapGimmick_Object_Door_Single005_C_0",L"BP_MapTransitionTrigger_C_0","First reward chamber door"},
+    {62,3,80400.,L"BP_MapGimmick_Object_Door_Single005_C_1",L"BP_MapTransitionTrigger_C_1","Second reward chamber door"},
+    {64,4,81200.,L"BP_MapGimmick_Object_Door_Single005_C_2",L"BP_MapTransitionTrigger_C_2","Third reward chamber door"},
+    {65,5,82000.,L"BP_MapGimmick_Object_Door_Single005_C_3",L"BP_MapTransitionTrigger_C_3","Fourth reward chamber door"}
+};
+const OblivionRewardDoor* oblivion_reward_door(UObject* actor,bool passage=false) {
+    const auto name=path(actor);
+    if(!name.starts_with(oblivion_palace_level))return nullptr;
+    const auto suffix=std::wstring_view(name).substr(oblivion_palace_level.size());
+    const auto id=read<int>(actor,L"m_UniqueId",passage?1040:808);
+    for(const auto& door:oblivion_reward_doors)
+        if(passage?(suffix==door.passage&&id==door.exit_id):(suffix==door.door&&id==door.door_id))return &door;
+    return nullptr;
+}
 const char* authored_transition_label(int map_id,UObject* actor,const EffectiveTransition& transition) {
+    if(thunderclap_far_passage(map_id,actor)) {
+        if(transition.event_only&&transition.map_id==-1&&transition.point_id==-1)return "Far-side mountain passage";
+        if(!transition.event_only&&transition.map_id==1000&&transition.point_id==43)return "Far-side exit to the world map";
+    }
     if(transition.point_id) {
         if(map_id==2000) {
             if(const auto* passage=mitra_exit_passage(actor,transition))return passage->label;
@@ -673,6 +719,12 @@ const char* authored_transition_label(int map_id,UObject* actor,const EffectiveT
             if(exit)if(const auto* passage=shrine_passage(*exit,*transition.point_id))return passage;
         } else if(transition.map_id==1000) {
             const auto exit=read<int>(actor,L"m_UniqueId",1040);
+            if(map_id==3050) {
+                if(exit==0&&transition.point_id==42)return "Main entrance to the world map";
+                if(exit==1&&transition.point_id==49)return "Side trail exit to the world map";
+                if(exit==2&&transition.point_id==50)return "Lower trail exit to the world map";
+                if(exit==3&&transition.point_id==48)return "High trail exit to the world map";
+            }
             if(exit&&map_id==2050&&*exit==0&&*transition.point_id==44)return "South exit of the Dwarven Forge";
             if(exit)if(const auto* label=chapter_three::exit_label(map_id,*exit,transition.map_id,*transition.point_id))
                 return label;
@@ -802,6 +854,8 @@ std::vector<AreaTarget> scan(UObject* pawn,const std::string* only,const StorySp
         }
     }
     const auto nearby=interactions(pawn);
+    const bool oblivion=map.current_map()==2031;
+    const int reward_room=oblivion?oblivion_reward_room(*origin):-1;
     std::size_t considered=0;
     // Dead registry entries are counted only by full captures; a selected capture
     // cannot attribute an unidentifiable dead entry to its target.
@@ -831,11 +885,13 @@ std::vector<AreaTarget> scan(UObject* pawn,const std::string* only,const StorySp
             const EffectiveTransition* transition=nullptr,const town_interactions::Placement* town=nullptr) {
         const auto& info=area_kind_info(kind);
         const auto category=town?town->category:info.category;
-        const auto ladder=kind==AreaKind::Ladder&&is_town_ladder(actor);
+        const bool mountain_ladder=kind==AreaKind::Ladder&&is_thunderclap_ladder(actor);
+        const auto ladder=kind==AreaKind::Ladder&&(is_town_ladder(actor)||mountain_ladder);
         const auto end=ladder?capture_interaction_box(actor,pawn):std::nullopt;
         if(ladder&&!end)return;
         const auto position=end?std::optional{end->center}:navigation_position(actor);
         if(!position) {tally.admit(unknown("position could not be read"),kind);return;}
+        if(oblivion&&kind==AreaKind::TreasureChest&&(reward_room<0||oblivion_reward_room(*position)!=reward_room))return;
         tally.listed();
         const bool interactable=nearby.actors.contains(actor);
         if(proximity) {
@@ -858,9 +914,15 @@ std::vector<AreaTarget> scan(UObject* pawn,const std::string* only,const StorySp
         std::string label=tr(kind==AreaKind::Person?person_label(actor):
             object_appearance_label(kind,actor->GetClassPrivate()->GetNamePrivate().ToString(),object_state));
         if(town)label=tr(town->label);
+        if(mountain_ladder) {
+            const auto ladder_id=read<int>(actor,L"m_UniqueId",808);
+            label=tr(ladder_id==1?"Ladder between the main trail and middle ledge":
+                ladder_id==2?"Ladder between the middle ledge and upper trail":"Entrance shortcut ladder");
+        }
         if(kind==AreaKind::FieldItem||kind==AreaKind::Interaction||kind==AreaKind::Book) {
             if(const auto* name=exact_placement_label(kind,path(actor),read<int>(actor,L"m_UniqueId",808).value_or(-1)))
                 label=tr(name);
+            if(const auto* rope=thunderclap_rope_label(actor))label=tr(rope);
         }
         if(kind==AreaKind::AutomaticLift)if(const auto* lift=siren_lift(actor))label=tr(lift->label);
         if(kind==AreaKind::Door) {
@@ -874,6 +936,7 @@ std::vector<AreaTarget> scan(UObject* pawn,const std::string* only,const StorySp
                     if(!name.empty())label=std::move(name);
                 }
             }
+            if(oblivion)if(const auto* door=oblivion_reward_door(actor))label=tr(door->label);
         }
         if(kind==AreaKind::Door||kind==AreaKind::TriggerDoor)
             if(auto facility=facility_door_label(actor,map,native.exits);!facility.empty())label=std::move(facility);
@@ -902,6 +965,11 @@ std::vector<AreaTarget> scan(UObject* pawn,const std::string* only,const StorySp
         // Unsupported gimmick classes (triggers, event volumes) are not listed targets.
         const auto kind=chain_kind(actor,true);
         if(!kind) {
+            if(thunderclap_rope_label(actor)) {
+                const auto id=identity(actor,AreaKind::Interaction);
+                if(id&&capture_interaction_box(actor,pawn))add(actor,*id,AreaKind::Interaction,std::nullopt);
+                continue;
+            }
             if(map.current_map()!=2130||proximity)continue;
             const auto warp=mysidia_warp_end(actor,pawn);
             if(!warp)continue;
@@ -983,7 +1051,10 @@ std::vector<AreaTarget> scan(UObject* pawn,const std::string* only,const StorySp
         const auto id=identity(actor,AreaKind::Exit);if(!id)continue;
         if(!native_kind(actor,AreaKind::Exit)) {tally.admit(layout,AreaKind::Exit);continue;}
         const auto facts=exit_facts(actor,map,pawn);
-        if(tally.admit(exit_verdict(facts),AreaKind::Exit))add(actor,*id,AreaKind::Exit,std::nullopt,&facts.transition.transition);
+        const bool mountain_passage=thunderclap_far_passage(map.current_map().value_or(-1),actor)&&
+            facts.transition.transition.map_id==-1&&facts.transition.transition.point_id==-1;
+        if(tally.admit(exit_verdict(facts,mountain_passage),AreaKind::Exit))
+            add(actor,*id,AreaKind::Exit,std::nullopt,&facts.transition.transition);
     }
     order_targets(result);
     finish("units="+std::to_string(native.units.size())+" gimmicks="+std::to_string(native.gimmicks.size())+
@@ -1250,6 +1321,27 @@ std::optional<bool> kol_inn_door_open(UObject* actor) {
 std::optional<bool> siren_tower_door_open(UObject* actor) {
     return siren_tower_door(actor)?story_door_box_open(actor):std::nullopt;
 }
+std::optional<ActivationBox> capture_oblivion_reward_passage(UObject* pawn,UObject* actor) {
+    auto* world=actor_world(pawn);
+    if(!world||actor_world(actor)!=world||!native_kind(actor,AreaKind::Exit))return {};
+    const auto* link=oblivion_reward_door(actor,true);
+    if(!link)return {};
+    auto* door=UObjectGlobals::StaticFindObject((std::wstring(oblivion_palace_level)+std::wstring(link->door)).c_str());
+    if(!native_kind(door,AreaKind::Door)||actor_world(door)!=world||oblivion_reward_door(door)!=link||
+       !field_object_available(actor_facts(door,world))||story_door_box_open(door)!=true)return {};
+    const auto box=capture_activation_box(actor);
+    if(!box||std::abs(box->center.x-3100.)>1.||std::abs(box->center.y-link->entrance_y)>1.)return {};
+    return box;
+}
+std::optional<ActivationBox> capture_oblivion_reward_alcove(UObject* pawn,Vec3 feet) {
+    if(feet.x<2440.||feet.x>3160.||feet.z<85.||feet.z>190.)return {};
+    for(const auto& door:oblivion_reward_doors) {
+        if(std::abs(feet.y-door.entrance_y)>275.)continue;
+        auto* exit=UObjectGlobals::StaticFindObject((std::wstring(oblivion_palace_level)+std::wstring(door.passage)).c_str());
+        return capture_oblivion_reward_passage(pawn,exit);
+    }
+    return {};
+}
 bool is_siren_tower_lift(UObject* actor) {
     return siren_lift(actor)!=nullptr;
 }
@@ -1340,6 +1432,15 @@ bool is_town_ladder(UObject* actor) {
     return (id==2&&instance==L"BP_MapGimmick_Object_Ladderwood02_C_0")||
            (id==3&&instance==L"BP_MapGimmick_Object_Ladderwood02_C_1");
 }
+bool is_thunderclap_ladder(UObject* actor) {
+    if(!native_kind(actor,AreaKind::Ladder))return false;
+    const auto name=path(actor);
+    if(!name.starts_with(thunderclap_gd))return false;
+    const auto instance=std::wstring_view(name).substr(thunderclap_gd.size());
+    const auto id=read<int>(actor,L"m_UniqueId",808);
+    return (id==1&&instance==L"BP_MapGimmickLadder_C_0")||(id==2&&instance==L"BP_MapGimmickLadder_C_1")||
+        (id==3&&instance==L"BP_MapGimmickLadder_C_2");
+}
 
 std::optional<ActivationBox> capture_interaction_box(UObject* actor,UObject* pawn) {
     const auto player_overlap=[&](UObject* component)->std::optional<ActivationBox> {
@@ -1363,7 +1464,8 @@ std::optional<ActivationBox> capture_interaction_box(UObject* actor,UObject* paw
         const auto end=mysidia_warp_end(actor,pawn);
         return end?std::optional{end->box}:std::nullopt;
     }
-    if(is_town_ladder(actor)&&actor_world(actor)==actor_world(pawn)&&byte_call(actor,L"GetGimmickCondition")==0) {
+    if((is_town_ladder(actor)||is_thunderclap_ladder(actor))&&actor_world(actor)==actor_world(pawn)&&
+       byte_call(actor,L"GetGimmickCondition")==0) {
         const auto origin=navigation_position(pawn);
         auto* low=object_value(actor,L"m_pBottomBoxComponent",1000);
         auto* high=object_value(actor,L"m_pTopBoxComponent",992);
@@ -1372,6 +1474,14 @@ std::optional<ActivationBox> capture_interaction_box(UObject* actor,UObject* paw
         if(!origin||!bottom||!top||top->center.z<=bottom->center.z)return {};
         const bool upper=std::abs(top->center.z-origin->z)<std::abs(bottom->center.z-origin->z);
         return interaction_box_enabled(actor,upper?high:low)==true?(upper?top:bottom):std::nullopt;
+    }
+    if(thunderclap_rope_label(actor)) {
+        auto* ladder=blueprint_object_value(actor,L"m_Ladder",1192);
+        if(!is_thunderclap_ladder(ladder)||actor_world(ladder)!=actor_world(pawn)||
+           !story_actor_available(pawn,actor)||byte_call(actor,L"GetGimmickCondition")!=0||
+           byte_value(actor,L"m_MapInteractType",833)!=4||
+           interaction_box_enabled(ladder,object_value(ladder,L"m_pTopBoxComponent",992))!=false)return {};
+        return player_overlap(object_value(actor,L"m_pRootBoxComponent",760));
     }
     if(research_lab_rope(actor))
         return player_overlap(object_value(actor,L"m_pRootBoxComponent",760));
@@ -1407,6 +1517,7 @@ std::optional<ActivationBox> capture_interaction_box(UObject* actor,UObject* paw
 }
 bool requires_checked_interaction_box(UObject* actor) {
     return town_interaction(actor)||mysidia_warp(actor)||is_town_ladder(actor)||research_lab_warp(actor)||research_lab_rope(actor)||
+        is_thunderclap_ladder(actor)||thunderclap_rope_label(actor)||
         research_lab_pickup_or_console(actor)||
         native_kind(actor,AreaKind::TreasureChest)||
         native_kind(actor,AreaKind::Door)||native_kind(actor,AreaKind::ElevatorCall)||native_kind(actor,AreaKind::Elevator)||

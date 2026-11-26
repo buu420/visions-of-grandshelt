@@ -138,6 +138,18 @@ bool struct_fields(UStruct* type,std::initializer_list<StructField> fields) {
     }
     return true;
 }
+// A reflected struct member of a struct type, with its own exact native layout.
+bool nested_struct(UStruct* type,const wchar_t* member,const wchar_t* expected,int size,std::initializer_list<StructField> fields) {
+    FName name(member,FNAME_Find);
+    if(!name.ComparisonIndex&&!name.Number)return false;
+    FProperty* found=nullptr;
+    for(auto* parent=type;parent&&!found;parent=parent->GetSuperStruct())found=parent->FindProperty(name);
+    if(!found||!found->field_class()||found->field_class()->GetName()!=L"StructProperty"||found->GetSize()!=size)return false;
+    auto& handle=static_cast<FStructProperty*>(found)->GetStruct();
+    UScriptStruct* inner{};std::memcpy(&inner,std::addressof(handle),sizeof inner);
+    return native_metadata(inner,NativeMetadataKind::ScriptStruct)&&path(inner)==expected&&
+        inner->GetPropertiesSize()==size&&struct_fields(inner,fields);
+}
 bool output_struct(FProperty* field,const wchar_t* expected,int size) {
     // The pinned UE4SS TObjectPtr is one raw pointer (public upgrade guide).
     // Read its opaque reference; never invent a smart-pointer/handle resolver.
@@ -148,7 +160,15 @@ bool output_struct(FProperty* field,const wchar_t* expected,int size) {
     if(name==L"/Script/mucha.QuestData")return struct_fields(type,{
         {L"Property",0,16},{L"ID",16,4},{L"Category",20,1},{L"Name",24,16},{L"Subtitle",40,16},
         {L"DestinationTitle",56,16},{L"Description",72,16,L"TextProperty"},
-        {L"Progression",104,1},{L"DestinationList",112,16}});
+        {L"Progression",104,1},{L"DestinationList",112,16},{L"bIsPreferred",128,1,L"BoolProperty"}});
+    if(name==L"/Script/mucha.MiniMapEntryData")return struct_fields(type,{
+        {L"Property",0,96,L"StructProperty"},{L"ObjectData",96,88,L"StructProperty"},{L"BelongAreaId",184,4,L"IntProperty"},
+        {L"bIsMarkedQuestTarget",188,1,L"BoolProperty"},{L"Appearance",192,16,L"StructProperty"},{L"RelativeAltitude",208,1}})&&
+        nested_struct(type,L"Property",L"/Script/mucha.MiniMapEntryProperty",96,
+            {{L"bIsValid",0,1,L"BoolProperty"},{L"bDefaultDisplay",1,1,L"BoolProperty"},{L"bStopAtEdge",88,1,L"BoolProperty"}})&&
+        nested_struct(type,L"ObjectData",L"/Script/mucha.FieldObjectData",88,
+            {{L"TypeData",8,8},{L"InteractTag",16,8,L"StructProperty"},{L"RelatedMapId",24,4},{L"RelatedQuestIdList",32,16},{L"ReferenceActor",48,40}})&&
+        nested_struct(type,L"Appearance",L"/Script/mucha.MiniMapEntryAppearance",16,{{L"Color",0,16,L"StructProperty"}});
     if(name==L"/Script/mucha.FieldObjectData")return struct_fields(type,{
         {L"TypeData",8,8},{L"RelatedMapId",24,4},{L"RelatedQuestIdList",32,16},{L"ReferenceActor",48,40}});
     if(name==L"/Script/mucha.MapEventData")return struct_fields(type,{
@@ -252,6 +272,12 @@ public:
     bool progress_list_return()const {
         return return_kind(L"StructProperty")&&
             output_struct(function_->GetReturnProperty(),L"/Script/mucha.SaveData_Progress",48);
+    }
+    bool int_array_return()const {
+        if(!return_kind(L"ArrayProperty"))return false;
+        auto* inner=static_cast<FArrayProperty*>(function_->GetReturnProperty())->GetInner();
+        return inner&&inner->GetOffset_Internal()==0&&inner->GetSize()==4&&inner->field_class()&&
+            inner->field_class()->GetName()==L"IntProperty";
     }
     bool event_array(FProperty* field)const {
         if(!field||field->GetSize()!=16||!field->field_class()||field->field_class()->GetName()!=L"ArrayProperty")return false;
@@ -1431,6 +1457,51 @@ bool mobliz_story_leg(StorySnapshot& story,UObject* pawn,UObject* world,UObject*
 }
 bool capture_chapter_two_legs(StorySnapshot& story,UObject* pawn,UObject* world,int map,int main_id,
         std::span<const FilteredPoint> points) {
+    if(thunderclap_crossing(map,main_id,story.main_progress,points)) {
+        const auto manager=world_scoped(L"CPP_MapManager",world);
+        if(map==1000) {
+            if(!manager.ambiguous&&story_gate(story,pawn,world,manager.object,5,3050,0,"thunderclap-main-entrance",
+                "Main entrance to Mt. Thunderclap","Enter the mountain through the main trail."))return true;
+            story.unavailable_reason=tr("The main entrance to Mt. Thunderclap could not be verified here.");
+            return true;
+        }
+        const auto area=manager.ambiguous?std::nullopt:getter<int>(manager.object,L"GetMapAreaId");
+        const auto position=getter<Vec3>(pawn,L"K2_GetActorLocation");
+        if(area==0&&story_gate(story,pawn,world,manager.object,4,-1,-1,"thunderclap-far-passage",
+            "Far-side mountain passage","Follow the mountain trail to the far-side passage.",true))return true;
+        if(area==2&&position) {
+            const bool lower=position->y<-11775.;
+            if(story_gate(story,pawn,world,manager.object,lower?2:1,1000,lower?50:49,
+                lower?"thunderclap-lower-return":"thunderclap-side-return",
+                lower?"Lower trail exit to the world map":"Side trail exit to the world map",
+                "Return to the world map and enter through Thunderclap's main entrance."))return true;
+        }
+        if(area==1||area==3) {
+            const bool upper=*area==3;
+            const auto registry=registered_story_gimmicks(world);
+            auto* ladder=registered_gimmick(registry,world,upper?2:1,L"/Script/mucha.CPP_MapGimmickLadder");
+            if(is_thunderclap_ladder(ladder)) {
+                const auto climb=story_ladder_approach(pawn,ladder,true);
+                const auto key=upper?"thunderclap-upper-ladder":"thunderclap-middle-ladder";
+                const auto label=upper?"Ladder down to the middle ledge":"Ladder down to the main trail";
+                if(climb) {
+                    story_step(story,key,"Climb down to continue across Mt. Thunderclap.");
+                    story_step_actor(story,ladder,*climb,key,label);
+                    return true;
+                }
+                auto* rope=registered_gimmick(registry,world,upper?19:18,L"/Script/mucha.CPP_MapGimmick_StringLadder");
+                if(const auto prompt=capture_interaction_box(rope,pawn)) {
+                    const auto rope_key=upper?"thunderclap-upper-rope":"thunderclap-middle-rope";
+                    story_step(story,rope_key,"Use the game's interaction control to lower the rope ladder.");
+                    story_step_actor(story,rope,prompt->center,rope_key,upper?
+                        "Rope ladder to the middle ledge":"Rope ladder to the main trail");
+                    return true;
+                }
+            }
+        }
+        story.unavailable_reason=tr("The passage across Mt. Thunderclap could not be verified here.");
+        return true;
+    }
     if(main_id!=1002||(map!=3070&&map!=3060&&map!=3061)||std::none_of(points.begin(),points.end(),[&](const auto& point) {
         return point.role==0&&point.map_kind==0&&point.map_id==(map==3070?3070:3060)&&!point.object_target;
     }))return false;
@@ -2969,6 +3040,169 @@ StorySnapshot capture_story_input(UObject* pawn) {
         static NativeProblemDeduplicator reported;
         if(reported.accept(error.what()))log(std::string("STORY INPUT capture unavailable: ")+error.what());
         fail_story_capture(result);
+    }
+    return result;
+}
+
+namespace {
+// The audited native class must be in the chain with its exact PropertiesSize.
+bool native_shape(UObject* object,const wchar_t* type,int size) {
+    if(!live(object))return false;
+    int depth=0;
+    for(auto* cls=static_cast<UStruct*>(object->GetClassPrivate());cls&&depth++<64;cls=cls->GetSuperStruct())
+        if(path(cls)==type)return cls->GetPropertiesSize()==size;
+    return false;
+}
+// A reflected struct-typed member with the exact native struct, as read-only bytes.
+const std::byte* verified_struct(UObject* object,const wchar_t* name,int offset,int size,const wchar_t* type) {
+    if(!live(object))return nullptr;
+    auto* field=object->GetPropertyByNameInChain(name);
+    if(!field||field->GetOffset_Internal()!=offset||field->GetSize()!=size||!field->field_class()||
+       field->field_class()->GetName()!=L"StructProperty")return nullptr;
+    auto& handle=static_cast<FStructProperty*>(field)->GetStruct();
+    UScriptStruct* inner{};std::memcpy(&inner,std::addressof(handle),sizeof inner);
+    if(!native_metadata(inner,NativeMetadataKind::ScriptStruct)||path(inner)!=type||inner->GetPropertiesSize()!=size)return nullptr;
+    return static_cast<const std::byte*>(object->GetValuePtrByPropertyNameInChain(name));
+}
+bool finite_point(Vec3 v) {return std::isfinite(v.x)&&std::isfinite(v.y)&&std::isfinite(v.z);}
+}
+
+// Exact-build evidence: story-marker-presentation-20261101 (PRESENTATION.md, ADDENDUM.md),
+// story-navigation-native-audit-20261101/NATIVE-STORY.md and jmap-quest-classes.txt.
+// The rendered set is the view model's own entry list; an entry is disclosed only as a
+// drawn base icon of a verified kind or as a marker of the exact tracked Sub quest
+// (QuestSubsystem.PreferredQuestId @0x9C, entry bIsMarkedQuestTarget @0xBC). No quest
+// rows are enumerated and no transition destinations are read.
+std::vector<NativeMapMarker> capture_map_markers(UObject* pawn,UObject* game_instance,UObject* minimap_vm,std::string_view only_id) {
+    std::vector<NativeMapMarker> result;
+    try {
+        auto* world=actor_world(pawn);
+        if(!world)return result;
+        if(!native_shape(pawn,L"/Script/mucha.CPP_MapUnit_Playable",3072))
+            throw std::runtime_error("Unsupported native player layout");
+        const auto origin=tracked_actor_position(pawn);
+        if(!origin||!finite_point(*origin))return result;
+        // The caller's view model: exact native class, displayed, and on the current map.
+        if(!native_shape(minimap_vm,L"/Script/mucha.CPP_VM_MiniMap",2016)||!property(minimap_vm,L"EntryDataMap",0x698,80))
+            throw std::runtime_error("Unsupported native minimap view model layout");
+        if(bool_getter(minimap_vm,L"GetIsDisplay")!=true)return result;
+        const auto map=current_map(world);
+        const auto vm_map=getter<int>(minimap_vm,L"GetCurrentMapId");
+        if(!map||!vm_map||*vm_map!=*map)return result;
+        // Range inputs for entries that are not pinned to the edge.
+        const auto zoom=getter<float>(minimap_vm,L"GetZoomScale");
+        auto* base=object_getter(minimap_vm,L"GetMiniMapBaseDA");
+        if(!zoom||!native_shape(base,L"/Script/mucha.CPP_DA_MiniMapBase",192))
+            throw std::runtime_error("Unsupported native minimap projection layout");
+        const auto projection=read<float>(base,L"ProjectionScale",0x30);
+        const auto* appearance=verified_struct(base,L"Appearance",0x90,40,L"/Script/mucha.MiniMapAppearance");
+        if(!projection||!appearance)return result;
+        const double range_x=pod<double>(appearance,0x18),range_y=pod<double>(appearance,0x20);
+        // Current-world subsystems and the live registry.
+        const auto minimap=world_scoped(L"CPP_MiniMapSubsystem",world);
+        if(minimap.ambiguous||!native_shape(minimap.object,L"/Script/mucha.CPP_MiniMapSubsystem",392)||
+           !property(minimap.object,L"EntryDataMap",0xC0,80))
+            throw std::runtime_error("Current minimap subsystem unavailable");
+        const auto field=world_scoped(L"CPP_FieldObjectSubsystem",world);
+        if(field.ambiguous||!native_shape(field.object,L"/Script/mucha.CPP_FieldObjectSubsystem",296))
+            throw std::runtime_error("Current field object registry unavailable");
+        Call list(field.object,L"GetObjectIdList",16,0,16);
+        if(!list||!list.int_array_return())throw std::runtime_error("Unsupported native field object list");
+        list.invoke(field.object);
+        const auto registry=copy_array(list.get<NativeArray<int>>(0),1024);
+        if(!registry||!unique_capture_ids(*registry,1024))return result;
+        Call ids(minimap_vm,L"GetEntryIdList",16,0,16);
+        if(!ids||!ids.int_array_return())throw std::runtime_error("Unsupported native minimap entry list");
+        ids.invoke(minimap_vm);
+        const auto entries=copy_array(ids.get<NativeArray<int>>(0),1024);
+        if(!entries)return result;
+        // The one Sub quest the player tracked in the journal, verified from its own row.
+        std::optional<int> tracked;
+        std::string tracked_title;
+        const auto quest=gi_scoped(L"CPP_QuestSubsystem",game_instance);
+        if(quest.ambiguous)return result;
+        if(quest.object) {
+            const auto preferred=read<int>(quest.object,L"PreferredQuestId",156);
+            if(preferred&&*preferred>=0) {
+                Call row(quest.object,L"FindQuestData",168,160,1,{L"OutData",8,152,L"/Script/mucha.QuestData",
+                    L"/Script/mucha.CPP_QuestSubsystem:FindQuestData"});
+                if(!row)report_find_quest_rejection(row);
+                else {
+                    row.put(0,*preferred);row.invoke(quest.object);
+                    if(row.get<unsigned char>(160)) {
+                        const auto* data=row.data()+8;
+                        const auto progression=pod<unsigned char>(data,104);
+                        if(pod<int>(data,16)==*preferred&&pod<unsigned char>(data,20)==2&&(progression==1||progression==2)&&
+                           pod<unsigned char>(data,128)==1) {
+                            const auto name=clean(reinterpret_cast<const FText*>(data+24)->ToString());
+                            const auto subtitle=clean(reinterpret_cast<const FText*>(data+40)->ToString());
+                            tracked_title=name.empty()||subtitle.empty()?name+subtitle:trf("{0}. {1}",{name,subtitle});
+                            if(!tracked_title.empty())tracked=*preferred;
+                        }
+                    }
+                }
+            }
+        }
+        const auto selected=marker_identity_object(only_id);
+        if(!only_id.empty()&&!selected)return result;
+        const auto units=copied_array<UObject*>(pawn,L"m_InteractMapUnitList",2584,512);
+        const auto gimmicks=copied_array<UObject*>(pawn,L"m_pInteractMapGimmickList",2600,512);
+        for(const int id:*entries) {
+            if(selected&&*selected!=id)continue;
+            if(id<0||std::find(registry->begin(),registry->end(),id)==registry->end())continue;
+            Call entry(minimap.object,L"FindEntryData",232,224,1,{L"OutData",8,216,L"/Script/mucha.MiniMapEntryData",
+                L"/Script/mucha.CPP_MiniMapSubsystem:FindEntryData"});
+            if(!entry)throw std::runtime_error("Unsupported native minimap entry layout");
+            entry.put(0,id);entry.invoke(minimap.object);
+            if(!entry.get<unsigned char>(224))continue;
+            const auto* data=entry.data()+8;
+            const auto type=pod<unsigned char>(data,0x68);
+            const int key=pod<int>(data,0x6c);
+            // TransitionPoint objects never have entries; the entry must be valid and not faded out.
+            if(type==3||type>6||pod<unsigned char>(data,0)!=1)continue;
+            const bool default_display=pod<unsigned char>(data,1)==1;
+            const bool edge=pod<unsigned char>(data,0x58)==1;
+            if(!(pod<float>(data,0xcc)>0.f))continue;
+            const bool marked=pod<unsigned char>(data,0xbc)==1;
+            const auto related=copy_array(pod<NativeArray<int>>(data,0x80),256);
+            if(!related)continue;
+            const bool side_quest=tracked&&marked&&std::find(related->begin(),related->end(),*tracked)!=related->end();
+            FName tag{};std::memcpy(&tag,data+0x70,sizeof tag);
+            const auto tag_name=tag.ComparisonIndex?tag.ToString():std::wstring{};
+            const char* kind=marker_kind_label(tag_name);
+            if(!side_quest&&(!default_display||!kind))continue;
+            Call actor_call(field.object,L"GetActorAtId",16,8,8);
+            if(!actor_call)throw std::runtime_error("The marker's actor could not be read safely.");
+            actor_call.put(0,id);actor_call.invoke(field.object);
+            auto* actor=actor_call.get<UObject*>(8);
+            if(!live(actor)||actor==pawn||actor_world(actor)!=world||!story_actor_available(pawn,actor))continue;
+            const auto position=tracked_actor_position(actor);
+            if(!position||!finite_point(*position))continue;
+            // The minimap projects the same root location; clipped entries are not shown.
+            if(!side_quest&&!edge&&!marker_within_minimap_range(std::hypot(position->x-origin->x,position->y-origin->y),
+                *projection,*zoom,range_x,range_y))continue;
+            std::string label;
+            if(side_quest)label=tracked_title;
+            else if(kind&&*kind)label=tr(kind);
+            else if(kind) {
+                if(type==1)label=field_npc_label(actor);
+                if(label.empty())label=tr("Local resident");
+            }
+            if(label.empty())continue;
+            NativeMapMarker marker;
+            marker.id=marker_identity_text({side_quest,side_quest?*tracked:-1,id,type,key});
+            marker.label=std::move(label);
+            marker.actor=actor;
+            marker.position=*position;
+            marker.side_quest=side_quest;
+            marker.interactable=(units&&std::find(units->begin(),units->end(),actor)!=units->end())||
+                (gimmicks&&std::find(gimmicks->begin(),gimmicks->end(),actor)!=gimmicks->end());
+            result.push_back(std::move(marker));
+        }
+    } catch(const std::exception& error) {
+        static NativeProblemDeduplicator reported;
+        if(reported.accept(error.what()))log(std::string("STORY INPUT markers unavailable: ")+error.what());
+        result.clear();
     }
     return result;
 }

@@ -19,6 +19,16 @@
 #include <unordered_set>
 #include <vector>
 namespace resonance::area_input_detail {
+// The palace loads the reward rooms into the same world, but each room
+// has its own walkable ground and connects to the hall through a passage.
+inline int oblivion_reward_room(Vec3 point) {
+    if(!std::isfinite(point.x)||!std::isfinite(point.y)||!std::isfinite(point.z)||
+       std::abs(point.x-2790.)>2048.||std::abs(point.z-700.)>1024.)return -1;
+    constexpr std::array centres{67280.,71480.,90580.,97280.};
+    for(std::size_t i=0;i<centres.size();++i)
+        if(std::abs(point.y-centres[i])<=1280.)return static_cast<int>(i);
+    return -1;
+}
 enum class AreaKind : std::uint8_t {
     Person, TreasureChest, FieldItem, SavePoint, Door, Ladder, MovableObject, Switch, Mailbox, Exit,
     TriggerDoor, ElevatorCall, Elevator, Book, Interaction, AutomaticLift

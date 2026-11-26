@@ -551,11 +551,17 @@ NavigationUpdate NavigationFollower::start(NavigationMode requested,const Naviga
     // The newly requested mode has not supplied input yet if activation failed.
     out.stopped_auto=previous_auto;
     if(out.mode!=NavigationMode::Off) {
-        const auto message=f.target_label.empty()?
+        auto message=f.target_label.empty()?
             tr(requested==NavigationMode::Automatic?"Automatic walking on.":
                 out.beacon?"Navigation beacon on.":"Spoken guidance on."):
             trf(requested==NavigationMode::Automatic?"Automatic walking on. {0}.":
                 out.beacon?"Navigation beacon on. {0}.":"Spoken guidance on. {0}.",{f.target_label});
+        if(requested==NavigationMode::Manual&&out.beacon) {
+            const auto direct=distance(f.position,f.path.points.back())/f.path.world_to_metres;
+            const auto metres=out.beacon->remaining_metres;
+            if(metres>std::max(30.,3.*direct)&&metres<1000000.)
+                message+=" "+trf("Walking route is {0} metres.",{std::to_string(std::lround(metres))});
+        }
         if(!out.speech.empty())out.speech.front().text=message+" "+out.speech.front().text;
         else if(out.beacon||out.floor_turn_waypoint)out.speech.push_back({message,true});
     }

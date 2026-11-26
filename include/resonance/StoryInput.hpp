@@ -2,7 +2,18 @@
 #include "resonance/ActivationGoal.hpp"
 #include "resonance/Story.hpp"
 #include "resonance/UnrealApi.hpp"
+#include <string>
+#include <string_view>
+#include <vector>
 namespace resonance {
+// A marker the native minimap presents right now (story-marker-presentation-20261101):
+// a default-displayed base icon of a verified kind, or a marker of the one Sub quest the
+// player tracked in the journal. actor is valid only during the calling game-thread frame.
+struct NativeMapMarker { std::string id; std::string label; unreal::UObject* actor{}; Vec3 position; bool side_quest{}; bool interactable{}; };
+// minimap_vm is the caller's current, owned and displayed CPP_VM_MiniMap. only_id limits the
+// read to one registry entry. Nothing is cached, loaded, written or executed.
+std::vector<NativeMapMarker> capture_map_markers(unreal::UObject* pawn,unreal::UObject* game_instance,
+    unreal::UObject* minimap_vm,std::string_view only_id={});
 // Read-only game-thread capture of current main QuestData, active area-wide
 // quest actors and audited opening continuations. Never loads future assets.
 StorySnapshot capture_story_input(resonance::unreal::UObject* controlled_pawn);

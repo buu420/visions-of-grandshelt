@@ -539,9 +539,17 @@ void wall_apertures() {
         "a wall past the aperture is reported from the side-stepped probe, farther and quieter");
 }
 
+void oblivion_rewards_follow_the_current_chamber() {
+    require(oblivion_reward_room({-230,80800,102})==-1,"the palace hall is outside all reward chambers");
+    require(oblivion_reward_room({2400,66650,170})==0&&oblivion_reward_room({3600,72050,570})==1&&
+        oblivion_reward_room({3000,91200,370})==2&&oblivion_reward_room({4250,97300,770})==3,
+        "reward chests are attributed to their own chamber at every shelf height");
+    require(oblivion_reward_room({2790,67280,1800})==-1&&oblivion_reward_room({6000,97280,170})==-1,
+        "an unrelated floor or corridor cannot select a reward chamber");
+}
 }
 int main() {
-    const std::array<std::pair<const char*,void(*)()>,27> tests{{
+    const std::array<std::pair<const char*,void(*)()>,28> tests{{
         {"town_interactions_match_placements",town_interactions_match_placements},
         {"native_transition_resolution",native_transition_resolution},
         {"offscreen_and_prior_sight_independent",offscreen_and_prior_sight_independent},{"live_position_movement",live_position_movement},
@@ -556,6 +564,7 @@ int main() {
         {"castle_room_and_exit_legs",castle_room_and_exit_legs},{"mitra_labels_and_mailbox",mitra_labels_and_mailbox},
         {"named_world_exits",named_world_exits},{"visible_interactive_props",visible_interactive_props},
         {"siren_tower_objects",siren_tower_objects},{"proximity_approach",proximity_approach},
+        {"oblivion_rewards_follow_the_current_chamber",oblivion_rewards_follow_the_current_chamber},
         {"field_wall_positions",field_wall_positions},{"wall_apertures",wall_apertures}}};
     int failures=0;
     for(const auto& [name,test]:tests)try{test();std::cout<<"PASS "<<name<<'\n';}
