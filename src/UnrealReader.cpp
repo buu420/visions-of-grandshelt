@@ -1790,6 +1790,26 @@ bool mozul_world_entrance(UObject* target) {
     return path(target)==L"/Game/Map/Wld/GD/Wld_GD.Wld_GD:PersistentLevel.BP_MapTransitionTrigger_C_35"&&
         read<int>(target,L"m_UniqueId")==31;
 }
+bool dwarven_forge_south_entrance(UObject* target) {
+    return path(target)==L"/Game/Map/Wld/GD/Wld_GD.Wld_GD:PersistentLevel.BP_MapTransitionTrigger_C_7"&&
+        read<int>(target,L"m_UniqueId")==10;
+}
+constexpr auto thunderclap_high_gate=
+    L"/Game/Map/Wld/GD/Wld_GD.Wld_GD:PersistentLevel.BP_MapTransitionTrigger_C_10";
+bool thunderclap_high_entrance(UObject* target) {
+    return path(target)==thunderclap_high_gate&&read<int>(target,L"m_UniqueId")==7;
+}
+std::optional<Vec3> thunderclap_collectible_approach(UObject* target) {
+    constexpr std::wstring_view level=L"/Game/Map/Dng/04Dir/04Dir_40/GD/"
+        L"Dng_04Dir_40_01_GD.Dng_04Dir_40_01_GD:PersistentLevel.";
+    const auto name=path(target);
+    if(!name.starts_with(level))return {};
+    const auto actor=std::wstring_view(name).substr(level.size());
+    const auto id=read<int>(target,L"m_UniqueId");
+    if(id==22&&actor==L"BP_MapGimmick_FieldItem_Medal_C_10")return Vec3{5736.,6582.,407.054};
+    if(id==17&&actor==L"BP_MapGimmick_TreasureBox_C_1")return Vec3{3160.,-3800.,1209.753};
+    return {};
+}
 std::optional<Vec3> zoldaad_world_approach(UObject* target) {
     constexpr std::wstring_view prefix=L"/Game/Map/Wld/GD/Wld_GD.Wld_GD:PersistentLevel.BP_MapTransitionTrigger_C_";
     const auto name=path(target);
@@ -2762,7 +2782,7 @@ std::array<Vec3,12> interaction_side_approaches(const ActivationBox& box,Walking
 struct InteractionRoute { direct_nav::Path path; double arrival_metres; std::size_t lift_prefix{}; };
 std::optional<InteractionRoute> interaction_route_on_mesh(const CapsuleSweep& sweep,UObject* system,UObject* mesh,
         Vec3 from,const ActivationBox& box,double z,double scale,bool chest=false,std::optional<Vec3> preferred={},
-        bool portal_ramp=false) {
+        bool swept_landing=false) {
     const auto start=project_navigation(sweep.pawn,system,mesh,from);
     if(!start||!start->on_mesh)return {};
     const WalkingCapsule capsule{sweep.radius,sweep.half_height};
@@ -2805,9 +2825,9 @@ std::optional<InteractionRoute> interaction_route_on_mesh(const CapsuleSweep& sw
         const auto t=std::min(1.,scale/run);
         const Vec3 tail{end.x+(prior.x-end.x)*t,end.y+(prior.y-end.y)*t,end.z+(prior.z-end.z)*t};
         auto floor=capsule_lane(sweep,system,mesh,tail,end,scale);
-        if(!floor&&portal_ramp) {
-            // The visible portal platforms can extend past their baked edge.
-            // Keep the connected native route and sweep its final metre on the floor.
+        if(!floor&&swept_landing) {
+            // The baked edge can cut across the standing surface. Retain the
+            // connected route and check its final metre with the live capsule.
             const ActivationBox landing{end,{scale*1.5,scale*1.5,scale*1.5},0};
             const auto support=sweep.ground_probe().project(tail);
             if(support)floor=room_lane(sweep,landing,*support,end,scale);
@@ -3467,8 +3487,15 @@ std::optional<direct_nav::Path> surveyed_walking_turn(UObject* pawn,UObject* tar
     const auto id=read<int>(target,L"m_UniqueId");
     const bool reizan=id==5&&name==L"/Game/Map/Dng/09Pha/09Pha_40/EV/Dng_09Pha_40_01_EV.Dng_09Pha_40_01_EV:"
         L"PersistentLevel.BP_MapGimmick_EventTrigger_C_1";
-    const bool thunderclap=id==9&&name==L"/Game/Map/Dng/04Dir/04Dir_40/EV/Dng_04Dir_40_01_EV.Dng_04Dir_40_01_EV:"
-        L"PersistentLevel.BP_MapGimmick_InteractEventTrigger_C_3";
+    const auto main_trail_pickup=id==22?thunderclap_collectible_approach(target):std::nullopt;
+    const bool thunderclap=main_trail_pickup.has_value()||
+        (id==9&&name==L"/Game/Map/Dng/04Dir/04Dir_40/EV/Dng_04Dir_40_01_EV.Dng_04Dir_40_01_EV:"
+            L"PersistentLevel.BP_MapGimmick_InteractEventTrigger_C_3");
+    constexpr std::wstring_view mountain= L"/Game/Map/Dng/04Dir/04Dir_40/GD/"
+        L"Dng_04Dir_40_01_GD.Dng_04Dir_40_01_GD:PersistentLevel.";
+    const bool lower_chest=name.starts_with(mountain)&&
+        ((id==24&&std::wstring_view(name).substr(mountain.size())==L"BP_MapGimmick_TreasureBox002_C_1")||
+         (id==25&&std::wstring_view(name).substr(mountain.size())==L"BP_MapGimmick_TreasureBox002_C_2"));
     const bool tower_chamber=tower_chamber_return(target);
     const bool lower_tower_portal=id==2&&name==L"/Game/Map/Dng/10Cry/10Cry_40/GD/Dng_10Cry_40_01_GD.Dng_10Cry_40_01_GD:"
         L"PersistentLevel.BP_MapTransitionTrigger_C_4";
@@ -3487,9 +3514,9 @@ std::optional<direct_nav::Path> surveyed_walking_turn(UObject* pawn,UObject* tar
         if(route)prefix_legs=1;
         return route;
     }
-    if(!reizan&&!thunderclap&&!tower_chamber&&!middle_reach&&!lower_tower_portal)return {};
-    const auto interaction=thunderclap&&arrival?capture_interaction_box(target,pawn):std::nullopt;
-    if(thunderclap&&!interaction)return {};
+    if(!reizan&&!thunderclap&&!lower_chest&&!tower_chamber&&!middle_reach&&!lower_tower_portal)return {};
+    const auto interaction=(thunderclap||lower_chest)&&arrival?capture_interaction_box(target,pawn):std::nullopt;
+    if((thunderclap||lower_chest)&&!interaction)return {};
     constexpr ActivationBox lower{{-9285.,8820.,1445.},{335.,610.,180.},0};
     constexpr ActivationBox middle{{-7270.,8310.,3040.},{260.,230.,190.},0};
     constexpr ActivationBox upper{{-6880.,10545.,4010.},{345.,330.,175.},0};
@@ -3504,6 +3531,11 @@ std::optional<direct_nav::Path> surveyed_walking_turn(UObject* pawn,UObject* tar
     constexpr ActivationBox descent{{4548.,1645.,655.},{200.,560.,290.},0};
     constexpr std::array ramp_turn{Vec3{4560.,1420.,698.8},Vec3{4560.,1810.,503.8},
         Vec3{4560.,2104.,402.15},Vec3{4485.,2155.,402.15}};
+    // On the side trail, stay right of the inside rock and rejoin after
+    // turning onto the lower shelf. Rejoining on the ramp restarts the bend.
+    constexpr ActivationBox side_descent{{3260.,-10050.,1010.},{300.,750.,240.},0};
+    constexpr std::array side_turn{Vec3{3390.,-9690.,960.},Vec3{3404.,-10325.,802.15},
+        Vec3{3404.,-10718.,802.15},Vec3{2966.,-10559.,802.15}};
     // Portal 7's bake cuts the lower chamber ramp's inside wall.
     constexpr ActivationBox chamber_turn{{-1390.,-90810.,947.},{490.,240.,120.},0};
     constexpr std::array chamber_ramp{Vec3{-1440.7,-90735.5,881.96},Vec3{-1579.6,-90735.5,895.85},
@@ -3523,6 +3555,7 @@ std::optional<direct_nav::Path> surveyed_walking_turn(UObject* pawn,UObject* tar
     else if(middle_reach&&start.x<920.&&inside_box(middle_approach,start)){lane=&middle_approach;turns=middle_stairway;}
     else if(lower_tower_portal&&start.x<9360.&&inside_box(portal_walkway,start)){lane=&portal_walkway;turns=portal_turn;}
     else if(thunderclap&&start.y<2110.&&inside_box(descent,start)){lane=&descent;turns=ramp_turn;}
+    else if(lower_chest&&start.x>3035.&&inside_box(side_descent,start)){lane=&side_descent;turns=side_turn;}
     else if(reizan&&inside_box(lower,start)&&start.x<-9095.){lane=&lower;turns=low_turn;}
     else if(reizan&&inside_box(middle,start)&&start.y<8415.){lane=&middle;turns=mid_turn;}
     else if(reizan&&inside_box(upper,start)&&(start.x<-6810.||start.y>10540.)){lane=&upper;turns=high_turn;}
@@ -3545,7 +3578,8 @@ std::optional<direct_nav::Path> surveyed_walking_turn(UObject* pawn,UObject* tar
         if(legs!=turns.size()-first+1)continue;
         if(interaction) {
             // Keep the interaction solver's swept approach at the far end.
-            auto onward=interaction_route_on_mesh(*sweep,system,mesh,prefix.back(),*interaction,goal.z,scale);
+            auto onward=interaction_route_on_mesh(*sweep,system,mesh,prefix.back(),*interaction,goal.z,scale,
+                lower_chest,main_trail_pickup,main_trail_pickup.has_value());
             if(!onward||onward->path.points.empty()||
                std::hypot(onward->path.points.front().x-prefix.back().x,
                           onward->path.points.front().y-prefix.back().y)>scale*.05)continue;
@@ -5282,6 +5316,10 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
         else if(waterfall_south_entrance(target))road=waterfall_south_road;
         else if(cave_world_south_entrance(target))road=Vec3{1701,4231,210};
         else if(cave_world_north_entrance(target))road=Vec3{3234,5153,372};
+        else if(dwarven_forge_south_entrance(target))road=Vec3{16067.,-292.,289.};
+        // Approaching the high-trail gate at the near edge of its trigger
+        // cuts the inside wall. Aim for the open surface farther in.
+        else if(thunderclap_high_entrance(target))road=Vec3{17545.,2899.,589.};
         else if(const auto zoldaad=zoldaad_world_approach(target))road=*zoldaad;
         else if(tunnel_exit)road=Vec3{-10644,14960,-1087};
         else if(zoldaad_dungeon_castle_exit(target))road=Vec3{4000,-47520,74.04};
@@ -5380,11 +5418,8 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
     if(person&&(!interaction||!sweep||actor_world(target)!=world))
         return fail("This person's talk area could not be verified.");
     auto preferred_approach=olderion_harbor_check(target)?std::optional{Vec3{-1984.62,4960.98,-65.}}:std::nullopt;
-    if(read<int>(target,L"m_UniqueId")==22&&
-       path(target)==L"/Game/Map/Dng/04Dir/04Dir_40/GD/Dng_04Dir_40_01_GD.Dng_04Dir_40_01_GD:"
-                     L"PersistentLevel.BP_MapGimmick_FieldItem_Medal_C_10")
-        // The pickup's centre projects onto an isolated polygon. Approach from the trail's side.
-        preferred_approach=Vec3{5736.,6582.,407.054};
+    const auto mountain_approach=thunderclap_collectible_approach(target);
+    if(mountain_approach)preferred_approach=mountain_approach;
     const bool lab_portal=is(target,L"/Script/mucha.CPP_MapGimmick_Warp")&&
         path(target).starts_with(L"/Game/Map/Dng/08Gro/08Gro_40/GD/");
     if(lab_portal&&read<int>(target,L"m_UniqueId")==18)preferred_approach=Vec3{-31.475,-9852.154,103.215};
@@ -5393,7 +5428,7 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
     auto approach=!boarding&&interaction&&sweep&&actor_world(target)==world?
         interaction_route_on_mesh(*sweep,library,mesh,*start,*interaction,destination.z,*scale,
             chest||mailbox||interact_door||checked_prop,elder_door?std::optional{elder_prompt}:preferred_approach,
-            lab_portal):std::nullopt;
+            lab_portal||mountain_approach.has_value()):std::nullopt;
     if(!approach&&chest&&sweep&&interaction&&oblivion_first_chamber_safe(target))
         if(auto route=oblivion_safe_walk(*sweep,*interaction,*start,*axes,*scale,ground_check,path_id,log_query))return route;
     if(!approach&&elder_door&&interaction&&sweep&&has_mesh) {
@@ -6174,6 +6209,21 @@ resonance::unreal::UObject* UnrealReader::refresh_navigation_target(resonance::u
         const auto markers=presented_map_markers(pawn,target_id_);
         for(const auto& marker:markers) {
             if(marker.id!=target_id_||marker.side_quest!=(navigation_category_==side_quests_category))continue;
+            if(!marker.side_quest&&
+               path(marker.actor)==L"/Game/Map/Wld/GD/Wld_GD.Wld_GD:PersistentLevel.BP_DestAreaBox_C_2") {
+                // The Esper pin represents the high trail region. Its centre
+                // is in the air, so route to the live entrance to that trail.
+                auto* gate=UObjectGlobals::StaticFindObject(thunderclap_high_gate);
+                const auto exit=capture_story_exit_route(pawn,gate);
+                if(!exit||exit->actor!=gate||exit->event_only||exit->destination_map!=3050||exit->destination_point!=1||
+                   !thunderclap_high_entrance(gate)) {
+                    navigation_target_reason_="The marker's trail entrance is unavailable.";
+                    return nullptr;
+                }
+                const auto label=trf("{0}. {1}",{marker.label,exit->label});
+                active_target_=KnownTarget{marker.id,world,owner,label,path(gate->GetClassPrivate()),exit->position};
+                return gate;
+            }
             const auto type=path(marker.actor->GetClassPrivate());
             active_target_=KnownTarget{marker.id,world,owner,marker.label,type,marker.position};
             return marker.actor;

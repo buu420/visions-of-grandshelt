@@ -712,7 +712,18 @@ const char* authored_transition_label(int map_id,UObject* actor,const EffectiveT
         if(!transition.event_only&&transition.map_id==1000&&transition.point_id==43)return "Far-side exit to the world map";
     }
     if(transition.point_id) {
-        if(map_id==2000) {
+        if(map_id==1000&&!transition.event_only&&transition.map_id==2050) {
+            const auto exit=read<int>(actor,L"m_UniqueId",1040);
+            if(exit==10&&transition.point_id==2)return "South entrance to the Dwarven Forge";
+            if(exit==11&&transition.point_id==1)return "North entrance to the Dwarven Forge";
+        } else if(map_id==1000&&!transition.event_only&&transition.map_id==3050) {
+            const auto exit=read<int>(actor,L"m_UniqueId",1040);
+            if(exit==5&&transition.point_id==0)return "Main entrance to Mt. Thunderclap";
+            if(exit==6&&transition.point_id==-1)return "Far-side entrance to Mt. Thunderclap";
+            if(exit==7&&transition.point_id==1)return "High trail entrance to Mt. Thunderclap";
+            if(exit==8&&transition.point_id==2)return "Side trail entrance to Mt. Thunderclap";
+            if(exit==9&&transition.point_id==3)return "Lower trail entrance to Mt. Thunderclap";
+        } else if(map_id==2000) {
             if(const auto* passage=mitra_exit_passage(actor,transition))return passage->label;
         } else if(map_id==3000&&transition.map_id==3000) {
             const auto exit=read<int>(actor,L"m_UniqueId",1040);
