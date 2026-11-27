@@ -35,6 +35,12 @@ inline bool wind_at_other_dock(int lift,Vec3 p) {
     default:return false;
     }
 }
+inline bool mobliz_at_other_dock(int lift,Vec3 p) {
+    if(lift==81)return near_dock(p,{2000,8000,30})||near_dock(p,{2000,8000,1638});
+    if(lift==82)return near_dock(p,{1200,12000,1630});
+    if(lift==61)return near_dock(p,{5200,15200,1630});
+    return false;
+}
 // Build 24250053, Dng_04Dir_42_01_GD and _NAV. The first upper landing
 // and the main upper walkway share area 3. The lower floor and the
 // walkway above it likewise share area 1, but are separated by a lift.

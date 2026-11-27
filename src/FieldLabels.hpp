@@ -82,6 +82,8 @@ inline const char* exact_placement_label(AreaKind kind,std::wstring_view actor,i
             L"PersistentLevel.BP_MapGimmick_BlockingBase_Child_MagicPot_C_2","Pearly Pot"},
         {AreaKind::Book,3,L"/Game/Map/Dng/02Lan/02Lan_40/GD/Dng_02Lan_40_01_GD.Dng_02Lan_40_01_GD:"
             L"PersistentLevel.BP_MapGimmick_BlockingBase_Child_MagicPot_C_1","Pot"},
+        {AreaKind::Book,85,L"/Game/Map/Dng/04Dir/04Dir_41/GD/Dng_04Dir_41_03_GD.Dng_04Dir_41_03_GD:"
+            L"PersistentLevel.BP_MapGimmick_BlockingBase_Child_MagicPot_C_1","Pot"},
         {AreaKind::Interaction,4,L"/Game/Map/Dng/05Old/05Old_43/EV/Dng_05Old_43_01_EV.Dng_05Old_43_01_EV:"
             L"PersistentLevel.BP_MapGimmick_InteractEventTrigger_C_2","Water ley line"},
         {AreaKind::Interaction,9,L"/Game/Map/Dng/04Dir/04Dir_40/EV/Dng_04Dir_40_01_EV.Dng_04Dir_40_01_EV:"

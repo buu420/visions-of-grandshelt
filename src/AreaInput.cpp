@@ -897,7 +897,7 @@ std::vector<AreaTarget> scan(UObject* pawn,const std::string* only,const StorySp
         const auto& info=area_kind_info(kind);
         const auto category=town?town->category:info.category;
         const bool mountain_ladder=kind==AreaKind::Ladder&&is_thunderclap_ladder(actor);
-        const auto ladder=kind==AreaKind::Ladder&&(is_town_ladder(actor)||mountain_ladder);
+        const auto ladder=kind==AreaKind::Ladder&&(is_town_ladder(actor)||mountain_ladder||is_mobliz_ladder(actor));
         const auto end=ladder?capture_interaction_box(actor,pawn):std::nullopt;
         if(ladder&&!end)return;
         const auto position=end?std::optional{end->center}:navigation_position(actor);
@@ -1452,6 +1452,11 @@ bool is_thunderclap_ladder(UObject* actor) {
     return (id==1&&instance==L"BP_MapGimmickLadder_C_0")||(id==2&&instance==L"BP_MapGimmickLadder_C_1")||
         (id==3&&instance==L"BP_MapGimmickLadder_C_2");
 }
+bool is_mobliz_ladder(UObject* actor) {
+    return native_kind(actor,AreaKind::Ladder)&&read<int>(actor,L"m_UniqueId",808)==59&&
+        path(actor)==L"/Game/Map/Dng/04Dir/04Dir_41/GD/Dng_04Dir_41_03_GD.Dng_04Dir_41_03_GD:"
+            L"PersistentLevel.BP_MapGimmick_Object_Ladderwood02_C_0";
+}
 
 std::optional<ActivationBox> capture_interaction_box(UObject* actor,UObject* pawn) {
     const auto player_overlap=[&](UObject* component)->std::optional<ActivationBox> {
@@ -1475,7 +1480,7 @@ std::optional<ActivationBox> capture_interaction_box(UObject* actor,UObject* paw
         const auto end=mysidia_warp_end(actor,pawn);
         return end?std::optional{end->box}:std::nullopt;
     }
-    if((is_town_ladder(actor)||is_thunderclap_ladder(actor))&&actor_world(actor)==actor_world(pawn)&&
+    if((is_town_ladder(actor)||is_thunderclap_ladder(actor)||is_mobliz_ladder(actor))&&actor_world(actor)==actor_world(pawn)&&
        byte_call(actor,L"GetGimmickCondition")==0) {
         const auto origin=navigation_position(pawn);
         auto* low=object_value(actor,L"m_pBottomBoxComponent",1000);
@@ -1528,7 +1533,7 @@ std::optional<ActivationBox> capture_interaction_box(UObject* actor,UObject* paw
 }
 bool requires_checked_interaction_box(UObject* actor) {
     return town_interaction(actor)||mysidia_warp(actor)||is_town_ladder(actor)||research_lab_warp(actor)||research_lab_rope(actor)||
-        is_thunderclap_ladder(actor)||thunderclap_rope_label(actor)||
+        is_thunderclap_ladder(actor)||thunderclap_rope_label(actor)||is_mobliz_ladder(actor)||
         research_lab_pickup_or_console(actor)||
         native_kind(actor,AreaKind::TreasureChest)||
         native_kind(actor,AreaKind::Door)||native_kind(actor,AreaKind::ElevatorCall)||native_kind(actor,AreaKind::Elevator)||

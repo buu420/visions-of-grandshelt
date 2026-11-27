@@ -55,6 +55,7 @@ std::optional<ActivationBox> capture_interaction_box(resonance::unreal::UObject*
 std::optional<ActivationBox> capture_ladder_bottom_box(resonance::unreal::UObject* actor);
 bool is_town_ladder(resonance::unreal::UObject* actor);
 bool is_thunderclap_ladder(resonance::unreal::UObject* actor);
+bool is_mobliz_ladder(resonance::unreal::UObject* actor);
 // These interactables need an approach to the live prompt box rather than the actor origin.
 bool requires_checked_interaction_box(resonance::unreal::UObject* actor);
 std::optional<bool> burning_castle_door_open(resonance::unreal::UObject* actor);

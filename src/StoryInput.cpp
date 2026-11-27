@@ -611,14 +611,14 @@ bool story_return_save_point(StorySnapshot& story,UObject* pawn,UObject* world,i
     story_step_actor(story,actor,approach->center,key,"Save point for the return to the entrance");
     return true;
 }
-bool wind_story_leg(StorySnapshot& story,UObject* pawn,UObject* world,std::span<UObject* const> registry,
-        const chapter_two::LiftLeg& leg) {
+bool story_lift_leg(StorySnapshot& story,UObject* pawn,UObject* world,std::span<UObject* const> registry,
+        const chapter_two::LiftLeg& leg,std::string key,bool (*other_dock)(int,Vec3)) {
     using namespace chapter_two;
     auto* lift=registered_gimmick(registry,world,leg.lift,L"/Script/mucha.CPP_MapGimmick_Elevator_Interact");
     const auto location=getter<Vec3>(lift,L"K2_GetActorLocation");
     const auto state=getter<unsigned char>(lift,L"GetGimmickCondition");
     const bool docked=location&&near_dock(*location,leg.dock);
-    const bool away=location&&wind_at_other_dock(leg.lift,*location);
+    const bool away=location&&!docked&&other_dock(leg.lift,*location);
     const auto boarding=docked?capture_interaction_box(lift,pawn):std::nullopt;
     auto* call=away&&leg.call>=0?registered_gimmick(registry,world,leg.call,L"/Script/mucha.CPP_MapGimmick_CallSwitch"):nullptr;
     const auto call_box=call&&object_value(call,L"m_pElevator",1016)==lift&&
@@ -626,7 +626,6 @@ bool wind_story_leg(StorySnapshot& story,UObject* pawn,UObject* world,std::span<
             capture_interaction_box(call,pawn):std::nullopt;
     const auto step=lift_step(leg,{location.has_value(),state==0,docked,boarding.has_value(),call_box.has_value(),
         location&&!docked&&!away&&leg.call>=0});
-    auto key="wind-"+std::to_string(leg.lift);
     const auto name=tr(leg.name);
     switch(step) {
     case LiftStep::Call:
@@ -1387,7 +1386,59 @@ bool mobliz_story_leg(StorySnapshot& story,UObject* pawn,UObject* world,UObject*
         return dock&&near_dock(*dock,{4400,3600,-10})&&target({roof,interact(roof)},"mobliz-roof",
             "Rooftop return elevator","Take the rooftop elevator back into the shipyard.");
     }
-    if(map!=3060||phase!=2095)return false;
+    if(map!=3060)return false;
+    if(phase==2090) {
+        const auto power=getter<unsigned char>(elevator(82),L"GetGimmickCondition");
+        switch(area) {
+        case 4:
+            if(story_gate(story,pawn,world,manager,5,3060,1,"mobliz-factory-passage",
+                    "Passage to the factory floor","Follow the passage into the shipyard."))return true;
+            break;
+        case 0:
+            if(power==0)
+                return story_lift_leg(story,pawn,world,registry,
+                    {82,20,1,{1200,12000,30},"center elevator","up to the inner walkway"},
+                    "mobliz-center-elevator",mobliz_at_other_dock);
+            if(power==1)
+                return story_lift_leg(story,pawn,world,registry,
+                    {81,9,0,{2000,8000,30},"west elevator","up to the upper walkway"},
+                    "mobliz-west-elevator",mobliz_at_other_dock);
+            break;
+        case 2: {
+            // The west and inner walkways share area 2. The factory floor and
+            // the two elevators connect them.
+            if(position.y<11100.) {
+                if(power==0)
+                    return story_lift_leg(story,pawn,world,registry,
+                        {81,22,1,{2000,8000,1638},"west elevator","down to the factory floor"},
+                        "mobliz-west-return",mobliz_at_other_dock);
+                if(power==1) {
+                    auto* lever=registered_gimmick(registry,world,52,L"/Script/mucha.CPP_MapGimmick_Switch");
+                    if(read<unsigned char>(lever,L"m_CanPressed",1112)==1&&
+                       target({lever,interact(lever)},"mobliz-upper-switch","Elevator power switch",
+                           "Use the switch on the upper walkway to power the elevator."))return true;
+                }
+                break;
+            }
+            [[fallthrough]];
+        }
+        case 1: {
+            const auto warning=trigger(84,"C02_Dng_04Dir_41_CanNotRetrun_01");
+            if(target(warning,"mobliz-rooftop-approach","Approach to the rooftop elevator",
+                    "Head toward the rooftop elevator.",true))return true;
+            return story_lift_leg(story,pawn,world,registry,
+                {83,-1,0,{7600,12000,830},"rooftop elevator","up to the rooftop"},
+                "mobliz-rooftop-elevator",mobliz_at_other_dock);
+        }
+        case 3:
+            return story_lift_leg(story,pawn,world,registry,
+                {61,10,1,{5200,15200,30},"treasure elevator","up to the upper walkway"},
+                "mobliz-treasure-elevator",mobliz_at_other_dock);
+        }
+        story.unavailable_reason=tr("The next passage in Mobliz Shipyard could not be verified here.");
+        return true;
+    }
+    if(phase!=2095)return false;
     story.nearby_clue=nearby_mobliz_marking(pawn,world,area,position);
     const auto power=trigger(48,"C02_Moburizu_001_01");
     const auto fence=trigger(46,"C02_Moburizu_002_01");
@@ -1506,7 +1557,8 @@ bool capture_chapter_two_legs(StorySnapshot& story,UObject* pawn,UObject* world,
         return point.role==0&&point.map_kind==0&&point.map_id==(map==3070?3070:3060)&&!point.object_target;
     }))return false;
     const auto phase=main_progress();
-    if(phase!=(map==3070?2130:2095))return false;
+    if(map==3070&&phase!=2130)return false;
+    if(map!=3070&&phase!=2095&&(map!=3060||phase!=2090))return false;
     const auto manager=world_scoped(L"CPP_MapManager",world);
     const auto area=manager.ambiguous?std::nullopt:getter<int>(manager.object,L"GetMapAreaId");
     const auto position=getter<Vec3>(pawn,L"K2_GetActorLocation");
@@ -1515,7 +1567,8 @@ bool capture_chapter_two_legs(StorySnapshot& story,UObject* pawn,UObject* world,
     if(map!=3070)return mobliz_story_leg(story,pawn,world,manager.object,registry,map,main_id,*phase,*area,*position);
     const auto leg=chapter_two::wind_leg(map,main_id,*phase,*area,*position);
     if(!leg)return false;
-    return wind_story_leg(story,pawn,world,registry,*leg);
+    return story_lift_leg(story,pawn,world,registry,*leg,"wind-"+std::to_string(leg->lift),
+        chapter_two::wind_at_other_dock);
 }
 bool capture_chapter_four_legs(StorySnapshot& story,UObject* pawn,UObject* world,int map,int quest,
         std::span<const FilteredPoint> points) {

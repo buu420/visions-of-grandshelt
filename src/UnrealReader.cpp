@@ -2077,7 +2077,7 @@ std::optional<ActivationBox> wind_boarding_floor(UObject* pawn,UObject* target,V
     // Keep the physical boarding corridor on the surveyed deck only.
     return inside_box(corridor,feet)?std::optional{corridor}:std::nullopt;
 }
-std::optional<ActivationBox> mobliz_escape_floor(UObject* pawn,UObject* target,Vec3 feet) {
+std::optional<ActivationBox> mobliz_walkable_floor(UObject* pawn,UObject* target,Vec3 feet) {
     if(!target||!mobliz_world(pawn)||actor_world(target)!=actor_world(pawn))return {};
     const auto id=read<int>(target,L"m_UniqueId");
     if(!id)return {};
@@ -2087,21 +2087,31 @@ std::optional<ActivationBox> mobliz_escape_floor(UObject* pawn,UObject* target,V
     const bool lever=is(target,L"/Script/mucha.CPP_MapGimmick_Switch");
     const bool gate=is(target,L"/Script/mucha.CPP_MapTransitionTrigger");
     const bool memo=*id==8&&requires_checked_interaction_box(target);
-    // Both Recast meshes have no polygons on the timed escape's middle and
-    // upper walkways. The lower deck and upper floor meet at ordinary stairs.
+    const bool item=is(target,L"/Script/mucha.CPP_MapGimmick_FieldItem");
+    const bool chest=is(target,L"/Script/mucha.CPP_MapGimmick_TreasureBox");
+    const bool save=is(target,L"/Script/mucha.CPP_MapGimmick_SavePoint");
+    const bool pot=*id==85&&requires_checked_interaction_box(target);
+    // The middle and upper walkways meet at ordinary stairs and can be
+    // missing from the navmesh. The factory and treasure pit require lifts.
     // Coordinates bound the candidate search, not whether an edge is safe.
-    if((event&&(*id==46||*id==48))||(lift&&*id==73)||(pedestal&&*id==14)||
-       (lever&&*id>=63&&*id<=67)||memo) {
+    if((event&&(*id==46||*id==48||*id==84))||(lift&&(*id==61||*id==73||*id==81||*id==82||*id==83))||
+       (pedestal&&(*id==14||*id==19||*id==21||*id==22))||(lever&&(*id==52||*id==54||(*id>=63&&*id<=67)))||
+       memo||item||chest||save||pot||is_mobliz_ladder(target)) {
         const ActivationBox decks{{3150,12400,1250},{5000,4950,560},0};
         if(inside_box(decks,feet))return decks;
     }
-    if((gate&&*id==4)||(event&&*id==47)) {
+    if((gate&&(*id==4||*id==9))||(event&&*id==47)||(lift&&(*id==72||*id==73||*id==81||*id==82))||
+       (pedestal&&(*id==9||*id==11||*id==13||*id==20))) {
         const ActivationBox factory{{-550,10950,0},{3100,3600,400},0};
         if(inside_box(factory,feet))return factory;
     }
-    if((gate&&*id==0)||(event&&*id==49)) {
+    if((gate&&(*id==0||*id==5))||(event&&*id==49)||item||save) {
         const ActivationBox entrance{{1290,-2590,0},{2900,3650,400},0};
         if(inside_box(entrance,feet))return entrance;
+    }
+    if(chest||(lift&&*id==61)||(pedestal&&*id==10)) {
+        const ActivationBox pit{{4750,15200,300},{900,490,400},0};
+        if(inside_box(pit,feet))return pit;
     }
     return {};
 }
@@ -3004,12 +3014,31 @@ std::optional<NativeRoute> capsule_route(UObject* pawn,UObject* target,UObject* 
         // The streetcar arrives at this standing point on the platform.
         graph.push_back({.position={425.,-775.,2.15}});
     } else if(room&&!direct_only&&mobliz_world(pawn)) {
-        // Taken from the copied-game walk around the railings, stair approach
-        // and upper passage. Every edge still needs its own live capsule and
-        // walkable floor proof; there are no forced jumps or floor changes.
-        for(const auto point:std::array<Vec3,11>{{{6150,13000,800},{5600,13050,800},
+        // The factory aisle bends before reaching the west elevator. The
+        // surveyed points also cover the stairs and rails on the upper decks.
+        // Every edge still needs a live capsule and floor check.
+        constexpr Vec3 walkways[]{
+            {-950,12000,2.4},{-550,11850,2.4},{350,11050,2.15},{350,9350,2.15},
+            {430,8950,2.15},{1000,8450,2.15},{1380,8150,10.77},
+            {1520,8010,10.78},{2212,8010,3.29},
+            {2212,7996,1611.29},{2450,7996,1602.15},{2851,7996,1602.15},
+            {3552,8863,1602.15},{3560,9052,1602.15},{3689.62,9117.47,1602.15},
+            {3819.62,9117.47,1602.15},{3819.62,9247.47,1602.15},
+            {3689.62,9377.47,1602.15},{3559.62,9507.47,1602.15},
+            {3364.62,9702.47,1602.15},{3057,9705,1602.15},{2975,9575,1602.15},
+            {4737.34,9504.92,1602.15},{4737.36,9262.04,1602.15},{4170.70,9267.58,1602.15},
+            {4170.70,8766.14,1602.15},{5356.78,8766.14,1602.15},{5356.78,10096.28,1602.15},{5775,10100,1602.15},
+            {5775,10275,1602.15},{5825,10450,1602.15},{6325,10450,1602.15},{7000,10450,1602.15},
+            {1387,12020,1611.29},{1200,12020,1611.29},{865,12020,1630},{665,12020,1602.15},
+            {470.79,12019.71,1602.15},
+            {6150,13000,800},{5600,13050,800},
             {3815,13050,800},{3815,15500,1600},{3815,16200,1600},{2400,16200,1600},
-            {1200,16100,1600},{1150,15200,1600},{1000,13900,1600},{540,13650,1600},{550,13200,1600}}})
+            {3840,15000,1602.15},{4210,15000,1602.15},{4220,14475,1602.15},{4825,14075,1602.15},
+            {4550,13450,1602.15},{5250,14500,1602.15},{5250,15200,1602.15},
+            {6175,14460,1602.15},{6175,15800,1602.15},{6175,16560,1602.15},
+            {1200,16100,1600},{1150,15200,1600},{1000,13900,1600},{540,13650,1600},{550,13200,1600}
+        };
+        for(const auto point:walkways)
             if(inside_box(*room,point))graph.push_back({.position=point});
         if(start.z>1500&&start.z<1800&&std::min(start.x,goal.x)<650&&std::max(start.y,goal.y)>14900) {
             // The upper fence opening and the aisle between the equipment
@@ -3188,7 +3217,10 @@ std::optional<NativeRoute> capsule_route(UObject* pawn,UObject* target,UObject* 
             next.path=best->path;next.path.push_back(*floor);next.distance=distance;
         }
     }
-    if(!room_bounds||!box||direct_only||!town_world(actor_world(pawn)))return {};
+    if(!room_bounds||!box||direct_only)return {};
+    const bool shipyard_lane=mobliz_world(pawn)&&std::abs(start.z-box->center.z)<scale*1.8&&
+        std::hypot(start.x-box->center.x,start.y-box->center.y)<scale*24.;
+    if(!shipyard_lane&&!town_world(actor_world(pawn)))return {};
     std::vector<Vec3> approaches;
     for(const auto& point:graph)if(point.goal)approaches.push_back(point.position);
     const auto stride=std::clamp(1.5*sweep->radius,.4*scale,.65*scale);
@@ -4647,7 +4679,7 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
     auto room=inn_floor(p);
     if(!room)room=wind_boarding_floor(p,target,*start);
     if(!room)room=story_walkway(target,*start);
-    if(!room)if(auto floor=mobliz_escape_floor(p,target,*start)) {
+    if(!room)if(auto floor=mobliz_walkable_floor(p,target,*start)) {
         const auto surface=has_mesh?project_navigation(p,library,mesh,*start):std::nullopt;
         if(!surface||!surface->on_mesh)room=std::move(floor);
     }
@@ -5877,6 +5909,14 @@ struct NavigationGuard {
 bool ordinary_walking(UObject* pawn) {
     return ground_travel(pawn)==NativeGroundTravel::Walking;
 }
+bool navigation_controller_available() {
+    const auto cached=controller_backend_status();
+    if(!cached.ready||cached.connected>1)return false;
+    if(cached.connected==1)return true;
+    // A long native route query can outlive the last game-owned XInput sample.
+    const auto current=controller_walking_state(true);
+    return current.ready&&!current.read_failed&&current.connected==1;
+}
 constexpr auto antlion_warning="Beware the Antlion. Cross by chocobo only.";
 std::optional<WalkingCapsule> antlion_player_capsule(UObject* pawn) {
     auto* capsule=object(pawn,L"CapsuleComponent");
@@ -6719,7 +6759,7 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
         }
     }
     if(!navigation_door_approach_&&is(live_target,L"/Script/mucha.CPP_MapGimmickLadder")&&
-       (story_target(target_id_)||is_town_ladder(live_target)||is_thunderclap_ladder(live_target)||
+       (story_target(target_id_)||is_town_ladder(live_target)||is_thunderclap_ladder(live_target)||is_mobliz_ladder(live_target)||
         sanctissimus_pot_ladder(live_target,active_target_->position))) {
         const auto axes=navigation_path_.valid?std::optional<WalkingAxes>{{navigation_path_.right,navigation_path_.up}}:
             walking_input_axes(pawn);
@@ -7018,9 +7058,8 @@ void UnrealReader::movement_tick() {
     stage="navigation movement guard";
     const auto guard=capture_navigation_guard();
     const bool automatic=navigation_.mode()==NavigationMode::Automatic;
-    if(navigation_controller_&&!automatic) {
-        const auto controller=controller_backend_status();
-        if(!controller.ready||controller.connected!=1){stop_navigation("Navigation stopped. Controller unavailable.",true);return;}
+    if(navigation_controller_&&!automatic&&!navigation_controller_available()) {
+        stop_navigation("Navigation stopped. Controller unavailable.",true);return;
     }
     if(!guard.foreground){
         navigation_speech_stop_pending_="Navigation stopped. Game focus lost.";
@@ -7242,8 +7281,9 @@ bool UnrealReader::suspend_auto_walk_trip() {
 }
 
 bool UnrealReader::pause_field_guidance() {
-    if(navigation_.mode()==NavigationMode::Off||navigation_.target()!=target_id_||
-       story_target(target_id_)||destination_leg_||navigation_crossing_)return false;
+    const auto mode=navigation_.mode();
+    if(mode==NavigationMode::Off||navigation_.target()!=target_id_||navigation_crossing_||
+       (mode==NavigationMode::Automatic&&(story_target(target_id_)||destination_leg_)))return false;
     if(navigation_path_sample_!=0)log("NAV field guidance paused target="+target_id_);
     navigation_path_={};navigation_path_sample_=0;navigation_ground_.reset();
     navigation_activation_arrival_metres_.reset();
@@ -7388,20 +7428,25 @@ void UnrealReader::observe_destination(UObject* pawn,bool battle) {
     if(!destination_leg_||navigation_category_!=(destination_leg_->esper_marker?markers_category:destination_category))return;
     DWORD foreground{};GetWindowThreadProcessId(GetForegroundWindow(),&foreground);
     if(foreground!=GetCurrentProcessId()||!speech_.ready()) {
+        log("TRAVEL destination guidance cleared because game focus or speech output is unavailable");
         destination_leg_.reset();
         destination_crossed_.clear();
         return;
     }
     auto& trip=*destination_leg_;
-    if(battle)suspend_auto_walk_trip();
+    if(battle) {
+        // Retain the selected manual route while the fight and results own
+        // input. Its next cue still requires a fresh route from grounded feet.
+        if(trip.mode==NavigationMode::Manual)pause_field_guidance();
+        else suspend_auto_walk_trip();
+    }
     auto current=!battle&&!description_busy_&&pawn?loaded_travel_location(pawn):std::nullopt;
     if(current&&(current->point!=trip.departure.point||trip.continuation.pending()||
         travel_arrived(trip.departure,trip.passage,*current))) {
         const auto control=capture_navigation_guard();
         if(control.pawn!=pawn||!control.eligible||!control.ground)current.reset();
     }
-    const auto handoff=trip.continuation.observe(trip.departure,trip.passage,current,
-        battle&&trip.mode==NavigationMode::Automatic);
+    const auto handoff=trip.continuation.observe(trip.departure,trip.passage,current,battle);
     if(handoff==TravelHandoff::Wait)return;
     const auto previous=std::exchange(destination_leg_,std::nullopt).value();
     stop_navigation("");
@@ -7419,7 +7464,7 @@ void UnrealReader::observe_destination(UObject* pawn,bool battle) {
             if(const auto issue=automatic_resume_issue(guard,previous.controller);!issue.empty()) {
                 speech_.say(tr(issue));return;
             }
-        } else if(previous.controller&&(!guard.controller_allowed||controller_backend_status().connected!=1)) {
+        } else if(previous.controller&&(!guard.controller_allowed||!navigation_controller_available())) {
             speech_.say(tr("Destination kept. Start guidance when controller navigation is available."));return;
         }
         target_id_=thunderclap_esper_id_;
@@ -7446,7 +7491,7 @@ void UnrealReader::observe_destination(UObject* pawn,bool battle) {
             return;
         }
     }
-    if(previous.controller&&previous.mode==NavigationMode::Manual&&controller_backend_status().connected!=1) {
+    if(previous.controller&&previous.mode==NavigationMode::Manual&&!navigation_controller_available()) {
         speech_.say(tr("Destination kept. Start guidance when controller navigation is available."));
         return;
     }
@@ -7695,7 +7740,8 @@ void UnrealReader::tick(unsigned commands) {
         if(title) {
             area_browse_.reset();
             cancel_auto_walk_trip();
-            if(destination_leg_&&destination_leg_->esper_marker)destination_leg_.reset();
+            destination_leg_.reset();
+            destination_crossed_.clear();
             thunderclap_esper_id_.clear();
         }
         if(title||!pause_field_guidance()) {
@@ -7798,7 +7844,7 @@ void UnrealReader::tick(unsigned commands) {
             story_capture.field_control,description_busy_,voice.any_talk_voice_busy==NarrationFact::No);
     }
     const auto story_update=story_.observe(story_capture,story_can_announce,speech_.epoch());
-    apply_story_update(story_update);
+    if(navigation_.mode()!=NavigationMode::Manual||!(battle.active||battle_results))apply_story_update(story_update);
     if(speech_.ready() && foreground==GetCurrentProcessId()) {
         // Capture still runs while output is unavailable so battle/world end
         // discards stale sessions. Consume current results only for delivery.
