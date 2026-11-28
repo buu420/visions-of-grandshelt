@@ -4071,6 +4071,45 @@ std::vector<Vec3> walking_lane_suffix(Vec3 start,std::span<const Vec3> walkway,d
     }
     return points;
 }
+std::optional<direct_nav::Path> sanctum_capital_departure(UObject* pawn,UObject* target,UObject* system,UObject* mesh,
+        Vec3 start,Vec3 goal,double scale,bool log_query) {
+    if(read<int>(target,L"m_UniqueId")!=68||
+       path(target)!=L"/Game/Map/Wld/GD/Wld_02Lan_GD.Wld_02Lan_GD:PersistentLevel.BP_MapTransitionTrigger_C_0")
+        return {};
+    constexpr ActivationBox verge{{12790.,20025.,65.},{625.,845.,180.},0};
+    if(!inside_box(verge,start)||start.y<19680.)return {};
+    // The straight mesh approach cuts across the crest near the capital.
+    // Rejoin the road below it using the surveyed, continuous walking lane.
+    constexpr std::array lane{
+        Vec3{12627.82,20636.00,132.41},Vec3{12627.82,20473.93,112.57},Vec3{12627.82,20260.09,53.67},
+        Vec3{12627.82,19847.98,51.51},Vec3{12679.29,19668.94,65.18}
+    };
+    auto prefix=walking_lane_suffix(start,lane,scale,.45,.03);
+    if(prefix.size()<2)return {};
+    const auto sweep=capture_capsule_sweep(pawn);
+    if(!sweep)return {};
+    const auto probe=sweep->ground_probe();
+    std::size_t supported=1;
+    for(;supported<prefix.size();++supported) {
+        const auto floor=checked_walking_leg(prefix[supported-1],prefix[supported],scale,sweep->floor_z,probe);
+        if(!floor||!inside_box(verge,*floor)) {
+            if(log_query)log("NAV Sanctum surveyed segment unavailable from="+coordinates(prefix[supported-1])+
+                " to="+coordinates(prefix[supported]));
+            break;
+        }
+        prefix[supported]=*floor;
+    }
+    prefix.resize(supported);
+    // A later shoulder may be temporarily obstructed. Keep the longest
+    // verified prefix that reaches a native polygon and still leads to this gate.
+    while(prefix.size()>=2) {
+        if(capsule_floor_on_mesh(*sweep,system,mesh,prefix.back(),scale))
+            if(auto route=join_verified_walking_prefix(pawn,system,mesh,prefix,goal,scale))return route;
+        if(log_query)log("NAV Sanctum surveyed rejoin unavailable at="+coordinates(prefix.back()));
+        prefix.pop_back();
+    }
+    return {};
+}
 std::optional<NativeRoute> factory_west_walk(UObject* pawn,UObject* target,UObject* library,UObject* mesh,
         Vec3 start,Vec3 goal,WalkingAxes axes,double scale,bool ground_check,std::uint64_t path_id) {
     const bool ladder=zoldaad_factory_west_ladder(target,goal);
@@ -4483,12 +4522,21 @@ std::optional<NativeRoute> burning_castle_chamber_route(UObject* pawn,UObject* d
     auto* swing=UObjectGlobals::StaticFindObject((std::wstring(level)+L"BP_MapGimmick_TriggerDoor_C_3").c_str());
     if(read<int>(swing,L"m_UniqueId")!=35)return {};
     const auto trigger=capture_swing_door_trigger(pawn,swing);
+    constexpr Vec3 door_threshold{-13220.,5600.,1182.15};
+    const auto approach=trigger?activation_approach(*trigger,capsule,door_threshold,scale):std::nullopt;
+    if(!approach)return {};
+    // The ladder deposits the party west of the obstruction. Check that side
+    // first so the route never needs to cross the obstruction to reach a detour.
+    constexpr std::array from_ladder{Vec3{-12475.,5795.,1182.15},Vec3{-13065.,5600.,1182.15},door_threshold};
+    if(auto route=verified_walking_turns(*sweep,west_hall,start,from_ladder,axes,scale,ground_check,path_id,
+        approach->arrival_metres,900,"Castle ladder landing",true)) {
+        route->door_approach=true;
+        return route;
+    }
     const std::array threshold{Vec3{-10925.,std::clamp(start.y,4960.,6320.),1182.15},
         Vec3{-10925.,4960.,1182.15},Vec3{-11325.,4960.,1182.15},Vec3{-11325.,5008.,1182.15},
         Vec3{-11920.,5008.,1182.15},Vec3{-12500.,5008.,1182.15},Vec3{-13065.,5008.,1182.15},
-        Vec3{-13065.,5600.,1182.15},Vec3{-13220.,5600.,1182.15}};
-    const auto approach=trigger?activation_approach(*trigger,capsule,threshold.back(),scale):std::nullopt;
-    if(!approach)return {};
+        Vec3{-13065.,5600.,1182.15},door_threshold};
     auto route=verified_walking_turns(*sweep,west_hall,start,threshold,axes,scale,ground_check,path_id,
         approach->arrival_metres,2400,"Castle east wing",true);
     if(route)route->door_approach=true;
@@ -5698,6 +5746,15 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
             native.offset_points.clear();
             arrival_metres=overlap->arrival_metres;
             centered_spiral=true;
+        }
+    }
+    if(swept_default&&transition&&endpoint) {
+        if(auto departure=sanctum_capital_departure(p,target,library,mesh,*start,native.points.back(),*scale,log_query)) {
+            if(const auto verified_end=box_endpoint(*departure)) {
+                native=std::move(*departure);
+                arrival_metres=verified_end->arrival_metres;
+                if(log_query)log("NAV Sanctum departure verified from="+coordinates(*start));
+            }
         }
     }
     std::size_t bypass_rejoin{};

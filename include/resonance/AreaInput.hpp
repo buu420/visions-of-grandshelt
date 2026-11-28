@@ -103,7 +103,9 @@ struct MitraLeg {
     Vec3 position;
     const char* label{};
 };
-std::optional<MitraLeg> capture_mitra_leg(resonance::unreal::UObject* pawn);
+std::optional<MitraLeg> capture_mitra_leg(resonance::unreal::UObject* pawn,
+    std::optional<int> walking_area=std::nullopt);
+std::optional<bool> mitra_house_door_open(resonance::unreal::UObject* actor);
 struct StoryExitRoute {
     resonance::unreal::UObject* actor{}; // Same-frame capture only.
     Vec3 position;

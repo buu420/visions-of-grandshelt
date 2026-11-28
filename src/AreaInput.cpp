@@ -1329,6 +1329,12 @@ std::optional<bool> kol_inn_door_open(UObject* actor) {
           L"PersistentLevel.BP_MapGimmick_Object_Door_Single002_C_5")return {};
     return story_door_box_open(actor);
 }
+std::optional<bool> mitra_house_door_open(UObject* actor) {
+    const auto* door=mitra_door(actor);
+    const auto id=read<int>(actor,L"m_UniqueId",808);
+    if(!door||!((id==29&&door->suffix==L"1")||(id==31&&door->suffix==L"2")))return {};
+    return story_door_box_open(actor);
+}
 std::optional<bool> siren_tower_door_open(UObject* actor) {
     return siren_tower_door(actor)?story_door_box_open(actor):std::nullopt;
 }
@@ -1689,16 +1695,19 @@ std::optional<CastleLeg> capture_castle_leg(UObject* pawn) {
     }
     return result;
 }
-std::optional<MitraLeg> capture_mitra_leg(UObject* pawn) {
+std::optional<MitraLeg> capture_mitra_leg(UObject* pawn,std::optional<int> walking_area) {
     auto* world=actor_world(pawn);
     if(!world)return {};
     const auto current=registry(world);
     if(current.problem||!current.manager)return {};
     MapContext map(world,current.manager);
     if(map.current_map()!=2000)return {};
-    Getter area(current.manager,L"GetMapAreaId",4,0,4);
-    if(!area||path(area.function())!=L"/Script/mucha.CPP_MapManager:GetMapAreaId")return {};
-    const auto id=mitra_story_exit_id(area.call<int>(current.manager));
+    if(!walking_area) {
+        Getter area(current.manager,L"GetMapAreaId",4,0,4);
+        if(!area||path(area.function())!=L"/Script/mucha.CPP_MapManager:GetMapAreaId")return {};
+        walking_area=area.call<int>(current.manager);
+    }
+    const auto id=mitra_story_exit_id(*walking_area);
     if(!id)return {};
     UObject* selected=nullptr;
     for(auto* actor:current.exits) {

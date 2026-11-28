@@ -718,6 +718,84 @@ bool story_gate(StorySnapshot& story,UObject* pawn,UObject* world,UObject* manag
     destination.exit_route_key=route->route_key;
     return true;
 }
+bool mitra_house_story(StorySnapshot& story,UObject* pawn,UObject* world,int map,int quest,
+        std::span<const FilteredPoint> points) {
+    if(map!=2000||quest!=1001||!story.main_progress||
+        (*story.main_progress!=1060&&*story.main_progress!=1070&&*story.main_progress!=1080)||
+        std::none_of(points.begin(),points.end(),[](const FilteredPoint& point) {
+            return point.role==0&&point.map_kind==0&&point.map_id==2000;
+        }))return false;
+
+    const int progress=*story.main_progress;
+    const auto manager=world_scoped(L"CPP_MapManager",world);
+    const auto section=capture_walking_section(pawn,false);
+    const auto area=section?std::optional{section->id}:
+        manager.ambiguous?std::nullopt:getter<int>(manager.object,L"GetMapAreaId");
+    if(!area||*area<1||*area>10) {
+        story.unavailable_reason=tr("The current room in Mitra could not be verified.");
+        return true;
+    }
+    const auto gate=[&](int id,int point,const char* key,const char* label,const char* instruction) {
+        return story_gate(story,pawn,world,manager.object,id,2000,point,key,label,instruction);
+    };
+    const auto door=[&](int id) {
+        return registered_gimmick(registered_story_gimmicks(world),world,id,L"/Script/mucha.CPP_MapGimmick_Object_DoorBase");
+    };
+    const auto guide_to_door=[&](UObject* actor,const char* key,const char* label,const char* instruction) {
+        if(!story_actor_available(pawn,actor))return false;
+        const auto box=capture_interaction_box(actor,pawn);
+        if(!box)return false;
+        story_step(story,key,instruction);
+        story_step_actor(story,actor,box->center,key,label);
+        return true;
+    };
+
+    if(*area==1||*area==10) {
+        auto* entrance=door(29);
+        if(const auto open=mitra_house_door_open(entrance)) {
+            if(!*open&&guide_to_door(entrance,"mitra-open-house","Door of Rain's house","Open the front door of Rain's house."))
+                return true;
+            if(*open&&gate(24,128,"mitra-enter-house","Entrance to Rain's house","Enter Rain's house."))
+                return true;
+        }
+    } else if(*area==5) {
+        if(progress==1070) {
+            auto* basement=door(31);
+            if(mitra_house_door_open(basement)==false&&story_event_matches(basement,"C01_013_01")&&
+                guide_to_door(basement,"mitra-use-key","Basement door inside Rain's house","Use the key on the basement door."))
+                return true;
+        } else if(progress==1080&&gate(3,130,"mitra-enter-basement","Door to Rain's basement","Enter Rain's basement.")) {
+            return true;
+        }
+    } else if(*area==9&&progress==1080) {
+        auto* event=registered_gimmick(registered_story_gimmicks(world),world,6,L"/Script/mucha.CPP_MapGimmick_EventTrigger");
+        if(const auto point=active_story_trigger(pawn,event,"C01_014_01")) {
+            story_step(story,"mitra-investigate-basement","Go farther into Rain's basement.");
+            story_step_actor(story,event,*point,"mitra-investigate-basement","Investigation in Rain's basement",true);
+            return true;
+        }
+    }
+    // Return to the street (or to the house from the basement) after a detour.
+    const bool return_needed=(*area!=1&&*area!=10)&&
+        !(*area==5&&progress>=1070)&&!(*area==9&&progress==1080);
+    if(return_needed)if(const auto leg=capture_mitra_leg(pawn,*area)) {
+        if(const auto route=capture_story_exit_route(pawn,leg->actor);route&&!route->event_only&&
+            route->destination_map==2000&&route->destination_point) {
+            constexpr auto key="mitra-house-return";
+            story_step(story,key,*area==9?"Return to Rain's house.":"Return to the street to reach Rain's house.");
+            story_step_actor(story,leg->actor,route->position,key,leg->label,true);
+            auto& destination=story.destinations.back();
+            destination.exit=true;
+            destination.event_trigger=false;
+            destination.exit_source=path(leg->actor);
+            destination.exit_route_key=route->route_key;
+            return true;
+        }
+    }
+    story.unavailable_reason=tr("The current passage or door at Rain's house could not be verified.");
+    return true;
+}
+
 bool burning_castle_story(StorySnapshot& story,UObject* pawn,UObject* world,int map,int quest,
         std::span<const FilteredPoint> points) {
     if(map!=3020||quest!=1001||(story.main_progress!=1100&&story.main_progress!=1110)||
@@ -2990,6 +3068,7 @@ StorySnapshot capture_story_input(UObject* pawn) {
             if(capture_chapter_six_lab(result,pawn,world,*map,*main_id,*points))return result;
             if(capture_chapter_seven_leg(result,pawn,world,game_instance,*map,*main_id))return result;
             if(capture_chapter_eight_leg(result,pawn,world,*map,*main_id))return result;
+            if(mitra_house_story(result,pawn,world,*map,*main_id,*points))return result;
             if(burning_castle_story(result,pawn,world,*map,*main_id,*points))return result;
             if(kol_story(result,pawn,world,*map,*main_id,*points))return result;
             if(kolobos_ruins_story(result,pawn,world,*map,*main_id,*points))return result;

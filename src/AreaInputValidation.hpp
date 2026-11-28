@@ -275,16 +275,19 @@ struct CastleLegSpec {int id,point_id;bool doorway;const char* label;};
 inline std::optional<CastleLegSpec> castle_leg_spec(int map,int area,Vec3 position) {
     if(map!=2014||!std::isfinite(position.x)||!std::isfinite(position.y)||!std::isfinite(position.z))return {};
     if(area==5&&position.z>=1200&&position.z<=1400) {
-        // Three upper rooms are separate LocalMap components. These ranges
-        // include their doorway wall and one capsule radius past the baked edges.
-        struct Room {int door;double min_x,max_x,min_y,max_y;};
-        constexpr std::array<Room,3> rooms{{
-            {16,-13180,-10876,4876,6326},
-            {17,-12379,-10810,2476,3926},
-            {18,-12379,-10810,-3926,-2476}
-        }};
+        struct Room {int door;double min_x,max_x,min_y,max_y,door_y;};
+        constexpr std::array rooms{
+            Room{16,-13180,-10876,4876,6326,5600},
+            Room{17,-12379,-10810,2476,3926,3200},
+            Room{18,-12379,-10810,-3926,-2476,-3200},
+            Room{19,-13180,-10596,-7206,-4774,-6000}
+        };
         for(const auto& room:rooms) {
-            if(position.x>=room.min_x&&position.x<=room.max_x&&position.y>=room.min_y&&position.y<=room.max_y)
+            // Keep the doorway leg through the swing-door overlap. The feet
+            // can cross the wall plane before the native route reaches it.
+            const bool threshold=position.x>=room.min_x-96.&&std::abs(position.y-room.door_y)<=150.;
+            if(position.x<=room.max_x&&position.y>=room.min_y&&position.y<=room.max_y&&
+               (position.x>=room.min_x||threshold))
                 return CastleLegSpec{room.door,-1,true,"Door to the hall"};
         }
     }

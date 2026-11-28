@@ -25,6 +25,8 @@ Use the game's interaction button when Story guides you to a door, switch or per
 
 The mod follows the game's Text Language setting. French, German, Spanish (Spain), Japanese, Korean, Simplified Chinese and Traditional Chinese use the screen reader for displayed subtitles and audio descriptions. English audio descriptions use recordings.
 
+In 0.2.72, Story guides you through Rain’s house in Mitra and the room transitions in Grandshelt Castle. The world-map route to Sanctum of Light follows a walkable approach around the steep ground near the capital. [0.2.72 beta notes](docs/release-notes-0.2.72.md)
+
 In 0.2.71, Story guides you through Mobliz Shipyard, Borin’s rescue, and the timed escape. Objects lists reachable pickups as you explore the Shipyard. The manual beacon resumes toward its selected destination when field control returns after a battle. [0.2.71 beta notes](docs/release-notes-0.2.71.md)
 
 In 0.2.70, the route to Onion Knight's Sanctum of Light continues through Thunderclap's lower exit. The Esper map marker carries guidance through the high trail to Ramuh's encounter. [0.2.70 beta notes](docs/release-notes-0.2.70.md)

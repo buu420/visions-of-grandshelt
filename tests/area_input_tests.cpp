@@ -364,6 +364,12 @@ void castle_room_and_exit_legs() {
     require(room&&room->doorway&&room->id==17,"Rain's live room spawn uses its inside doorway");
     auto old=castle_leg_spec(2014,5,{-11841.79,2524.90,1282.15});
     require(old&&old->id==17,"the reported position just inside the walking mesh edge stays in Rain's room");
+    const auto threshold=castle_leg_spec(2014,5,{-12407,3090,1282.15});
+    require(threshold&&threshold->doorway&&threshold->id==17,"the doorway leg survives the threshold");
+    const auto beyond=castle_leg_spec(2014,5,{-12510,3200,1282.15});
+    require(beyond&&!beyond->doorway&&beyond->id==8,"crossing the threshold switches to the hall");
+    const auto captain=castle_leg_spec(2014,5,{-12560,-6090,1282.15});
+    require(captain&&captain->doorway&&captain->id==19,"the captain's room uses its own door");
     auto hall=castle_leg_spec(2014,5,{-12520,1305,1282.15});
     require(hall&&!hall->doorway&&hall->id==8&&hall->point_id==2,"leaving the room selects the passage from the hall");
     auto main=castle_leg_spec(2014,3,{-28600,-16,900});
