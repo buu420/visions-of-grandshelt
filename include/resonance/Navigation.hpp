@@ -87,12 +87,16 @@ struct NavigationFrame {
     bool check_route_turns{}; // Require a live swept proof before following each outgoing world-map leg.
     bool hold_floor_turn{}; // Keep approaching the pivot when its outgoing chord could not be checked.
     bool use_beacon{};
+    double manual_speed_world{}; // Live horizontal ground velocity in world units per second.
 };
 struct RouteBeaconCue {
     double azimuth_degrees{}; // Zero is forward, positive is to the right of the native walking axes.
     double remaining_metres{};
+    double metres_to_waypoint{};
+    double speed_metres_per_second{};
 };
 unsigned route_beacon_interval_ms(double remaining_metres);
+unsigned route_beacon_interval_ms(const RouteBeaconCue&);
 struct NavigationUpdate {
     NavigationMode mode{NavigationMode::Off};
     std::optional<Vec3> movement; // Unit XY world direction, automatic mode only.
@@ -125,7 +129,8 @@ std::vector<SpeechEvent> navigation_speech_for_output(const NavigationUpdate&,bo
 // Manual guidance has no stationary timeout.
 // Automatic walking also requires walking_path and rejects vertical legs; manual
 // guidance accepts any valid, complete, fresh native path, including elevation.
-// The beacon follows the next valid leg and uses the full remaining route length.
+// The beacon follows the current leg. Faster manual movement shortens the pulse interval
+// and uses the outgoing corridor to detect when the player has passed a turn.
 // For spoken guidance, a changed next route point (a real turn) is spoken at once and
 // interrupts, as does a fresh route after leaving the spoken corridor by 2m.
 // A clear control-relative change (>=30 degrees and another octant, at
@@ -142,6 +147,7 @@ public:
     NavigationMode mode() const { return mode_; }
     const std::string& target() const { return target_; }
     std::optional<std::pair<Vec3,Vec3>> leg() const;
+    std::optional<std::pair<Vec3,Vec3>> manual_leg(Vec3 position,double scale,double speed_world) const;
     // Keep the untraversed detour only for the path the follower is using.
     // The caller must check its ground again from the new position.
     std::optional<WalkingBypass> remaining_bypass(const PathSnapshot&,std::uint64_t path_id,
@@ -150,7 +156,7 @@ private:
     struct RoutePoint { Vec3 point; bool endpoint{}; };
     NavigationUpdate arrive(std::string reason);
     NavigationUpdate wait_for_route(const std::string& reason);
-    std::size_t advance_waypoint(Vec3 position,double scale,const GroundCoverage* ground) const;
+    std::size_t advance_waypoint(Vec3 position,double scale,const GroundCoverage* ground,bool fast_manual=false) const;
     NavigationMode mode_{NavigationMode::Off};
     std::string world_,player_,target_;
     bool announced_{},waiting_for_route_{},retried_blockage_{},beacon_audio_{};

@@ -688,6 +688,51 @@ void speech_output_priority() {
     require(event&&event->text==instruction.front().text&&event->interrupt,"a real turn must retain interrupting queue behavior");
     require(navigation_speech_for_output(NavigationUpdate{},true).empty(),"a silent stop must not invent a spoken notice");
 }
+void running_beacon_keeps_the_turn() {
+    const auto sample=[](double now,Vec3 feet) {
+        auto f=at(now,feet,{{0,0,0},{300,0,0},{300,500,0}});
+        f.path.right={0,1,0};f.path.up={1,0,0};
+        f.use_beacon=true;f.manual_speed_world=1300.;
+        return f;
+    };
+    auto f=sample(0,{0,0,0});
+    NavigationFollower nav;
+    const auto first=nav.start(Mode::Manual,f);
+    require(first.beacon&&route_beacon_interval_ms(*first.beacon)<330,
+        "a sprinting player must not wait for the ordinary long-distance pulse");
+    f=sample(.2,{278,-16,0});
+    const auto approaching=nav.observe(f);
+    require(approaching.beacon&&std::abs(approaching.beacon->azimuth_degrees)<15,
+        "the cue must stay ahead as the player runs beside the last bit of the incoming leg");
+    f=sample(.26,{281,38,0});
+    const auto live_leg=nav.manual_leg(f.position,100.,f.manual_speed_world);
+    require(live_leg&&near(live_leg->second.y,500),"refresh must use the outgoing lane after a fast turn");
+    const auto rounding=nav.observe(f);
+    require(rounding.beacon&&rounding.beacon->azimuth_degrees>78&&rounding.beacon->azimuth_degrees<98,
+        "a running sample on the outgoing leg must stay with that leg instead of pointing back to the pivot");
+    f=sample(.3,{720,-300,0});
+    const auto detour=nav.observe(f);
+    require(detour.replan==NavigationReplan::OffRoute&&!detour.beacon,
+        "fast guidance must request a new path when the player actually leaves the corridor");
+
+    RouteBeaconCue cue{0.,32.,22.,2.5};
+    require(route_beacon_interval_ms(cue)==route_beacon_interval_ms(cue.remaining_metres),
+        "slow walking must retain the ordinary cadence");
+    cue.speed_metres_per_second=13.;
+    const auto ahead=route_beacon_interval_ms(cue);
+    cue.metres_to_waypoint=.65;
+    const auto turning=route_beacon_interval_ms(cue);
+    require(turning>=220&&turning<ahead,"approaching a turn must tighten the running cadence without overlapping the two-note cue");
+
+    auto hairpin=at(0,{0,0,0},{{0,0,0},{300,0,0},{0,30,0}});
+    hairpin.use_beacon=true;hairpin.manual_speed_world=1300.;
+    NavigationFollower reversing;
+    reversing.start(Mode::Manual,hairpin);
+    hairpin.position={275,28,0};hairpin.sample_seconds=hairpin.path_sample_seconds=.2;
+    const auto before_hairpin=reversing.manual_leg(hairpin.position,100.,hairpin.manual_speed_world);
+    require(before_hairpin&&near(before_hairpin->second.x,300),"running toward a hairpin must still lead to its pivot");
+}
+
 void directional_beacon() {
     for (auto mode : {Mode::Manual,Mode::Automatic}) {
         NavigationFollower nav;
@@ -762,7 +807,7 @@ int main() {
         native_walking_basis();activation_endpoint_arrival();native_agent_and_speed_policy();capsule_speed_bound();manual_and_auto();corners_and_replanning();cancellation_guards();freshness_blocking_and_geometry();arrival_and_explicit_mode_switch();
         chatter_and_turns();manual_without_ground_proof();active_target_following();native_route_failure_feedback();target_read_failure_feedback();speech_output_priority();surface_following_corridor_and_progress();
         verified_capsule_routes();walking_path_around_a_town_building();nearby_target_does_not_require_a_route();capsule_route_renewal_keeps_the_turn();
-        slow_progress_into_a_narrow_interaction();reroute_from_live_position();directional_beacon();rowing_around_obstacles();
+        slow_progress_into_a_narrow_interaction();reroute_from_live_position();directional_beacon();running_beacon_keeps_the_turn();rowing_around_obstacles();
         std::cout<<"Navigation follower checks passed\n";return 0;
     } catch(const std::exception& e) {std::cerr<<e.what()<<'\n';return 1;}
 }

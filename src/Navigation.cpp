@@ -512,6 +512,21 @@ bool passed(Vec3 position,Vec3 a,Vec3 b,double scale) {
     const auto side=std::abs(from.x*(d.y/n)-from.y*(d.x/n));
     return along>=n&&side/scale<=passed_corridor&&std::abs(position.z-b.z)/scale<=arrival_radius;
 }
+bool fast_manual_beacon(double speed) {
+    return std::isfinite(speed)&&speed>=4.;
+}
+bool on_outgoing_leg(Vec3 position,Vec3 previous,Vec3 corner,Vec3 following,double scale) {
+    const auto incoming=delta(corner,previous),outgoing=delta(following,corner);
+    const auto before=std::hypot(incoming.x,incoming.y),after=std::hypot(outgoing.x,outgoing.y);
+    if(before<.05*scale||after<.05*scale||incoming.x*outgoing.x+incoming.y*outgoing.y<-.25*before*after)
+        return false;
+    const auto offset=delta(position,corner);
+    const auto passed_incoming=(offset.x*incoming.x+offset.y*incoming.y)/before;
+    const auto along=(offset.x*outgoing.x+offset.y*outgoing.y)/after;
+    return passed_incoming>=-passed_corridor*scale&&along>=.12*scale&&
+        segment_distance(position,corner,following,true)<=passed_corridor*scale&&
+        std::abs(offset.z-outgoing.z*std::clamp(along/after,0.,1.))<=arrival_radius*scale;
+}
 bool at_swept_floor_anchor(Vec3 position,Vec3 point,std::size_t waypoint,double scale,const GroundCoverage* ground) {
     if(!ground||!ground->swept_ground)return false;
     const auto& swept=*ground->swept_ground;
@@ -540,6 +555,15 @@ unsigned route_beacon_interval_ms(double remaining_metres) {
     if(!std::isfinite(remaining_metres))return 1200;
     const auto metres=std::max(0.,remaining_metres);
     return 220+static_cast<unsigned>(std::lround(980*(metres/(metres+6))));
+}
+unsigned route_beacon_interval_ms(const RouteBeaconCue& cue) {
+    const auto standard=route_beacon_interval_ms(cue.remaining_metres);
+    if(!fast_manual_beacon(cue.speed_metres_per_second)||!std::isfinite(cue.metres_to_waypoint))return standard;
+    // At running speed, leave time for another pulse before the player
+    // covers the next few metres. Keep enough time to play a complete cue.
+    const auto step=std::clamp(cue.metres_to_waypoint*.5,2.8,4.2);
+    const auto milliseconds=1000.*step/cue.speed_metres_per_second;
+    return static_cast<unsigned>(std::lround(std::clamp(milliseconds,220.,static_cast<double>(standard))));
 }
 NavigationUpdate NavigationFollower::start(NavigationMode requested,const NavigationFrame& f) {
     if(requested==NavigationMode::Off) return stop();
@@ -606,13 +630,20 @@ std::optional<std::pair<Vec3,Vec3>> NavigationFollower::leg() const {
     if(waiting_for_route_||waypoint_==0||waypoint_>=points_.size())return {};
     return std::pair{points_[waypoint_-1],points_[waypoint_]};
 }
-std::size_t NavigationFollower::advance_waypoint(Vec3 position,double scale,const GroundCoverage* ground) const {
+std::optional<std::pair<Vec3,Vec3>> NavigationFollower::manual_leg(Vec3 position,double scale,double speed_world) const {
+    const auto current=leg();
+    if(!current||mode_!=NavigationMode::Manual||scale<=0||!fast_manual_beacon(speed_world/scale))return current;
+    const auto next=advance_waypoint(position,scale,nullptr,true);
+    return std::pair{points_[next-1],points_[next]};
+}
+std::size_t NavigationFollower::advance_waypoint(Vec3 position,double scale,const GroundCoverage* ground,bool fast_manual) const {
     auto next=waypoint_;
     while(next+1<points_.size()) {
         if(distance(points_[next],points_[next-1])/scale>=.001&&
            distance(position,points_[next])/scale>corner_radius&&
            !at_swept_floor_anchor(position,points_[next],next,scale,ground)&&
-           !passed(position,points_[next-1],points_[next],scale))break;
+           !passed(position,points_[next-1],points_[next],scale)&&
+           !(fast_manual&&on_outgoing_leg(position,points_[next-1],points_[next],points_[next+1],scale)))break;
         ++next;
     }
     return next;
@@ -686,7 +717,9 @@ NavigationUpdate NavigationFollower::observe(const NavigationFrame& f,bool expli
     last_sample_=f.sample_seconds;
     const auto previous_waypoint=waypoint_;
     const auto* ground=automatic?&*f.ground:nullptr;
-    const auto ordinary_next=advance_waypoint(f.position,scale,nullptr);
+    const auto beacon_speed=!automatic&&f.use_beacon?f.manual_speed_world/scale:0.;
+    const auto running=fast_manual_beacon(beacon_speed);
+    const auto ordinary_next=advance_waypoint(f.position,scale,nullptr,running);
     const auto next=ground&&ground->swept_ground?advance_waypoint(f.position,scale,ground):ordinary_next;
     auto turn_limit=points_.size()-1;
     if(automatic&&f.check_route_turns) {
@@ -749,9 +782,31 @@ NavigationUpdate NavigationFollower::observe(const NavigationFrame& f,bool expli
         }
     }
     NavigationUpdate out;out.mode=mode_;
-    const auto angle=bearing(delta(points_[waypoint_],f.position),f.path);
-    if(f.use_beacon&&angle&&std::isfinite(*angle))
-        out.beacon=RouteBeaconCue{std::remainder(90.-*angle,360.),remaining_metres};
+    const auto to_waypoint=delta(points_[waypoint_],f.position);
+    const auto angle=bearing(to_waypoint,f.path);
+    if(f.use_beacon) {
+        auto direction=to_waypoint;
+        if(running&&waypoint_+1<points_.size()) {
+            const auto& before=points_[waypoint_-1];
+            const auto& corner=points_[waypoint_];
+            const auto leg=delta(corner,before);
+            const auto length=std::hypot(leg.x,leg.y);
+            const auto lead=scale*std::min(.8,beacon_speed*.09);
+            if(length>=.05*scale&&std::hypot(direction.x,direction.y)<lead&&
+               segment_distance(f.position,before,corner)<=passed_corridor*scale) {
+                // Retain cross-track correction, but do not pan toward a
+                // nearby point almost underneath the player. The next leg
+                // takes over once the player has actually reached the turn.
+                const auto forward=(direction.x*leg.x+direction.y*leg.y)/length;
+                const auto extension=std::max(0.,lead-forward)/length;
+                direction.x+=leg.x*extension;
+                direction.y+=leg.y*extension;
+            }
+        }
+        if(const auto cue_angle=bearing(direction,f.path);cue_angle&&std::isfinite(*cue_angle))
+            out.beacon=RouteBeaconCue{std::remainder(90.-*cue_angle,360.),remaining_metres,
+                std::hypot(to_waypoint.x,to_waypoint.y)/scale,beacon_speed};
+    }
     if(beacon_audio_&&!f.use_beacon)announced_=false;
     beacon_audio_=f.use_beacon;
     if(!out.beacon||explicit_status) {

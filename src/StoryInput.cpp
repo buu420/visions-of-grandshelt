@@ -850,9 +850,17 @@ bool kol_story(StorySnapshot& story,UObject* pawn,UObject* world,int map,int que
     const auto manager=world_scoped(L"CPP_MapManager",world);
     const auto area=manager.ambiguous?std::nullopt:getter<int>(manager.object,L"GetMapAreaId");
     if(!area)return false;
-    const auto leg=kol_story_leg(story.main_progress,*area,points);
+    const auto leg=kol_story_leg(story.main_progress,*area,points,getter<Vec3>(pawn,L"K2_GetActorLocation"));
     if(!leg)return false;
     using Kind=KolStoryLeg::Kind;
+    if(leg->kind==Kind::HouseExit) {
+        const char* instruction=story.main_progress==1140?"Leave the house to reach the inn.":
+            "Leave the house to find the Chocobo Stablehand.";
+        if(story_gate(story,pawn,world,manager.object,leg->exit_id,2020,leg->exit_point,
+            "kol-house-return-"+std::to_string(leg->exit_point),"Door back to the village",instruction))return true;
+        story.unavailable_reason=tr("The door from this house to the village could not be verified.");
+        return true;
+    }
     if(leg->kind==Kind::InnApproach) {
         const auto registry=registered_story_gimmicks(world);
         auto* door=registered_gimmick(registry,world,8,L"/Script/mucha.CPP_MapGimmick_Object_DoorBase");

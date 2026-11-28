@@ -1195,20 +1195,20 @@ bool capsule_trace_library(UObject* object) {
     const auto flags=static_cast<std::uint32_t>(object->GetObjectFlags());
     return (flags&0x10u)!=0&&(flags&(0x8000u|0x10000u|0x40000000u))==0;
 }
-template<std::size_t N> bool nav_call(UObject* library,const wchar_t* name,int result,std::array<std::byte,N>& params) {
+UFunction* navigation_function(UObject* library,const wchar_t* name,int result,int buffer_size) {
     const bool capsule_trace=std::wstring_view(name)==L"CapsuleTraceSingleByProfile";
-    if(capsule_trace?!capsule_trace_library(library):!valid(library))return false;
+    if(capsule_trace?!capsule_trace_library(library):!valid(library))return nullptr;
     auto* function=library->GetFunctionByNameInChain(name);
-    if(!function)return false;
+    if(!function)return nullptr;
     if(capsule_trace&&(path(function)!=L"/Script/Engine.KismetSystemLibrary:CapsuleTraceSingleByProfile"||
        !function->HasAnyFunctionFlags(static_cast<EFunctionFlags>(0x400))||
-       !function->HasAnyFunctionFlags(static_cast<EFunctionFlags>(0x2000))))return false;
+       !function->HasAnyFunctionFlags(static_cast<EFunctionFlags>(0x2000))))return nullptr;
     auto* returned=function->GetReturnProperty();
     if(!returned||returned->GetOffset_Internal()!=result||!returned->HasAnyPropertyFlags(0x80)||
        !returned->HasAnyPropertyFlags(0x400)||
-       !native_call_extent(function->GetParmsSize(),function->GetPropertiesSize(),static_cast<int>(N),
-           function->GetReturnValueOffset(),result,result+returned->GetSize(),static_cast<int>(N)))return false;
-    stage="native navigation "+utf8(name);library->ProcessEvent(function,params.data());return true;
+       !native_call_extent(function->GetParmsSize(),function->GetPropertiesSize(),buffer_size,
+           function->GetReturnValueOffset(),result,result+returned->GetSize(),buffer_size))return nullptr;
+    return function;
 }
 template<class T,std::size_t N> void nav_put(std::array<std::byte,N>& params,std::size_t offset,const T& value) {
     std::memcpy(params.data()+offset,&value,sizeof(T));
@@ -1227,7 +1227,10 @@ std::optional<NavigationProjection> project_navigation(UObject* pawn,UObject* sy
     nav_put(params,8,point);
     nav_put(params,56,mesh);
     nav_put(params,72,extent);
-    if(!nav_call(system,L"K2_ProjectPointToNavigation",96,params))return {};
+    auto* function=navigation_function(system,L"K2_ProjectPointToNavigation",96,static_cast<int>(params.size()));
+    if(!function)return {};
+    stage="native navigation K2_ProjectPointToNavigation";
+    system->ProcessEvent(function,params.data());
     if(!nav_get<bool>(params,96))return NavigationProjection{};
     const auto surface=nav_get<Vec3>(params,32);
     if(!finite(surface))return {};
@@ -1375,9 +1378,12 @@ std::optional<std::string> live_ladder_instruction(UObject* ladder,Vec3 goal,con
 }
 struct CapsuleSweep {
     static constexpr float floor_clearance=2.15f;
+    static constexpr int trace_buffer_size=0x198;
+    static constexpr int trace_result=0x190;
 
     UObject* pawn;
     UObject* library;
+    UFunction* trace_function;
     FName profile;
     float radius;
     float half_height;
@@ -1396,7 +1402,7 @@ struct CapsuleSweep {
             std::abs(from.y-11501.4)<=18.&&std::abs(to.y-11501.4)<=18.?landing_bumper:nullptr;
         from.z+=half_height;
         to.z+=half_height;
-        alignas(16) std::array<std::byte,0x198> params{};
+        alignas(16) std::array<std::byte,trace_buffer_size> params{};
         nav_put(params,0,pawn);
         nav_put(params,0x8,from);
         nav_put(params,0x20,to);
@@ -1405,18 +1411,18 @@ struct CapsuleSweep {
         nav_put(params,0x40,profile);
         nav_put(params,0x48,complex);
         if(ignored) {
-            auto* function=library->GetFunctionByNameInChain(L"CapsuleTraceSingleByProfile");
-            if(!native_struct_shape(function,{{L"ActorsToIgnore",0x50,16}}))return {};
+            if(!native_struct_shape(trace_function,{{L"ActorsToIgnore",0x50,16}}))return {};
             nav_put(params,0x50,Array<UObject*>{&ignored,1,1});
         }
         nav_put(params,0x168,true); // Ignore only the controlled pawn.
         nav_put(params,0x6c,-1.f); // FHitResult::Time sentinel.
-        if(!nav_call(library,L"CapsuleTraceSingleByProfile",0x190,params))return {};
+        stage="native navigation CapsuleTraceSingleByProfile";
+        library->ProcessEvent(trace_function,params.data());
         const auto close=[](Vec3 a,Vec3 b){return std::hypot(a.x-b.x,a.y-b.y,a.z-b.z)<.001;};
         if(!close(nav_get<Vec3>(params,0xd8),from)||!close(nav_get<Vec3>(params,0xf0),to))return {};
         const auto time=nav_get<float>(params,0x6c);
         const auto flags=nav_get<unsigned char>(params,0x115);
-        const bool blocked=nav_get<bool>(params,0x190);
+        const bool blocked=nav_get<bool>(params,trace_result);
         if(!blocked) {
             // A false return without a written no-hit result is not clearance.
             if(time!=1.f||(flags&3))return {};
@@ -1556,13 +1562,17 @@ std::optional<CapsuleSweep> capture_capsule_sweep(UObject* pawn,bool rowing=fals
         profile=pawn_profile;
     }
     auto* library=UObjectGlobals::StaticFindObject(L"/Script/Engine.Default__KismetSystemLibrary");
-    if(!capsule_trace_library(library))return {};
+    // The sweep and its callbacks run synchronously on the game thread.
+    // Validate the reflected binding once for all samples in this sweep.
+    auto* trace=navigation_function(library,L"CapsuleTraceSingleByProfile",CapsuleSweep::trace_result,
+        CapsuleSweep::trace_buffer_size);
+    if(!trace)return {};
     auto* movement=object(pawn,L"CharacterMovement");
     const auto step=read<float>(movement,L"MaxStepHeight",L"FloatProperty");
     const auto floor_z=read<float>(movement,L"WalkableFloorZ",L"FloatProperty");
     if(!step||!std::isfinite(*step)||(rowing?*step!=0:*step<=0)||
        !floor_z||!std::isfinite(*floor_z)||*floor_z<=0||*floor_z>1)return {};
-    return CapsuleSweep{pawn,library,*profile,*radius,*half,boolean(capsule,L"bTraceComplexOnMove"),*step,*floor_z,
+    return CapsuleSweep{pawn,library,trace,*profile,*radius,*half,boolean(capsule,L"bTraceComplexOnMove"),*step,*floor_z,
         rowing?nullptr:cave_disembark_bumper(pawn)};
 }
 std::optional<Vec3> capsule_lane(const CapsuleSweep& sweep,UObject* system,UObject* mesh,Vec3 from,Vec3 to,double scale) {
@@ -1949,6 +1959,7 @@ bool felicitas_world(UObject* world) {
     return path(world)==L"/Game/Map/Town/03Kol/03Kol_20/Town_03Kol_20_PL.Town_03Kol_20_PL";
 }
 bool town_world(UObject* world) {return path(world).starts_with(L"/Game/Map/Town/");}
+constexpr ActivationBox kol_street{{8110.,6650.,-50.},{2280.,2950.,250.},0.};
 constexpr ActivationBox felicitas_street{{-3290.,-900.,120.},{2440.,3000.,245.},0.};
 std::optional<ActivationBox> felicitas_floor(Vec3 feet) {
     // The shops and houses share the persistent level at separate heights.
@@ -2980,6 +2991,8 @@ std::optional<NativeRoute> capsule_route(UObject* pawn,UObject* target,UObject* 
     const bool person=is(target,L"/Script/mucha.CPP_MapUnit_NPC");
     if(!box&&(person||requires_checked_interaction_box(target)))return {};
     const bool felicitas_lane=room&&!direct_only&&felicitas_world(actor_world(pawn))&&inside_box(felicitas_street,start);
+    const bool kol_lane=room&&!direct_only&&kol_village_world(actor_world(pawn))&&inside_box(kol_street,start);
+    const bool street_graph=felicitas_lane||kol_lane;
     struct Junction {
         Vec3 position;
         bool goal{};
@@ -3009,6 +3022,22 @@ std::optional<NativeRoute> capsule_route(UObject* pawn,UObject* target,UObject* 
             {-4470.,-230.,2.15},{-3920.,640.,2.15},{-3810.,1000.,2.15},{-3670.,1190.,2.15},
             {-3750.,290.,2.15},{-3510.,245.,2.15},{-2650.,130.,2.15},{-1910.,10.,2.15},
             {-1910.,-390.,2.15},{-1750.,-630.,2.15},{-1670.,-1350.,2.15}};
+        for(const auto point:street)graph.push_back({.position=point});
+    } else if(kol_lane) {
+        // Kol's pond, retaining walls and buildings interrupt both navmeshes.
+        // These street and bank junctions only seed the search. Every leg is
+        // checked against the live pawn's floor and collision capsule.
+        constexpr Vec3 street[]{
+            {6615.,9260.,2.},{6680.,8675.,6.},{6680.,7960.,5.},{6875.,7375.,-7.},
+            {6875.,7180.,-4.},{7200.,6855.,-74.},{7374.,6675.,-124.},{7374.,6034.,-33.},
+            {7980.,6010.,-25.},{8370.,6010.,-28.},{8240.,5880.,-9.},{8695.,5360.,-23.},
+            {8955.,6205.,-27.},{8890.,6725.,-100.},{8565.,6400.,-121.},{8045.,6335.,-135.},
+            {6810.,8740.,2.},{7200.,8415.,-6.},{7330.,8415.,-6.},{7460.,8545.,-14.},
+            {8110.,8805.,-69.},{8825.,8805.,-124.},{9345.,8740.,-142.},{9735.,8610.,-78.},
+            {9735.,7895.,-75.},{9345.,7245.,-69.},{9150.,6985.,-43.},
+            {7135.,5620.,-3.},{7200.,5490.,5.},{7460.,5100.,7.},
+            {7005.,5230.,-32.},{6745.,5100.,-105.},{6485.,4515.,-123.}
+        };
         for(const auto point:street)graph.push_back({.position=point});
     } else if(room&&!direct_only&&zoldaad_slums_timetable(target)) {
         // The streetcar arrives at this standing point on the platform.
@@ -3182,7 +3211,7 @@ std::optional<NativeRoute> capsule_route(UObject* pawn,UObject* target,UObject* 
         if(direct_only)return {};
     }
     const auto priority=[&](const Junction& point) {
-        if(!felicitas_lane||point.goal)return point.distance;
+        if(!street_graph||point.goal)return point.distance;
         double nearest=std::numeric_limits<double>::infinity();
         for(const auto& goal:graph)if(goal.goal)nearest=std::min(nearest,
             std::hypot(goal.position.x-point.position.x,goal.position.y-point.position.y)+goal.goal_cost);
@@ -3205,7 +3234,7 @@ std::optional<NativeRoute> capsule_route(UObject* pawn,UObject* target,UObject* 
             const auto length=std::hypot(next.position.x-from.x,next.position.y-from.y);
             const auto distance=best->distance+length+next.goal_cost;
             if(length<scale*.01||distance>=next.distance)continue;
-            if(felicitas_lane&&length>13.*scale)continue;
+            if(street_graph&&length>13.*scale)continue;
             if(room&&best==graph.begin()&&next.goal)continue; // Already checked the direct approaches.
             const auto floor=proof(from,next.position);
             if(!floor)continue;
@@ -4743,6 +4772,7 @@ std::optional<NativeRoute> route_on_mesh(UObject* p,UObject* target,Vec3 destina
     if(!scale)return fail("The area's distance scale is unavailable.");
     if(!room&&town_collision&&actor_world(target)==world) {
         if(felicitas_world(world))room=felicitas_floor(*start);
+        else if(kol_village_world(world)&&inside_box(kol_street,*start))room=kol_street;
         else if(transition||local_interaction||is(target,L"/Script/mucha.CPP_MapGimmick_Trigger_DoorBase"))
             room=nearby_town_floor(*start,destination,*scale);
         if(!room)return {};
@@ -5875,8 +5905,10 @@ std::optional<NativeRoute> route_snapshot(UObject* pawn,UObject* target,Vec3 des
         if(auto route=route_on_mesh(pawn,target,destination,ground_check,reason,path_id,alternate,log_query))return route;
     if(town_world(world)&&!felicitas_world(world)) {
         std::string fallback_reason;
-        if(auto local=route_on_mesh(pawn,target,destination,ground_check,&fallback_reason,path_id,nullptr,log_query,true))
+        if(auto local=route_on_mesh(pawn,target,destination,ground_check,&fallback_reason,path_id,nullptr,log_query,true)) {
+            if(reason)reason->clear();
             return local;
+        }
     }
     return {};
 }
@@ -5988,8 +6020,7 @@ FieldWallCues capture_field_walls(UObject* pawn,const StorySpatialContext& spati
     if(!ground_travel(pawn))return cues;
     auto sweep=capture_capsule_sweep(pawn);
     if(!sweep)return cues;
-    auto* function=sweep->library->GetFunctionByNameInChain(L"CapsuleTraceSingleByProfile");
-    auto* field=function?function->FindProperty(FName(L"OutHit",FNAME_Find)):nullptr;
+    auto* field=sweep->trace_function->FindProperty(FName(L"OutHit",FNAME_Find));
     if(!field||field->GetOffset_Internal()!=0x68||field->GetSize()!=256||
        !field->field_class()||field->field_class()->GetName()!=L"StructProperty")return cues;
     auto& handle=static_cast<FStructProperty*>(field)->GetStruct();
@@ -6647,6 +6678,10 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
     const auto position=controlled_agent_position(pawn);
     if(!position||!finite(*position)){frame.target_unavailable_reason="The player position could not be read.";return frame;}
     frame.position=*position;
+    if(frame.use_beacon&&!automatic) {
+        const auto velocity=read<Vec3>(object(pawn,L"CharacterMovement"),L"Velocity",L"StructProperty");
+        if(velocity&&finite(*velocity))frame.manual_speed_world=std::hypot(velocity->x,velocity->y);
+    }
     auto* live_target=refresh_navigation_target(pawn);
     frame.target_unavailable_reason=navigation_target_reason_;
     if(!active_target_||active_target_->id!=target_id_||active_target_->world!=frame.world||
@@ -6685,7 +6720,7 @@ NavigationFrame UnrealReader::navigation_frame(resonance::unreal::UObject* pawn,
        navigation_path_.valid&&(!automatic||navigation_ground_)) {
         const auto scale=navigation_path_.world_to_metres;
         const auto goal=active_target_->position;
-        const auto leg=navigation_.leg();
+        const auto leg=automatic?navigation_.leg():navigation_.manual_leg(*position,scale,frame.manual_speed_world);
         if(leg&&std::hypot(goal.x-navigation_route_goal_.x,goal.y-navigation_route_goal_.y,
                            goal.z-navigation_route_goal_.z)<=scale*.05) {
             bool endpoint_available=true;

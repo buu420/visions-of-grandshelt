@@ -595,7 +595,7 @@ struct RouteBeaconOutput::Impl {
     }
     void play_routes(const BeaconBank& bank,BeaconPlayer& player) {
         constexpr auto freshness=450ms;
-        constexpr auto refresh=40ms;
+        constexpr auto refresh=20ms;
         constexpr auto buffer_timeout=650ms;
         std::uint64_t seen_generation{};
         std::optional<Clock::time_point> last_pulse;
@@ -628,7 +628,8 @@ struct RouteBeaconOutput::Impl {
             const double azimuth=std::remainder(sample.cue.azimuth_degrees,360.);
             const bool sharp_turn=last_pulse&&sample.mode==NavigationMode::Manual&&
                 std::abs(std::remainder(azimuth-last_played_azimuth,360.))>=60.;
-            const auto cadence=route_beacon_interval_ms(sample.cue.remaining_metres);
+            const auto cadence=sample.mode==NavigationMode::Manual?route_beacon_interval_ms(sample.cue):
+                route_beacon_interval_ms(sample.cue.remaining_metres);
             const int spacing=static_cast<int>(sharp_turn?std::min(cadence,300u):cadence);
             if(last_pulse) {
                 if(now-*last_pulse>=buffer_timeout&&player.busy())
@@ -654,7 +655,9 @@ struct RouteBeaconOutput::Impl {
                 if(report) {
                     const auto mode=sample.mode==NavigationMode::Automatic?"automatic":"manual";
                     log(std::string("BEACON pulse mode=")+mode+" azimuth="+std::to_string(angle)+
-                        " interval_ms="+std::to_string(spacing)+" remaining_m="+std::to_string(sample.cue.remaining_metres));
+                        " interval_ms="+std::to_string(spacing)+" remaining_m="+std::to_string(sample.cue.remaining_metres)+
+                        " speed_mps="+std::to_string(sample.cue.speed_metres_per_second)+
+                        " waypoint_m="+std::to_string(sample.cue.metres_to_waypoint));
                     last_reported_angle=angle;
                     last_reported_spacing=spacing;
                 }

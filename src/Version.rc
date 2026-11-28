@@ -1,7 +1,7 @@
 #include <windows.h>
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,2,72,0
- PRODUCTVERSION 0,2,72,0
+ FILEVERSION 0,2,75,0
+ PRODUCTVERSION 0,2,75,0
  FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
  FILEFLAGS VS_FF_PRERELEASE
  FILEOS VOS_NT_WINDOWS32
@@ -12,11 +12,11 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "Visions of Grandshelt accessibility mod"
-            VALUE "FileVersion", "0.2.72.0"
+            VALUE "FileVersion", "0.2.75.0"
             VALUE "InternalName", "ResonanceAccess"
             VALUE "OriginalFilename", "ResonanceAccess.dll"
             VALUE "ProductName", "Visions of Grandshelt"
-            VALUE "ProductVersion", "0.2.72-dev"
+            VALUE "ProductVersion", "0.2.75-dev"
         END
     END
     BLOCK "VarFileInfo"

@@ -973,6 +973,14 @@ void kol_uses_the_current_objective_and_room() {
     require(!kol_story_leg(1140,3,std::span{inn}.first(1))&&!kol_story_leg(1150,0,path_points)&&
         !kol_story_leg(1150,0,inn)&&!kol_story_leg(1150,2,rental)&&!kol_story_leg(1160,0,rental),
         "Kol steps require the current native goal in a matching room and phase");
+    const auto south_house=kol_story_leg(1150,2,rental,Vec3{-2920.84,25603.10,102.15});
+    const auto west_house=kol_story_leg(1140,1,inn,Vec3{-2939.52,31254.30,102.15});
+    require(south_house&&south_house->kind==Kind::HouseExit&&south_house->exit_id==1&&south_house->exit_point==22&&
+        west_house&&west_house->kind==Kind::HouseExit&&west_house->exit_id==2&&west_house->exit_point==20,
+        "both native house arrivals lead through their own return door before continuing Story");
+    require(!kol_story_leg(1150,2,rental,Vec3{8700,6000,102.15})&&
+        !kol_story_leg(1150,2,path_points,Vec3{-2920.84,25603.10,102.15}),
+        "the house route requires the matching location and a visible Kol objective");
 }
 void kolobos_story_follows_the_current_room_and_bridge_state() {
     using Leg=KolobosStoryLeg;

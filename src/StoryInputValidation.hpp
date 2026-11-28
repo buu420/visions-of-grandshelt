@@ -164,21 +164,29 @@ inline std::optional<SirenStoryLeg> siren_story_leg(int map,int quest,std::optio
     return {};
 }
 struct KolStoryLeg {
-    enum class Kind { InnApproach, Innkeeper, InnExit, Stablehand };
+    enum class Kind { InnApproach, Innkeeper, InnExit, Stablehand, HouseExit };
     Kind kind;
     const FilteredPoint* contact{};
+    int exit_id{-1},exit_point{-1};
 };
 inline std::optional<KolStoryLeg> kol_story_leg(std::optional<int> progress,int area,
-        std::span<const FilteredPoint> points) {
-    if((progress!=1140&&progress!=1150)||(area!=0&&area!=3))return {};
+        std::span<const FilteredPoint> points,std::optional<Vec3> position={}) {
+    if(progress!=1140&&progress!=1150)return {};
     using Kind=KolStoryLeg::Kind;
     const auto village_goal=[](const FilteredPoint& point) {
         return point.role==0&&point.map_kind==0&&point.map_id==2020;
     };
-    if(progress==1140&&area==0) {
-        if(std::any_of(points.begin(),points.end(),village_goal))return KolStoryLeg{Kind::InnApproach};
-        return {};
+    if(!std::any_of(points.begin(),points.end(),village_goal))return {};
+    if(position&&std::abs(position->x+2500.)<=1280.&&std::abs(position->z)<=340.) {
+        // The two houses share area identifiers with other parts of Kol.
+        // The room's authored bounds distinguish its return door.
+        if((area==2||area==3)&&std::abs(position->y-26000.)<=1280.)
+            return KolStoryLeg{.kind=Kind::HouseExit,.exit_id=1,.exit_point=22};
+        if((area==1||area==4)&&std::abs(position->y-31650.)<=1280.)
+            return KolStoryLeg{.kind=Kind::HouseExit,.exit_id=2,.exit_point=20};
     }
+    if(area!=0&&area!=3)return {};
+    if(progress==1140&&area==0)return KolStoryLeg{Kind::InnApproach};
     const ObjectKey contact{1,progress==1140?10:11};
     const auto goal=std::find_if(points.begin(),points.end(),[&](const FilteredPoint& point) {
         return village_goal(point)&&point.object_target&&point.object==contact;
